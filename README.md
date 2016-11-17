@@ -9,7 +9,7 @@
 <div>
 <h3>Description</h3>
 
-<p>The purpose of this repository is to support development of tools for producing OpenAPI descriptions for OData services.</p>
+<p>The purpose of this repository is to support development of tools for producing <a href="https://github.com/OAI/OpenAPI-Specification">OpenAPI</a> descriptions for OData services.</p>
 <p>Planned work items include:
 <ul>
 <li>XSLT transformation from OData CSDL XML to OpenAPI JSON</li>
