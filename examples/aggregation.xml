@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm"
+  Version="4.0"
+>
+  <edmx:Reference
+    Uri="http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs01/vocabularies/Org.OData.Aggregation.V1.xml"
+  >
+    <edmx:Include Alias="Aggregation" Namespace="Org.OData.Aggregation.V1" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Alias="SalesModel" Namespace="org.example.odata.salesservice">
+
+      <EntityType Name="Currency">
+        <Key>
+          <PropertyRef Name="Code" />
+        </Key>
+        <Property Name="Code" Type="Edm.String">
+          <Annotation Term="Aggregation.Groupable" />
+        </Property>
+        <Property Name="Name" Type="Edm.String">
+          <Annotation Term="Core.IsLanguageDependent" />
+        </Property>
+      </EntityType>
+
+      <EntityType Name="Sales">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+
+        <Property Name="Amount" Type="Edm.Decimal" Scale="variable">
+          <Annotation Term="Aggregation.Aggregateable" />
+          <Annotation Term="Aggregation.ContextDefiningProperties">
+            <Collection>
+              <PropertyPath>Currency/Code</PropertyPath>
+            </Collection>
+          </Annotation>
+        </Property>
+
+        <NavigationProperty Name="Customer" Type="SalesModel.Customer" Nullable="false" />
+        <NavigationProperty Name="Currency" Type="SalesModel.Currency" Nullable="false" />
+        <NavigationProperty Name="Product" Type="SalesModel.Product" Nullable="false" />
+        <NavigationProperty Name="SalesOrganization" Type="SalesModel.SalesOrganization" Nullable="false" />
+        <NavigationProperty Name="Time" Type="SalesModel.Time" Nullable="false" />
+
+        <Annotation Term="Aggregation.CustomAggregate" Qualifier="Forecast" String="Edm.Decimal">
+          <Annotation Term="Aggregation.ContextDefiningProperties">
+            <Collection>
+              <PropertyPath>Currency/Code</PropertyPath>
+            </Collection>
+          </Annotation>
+        </Annotation>
+      </EntityType>
+
+      <Annotations Target="SalesModel.Product">
+        <Annotation Term="Aggregation.LeveledHierarchy" Qualifier="ProductHierarchy">
+          <Record>
+            <PropertyValue Property="Levels">
+              <Collection>
+                <String>Category/Name</String>
+                <String>Name</String>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="SalesModel.Time">
+        <Annotation Term="Aggregation.LeveledHierarchy" Qualifier="TimeHierarchy">
+          <Record>
+            <PropertyValue Property="Levels">
+              <Collection>
+                <String>Year</String>
+                <String>Quarter</String>
+                <String>Month</String>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="SalesModel.SalesOrganization">
+        <Annotation Term="Aggregation.RecursiveHierarchy" Qualifier="SalesOrgHierarchy">
+          <Record>
+            <PropertyValue Property="NodeProperty" String="ID" />
+            <PropertyValue Property="ParentNodeProperty" String="Superordinate/ID" />
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <EntityContainer Name="Default">
+        <Annotation Term="Aggregation.ApplySupported">
+          <Record>
+            <PropertyValue Property="PropertyRestrictions" Bool="true" />
+          </Record>
+        </Annotation>
+
+        <Annotation Term="Aggregation.CustomAggregate" Qualifier="Budget" String="Edm.Decimal">
+          <Annotation Term="Aggregation.ContextDefiningProperties">
+            <Collection>
+              <PropertyPath>Currencies/Code</PropertyPath>
+            </Collection>
+          </Annotation>
+        </Annotation>
+
+        <EntitySet Name="Sales" EntityType="SalesModel.Sales" />
+        <EntitySet Name="Currencies" EntityType="SalesModel.Currency" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

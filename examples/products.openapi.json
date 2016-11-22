@@ -1,0 +1,1225 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "OData Service for namespace ProductService",
+        "version": "",
+        "description": "This OData service is located at http://localhost/Products.svc/\n\n## Entity Data Model\n![ER Diagram](http://yuml.me/diagram/class/[Product],[Product]-*>[Category],[Product]-0..1>[PeopleService.Supplier{bg:white}],[Product]-0..1>[ProductDetail],[Product]^[FeaturedProduct],[FeaturedProduct]-0..1>[Advertisement],[ProductDetail],[ProductDetail]-0..1>[Product],[Category],[Category]-*>[Product],[Advertisement],[Advertisement]-0..1>[FeaturedProduct])\n\n## References\n- [PeopleService](http://localhost/swagger-ui/?url=http://localhost/examples/People.openapi.json)"
+    },
+    "schemes": [
+        "http"
+    ],
+    "host": "localhost",
+    "basePath": "/Products.svc",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Products"
+        },
+        {
+            "name": "ProductDetails"
+        },
+        {
+            "name": "Categories"
+        },
+        {
+            "name": "Advertisements"
+        }
+    ],
+    "definitions": {
+        "ProductService.Product": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "ReleaseDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "DiscontinuedDate": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date-time"
+                },
+                "Rating": {
+                    "type": "integer",
+                    "format": "int16"
+                },
+                "Price": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "double"
+                },
+                "Categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ProductService.Category"
+                    }
+                },
+                "Supplier": {
+                    "$ref": "http://localhost/examples/People.openapi.json#/definitions/PeopleService.Supplier"
+                },
+                "ProductDetail": {
+                    "$ref": "#/definitions/ProductService.ProductDetail"
+                }
+            },
+            "title": "Product"
+        },
+        "ProductService.FeaturedProduct": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/ProductService.Product"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "Advertisement": {
+                            "$ref": "#/definitions/ProductService.Advertisement"
+                        }
+                    },
+                    "title": "FeaturedProduct"
+                }
+            ]
+        },
+        "ProductService.ProductDetail": {
+            "type": "object",
+            "properties": {
+                "ProductID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Details": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Product": {
+                    "$ref": "#/definitions/ProductService.Product"
+                }
+            },
+            "title": "ProductDetail"
+        },
+        "ProductService.Category": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ProductService.Product"
+                    }
+                }
+            },
+            "title": "Category"
+        },
+        "ProductService.Advertisement": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "AirDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "FeaturedProduct": {
+                    "$ref": "#/definitions/ProductService.FeaturedProduct"
+                }
+            },
+            "title": "Advertisement"
+        }
+    },
+    "paths": {
+        "/Products": {
+            "get": {
+                "summary": "Get entities from Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374629)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "ID",
+                            "ID desc",
+                            "Name",
+                            "Name desc",
+                            "Description",
+                            "Description desc",
+                            "ReleaseDate",
+                            "ReleaseDate desc",
+                            "DiscontinuedDate",
+                            "DiscontinuedDate desc",
+                            "Rating",
+                            "Rating desc",
+                            "Price",
+                            "Price desc"
+                        ]
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "ID",
+                            "Name",
+                            "Description",
+                            "ReleaseDate",
+                            "DiscontinuedDate",
+                            "Rating",
+                            "Price"
+                        ]
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "*",
+                            "Categories",
+                            "Supplier",
+                            "ProductDetail"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "type": "object",
+                            "title": "Collection of Product",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ProductService.Product"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "Product",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.Product"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.Product"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Products({ID})": {
+            "get": {
+                "summary": "Get entity from Products by key",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "ID",
+                            "Name",
+                            "Description",
+                            "ReleaseDate",
+                            "DiscontinuedDate",
+                            "Rating",
+                            "Price"
+                        ]
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "*",
+                            "Categories",
+                            "Supplier",
+                            "ProductDetail"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.Product"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Product",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.Product"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Products({ID})/ProductService.Discount": {
+            "post": {
+                "summary": "Invoke action Discount",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Action parameters",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "discountPercentage": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": [
+                                "number",
+                                "string"
+                            ],
+                            "format": "double"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/ProductDetails": {
+            "get": {
+                "summary": "Get entities from ProductDetails",
+                "tags": [
+                    "ProductDetails"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374629)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "ProductID",
+                            "ProductID desc",
+                            "Details",
+                            "Details desc"
+                        ]
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "ProductID",
+                            "Details"
+                        ]
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "*",
+                            "Product"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "type": "object",
+                            "title": "Collection of ProductDetail",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ProductService.ProductDetail"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to ProductDetails",
+                "tags": [
+                    "ProductDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "ProductDetail",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.ProductDetail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.ProductDetail"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/ProductDetails({ProductID})": {
+            "get": {
+                "summary": "Get entity from ProductDetails by key",
+                "tags": [
+                    "ProductDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "ProductID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ProductID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "ProductID",
+                            "Details"
+                        ]
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "*",
+                            "Product"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.ProductDetail"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in ProductDetails",
+                "tags": [
+                    "ProductDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "ProductID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ProductID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "ProductDetail",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.ProductDetail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from ProductDetails",
+                "tags": [
+                    "ProductDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "ProductID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ProductID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Categories": {
+            "get": {
+                "summary": "Get entities from Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374629)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "ID",
+                            "ID desc",
+                            "Name",
+                            "Name desc"
+                        ]
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "ID",
+                            "Name"
+                        ]
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "*",
+                            "Products"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "type": "object",
+                            "title": "Collection of Category",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ProductService.Category"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "Category",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.Category"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Categories({ID})": {
+            "get": {
+                "summary": "Get entity from Categories by key",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "ID",
+                            "Name"
+                        ]
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "*",
+                            "Products"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.Category"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Category",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Advertisements": {
+            "get": {
+                "summary": "Get entities from Advertisements",
+                "tags": [
+                    "Advertisements"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374629)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "ID",
+                            "ID desc",
+                            "Name",
+                            "Name desc",
+                            "AirDate",
+                            "AirDate desc"
+                        ]
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "ID",
+                            "Name",
+                            "AirDate"
+                        ]
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "*",
+                            "FeaturedProduct"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "type": "object",
+                            "title": "Collection of Advertisement",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ProductService.Advertisement"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to Advertisements",
+                "tags": [
+                    "Advertisements"
+                ],
+                "parameters": [
+                    {
+                        "name": "Advertisement",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.Advertisement"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.Advertisement"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Advertisements({ID})": {
+            "get": {
+                "summary": "Get entity from Advertisements by key",
+                "tags": [
+                    "Advertisements"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "ID",
+                            "Name",
+                            "AirDate"
+                        ]
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "*",
+                            "FeaturedProduct"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.Advertisement"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in Advertisements",
+                "tags": [
+                    "Advertisements"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Advertisement",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/ProductService.Advertisement"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from Advertisements",
+                "tags": [
+                    "Advertisements"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "top": {
+            "name": "$top",
+            "in": "query",
+            "description": "Show only the first n items, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374630)",
+            "type": "integer"
+        },
+        "skip": {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skip the first n items, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374631)",
+            "type": "integer"
+        },
+        "count": {
+            "name": "$count",
+            "in": "query",
+            "description": "Include count of items, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374632)",
+            "type": "boolean"
+        },
+        "filter": {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filter items by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374625)",
+            "type": "string"
+        },
+        "search": {
+            "name": "$search",
+            "in": "query",
+            "description": "Search items by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374633)",
+            "type": "string"
+        }
+    },
+    "responses": {
+        "error": {
+            "description": "Error",
+            "schema": {
+                "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+            }
+        }
+    }
+}

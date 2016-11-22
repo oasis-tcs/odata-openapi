@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="http://localhost/examples/People.xml">
+    <edmx:Include Namespace="PeopleService" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="ProductService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Product">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="ReleaseDate" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="DiscontinuedDate" Type="Edm.DateTimeOffset" />
+        <Property Name="Rating" Type="Edm.Int16" Nullable="false" />
+        <Property Name="Price" Type="Edm.Double" Nullable="false" />
+        <NavigationProperty Name="Categories" Type="Collection(ProductService.Category)" Partner="Products" />
+        <NavigationProperty Name="Supplier" Type="PeopleService.Supplier" Partner="Products" />
+        <NavigationProperty Name="ProductDetail" Type="ProductService.ProductDetail" Partner="Product" />
+      </EntityType>
+      <EntityType Name="FeaturedProduct" BaseType="ProductService.Product">
+        <NavigationProperty Name="Advertisement" Type="ProductService.Advertisement" Partner="FeaturedProduct" />
+      </EntityType>
+      <EntityType Name="ProductDetail">
+        <Key>
+          <PropertyRef Name="ProductID" />
+        </Key>
+        <Property Name="ProductID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Details" Type="Edm.String" />
+        <NavigationProperty Name="Product" Type="ProductService.Product" Partner="ProductDetail" />
+      </EntityType>
+      <EntityType Name="Category" OpenType="true">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" />
+        <NavigationProperty Name="Products" Type="Collection(ProductService.Product)" Partner="Categories" />
+      </EntityType>
+      <EntityType Name="Advertisement" HasStream="true">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="AirDate" Type="Edm.DateTimeOffset" Nullable="false" />
+        <NavigationProperty Name="FeaturedProduct" Type="ProductService.FeaturedProduct" Partner="Advertisement" />
+      </EntityType>
+      <Action Name="Discount" IsBound="true">
+        <Parameter Name="product" Type="ProductService.Product" />
+        <Parameter Name="discountPercentage" Type="Edm.Int32" Nullable="false" />
+        <ReturnType Type="Edm.Double" Nullable="false" />
+      </Action>
+      <EntityContainer Name="Container">
+        <EntitySet Name="Products" EntityType="ProductService.Product">
+          <NavigationPropertyBinding Path="ProductService.FeaturedProduct/Advertisement"
+            Target="Advertisements" />
+          <NavigationPropertyBinding Path="Categories" Target="Categories" />
+          <NavigationPropertyBinding Path="Supplier" Target="PeopleService.Container.Suppliers" />
+          <NavigationPropertyBinding Path="ProductDetail" Target="ProductDetails" />
+        </EntitySet>
+        <EntitySet Name="ProductDetails" EntityType="ProductService.ProductDetail">
+          <NavigationPropertyBinding Path="Product" Target="Products" />
+        </EntitySet>
+        <EntitySet Name="Categories" EntityType="ProductService.Category">
+          <NavigationPropertyBinding Path="Products" Target="Products" />
+        </EntitySet>
+        <EntitySet Name="Advertisements" EntityType="ProductService.Advertisement">
+          <NavigationPropertyBinding Path="FeaturedProduct" Target="Products" />
+        </EntitySet>
+      </EntityContainer>
+      <Annotations Target="ProductService.Container">
+        <Annotation Term="Org.OData.Display.V1.Description" String="This is a sample OData service with vocabularies" />
+      </Annotations>
+      <Annotations Target="ProductService.Product">
+        <Annotation Term="Org.OData.Display.V1.Description" String="All Products available in the online store" />
+      </Annotations>
+      <Annotations Target="ProductService.Product/Name">
+        <Annotation Term="Org.OData.Display.V1.DisplayName" String="Product Name" />
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

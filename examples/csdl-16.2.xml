@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.01">
+  <edmx:Reference Uri="http://host/service/$metadata">
+    <edmx:Include Namespace="ODataDemo" />
+  </edmx:Reference>
+  <edmx:Reference Uri="http://somewhere/Vocabulary/V1">
+    <edmx:Include Alias="Vocabulary1" Namespace="Some.Vocabulary.V1" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="External.Annotations">
+      <Annotations Target="ODataDemo.Supplier">
+        <Annotation Term="Vocabulary1.EMail">
+          <Null />
+        </Annotation>
+        <Annotation Term="Vocabulary1.AccountID" Path="ID" />
+        <Annotation Term="Vocabulary1.Title" String="Supplier Info" />
+        <Annotation Term="Vocabulary1.DisplayName">
+          <Apply Function="odata.concat">
+            <Path>Name</Path>
+            <String> in </String>
+            <Path>Address/CountryName</Path>
+          </Apply>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="ODataDemo.Product">
+        <Annotation Term="Vocabulary1.Tags">
+          <Collection>
+            <String>MasterData</String>
+          </Collection>
+        </Annotation>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
