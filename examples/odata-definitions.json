@@ -1,0 +1,422 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "OData OpenAPI Definitions",
+  "definitions": {
+    "Edm.ComplexType": {
+      "type": "object"
+    },
+    "Edm.EntityType": {
+      "type": "object"
+    },
+    "Edm.PrimitiveType": {
+      "type": [
+        "boolean",
+        "number",
+        "string"
+      ]
+    },
+    "Edm.AnnotationPath": {
+      "type": "object",
+      "properties": {
+        "@odata.annotationPath": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "@odata.annotationPath"
+      ]
+    },
+    "Edm.NavigationPropertyPath": {
+      "type": "object",
+      "properties": {
+        "@odata.navigationPropertyPath": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "@odata.navigationPropertyPath"
+      ]
+    },
+    "Edm.PropertyPath": {
+      "type": "object",
+      "properties": {
+        "@odata.propertyPath": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "@odata.propertyPath"
+      ]
+    },
+    "Edm.Binary": {
+      "type": "string",
+      "format": "base64url",
+      "pattern": "^([A-Za-z0-9_-]{4})*([A-Za-z0-9_-]{3}[A-Za-z0-9_-]|[A-Za-z0-9_-]{2}[AEIMQUYcgkosw048]=?|[A-Za-z0-9_-][AQgw](==)?)?$"
+    },
+    "Edm.Byte": {
+      "type": "integer",
+      "format": "uint8",
+      "minimum": 0,
+      "maximum": 255
+    },
+    "Edm.Date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$"
+    },
+    "Edm.DateTimeOffset": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$"
+    },
+    "Edm.Double": {
+      "anyOf": [
+        {
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "enum": [
+            "-INF",
+            "INF",
+            "NaN"
+          ]
+        }
+      ]
+    },
+    "Edm.Duration": {
+      "type": "string",
+      "format": "duration",
+      "pattern": "^-?P([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+([.][0-9]+)?S)?)?$"
+    },
+    "Edm.Guid": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    },
+    "Edm.Int16": {
+      "type": "integer",
+      "format": "int16",
+      "minimum": -32768,
+      "maximum": 32767
+    },
+    "Edm.Int32": {
+      "type": "integer",
+      "format": "int32",
+      "minimum": -2147483648,
+      "maximum": 2147483647
+    },
+    "Edm.Int64": {
+      "type": "integer",
+      "format": "int64",
+      "minimum": -9223372036854775808,
+      "maximum": 9223372036854775807
+    },
+    "Edm.SByte": {
+      "type": "integer",
+      "format": "int8",
+      "minimum": -128,
+      "maximum": 127
+    },
+    "Edm.Single": {
+      "anyOf": [
+        {
+          "type": "number",
+          "format": "single"
+        },
+        {
+          "enum": [
+            "-INF",
+            "INF",
+            "NaN"
+          ]
+        }
+      ]
+    },
+    "Edm.Stream": {
+      "description": "Edm.Stream properties aren't represented inline",
+      "type": "string",
+      "readOnly": true
+    },
+    "Edm.TimeOfDay": {
+      "type": "string",
+      "format": "time",
+      "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?$"
+    },
+    "Edm.Geography": {
+      "$ref": "#/definitions/Edm.Geometry"
+    },
+    "Edm.GeographyPoint": {
+      "$ref": "#/definitions/Edm.GeometryPoint"
+    },
+    "Edm.GeographyLineString": {
+      "$ref": "#/definitions/Edm.GeometryLineString"
+    },
+    "Edm.GeographyPolygon": {
+      "$ref": "#/definitions/Edm.GeometryPolygon"
+    },
+    "Edm.GeographyMultiPoint": {
+      "$ref": "#/definitions/Edm.GeometryMultiPoint"
+    },
+    "Edm.GeographyMultiLineString": {
+      "$ref": "#/definitions/Edm.GeometryMultiLineString"
+    },
+    "Edm.GeographyMultiPolygon": {
+      "$ref": "#/definitions/Edm.GeometryMultiPolygon"
+    },
+    "Edm.GeographyCollection": {
+      "$ref": "#/definitions/Edm.GeometryCollection"
+    },
+    "Edm.Geometry": {
+      "type": "object",
+      "@TODO": "This is not allowed in OpenAPI 2.0 - place it in description and reduce the structure to type property with enum list of all seven subtypes",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Edm.GeometryPoint"
+        },
+        {
+          "$ref": "#/definitions/Edm.GeometryLineString"
+        },
+        {
+          "$ref": "#/definitions/Edm.GeometryPolygon"
+        },
+        {
+          "$ref": "#/definitions/Edm.GeometryMultiPoint"
+        },
+        {
+          "$ref": "#/definitions/Edm.GeometryMultiLineString"
+        },
+        {
+          "$ref": "#/definitions/Edm.GeometryMultiPolygon"
+        },
+        {
+          "$ref": "#/definitions/Edm.GeometryCollection"
+        }
+      ]
+    },
+    "Edm.GeometryPoint": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Point"
+          ],
+          "default": "Point"
+        },
+        "coordinates": {
+          "$ref": "#/definitions/GeoJSON.position"
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ]
+    },
+    "Edm.GeometryLineString": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "LineString"
+          ]
+        },
+        "coordinates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GeoJSON.position"
+          },
+          "minItems": 2
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ]
+    },
+    "Edm.GeometryPolygon": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "Polygon"
+          ]
+        },
+        "coordinates": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/GeoJSON.position"
+            },
+            "minItems": 4
+          }
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ]
+    },
+    "Edm.GeometryMultiPoint": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "MultiPoint"
+          ]
+        },
+        "coordinates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GeoJSON.position"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ]
+    },
+    "Edm.GeometryMultiLineString": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "MultiLineString"
+          ]
+        },
+        "coordinates": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/GeoJSON.position"
+            },
+            "minItems": 2
+          }
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ]
+    },
+    "Edm.GeometryMultiPolygon": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "MultiPolygon"
+          ]
+        },
+        "coordinates": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GeoJSON.position"
+              },
+              "minItems": 4
+            }
+          }
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ]
+    },
+    "Edm.GeometryCollection": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "GeometryCollection"
+          ]
+        },
+        "geometries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Edm.Geometry"
+          }
+        }
+      }
+    },
+    "GeoJSON.position": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2
+    },
+    "odata.action": {
+      "type": "object",
+      "properties": {
+        "isBound": {
+          "type": "boolean"
+        },
+        "entitySetPath": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "http://json-schema.org/draft-04/schema#"
+          }
+        },
+        "returnType": {
+          "$ref": "http://json-schema.org/draft-04/schema#"
+        }
+      }
+    },
+    "odata.error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/odata.error.main"
+        }
+      }
+    },
+    "odata.error.main": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/odata.error.detail"
+          }
+        },
+        "innererror": {
+          "type": "object",
+          "description": "The structure of this object is service-specific"
+        }
+      }
+    },
+    "odata.error.detail": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
