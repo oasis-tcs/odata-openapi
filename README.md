@@ -30,11 +30,22 @@
 <p>Please see the <a href="https://github.com/oasis-tcs/odata-openapi/blob/master/LICENSE.md">LICENSE</a> file for description of the license terms and OASIS policies applicable to the TC's work in this GitHub project. Content in this repository is intended to be part of the OData TC's permanent record of activity, visible and freely available for all to use, subject to applicable OASIS policies, as presented in the repository <a href="https://github.com/oasis-tcs/odata-openapi/blob/master/LICENSE.md">LICENSE</a> file.</p>
 </div>
 
-<div>
+
 <h3>Further Description of this Repository</h3>
 
-<p>[Any narrative content may be provided here by the TC, for example, if the Members wish to provide an extended statement of purpose.]</p>
-</div>
+The `examples` folder contains OpenAPI descriptions have been created from the XML `$metadata` documents of live and example OData services with the [V4-CSDL-to-OpenAPI.xsl](tools/V4-CSDL-to-OpenAPI.xsl) XSL transformation in the `tools` folder. 
+
+The entity-relationship diagrams visualizing the resource models of each service are generated on-the-fly with [yUML](http://yuml.me/).
+
+OpenAPI descriptions for live example OData services at [www.odata.org](http://www.odata.org/)
+
+ - [Simple read/write service](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/ralfhandl/odata/master/example.openapi.json)
+ - [TripPin (read/write)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/ralfhandl/odata/master/TripPin.openapi.json)
+ - [Northwind (read)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/ralfhandl/odata/master/Northwind.openapi.json)
+
+OpenAPI descriptions for OData services that reference each other (cross-service references)
+ - [People](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/ralfhandl/odata/master/People.openapi.json)
+ - [Products](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/ralfhandl/odata/master/Products.openapi.json)
 
 <div>
 
