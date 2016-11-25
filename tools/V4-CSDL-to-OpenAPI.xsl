@@ -8,7 +8,6 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - Vocabulary references: link to github/*.md files for OASIS vocabularies
     - Inline definitions for odata.error*, Edm.* to make OpenAPI documents self-contained
     - remove unused templates: x-, callers of lowerCamelCase, annotations, ...
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see https://issues.oasis-open.org/browse/ODATA-856,
@@ -39,7 +38,7 @@
   <xsl:param name="scheme" select="'http'" />
   <xsl:param name="host" select="'localhost'" />
   <xsl:param name="basePath" select="'/service-root'" />
-  <xsl:param name="odata-schema" select="'https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json'" />
+  <xsl:param name="odata-schema" select="'https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json'" />
   <xsl:param name="odata-version" select="'4.0'" />
   <xsl:param name="vocabulary-home" select="'http://localhost/examples'" />
   <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui'" />
@@ -2710,7 +2709,6 @@
     <xsl:param name="url" />
     <xsl:variable name="jsonUrl">
       <xsl:choose>
-        <!-- TODO: intentionally broken :-) -->
         <xsl:when test="substring($url,string-length($url)-3) = '.xml'">
           <xsl:choose>
             <xsl:when test="substring($url,1,33) = 'http://docs.oasis-open.org/odata/'">
@@ -2723,7 +2721,6 @@
                 </xsl:call-template>
               </xsl:variable>
               <xsl:value-of select="substring($filename,1,string-length($filename)-4)" />
-              <!-- TODO: no .openapi in final destination -->
               <xsl:value-of select="'.openapi.json'" />
             </xsl:when>
             <xsl:otherwise>
