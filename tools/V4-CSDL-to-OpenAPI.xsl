@@ -8,6 +8,8 @@
     Latest version: https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/examples/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
+    - Vocabulary references: link to github/*.md files for OASIS vocabularies
+    - Inline definitions for odata.error*, Edm.* to make OpenAPI documents self-contained
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see https://issues.oasis-open.org/browse/ODATA-856,
     inline and explace style
     - annotations within edm:UrlRef, with string value and expression value of edm:UrlRef

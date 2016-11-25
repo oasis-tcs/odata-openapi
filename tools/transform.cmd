@@ -32,6 +32,6 @@ exit /b
   c:\git\yajl\build\yajl-2.1.1\bin\json_reformat.exe < %~n1.jsontmp > ..\examples\%~n1.openapi.json
   if not errorlevel 1 (
     del %~n1.jsontmp
-    git.exe diff ..\examples\%~n1.openapi.json
+    git.exe --no-pager diff ..\examples\%~n1.openapi.json
   )
 exit /b
