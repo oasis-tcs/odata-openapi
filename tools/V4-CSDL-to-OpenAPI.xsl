@@ -365,17 +365,26 @@
     <xsl:text>\n- [</xsl:text>
     <xsl:value-of select="@Namespace" />
     <xsl:text>](</xsl:text>
-    <xsl:value-of select="$swagger-ui" />
-    <xsl:text>/?url=</xsl:text>
-    <xsl:call-template name="replace-all">
-      <xsl:with-param name="string">
-        <xsl:call-template name="json-url">
-          <xsl:with-param name="url" select="../@Uri" />
+    <xsl:choose>
+      <xsl:when test="substring(@Namespace,1,10)='Org.OData.'">
+        <xsl:text>https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/</xsl:text>
+        <xsl:value-of select="@Namespace" />
+        <xsl:text>.md</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$swagger-ui" />
+        <xsl:text>/?url=</xsl:text>
+        <xsl:call-template name="replace-all">
+          <xsl:with-param name="string">
+            <xsl:call-template name="json-url">
+              <xsl:with-param name="url" select="../@Uri" />
+            </xsl:call-template>
+          </xsl:with-param>
+          <xsl:with-param name="old" select="')'" />
+          <xsl:with-param name="new" select="'%29'" />
         </xsl:call-template>
-      </xsl:with-param>
-      <xsl:with-param name="old" select="')'" />
-      <xsl:with-param name="new" select="'%29'" />
-    </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>)</xsl:text>
   </xsl:template>
 
