@@ -356,6 +356,10 @@
         <xsl:value-of select="@Namespace" />
         <xsl:text>.md</xsl:text>
       </xsl:when>
+      <xsl:when test="substring(@Namespace,1,21)='com.sap.vocabularies.'">
+        <xsl:text>https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+</xsl:text>
+        <xsl:value-of select="substring(@Namespace,22,string-length(@Namespace)-24)" />
+      </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$swagger-ui" />
         <xsl:text>/?url=</xsl:text>
