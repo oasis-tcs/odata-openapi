@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="edmx1 edm2 edm sap m" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="1.0" exclude-result-prefixes="edmx1 edm2 edm m annotation sap" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edmx1="http://schemas.microsoft.com/ado/2007/06/edmx"
-  xmlns:edm2="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:sap="http://www.sap.com/Protocols/SAPData"
-  xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://docs.oasis-open.org/odata/ns/edm"
+  xmlns:edm2="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:edm3="http://schemas.microsoft.com/ado/2009/11/edm"
+  xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
+  xmlns:sap="http://www.sap.com/Protocols/SAPData" xmlns="http://docs.oasis-open.org/odata/ns/edm"
 >
   <!--
 
@@ -11,7 +12,7 @@
     The retired primitive type Edm.DateTime is translated into Edm.DateTimeOffset or Edm.Date.
     The retired primitive type Edm.Time is translated into Edm.TimeOfDay.
 
-    In addition the SAP annotations are translated into corresponding V4 annotations in the OASIS or SAP vocabularies.
+    In addition SAP annotations are translated into corresponding V4 annotations in the OASIS or SAP vocabularies.
 
   -->
   <xsl:strip-space elements="*" />
@@ -40,17 +41,18 @@
           <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation" />
         </edmx:Reference>
       </xsl:if>
-
-      <edmx:Reference Uri="http://localhost/examples/Common.xml">
-        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common" />
-      </edmx:Reference>
+      <xsl:if test="//@sap:*">
+        <edmx:Reference Uri="https://wiki.scn.sap.com/wiki/download/attachments/448470974/Common.xml">
+          <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common" />
+        </edmx:Reference>
+      </xsl:if>
       <xsl:if test="//@sap:aggregation-role">
         <edmx:Reference Uri="http://localhost/examples/Analytis.xml">
           <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics" />
         </edmx:Reference>
       </xsl:if>
       <xsl:if test="//@sap:semantics[.='email' or .='tel']">
-        <edmx:Reference Uri="http://localhost/examples/Communication.xml">
+        <edmx:Reference Uri="https://wiki.scn.sap.com/wiki/download/attachments/448470971/Communication.xml">
           <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication" />
         </edmx:Reference>
       </xsl:if>
@@ -117,6 +119,10 @@
       </xsl:if>
       <xsl:apply-templates select="@DefaultValue|@MaxLength|@Precision|@Scale|@Unicode|@SRID|@sap:*|node()" />
     </Property>
+  </xsl:template>
+
+  <xsl:template match="@MaxLength[.='Max']">
+    <xsl:attribute name="MaxLength"><xsl:value-of select="'max'" /> </xsl:attribute>
   </xsl:template>
 
   <xsl:template match="edm2:NavigationProperty">
@@ -396,7 +402,6 @@
     </Annotation>
   </xsl:template>
 
-
   <xsl:template match="@sap:unit">
     <xsl:variable name="path" select="." />
     <xsl:choose>
@@ -582,6 +587,7 @@
   <xsl:template match="edm2:Association|edm2:AssociationSet|edm2:Using" />
   <xsl:template match="@Collation|@FixedLength|@Mode|edm2:Parameter/@DefaultValue" />
   <xsl:template match="@m:IsDefaultEntityContainer" />
+  <xsl:template match="@annotation:*" />
 
   <!-- literally copy from edm2 to edm namespace -->
   <xsl:template match="edm2:*">
@@ -591,7 +597,7 @@
   </xsl:template>
 
   <!-- literally copy OData 4.0 edm elements -->
-  <xsl:template match="@edm:*|edm:*">
+  <xsl:template match="edm:*">
     <xsl:element name="{name()}">
       <xsl:apply-templates select="@*|node()" />
     </xsl:element>
