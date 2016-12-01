@@ -29,6 +29,10 @@ exit /b
     java.exe org.apache.xalan.xslt.Process -XSL V2-to-V4-CSDL.xsl -IN ..\examples\%1 -OUT %~n1.V4.xml
     set VERSION=2.0
     set INPUT=%~n1.V4.xml
+  ) else if [%5]==[V3] (
+    java.exe org.apache.xalan.xslt.Process -XSL V2-to-V4-CSDL.xsl -IN ..\examples\%1 -OUT %~n1.V4.xml
+    set VERSION=3.0
+    set INPUT=%~n1.V4.xml
   ) else (
     set VERSION=4.0
     set INPUT=..\examples\%1
@@ -40,6 +44,7 @@ exit /b
   if not errorlevel 1 (
     del %~n1.jsontmp
     if [%5]==[V2] del %~n1.V4.xml
+    if [%5]==[V3] del %~n1.V4.xml
     git.exe --no-pager diff ..\examples\%~n1.openapi.json
   )
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="edmx1 edm2 edm m annotation sap" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="1.0" exclude-result-prefixes="edmx1 edm2 edm3 edm m annotation sap" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edmx1="http://schemas.microsoft.com/ado/2007/06/edmx"
   xmlns:edm2="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:edm3="http://schemas.microsoft.com/ado/2009/11/edm"
   xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
@@ -7,7 +7,7 @@
 >
   <!--
 
-    This style sheet transforms OData 2.0 $metadata documents into OData 4.0 CSDL documents.
+    This style sheet transforms OData 2.0 or 3.0 $metadata documents into OData 4.0 CSDL documents.
     Existing constructs that have an equivalent in V4 are automatically translated.
     The retired primitive type Edm.DateTime is translated into Edm.DateTimeOffset or Edm.Date.
     The retired primitive type Edm.Time is translated into Edm.TimeOfDay.
@@ -21,14 +21,18 @@
 
   <xsl:template match="edmx1:Edmx">
     <edmx:Edmx Version="4.0">
-      <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/vocabularies/Org.OData.Core.V1.xml">
-        <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
-      </edmx:Reference>
-      <edmx:Reference
-        Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/vocabularies/Org.OData.Capabilities.V1.xml"
-      >
-        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
-      </edmx:Reference>
+      <xsl:if test="//edm2:Summary|//edm2:LongDescription|//edm3:Summary|//edm3:LongDescription|//@sap:*">
+        <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/vocabularies/Org.OData.Core.V1.xml">
+          <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
+        </edmx:Reference>
+      </xsl:if>
+      <xsl:if test="//@sap:*">
+        <edmx:Reference
+          Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/vocabularies/Org.OData.Capabilities.V1.xml"
+        >
+          <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
+        </edmx:Reference>
+      </xsl:if>
       <xsl:if test="//@sap:unit">
         <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/vocabularies/Org.OData.Measures.V1.xml">
           <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures" />
@@ -84,16 +88,16 @@
     </edmx:DataServices>
   </xsl:template>
 
-  <xsl:template match="edm2:Schema">
+  <xsl:template match="edm2:Schema|edm3:Schema">
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <xsl:copy-of select="@Namespace|@Alias" />
       <xsl:apply-templates />
-      <xsl:apply-templates select="edm2:EntityContainer[@m:IsDefaultEntityContainer='true']/edm2:FunctionImport"
-        mode="Schema" />
+      <xsl:apply-templates
+        select="*[local-name()='EntityContainer' and @m:IsDefaultEntityContainer='true']/*[local-name()='FunctionImport']" mode="Schema" />
     </Schema>
   </xsl:template>
 
-  <xsl:template match="edm2:EntityContainer">
+  <xsl:template match="edm2:EntityContainer|edm3:EntityContainer">
     <xsl:if test="@m:IsDefaultEntityContainer='true'">
       <EntityContainer>
         <xsl:apply-templates select="@*|node()" />
@@ -101,7 +105,7 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="edm2:Property">
+  <xsl:template match="edm2:Property|edm3:Property">
     <Property>
       <xsl:copy-of select="@Name" />
       <xsl:attribute name="Type">
@@ -122,10 +126,10 @@
   </xsl:template>
 
   <xsl:template match="@MaxLength[.='Max']">
-    <xsl:attribute name="MaxLength"><xsl:value-of select="'max'" /> </xsl:attribute>
+    <xsl:attribute name="MaxLength">max</xsl:attribute>
   </xsl:template>
 
-  <xsl:template match="edm2:NavigationProperty">
+  <xsl:template match="edm2:NavigationProperty|edm3:NavigationProperty">
     <NavigationProperty>
       <xsl:copy-of select="@Name" />
       <!-- Extract @Type and @Multiplicity from matching Association/End -->
@@ -138,8 +142,10 @@
       </xsl:variable>
       <xsl:variable name="fromrole" select="@FromRole" />
       <xsl:variable name="torole" select="@ToRole" />
-      <xsl:variable name="type" select="../../edm2:Association[@Name=$assoc]/edm2:End[@Role=$torole]/@Type" />
-      <xsl:variable name="mult" select="../../edm2:Association[@Name=$assoc]/edm2:End[@Role=$torole]/@Multiplicity" />
+      <xsl:variable name="type"
+        select="../../edm2:Association[@Name=$assoc]/edm2:End[@Role=$torole]/@Type|../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$torole]/@Type" />
+      <xsl:variable name="mult"
+        select="../../edm2:Association[@Name=$assoc]/edm2:End[@Role=$torole]/@Multiplicity|../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$torole]/@Multiplicity" />
       <xsl:attribute name="Type">
         <xsl:choose>
           <xsl:when test="$mult='*'"><xsl:value-of select="concat('Collection(',$type,')')" /></xsl:when>
@@ -150,31 +156,32 @@
         <xsl:attribute name="Nullable">false</xsl:attribute>
       </xsl:if>
       <xsl:variable name="partner"
-        select="../../edm2:EntityType/edm2:NavigationProperty[@Relationship=$relation and @FromRole=$torole]/@Name" />
+        select="../../edm2:EntityType/edm2:NavigationProperty[@Relationship=$relation and @FromRole=$torole]/@Name|../../edm3:EntityType/edm3:NavigationProperty[@Relationship=$relation and @FromRole=$torole]/@Name" />
       <xsl:if test="$partner">
         <xsl:attribute name="Partner">
           <xsl:value-of select="$partner" />
         </xsl:attribute>
       </xsl:if>
-      <xsl:apply-templates mode="NavProp" select="../../edm2:Association[@Name=$assoc]/edm2:End[@Role=$fromrole]/edm2:OnDelete" />
       <xsl:apply-templates mode="NavProp"
-        select="../../edm2:Association[@Name=$assoc]/edm2:ReferentialConstraint/edm2:Principal[@Role=$torole]" />
+        select="../../edm2:Association[@Name=$assoc]/edm2:End[@Role=$fromrole]/edm2:OnDelete|../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$fromrole]/edm3:OnDelete" />
+      <xsl:apply-templates mode="NavProp"
+        select="../../edm2:Association[@Name=$assoc]/edm2:ReferentialConstraint/edm2:Principal[@Role=$torole]|../../edm3:Association[@Name=$assoc]/edm3:ReferentialConstraint/edm3:Principal[@Role=$torole]" />
       <xsl:apply-templates />
     </NavigationProperty>
   </xsl:template>
 
-  <xsl:template match="edm2:OnDelete" mode="NavProp">
+  <xsl:template match="edm2:OnDelete|edm3:OnDelete" mode="NavProp">
     <OnDelete>
       <xsl:copy-of select="@Action" />
       <xsl:apply-templates />
     </OnDelete>
   </xsl:template>
 
-  <xsl:template match="edm2:PropertyRef" mode="NavProp">
+  <xsl:template match="edm2:PropertyRef|edm3:PropertyRef" mode="NavProp">
     <xsl:variable name="index" select="position()" />
     <ReferentialConstraint>
       <xsl:attribute name="Property">
-        <xsl:value-of select="../../edm2:Dependent/edm2:PropertyRef[$index]/@Name" />
+        <xsl:value-of select="../../edm2:Dependent/edm2:PropertyRef[$index]/@Name|../../edm3:Dependent/edm2:PropertyRef[$index]/@Name" />
       </xsl:attribute>
       <xsl:attribute name="ReferencedProperty">
         <xsl:value-of select="@Name" />
@@ -182,7 +189,7 @@
     </ReferentialConstraint>
   </xsl:template>
 
-  <xsl:template match="edm2:EntitySet">
+  <xsl:template match="edm2:EntitySet|edm3:EntitySet">
     <xsl:variable name="qualifier">
       <xsl:call-template name="substring-before-last">
         <xsl:with-param name="input" select="@EntityType" />
@@ -210,7 +217,9 @@
     <EntitySet>
       <xsl:copy-of select="@Name|@EntityType" />
       <xsl:apply-templates select="@sap:*|node()" />
-      <xsl:apply-templates select="../edm2:AssociationSet/edm2:End[@EntitySet=$name]" mode="Binding">
+      <xsl:apply-templates select="../edm2:AssociationSet/edm2:End[@EntitySet=$name]|../edm3:AssociationSet/edm3:End[@EntitySet=$name]"
+        mode="Binding"
+      >
         <xsl:with-param name="entitytype" select="@EntityType" />
       </xsl:apply-templates>
 
@@ -228,16 +237,17 @@
     </EntitySet>
   </xsl:template>
 
-  <xsl:template match="edm2:AssociationSet/edm2:End" mode="Binding">
+  <xsl:template match="edm2:AssociationSet/edm2:End|edm3:AssociationSet/edm3:End" mode="Binding">
     <xsl:param name="entitytype" />
     <xsl:variable name="role" select="@Role" />
-    <xsl:variable name="set" select="../edm2:End[not(@Role=$role)]/@EntitySet" />
+    <xsl:variable name="set" select="../edm2:End[not(@Role=$role)]/@EntitySet|../edm3:End[not(@Role=$role)]/@EntitySet" />
     <xsl:variable name="assoc" select="../@Association" />
     <xsl:variable name="navprop"
-      select="../../../edm2:EntityType/edm2:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/@Name" />
+      select="../../../edm2:EntityType/edm2:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/@Name|../../../edm3:EntityType/edm3:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/@Name" />
     <xsl:if test="$navprop">
       <xsl:variable name="namespace" select="../../../@Namespace" />
-      <xsl:variable name="typename" select="../../../*/edm2:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/../@Name" />
+      <xsl:variable name="typename"
+        select="../../../*/edm2:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/../@Name|../../../*/edm3:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/../@Name" />
       <xsl:variable name="type" select="concat($namespace,'.',$typename)" />
       <NavigationPropertyBinding>
         <xsl:attribute name="Target"><xsl:value-of select="$set" /></xsl:attribute>
@@ -250,7 +260,7 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="edm2:FunctionImport">
+  <xsl:template match="edm2:FunctionImport|edm3:FunctionImport">
     <xsl:choose>
       <xsl:when test="@m:HttpMethod='POST'">
         <ActionImport>
@@ -267,7 +277,7 @@
           <xsl:attribute name="Function">
             <xsl:value-of select="../../@Namespace" />.<xsl:value-of select="@Name" />
           </xsl:attribute>
-          <xsl:if test="not(edm2:Parameter)">
+          <xsl:if test="not(*[local-name()='Parameter'])">
             <xsl:attribute name="IncludeInServiceDocument">true</xsl:attribute>
           </xsl:if>
         </FunctionImport>
@@ -275,7 +285,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="edm2:FunctionImport" mode="Schema">
+  <xsl:template match="edm2:FunctionImport|edm3:FunctionImport" mode="Schema">
     <xsl:choose>
       <xsl:when test="@m:HttpMethod='POST'">
         <Action>
@@ -308,7 +318,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="edm2:Function">
+  <xsl:template match="edm2:Function|edm3:Function">
     <Function>
       <xsl:apply-templates select="@Name|node()" />
       <xsl:if test="@ReturnType">
@@ -325,12 +335,12 @@
     </Function>
   </xsl:template>
 
-  <xsl:template match="edm2:Documentation">
+  <xsl:template match="edm2:Documentation|edm3:Documentation">
     <!-- ignore this node and translate children -->
     <xsl:apply-templates />
   </xsl:template>
 
-  <xsl:template match="edm2:Summary">
+  <xsl:template match="edm2:Summary|edm3:Summary">
     <Annotation Term="Core.Description">
       <String>
         <xsl:value-of select="." />
@@ -338,12 +348,67 @@
     </Annotation>
   </xsl:template>
 
-  <xsl:template match="edm2:LongDescription">
+  <xsl:template match="edm2:LongDescription|edm3:LongDescription">
     <Annotation Term="Core.LongDescription">
       <String>
         <xsl:value-of select="." />
       </String>
     </Annotation>
+  </xsl:template>
+
+  <xsl:template match="edm3:ValueTerm">
+    <Term>
+      <xsl:apply-templates select="@*|node()" />
+    </Term>
+  </xsl:template>
+
+  <xsl:template match="edm3:ValueAnnotation">
+    <Annotation>
+      <xsl:apply-templates select="@*|node()" />
+    </Annotation>
+  </xsl:template>
+
+  <xsl:template match="edm3:TypeAnnotation">
+    <Annotation>
+      <xsl:attribute name="Term"><xsl:value-of select="@Term" /></xsl:attribute>
+      <Record>
+        <xsl:apply-templates select="node()" />
+      </Record>
+    </Annotation>
+  </xsl:template>
+
+  <xsl:template match="edm3:Annotations">
+    <Annotations>
+      <xsl:apply-templates select="@*|node()" />
+    </Annotations>
+  </xsl:template>
+
+  <xsl:template match="edm3:Binary">
+    <Binary>
+      <xsl:comment>
+        TODO: convert to base64url
+      </xsl:comment>
+      <xsl:apply-templates select="text()" />
+    </Binary>
+  </xsl:template>
+
+  <xsl:template match="edm3:DateTime">
+    <DateTimeOffset>
+      <xsl:apply-templates select="text()" />
+      <xsl:text>Z</xsl:text>
+    </DateTimeOffset>
+  </xsl:template>
+
+  <xsl:template match="edm3:IsType">
+    <IsOf>
+      <xsl:apply-templates select="@*|node()" />
+    </IsOf>
+  </xsl:template>
+
+  <xsl:template match="edm3:AssertType">
+    <Cast>
+      <xsl:apply-templates select="@*|node()" />
+    </Cast>
   </xsl:template>
 
   <xsl:template match="@Type|@UnderlyingType">
@@ -585,20 +650,14 @@
   <xsl:template match="@sap:is-annotation|@sap:is-extension-field|@sap:is-thing-type" />
   <xsl:template match="@sap:supported-formats" />
   <xsl:template match="edm2:Association|edm2:AssociationSet|edm2:Using" />
-  <xsl:template match="@Collation|@FixedLength|@Mode|edm2:Parameter/@DefaultValue" />
+  <xsl:template match="edm3:Association|edm3:AssociationSet|edm3:Using" />
+  <xsl:template match="@Collation|@FixedLength|@Mode|edm2:Parameter/@DefaultValue|edm3:Parameter/@DefaultValue" />
   <xsl:template match="@m:IsDefaultEntityContainer" />
   <xsl:template match="@annotation:*" />
 
-  <!-- literally copy from edm2 to edm namespace -->
-  <xsl:template match="edm2:*">
+  <!-- literally copy from V2, V3, and V4 edm namespaces -->
+  <xsl:template match="edm:*|edm2:*|edm3:*">
     <xsl:element name="{local-name()}">
-      <xsl:apply-templates select="@*|node()" />
-    </xsl:element>
-  </xsl:template>
-
-  <!-- literally copy OData 4.0 edm elements -->
-  <xsl:template match="edm:*">
-    <xsl:element name="{name()}">
       <xsl:apply-templates select="@*|node()" />
     </xsl:element>
   </xsl:template>
