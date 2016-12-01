@@ -33,7 +33,7 @@
 
 <h3>Further Description of this Repository</h3>
 
-The `examples` folder contains OpenAPI descriptions have been created from the XML `$metadata` documents of live and example OData services with the [V4-CSDL-to-OpenAPI.xsl](tools/V4-CSDL-to-OpenAPI.xsl) XSL transformation in the `tools` folder. 
+The `examples` folder contains OpenAPI descriptions have been created from the XML `$metadata` documents of live and example OData services with the [V4-CSDL-to-OpenAPI.xsl](tools/V4-CSDL-to-OpenAPI.xsl) XSL transformation in the [`tools` folder](tools). 
 
 The entity-relationship diagrams visualizing the resource models of each service are generated on-the-fly with [yUML](http://yuml.me/).
 
