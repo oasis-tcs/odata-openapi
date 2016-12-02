@@ -33,7 +33,9 @@
 
 <h3>Further Description of this Repository</h3>
 
-The `examples` folder contains OpenAPI descriptions have been created from the XML `$metadata` documents of live and example OData services with the [V4-CSDL-to-OpenAPI.xsl](tools/V4-CSDL-to-OpenAPI.xsl) XSL transformation in the [`tools` folder](tools). 
+The OData TC is currently working on the [OData to OpenAPI Mapping Version 1.0](https://www.oasis-open.org/committees/download.php/59500/odata-openapi-v1.0-wd01-2016-11-28.docx), a recommendation on how to create OpenAPI descriptions for OData services, as well as a proof-of-concept implementation of that mapping using XSLT.
+
+The `examples` folder contains OpenAPI descriptions have been created from the XML `$metadata` documents of live and example OData services with the [V4-CSDL-to-OpenAPI.xsl](tools/V4-CSDL-to-OpenAPI.xsl) transformation in the [`tools` folder](tools). 
 
 The entity-relationship diagrams visualizing the resource models of each service are generated on-the-fly with [yUML](http://yuml.me/).
 
