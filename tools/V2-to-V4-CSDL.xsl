@@ -351,7 +351,11 @@
   <xsl:template match="edm2:LongDescription|edm3:LongDescription">
     <Annotation Term="Core.LongDescription">
       <String>
-        <xsl:value-of select="." />
+        <xsl:call-template name="replace-all">
+        <xsl:with-param name="string" select="." />
+        <xsl:with-param name="old" select="'&#x0A;'" />
+        <xsl:with-param name="new" select="'  &#x0A;'" />
+        </xsl:call-template>
       </String>
     </Annotation>
   </xsl:template>
@@ -695,6 +699,26 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$input" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="replace-all">
+    <xsl:param name="string" />
+    <xsl:param name="old" />
+    <xsl:param name="new" />
+    <xsl:choose>
+      <xsl:when test="contains($string,$old)">
+        <xsl:value-of select="substring-before($string,$old)" />
+        <xsl:value-of select="$new" />
+        <xsl:call-template name="replace-all">
+          <xsl:with-param name="string" select="substring-after($string,$old)" />
+          <xsl:with-param name="old" select="$old" />
+          <xsl:with-param name="new" select="$new" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$string" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

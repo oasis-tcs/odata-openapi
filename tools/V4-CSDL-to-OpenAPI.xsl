@@ -77,6 +77,8 @@
     select="//edmx:Include[@Namespace=$commonNamespace]/@Alias|//edm:Schema[@Namespace=$commonNamespace]/@Alias" />
   <xsl:variable name="commonLabel" select="concat($commonNamespace,'.Label')" />
   <xsl:variable name="commonLabelAliased" select="concat($commonAlias,'.Label')" />
+  <xsl:variable name="commonQuickInfo" select="concat($commonNamespace,'.QuickInfo')" />
+  <xsl:variable name="commonQuickInfoAliased" select="concat($commonAlias,'.QuickInfo')" />
 
   <xsl:variable name="defaultResponse">
     <xsl:text>"default":{"$ref":"#/responses/error"}</xsl:text>
@@ -111,7 +113,6 @@
 
   <xsl:template name="Common.Label">
     <xsl:param name="node" />
-    <!-- TODO: consider explace annotations for properties -->
     <xsl:variable name="label"
       select="normalize-space($node/edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/@String|$node/edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/edm:String)" />
     <xsl:variable name="explaceLabel">
@@ -120,6 +121,33 @@
           <xsl:variable name="target" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
           <xsl:value-of
             select="//edm:Annotations[@Target=$target and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/@String" />
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="$label">
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="$label" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="$explaceLabel" />
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="Common.QuickInfo">
+    <xsl:param name="node" />
+    <xsl:variable name="label"
+      select="normalize-space($node/edm:Annotation[(@Term=$commonQuickInfo or @Term=$commonQuickInfoAliased) and not(@Qualifier)]/@String|$node/edm:Annotation[(@Term=$commonQuickInfo or @Term=$commonQuickInfoAliased) and not(@Qualifier)]/edm:String)" />
+    <xsl:variable name="explaceLabel">
+      <xsl:choose>
+        <xsl:when test="local-name($node)='Property'">
+          <xsl:variable name="target" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+          <xsl:value-of
+            select="//edm:Annotations[@Target=$target and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$commonQuickInfo or @Term=$commonQuickInfoAliased) and not(@Qualifier)]/@String" />
         </xsl:when>
       </xsl:choose>
     </xsl:variable>
@@ -1938,23 +1966,32 @@
       </xsl:when>
     </xsl:choose>
 
+    <xsl:variable name="quickinfo">
+      <xsl:call-template name="Common.QuickInfo">
+        <xsl:with-param name="node" select="." />
+      </xsl:call-template>
+    </xsl:variable>
     <xsl:variable name="description">
       <xsl:call-template name="Core.Description">
         <xsl:with-param name="node" select="." />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:variable name="longDescription">
+    <xsl:variable name="longdescription">
       <xsl:call-template name="Core.LongDescription">
         <xsl:with-param name="node" select="." />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="$description!=''">
+    <xsl:if test="$quickinfo!='' or $description!='' or $longdescription!=''">
       <xsl:text>,"description":"</xsl:text>
-      <xsl:value-of select="$description" />
-      <xsl:if test="$longDescription!=''">
-        <xsl:text>\n\n</xsl:text>
-        <xsl:value-of select="$longDescription" />
+      <xsl:value-of select="$quickinfo" />
+      <xsl:if test="$quickinfo!='' and $description!=''">
+        <xsl:text>  \n</xsl:text>
       </xsl:if>
+      <xsl:value-of select="$description" />
+      <xsl:if test="($quickinfo!='' or $description!='') and $longdescription!=''">
+        <xsl:text>  \n</xsl:text>
+      </xsl:if>
+      <xsl:value-of select="$longdescription" />
       <xsl:text>"</xsl:text>
     </xsl:if>
   </xsl:template>
