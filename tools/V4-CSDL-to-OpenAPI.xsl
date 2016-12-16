@@ -1951,8 +1951,10 @@
     <xsl:if test="$description!=''">
       <xsl:text>,"description":"</xsl:text>
       <xsl:value-of select="$description" />
-      <xsl:text> \n\n</xsl:text>
-      <xsl:value-of select="$longDescription" />
+      <xsl:if test="$longDescription!=''">
+        <xsl:text>\n\n</xsl:text>
+        <xsl:value-of select="$longDescription" />
+      </xsl:if>
       <xsl:text>"</xsl:text>
     </xsl:if>
   </xsl:template>
