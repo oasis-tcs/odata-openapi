@@ -56,6 +56,17 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
+  <xsl:variable name="coreLongDescription" select="concat($coreNamespace,'.LongDescription')" />
+  <xsl:variable name="coreLongDescriptionAliased">
+    <xsl:choose>
+      <xsl:when test="$coreAlias">
+        <xsl:value-of select="concat($coreAlias,'.LongDescription')" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="'Core.LongDescription'" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
 
   <xsl:variable name="capabilitiesNamespace" select="'Org.OData.Capabilities.V1'" />
   <xsl:variable name="capabilitiesAlias"
@@ -77,6 +88,15 @@
       select="$node/edm:Annotation[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/@String|$node/edm:Annotation[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/edm:String" />
     <xsl:call-template name="escape">
       <xsl:with-param name="string" select="normalize-space($description)" />
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template name="Core.LongDescription">
+    <xsl:param name="node" />
+    <xsl:variable name="description"
+      select="$node/edm:Annotation[(@Term=$coreLongDescription or @Term=$coreLongDescriptionAliased) and not(@Qualifier)]/@String|$node/edm:Annotation[(@Term=$coreLongDescription or @Term=$coreLongDescriptionAliased) and not(@Qualifier)]/edm:String" />
+    <xsl:call-template name="escape">
+      <xsl:with-param name="string" select="$description" />
     </xsl:call-template>
   </xsl:template>
 
@@ -1923,9 +1943,16 @@
         <xsl:with-param name="node" select="." />
       </xsl:call-template>
     </xsl:variable>
+    <xsl:variable name="longDescription">
+      <xsl:call-template name="Core.LongDescription">
+        <xsl:with-param name="node" select="." />
+      </xsl:call-template>
+    </xsl:variable>
     <xsl:if test="$description!=''">
       <xsl:text>,"description":"</xsl:text>
       <xsl:value-of select="$description" />
+      <xsl:text> \n\n</xsl:text>
+      <xsl:value-of select="$longDescription" />
       <xsl:text>"</xsl:text>
     </xsl:if>
   </xsl:template>
