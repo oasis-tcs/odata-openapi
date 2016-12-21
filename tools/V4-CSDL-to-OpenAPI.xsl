@@ -1006,69 +1006,72 @@
     <xsl:text>":{</xsl:text>
 
     <!-- GET -->
-    <xsl:text>"get":{</xsl:text>
-    <xsl:text>"summary":"Get entities from </xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>","tags":["</xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>"]</xsl:text>
+    <xsl:variable name="addressable" select="edm:Annotation[@Term='TODO.Addressable']/@Bool" />
+    <xsl:if test="not($addressable='false')">
+      <xsl:text>"get":{</xsl:text>
+      <xsl:text>"summary":"Get entities from </xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>","tags":["</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>"]</xsl:text>
 
-    <xsl:text>,"parameters":[</xsl:text>
+      <xsl:text>,"parameters":[</xsl:text>
 
-    <xsl:variable name="top-supported">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'TopSupported'" />
+      <xsl:variable name="top-supported">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'TopSupported'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="not($top-supported='false')">
+        <xsl:text>{"$ref":"#/parameters/top"},</xsl:text>
+      </xsl:if>
+
+      <xsl:variable name="skip-supported">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'SkipSupported'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="not($skip-supported='false')">
+        <xsl:text>{"$ref":"#/parameters/skip"},</xsl:text>
+      </xsl:if>
+
+      <xsl:text>{"$ref":"#/parameters/search"},{"$ref":"#/parameters/filter"},{"$ref":"#/parameters/count"}</xsl:text>
+
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
+        mode="orderby" />
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
+        mode="select" />
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
+        mode="expand" />
+
+      <xsl:text>],"responses":{"200":{"description":"Retrieved entities","schema":{"type":"object"</xsl:text>
+      <xsl:if test="$odata-version='2.0'">
+        <xsl:text>,"title":"Wrapper","properties":{"d":{"type":"object"</xsl:text>
+      </xsl:if>
+      <xsl:text>,"title":"Collection of </xsl:text>
+      <xsl:value-of select="$type" />
+      <xsl:text>"</xsl:text>
+      <xsl:text>,"properties":{</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$odata-version='2.0'">
+          <xsl:text>"results"</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>"value"</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:text>:{"type":"array","items":{</xsl:text>
+      <xsl:call-template name="schema-ref">
+        <xsl:with-param name="qualifiedName" select="$qualifiedType" />
       </xsl:call-template>
-    </xsl:variable>
-    <xsl:if test="not($top-supported='false')">
-      <xsl:text>{"$ref":"#/parameters/top"},</xsl:text>
-    </xsl:if>
-
-    <xsl:variable name="skip-supported">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'SkipSupported'" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:if test="not($skip-supported='false')">
-      <xsl:text>{"$ref":"#/parameters/skip"},</xsl:text>
-    </xsl:if>
-
-    <xsl:text>{"$ref":"#/parameters/search"},{"$ref":"#/parameters/filter"},{"$ref":"#/parameters/count"}</xsl:text>
-
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
-      mode="orderby" />
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
-      mode="select" />
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
-      mode="expand" />
-
-    <xsl:text>],"responses":{"200":{"description":"Retrieved entities","schema":{"type":"object"</xsl:text>
-    <xsl:if test="$odata-version='2.0'">
-      <xsl:text>,"title":"Wrapper","properties":{"d":{"type":"object"</xsl:text>
-    </xsl:if>
-    <xsl:text>,"title":"Collection of </xsl:text>
-    <xsl:value-of select="$type" />
-    <xsl:text>"</xsl:text>
-    <xsl:text>,"properties":{</xsl:text>
-    <xsl:choose>
-      <xsl:when test="$odata-version='2.0'">
-        <xsl:text>"results"</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>"value"</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>:{"type":"array","items":{</xsl:text>
-    <xsl:call-template name="schema-ref">
-      <xsl:with-param name="qualifiedName" select="$qualifiedType" />
-    </xsl:call-template>
-    <xsl:text>}}}</xsl:text>
-    <xsl:if test="$odata-version='2.0'">
+      <xsl:text>}}}</xsl:text>
+      <xsl:if test="$odata-version='2.0'">
+        <xsl:text>}}</xsl:text>
+      </xsl:if>
+      <xsl:text>}},</xsl:text>
+      <xsl:value-of select="$defaultResponse" />
       <xsl:text>}}</xsl:text>
     </xsl:if>
-    <xsl:text>}},</xsl:text>
-    <xsl:value-of select="$defaultResponse" />
-    <xsl:text>}}</xsl:text>
 
     <!-- POST -->
     <xsl:variable name="insertable">
@@ -1077,8 +1080,11 @@
         <xsl:with-param name="property" select="'Insertable'" />
       </xsl:call-template>
     </xsl:variable>
+    <xsl:if test="not($addressable='false') and not($insertable='false')">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
     <xsl:if test="not($insertable='false')">
-      <xsl:text>,"post":{</xsl:text>
+      <xsl:text>"post":{</xsl:text>
       <xsl:text>"summary":"Add new entity to </xsl:text>
       <xsl:value-of select="@Name" />
       <xsl:text>","tags":["</xsl:text>
@@ -1262,35 +1268,38 @@
     <xsl:text>)":{</xsl:text>
 
     <!-- GET -->
-    <xsl:text>"get":{</xsl:text>
-    <xsl:text>"summary":"Get entity from </xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text> by key","tags":["</xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>"]</xsl:text>
-    <xsl:text>,"parameters":[</xsl:text>
-    <xsl:apply-templates
-      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]/edm:Key/edm:PropertyRef"
-      mode="parameter" />
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
-      mode="select" />
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
-      mode="expand" />
-    <xsl:text>],"responses":{"200":{"description":"Retrieved entity","schema":{</xsl:text>
-    <xsl:if test="$odata-version='2.0'">
-      <xsl:text>"title":"</xsl:text>
-      <xsl:value-of select="$type" />
-      <xsl:text>","type":"object","properties":{"d":{</xsl:text>
-    </xsl:if>
-    <xsl:call-template name="schema-ref">
-      <xsl:with-param name="qualifiedName" select="$qualifiedType" />
-    </xsl:call-template>
-    <xsl:if test="$odata-version='2.0'">
+    <xsl:variable name="addressable" select="edm:Annotation[@Term='TODO.Addressable']/@Bool" />
+    <xsl:if test="not($addressable='false')">
+      <xsl:text>"get":{</xsl:text>
+      <xsl:text>"summary":"Get entity from </xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text> by key","tags":["</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>"]</xsl:text>
+      <xsl:text>,"parameters":[</xsl:text>
+      <xsl:apply-templates
+        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]/edm:Key/edm:PropertyRef"
+        mode="parameter" />
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
+        mode="select" />
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
+        mode="expand" />
+      <xsl:text>],"responses":{"200":{"description":"Retrieved entity","schema":{</xsl:text>
+      <xsl:if test="$odata-version='2.0'">
+        <xsl:text>"title":"</xsl:text>
+        <xsl:value-of select="$type" />
+        <xsl:text>","type":"object","properties":{"d":{</xsl:text>
+      </xsl:if>
+      <xsl:call-template name="schema-ref">
+        <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+      </xsl:call-template>
+      <xsl:if test="$odata-version='2.0'">
+        <xsl:text>}}</xsl:text>
+      </xsl:if>
+      <xsl:text>}},</xsl:text>
+      <xsl:value-of select="$defaultResponse" />
       <xsl:text>}}</xsl:text>
     </xsl:if>
-    <xsl:text>}},</xsl:text>
-    <xsl:value-of select="$defaultResponse" />
-    <xsl:text>}}</xsl:text>
 
     <!-- PATCH -->
     <xsl:variable name="updatable">
@@ -1299,8 +1308,11 @@
         <xsl:with-param name="property" select="'Updatable'" />
       </xsl:call-template>
     </xsl:variable>
+    <xsl:if test="not($addressable='false') and not($updatable='false')">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
     <xsl:if test="not($updatable='false')">
-      <xsl:text>,"patch":{</xsl:text>
+      <xsl:text>"patch":{</xsl:text>
       <xsl:text>"summary":"Update entity in </xsl:text>
       <xsl:value-of select="@Name" />
       <xsl:text>","tags":["</xsl:text>
@@ -1342,8 +1354,11 @@
         <xsl:with-param name="property" select="'Deletable'" />
       </xsl:call-template>
     </xsl:variable>
+    <xsl:if test="(not($addressable='false') or not($updatable='false')) and not($deletable='false')">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
     <xsl:if test="not($deletable='false')">
-      <xsl:text>,"delete":{</xsl:text>
+      <xsl:text>"delete":{</xsl:text>
       <xsl:text>"summary":"Delete entity from </xsl:text>
       <xsl:value-of select="@Name" />
       <xsl:text>","tags":["</xsl:text>

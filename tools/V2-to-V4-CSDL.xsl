@@ -602,6 +602,12 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="edm2:EntitySet/@sap:addressable">
+    <xsl:if test=". = 'false'">
+      <Annotation Term="TODO.Addressable" Bool="false" />
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template name="restriction">
     <xsl:param name="capability" />
     <xsl:param name="properties" />
@@ -650,7 +656,7 @@
   </xsl:template>
 
   <!-- ignore -->
-  <xsl:template match="@sap:addressable|@sap:content-version|@sap:display-format[.='Date']" />
+  <xsl:template match="@sap:content-version|@sap:display-format[.='Date']" />
   <xsl:template match="@sap:is-annotation|@sap:is-extension-field|@sap:is-thing-type" />
   <xsl:template match="@sap:supported-formats" />
   <xsl:template match="edm2:Association|edm2:AssociationSet|edm2:Using" />
