@@ -1994,32 +1994,14 @@
       </xsl:when>
     </xsl:choose>
 
-    <xsl:variable name="quickinfo">
-      <xsl:call-template name="Common.QuickInfo">
-        <xsl:with-param name="node" select="." />
-      </xsl:call-template>
-    </xsl:variable>
     <xsl:variable name="description">
-      <xsl:call-template name="Core.Description">
+      <xsl:call-template name="description">
         <xsl:with-param name="node" select="." />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:variable name="longdescription">
-      <xsl:call-template name="Core.LongDescription">
-        <xsl:with-param name="node" select="." />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:if test="$quickinfo!='' or $description!='' or $longdescription!=''">
+    <xsl:if test="$description!=''">
       <xsl:text>,"description":"</xsl:text>
-      <xsl:value-of select="$quickinfo" />
-      <xsl:if test="$quickinfo!='' and $description!=''">
-        <xsl:text>  \n</xsl:text>
-      </xsl:if>
       <xsl:value-of select="$description" />
-      <xsl:if test="($quickinfo!='' or $description!='') and $longdescription!=''">
-        <xsl:text>  \n</xsl:text>
-      </xsl:if>
-      <xsl:value-of select="$longdescription" />
       <xsl:text>"</xsl:text>
     </xsl:if>
   </xsl:template>
