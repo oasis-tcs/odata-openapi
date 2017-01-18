@@ -637,6 +637,14 @@
   </xsl:template>
   <xsl:template match="edm2:Property/@sap:filterable|edm2:Property/@sap:sortable" />
 
+  <xsl:template match="@sap:display-format[.='UpperCase']">
+    <Annotation Term="Common.IsUpperCase" />
+  </xsl:template>
+
+  <xsl:template match="@sap:display-format[.='NonNegative']">
+    <Annotation Term="Common.IsDigitSequence" />
+  </xsl:template>
+
   <xsl:template match="@sap:*">
     <xsl:message>
       <xsl:value-of select="name()" />
@@ -654,6 +662,7 @@
       </xsl:attribute>
     </Annotation>
   </xsl:template>
+
 
   <!-- ignore -->
   <xsl:template match="@sap:content-version|@sap:display-format[.='Date']" />

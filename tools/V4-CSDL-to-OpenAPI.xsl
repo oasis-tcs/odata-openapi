@@ -1577,9 +1577,22 @@
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:text>{"name":"</xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>","in":"path","required":true,"description":"key: </xsl:text>
-    <xsl:value-of select="@Name" />
+    <xsl:value-of select="$name" />
+    <xsl:text>","in":"path","required":true,"description":"</xsl:text>
+    <xsl:variable name="description">
+      <xsl:call-template name="description">
+        <xsl:with-param name="node" select="../../edm:Property[@Name=$name]" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="$description!=''">
+        <xsl:value-of select="$description" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>key: </xsl:text>
+        <xsl:value-of select="$name" />
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>","type":</xsl:text>
     <xsl:choose>
       <xsl:when test="$type='Edm.Int64'">
@@ -2008,6 +2021,36 @@
       </xsl:if>
       <xsl:value-of select="$longdescription" />
       <xsl:text>"</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="description">
+    <xsl:param name="node" />
+    <xsl:variable name="quickinfo">
+      <xsl:call-template name="Common.QuickInfo">
+        <xsl:with-param name="node" select="$node" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="description">
+      <xsl:call-template name="Core.Description">
+        <xsl:with-param name="node" select="$node" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="longdescription">
+      <xsl:call-template name="Core.LongDescription">
+        <xsl:with-param name="node" select="$node" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="$quickinfo!='' or $description!='' or $longdescription!=''">
+      <xsl:value-of select="$quickinfo" />
+      <xsl:if test="$quickinfo!='' and $description!=''">
+        <xsl:text>  \n</xsl:text>
+      </xsl:if>
+      <xsl:value-of select="$description" />
+      <xsl:if test="($quickinfo!='' or $description!='') and $longdescription!=''">
+        <xsl:text>  \n</xsl:text>
+      </xsl:if>
+      <xsl:value-of select="$longdescription" />
     </xsl:if>
   </xsl:template>
 
