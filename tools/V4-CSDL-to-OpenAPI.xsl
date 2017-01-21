@@ -8,6 +8,7 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
+    - URL parameters for V2 function imports
     - Inline definitions for odata.error*, Edm.* to make OpenAPI documents self-contained
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see https://issues.oasis-open.org/browse/ODATA-856,
     inline and explace style
@@ -34,11 +35,21 @@
   <xsl:param name="scheme" select="'http'" />
   <xsl:param name="host" select="'localhost'" />
   <xsl:param name="basePath" select="'/service-root'" />
-  <xsl:param name="odata-schema" select="'https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json'" />
+
+  <xsl:param name="info-title" select="null" />
+  <xsl:param name="info-description" select="null" />
+  <xsl:param name="info-version" select="null" />
+
+  <xsl:param name="externalDocs-url" select="null" />
+  <xsl:param name="externalDocs-description" select="null" />
+
+  <xsl:param name="x-tensions" select="null" />
+
   <xsl:param name="odata-version" select="'4.0'" />
-  <xsl:param name="vocabulary-home" select="'http://localhost/examples'" />
-  <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui'" />
   <xsl:param name="diagram" select="null" />
+
+  <xsl:param name="odata-schema" select="'https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json'" />
+  <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui'" />
   <xsl:param name="openapi-formatoption" select="''" />
 
 
@@ -175,22 +186,25 @@
     <xsl:text>"swagger":"2.0"</xsl:text>
 
     <xsl:text>,"info":{"title":"</xsl:text>
-    <xsl:variable name="title">
+    <xsl:variable name="schemaDescription">
       <xsl:call-template name="Core.Description">
         <xsl:with-param name="node" select="//edm:Schema" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:variable name="containerTitle">
+    <xsl:variable name="containerDescription">
       <xsl:call-template name="Core.Description">
         <xsl:with-param name="node" select="//edm:EntityContainer" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="$title!=''">
-        <xsl:value-of select="$title" />
+      <xsl:when test="$info-title">
+        <xsl:value-of select="$info-title" />
       </xsl:when>
-      <xsl:when test="$containerTitle!=''">
-        <xsl:value-of select="$containerTitle" />
+      <xsl:when test="$schemaDescription!=''">
+        <xsl:value-of select="$schemaDescription" />
+      </xsl:when>
+      <xsl:when test="$containerDescription!=''">
+        <xsl:value-of select="$containerDescription" />
       </xsl:when>
       <xsl:when test="//edm:EntityContainer">
         <xsl:text>OData Service for namespace </xsl:text>
@@ -203,32 +217,40 @@
     </xsl:choose>
 
     <xsl:text>","version":"</xsl:text>
-    <xsl:variable name="version">
-    </xsl:variable>
-    <xsl:call-template name="Core-Annotation">
-      <xsl:with-param name="node" select="//edm:EntityContainer" />
-      <xsl:with-param name="term" select="'SchemaVersion'" />
-    </xsl:call-template>
+    <xsl:choose>
+      <xsl:when test="$info-version">
+        <xsl:value-of select="$info-version" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="Core-Annotation">
+          <xsl:with-param name="node" select="//edm:EntityContainer" />
+          <xsl:with-param name="term" select="'SchemaVersion'" />
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <xsl:text>","description":"</xsl:text>
-    <xsl:variable name="description">
+    <xsl:variable name="schemaLongDescription">
       <xsl:call-template name="Core-Annotation">
         <xsl:with-param name="node" select="//edm:Schema" />
         <xsl:with-param name="term" select="'LongDescription'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:variable name="containerDescription">
+    <xsl:variable name="containerLongDescription">
       <xsl:call-template name="Core-Annotation">
         <xsl:with-param name="node" select="//edm:EntityContainer" />
         <xsl:with-param name="term" select="'LongDescription'" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="$description!=''">
-        <xsl:value-of select="$description" />
+      <xsl:when test="$info-description">
+        <xsl:value-of select="$info-description" />
       </xsl:when>
-      <xsl:when test="$containerDescription!=''">
-        <xsl:value-of select="$containerDescription" />
+      <xsl:when test="$schemaLongDescription!=''">
+        <xsl:value-of select="$schemaLongDescription" />
+      </xsl:when>
+      <xsl:when test="$containerLongDescription!=''">
+        <xsl:value-of select="$containerLongDescription" />
       </xsl:when>
       <xsl:when test="//edm:EntityContainer">
         <xsl:text>This OData service is located at </xsl:text>
@@ -244,6 +266,23 @@
     </xsl:if>
     <xsl:apply-templates select="//edmx:Include" mode="description" />
     <xsl:text>"}</xsl:text>
+
+    <xsl:if test="$externalDocs-url">
+      <xsl:text>,"externalDocs":{</xsl:text>
+      <xsl:if test="$externalDocs-description">
+        <xsl:text>"description":"</xsl:text>
+        <xsl:value-of select="$externalDocs-description" />
+        <xsl:text>",</xsl:text>
+      </xsl:if>
+      <xsl:text>"url":"</xsl:text>
+      <xsl:value-of select="$externalDocs-url" />
+      <xsl:text>"}</xsl:text>
+    </xsl:if>
+
+    <xsl:if test="$x-tensions">
+      <xsl:text>,</xsl:text>
+      <xsl:value-of select="$x-tensions" />
+    </xsl:if>
 
     <xsl:if test="//edm:EntityContainer">
       <xsl:text>,"schemes":["</xsl:text>
@@ -2278,24 +2317,8 @@
     <xsl:variable name="jsonUrl">
       <xsl:choose>
         <xsl:when test="substring($url,string-length($url)-3) = '.xml'">
-          <xsl:choose>
-            <xsl:when test="substring($url,1,33) = 'http://docs.oasis-open.org/odata/'">
-              <xsl:value-of select="$vocabulary-home" />
-              <xsl:text>/</xsl:text>
-              <xsl:variable name="filename">
-                <xsl:call-template name="substring-after-last">
-                  <xsl:with-param name="input" select="$url" />
-                  <xsl:with-param name="marker" select="'/'" />
-                </xsl:call-template>
-              </xsl:variable>
-              <xsl:value-of select="substring($filename,1,string-length($filename)-4)" />
-              <xsl:value-of select="'.openapi.json'" />
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="substring($url,1,string-length($url)-4)" />
-              <xsl:value-of select="'.openapi.json'" />
-            </xsl:otherwise>
-          </xsl:choose>
+          <xsl:value-of select="substring($url,1,string-length($url)-4)" />
+          <xsl:value-of select="'.openapi.json'" />
         </xsl:when>
         <xsl:when test="string-length($url) = 0">
           <xsl:value-of select="$url" />
