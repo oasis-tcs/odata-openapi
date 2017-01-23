@@ -243,17 +243,16 @@
     <xsl:variable name="set" select="../edm2:End[not(@Role=$role)]/@EntitySet|../edm3:End[not(@Role=$role)]/@EntitySet" />
     <xsl:variable name="assoc" select="../@Association" />
     <xsl:variable name="navprop"
-      select="../../../edm2:EntityType/edm2:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/@Name|../../../edm3:EntityType/edm3:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/@Name" />
+      select="//edm2:NavigationProperty[@Relationship=$assoc and @FromRole=$role]|//edm3:NavigationProperty[@Relationship=$assoc and @FromRole=$role]" />
     <xsl:if test="$navprop">
-      <xsl:variable name="namespace" select="../../../@Namespace" />
-      <xsl:variable name="typename"
-        select="../../../*/edm2:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/../@Name|../../../*/edm3:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/../@Name" />
+      <xsl:variable name="namespace" select="$navprop/../../@Namespace" />
+      <xsl:variable name="typename" select="$navprop/../@Name" />
       <xsl:variable name="type" select="concat($namespace,'.',$typename)" />
       <NavigationPropertyBinding>
         <xsl:attribute name="Target"><xsl:value-of select="$set" /></xsl:attribute>
         <xsl:attribute name="Path">
           <xsl:if test="not($type=$entitytype)"><xsl:value-of select="concat($type,'/')" /></xsl:if>
-          <xsl:value-of select="$navprop" />
+          <xsl:value-of select="$navprop/@Name" />
         </xsl:attribute>
         <xsl:apply-templates />
       </NavigationPropertyBinding>
