@@ -8,7 +8,6 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - URL parameters for V2 function imports
     - Inline definitions for odata.error*, Edm.* to make OpenAPI documents self-contained
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see https://issues.oasis-open.org/browse/ODATA-856,
     inline and explace style
