@@ -24,25 +24,25 @@
   <xsl:template match="edmx1:Edmx">
     <edmx:Edmx Version="4.0">
       <xsl:if test="//edm2:Summary|//edm2:LongDescription|//edm3:Summary|//edm3:LongDescription|//@sap:*">
-        <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
           <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
         </edmx:Reference>
       </xsl:if>
       <xsl:if test="//@sap:*">
         <edmx:Reference
-          Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/vocabularies/Org.OData.Capabilities.V1.xml"
+          Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml"
         >
           <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
         </edmx:Reference>
       </xsl:if>
       <xsl:if test="//@sap:unit">
-        <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/vocabularies/Org.OData.Measures.V1.xml">
+        <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.xml">
           <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures" />
         </edmx:Reference>
       </xsl:if>
       <xsl:if test="//@sap:super-ordinate">
         <edmx:Reference
-          Uri="http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs02/vocabularies/Org.OData.Aggregation.V1.xml"
+          Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Aggregation.V1.xml"
         >
           <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation" />
         </edmx:Reference>
@@ -53,7 +53,7 @@
         </edmx:Reference>
       </xsl:if>
       <xsl:if test="//@sap:aggregation-role">
-        <edmx:Reference Uri="http://localhost/examples/Analytis.xml">
+        <edmx:Reference Uri="https://wiki.scn.sap.com/wiki/download/attachments/462030211/Analytics.xml">
           <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics" />
         </edmx:Reference>
       </xsl:if>
