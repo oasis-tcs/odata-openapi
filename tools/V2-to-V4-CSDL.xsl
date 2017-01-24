@@ -6,13 +6,15 @@
   xmlns:sap="http://www.sap.com/Protocols/SAPData" xmlns="http://docs.oasis-open.org/odata/ns/edm"
 >
   <!--
-
     This style sheet transforms OData 2.0 or 3.0 $metadata documents into OData 4.0 CSDL documents.
+
     Existing constructs that have an equivalent in V4 are automatically translated.
     The retired primitive type Edm.DateTime is translated into Edm.DateTimeOffset or Edm.Date.
     The retired primitive type Edm.Time is translated into Edm.TimeOfDay.
 
     In addition SAP annotations are translated into corresponding V4 annotations in the OASIS or SAP vocabularies.
+
+    Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V2-to-V4-CSDL.xsl
 
   -->
   <xsl:strip-space elements="*" />
