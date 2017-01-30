@@ -8,7 +8,9 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - Inline definitions for odata.error*, Edm.* to make OpenAPI documents self-contained
+    - Inline definitions for Edm.* to make OpenAPI documents self-contained
+    - add securityDefinitions script parameter with default "securityDefinitions":{"basic_auth":{"type":"basic","description": "Basic
+    Authentication"}}
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see https://issues.oasis-open.org/browse/ODATA-856,
     inline and explace style
     - complex or collection-valued function parameters need special treatment in /paths - use parameter aliases with alias
@@ -46,6 +48,7 @@
 
   <xsl:param name="odata-version" select="'4.0'" />
   <xsl:param name="diagram" select="null" />
+  <xsl:param name="references" select="null" />
 
   <xsl:param name="odata-schema" select="'https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json'" />
   <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui'" />
@@ -263,7 +266,9 @@
     <xsl:if test="$diagram">
       <xsl:apply-templates select="//edm:EntityType" mode="description" />
     </xsl:if>
-    <xsl:apply-templates select="//edmx:Include" mode="description" />
+    <xsl:if test="$references">
+      <xsl:apply-templates select="//edmx:Include" mode="description" />
+    </xsl:if>
     <xsl:text>"}</xsl:text>
 
     <xsl:if test="$externalDocs-url">
@@ -299,7 +304,9 @@
 
     <xsl:apply-templates select="//edm:EntitySet|//edm:Singleton" mode="tags" />
 
-    <xsl:apply-templates select="//edm:EntityType|//edm:ComplexType|//edm:TypeDefinition|//edm:EnumType" mode="hash">
+    <xsl:apply-templates select="//edm:EntityType|//edm:ComplexType|//edm:TypeDefinition|//edm:EnumType|//edm:EntityContainer"
+      mode="hash"
+    >
       <xsl:with-param name="name" select="'definitions'" />
     </xsl:apply-templates>
 
@@ -322,10 +329,17 @@
       <xsl:text>, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374633)","type":"string"}}</xsl:text>
 
       <xsl:text>,"responses":{"error":{"description":"Error","schema":{"$ref":"</xsl:text>
-      <xsl:value-of select="$odata-schema" />
+      <!-- <xsl:value-of select="$odata-schema" /> -->
       <xsl:text>#/definitions/odata.error"}}}</xsl:text>
     </xsl:if>
     <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <!-- definitions for standard error response - only needed if there's an entity container -->
+  <xsl:template match="edm:EntityContainer" mode="hashpair">
+    <xsl:text>"odata.error":{"type":"object","properties":{"error":{"$ref":"#/definitions/odata.error.main"}}}</xsl:text>
+    <xsl:text>,"odata.error.main":{"type":"object","properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"},"details":{"type":"array","items":{"$ref":"#/definitions/odata.error.detail"}},"innererror":{"type":"object","description":"The structure of this object is service-specific"}}}</xsl:text>
+    <xsl:text>,"odata.error.detail":{"type":"object","properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"}}}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:EntityType" mode="description">
@@ -2159,7 +2173,7 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <!-- pluralize(name) : hash -->
+  <!-- name: hash -->
   <xsl:template match="*" mode="hash">
     <xsl:param name="name" />
     <xsl:param name="key" select="'Name'" />
