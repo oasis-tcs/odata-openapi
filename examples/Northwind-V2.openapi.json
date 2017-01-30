@@ -1555,6 +1555,52 @@
                 }
             },
             "title": "Summary_of_Sales_by_Year"
+        },
+        "odata.error": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/odata.error.main"
+                }
+            }
+        },
+        "odata.error.main": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/odata.error.detail"
+                    }
+                },
+                "innererror": {
+                    "type": "object",
+                    "description": "The structure of this object is service-specific"
+                }
+            }
+        },
+        "odata.error.detail": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                }
+            }
         }
     },
     "paths": {
@@ -8982,7 +9028,7 @@
         "error": {
             "description": "Error",
             "schema": {
-                "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/odata.error"
+                "$ref": "#/definitions/odata.error"
             }
         }
     }
