@@ -338,7 +338,8 @@
   <!-- definitions for standard error response - only needed if there's an entity container -->
   <xsl:template match="edm:EntityContainer" mode="hashpair">
     <xsl:text>"odata.error":{"type":"object","properties":{"error":{"$ref":"#/definitions/odata.error.main"}}}</xsl:text>
-    <xsl:text>,"odata.error.main":{"type":"object","properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"},"details":{"type":"array","items":{"$ref":"#/definitions/odata.error.detail"}},"innererror":{"type":"object","description":"The structure of this object is service-specific"}}}</xsl:text>
+    <xsl:text>,"odata.error.main":{"type":"object","properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"},"details":</xsl:text>
+    <xsl:text>{"type":"array","items":{"$ref":"#/definitions/odata.error.detail"}},"innererror":{"type":"object","description":"The structure of this object is service-specific"}}}</xsl:text>
     <xsl:text>,"odata.error.detail":{"type":"object","properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"}}}</xsl:text>
   </xsl:template>
 
