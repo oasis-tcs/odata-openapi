@@ -1984,16 +1984,12 @@
     <xsl:choose>
       <xsl:when test="$odata-version='2.0'">
         <xsl:text>","in":"query"</xsl:text>
-        <xsl:if test="@Nullable='false'">
-          <xsl:text>,"required":true</xsl:text>
-        </xsl:if>
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>","in":"path"</xsl:text>
-        <xsl:text>,"required":true</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>,</xsl:text>
+    <xsl:text>,"required":true,</xsl:text>
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="nullableFacet" select="@Nullable" />
