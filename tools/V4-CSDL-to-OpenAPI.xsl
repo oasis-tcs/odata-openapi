@@ -44,6 +44,8 @@
   <xsl:param name="externalDocs-url" select="null" />
   <xsl:param name="externalDocs-description" select="null" />
 
+  <xsl:param name="property-longDescription" select="true()" />
+
   <xsl:param name="x-tensions" select="null" />
 
   <xsl:param name="odata-version" select="'4.0'" />
@@ -2068,9 +2070,11 @@
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="longdescription">
-      <xsl:call-template name="Core.LongDescription">
-        <xsl:with-param name="node" select="$node" />
-      </xsl:call-template>
+      <xsl:if test="$property-longDescription">
+        <xsl:call-template name="Core.LongDescription">
+          <xsl:with-param name="node" select="$node" />
+        </xsl:call-template>
+      </xsl:if>
     </xsl:variable>
     <xsl:if test="$quickinfo!='' or $description!='' or $longdescription!=''">
       <xsl:value-of select="$quickinfo" />
