@@ -2076,17 +2076,24 @@
         </xsl:call-template>
       </xsl:if>
     </xsl:variable>
-    <xsl:if test="$quickinfo!='' or $description!='' or $longdescription!=''">
-      <xsl:value-of select="$quickinfo" />
-      <xsl:if test="$quickinfo!='' and $description!=''">
-        <xsl:text>  \n</xsl:text>
-      </xsl:if>
-      <xsl:value-of select="$description" />
-      <xsl:if test="($quickinfo!='' or $description!='') and $longdescription!=''">
-        <xsl:text>  \n</xsl:text>
-      </xsl:if>
-      <xsl:value-of select="$longdescription" />
-    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="$quickinfo!='' or $description!='' or $longdescription!=''">
+        <xsl:value-of select="$quickinfo" />
+        <xsl:if test="$quickinfo!='' and $description!=''">
+          <xsl:text>  \n</xsl:text>
+        </xsl:if>
+        <xsl:value-of select="$description" />
+        <xsl:if test="($quickinfo!='' or $description!='') and $longdescription!=''">
+          <xsl:text>  \n</xsl:text>
+        </xsl:if>
+        <xsl:value-of select="$longdescription" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="Common.Label">
+          <xsl:with-param name="node" select="$node" />
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template name="escape">
