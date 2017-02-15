@@ -180,6 +180,8 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:variable name="key-as-segment"
+    select="//edm:EntityContainer/edm:Annotation[(@Term='Org.OData.Core.V1.KeyAsSegment' or @Term=concat($coreAlias,'.KeyAsSegment')) and not(@Qualifier)]" />
 
   <xsl:template match="edmx:Edmx">
     <!--
@@ -1316,11 +1318,21 @@
     <!-- entity path template -->
     <xsl:text>,"/</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>(</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$key-as-segment">
+        <xsl:text>/</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>(</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:apply-templates
       select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]/edm:Key/edm:PropertyRef"
       mode="path" />
-    <xsl:text>)":{</xsl:text>
+    <xsl:if test="not($key-as-segment)">
+      <xsl:text>)</xsl:text>
+    </xsl:if>
+    <xsl:text>":{</xsl:text>
 
     <!-- GET -->
     <xsl:variable name="addressable" select="edm:Annotation[@Term='TODO.Addressable']/@Bool" />
@@ -1607,7 +1619,9 @@
         test="$type='Edm.Int64' or $type='Edm.Int32' or $type='Edm.Int16' or $type='Edm.SByte' or $type='Edm.Byte' or $type='Edm.Double' or $type='Edm.Single' or $type='Edm.Date' or $type='Edm.DateTimeOffset' or $type='Edm.Guid'" />
       <!-- TODO: handle other Edm types, enumeration types, and type definitions -->
       <xsl:otherwise>
-        <xsl:text>'</xsl:text>
+        <xsl:if test="not($key-as-segment)">
+          <xsl:text>'</xsl:text>
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -1619,7 +1633,9 @@
         test="$type='Edm.Int64' or $type='Edm.Int32' or $type='Edm.Int16' or $type='Edm.SByte' or $type='Edm.Byte' or $type='Edm.Double' or $type='Edm.Single' or $type='Edm.Date' or $type='Edm.DateTimeOffset' or $type='Edm.Guid'" />
       <!-- TODO: handle other Edm types, enumeration types, and type definitions -->
       <xsl:otherwise>
-        <xsl:text>'</xsl:text>
+        <xsl:if test="not($key-as-segment)">
+          <xsl:text>'</xsl:text>
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -1870,10 +1886,19 @@
     <xsl:choose>
       <xsl:when test="$entitySet">
         <xsl:value-of select="$entitySet" />
-        <xsl:text>(</xsl:text>
+        <xsl:choose>
+          <xsl:when test="$key-as-segment">
+            <xsl:text>/</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>(</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
           mode="path" />
-        <xsl:text>)</xsl:text>
+        <xsl:if test="not($key-as-segment)">
+          <xsl:text>)</xsl:text>
+        </xsl:if>
       </xsl:when>
       <xsl:when test="$singleton">
         <xsl:value-of select="$singleton" />
@@ -1881,14 +1906,17 @@
     </xsl:choose>
     <xsl:text>/</xsl:text>
     <xsl:choose>
+      <xsl:when
+        test="../edm:Annotation[(@Term='Org.OData.Core.V1.DefaultNamespace' or @Term=concat($coreAlias,'.DefaultNamespace')) and not(@Qualifier)]" />
       <xsl:when test="../@Alias">
         <xsl:value-of select="../@Alias" />
+        <xsl:text>.</xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="../@Namespace" />
+        <xsl:text>.</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{"post":{</xsl:text>
     <xsl:call-template name="summary-description">
@@ -1937,10 +1965,19 @@
     <xsl:choose>
       <xsl:when test="$entitySet">
         <xsl:value-of select="$entitySet" />
-        <xsl:text>(</xsl:text>
+        <xsl:choose>
+          <xsl:when test="$key-as-segment">
+            <xsl:text>/</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>(</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
           mode="path" />
-        <xsl:text>)</xsl:text>
+        <xsl:if test="not($key-as-segment)">
+          <xsl:text>)</xsl:text>
+        </xsl:if>
       </xsl:when>
       <xsl:when test="$singleton">
         <xsl:value-of select="$singleton" />
@@ -1948,14 +1985,17 @@
     </xsl:choose>
     <xsl:text>/</xsl:text>
     <xsl:choose>
+      <xsl:when
+        test="../edm:Annotation[(@Term='Org.OData.Core.V1.DefaultNamespace' or @Term=concat($coreAlias,'.DefaultNamespace')) and not(@Qualifier)]" />
       <xsl:when test="../@Alias">
         <xsl:value-of select="../@Alias" />
+        <xsl:text>.</xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="../@Namespace" />
+        <xsl:text>.</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>(</xsl:text>
     <xsl:apply-templates select="edm:Parameter[position()>1]" mode="path" />
