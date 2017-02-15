@@ -38,11 +38,11 @@ exit /b
     set INPUT=..\examples\%1
   )
 
-  java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui http://petstore.swagger.io -PARAM diagram YES -PARAM references YES -IN %INPUT% -OUT %~n1.jsontmp
+  java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui http://petstore.swagger.io -PARAM diagram YES -PARAM references YES -IN %INPUT% -OUT %~n1.tmp.json
 
-  c:\git\yajl\build\yajl-2.1.1\bin\json_reformat.exe < %~n1.jsontmp > ..\examples\%~n1.openapi.json
+  c:\git\yajl\build\yajl-2.1.1\bin\json_reformat.exe < %~n1.tmp.json > ..\examples\%~n1.openapi.json
   if not errorlevel 1 (
-    del %~n1.jsontmp
+    del %~n1.tmp.json
     if [%5]==[V2] del %~n1.V4.xml
     if [%5]==[V3] del %~n1.V4.xml
     git.exe --no-pager diff ..\examples\%~n1.openapi.json

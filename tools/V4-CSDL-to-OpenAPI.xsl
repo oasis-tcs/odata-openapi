@@ -8,22 +8,22 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
+    - operation descriptions for entity sets and singletons
+    - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
     - Inline definitions for Edm.* to make OpenAPI documents self-contained
-    - add securityDefinitions script parameter with default "securityDefinitions":{"basic_auth":{"type":"basic","description": "Basic
+    - add securityDefinitions script parameter with default
+    "securityDefinitions":{"basic_auth":{"type":"basic","description": "Basic
     Authentication"}}
-    - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see https://issues.oasis-open.org/browse/ODATA-856,
+    - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, allowed values,
+    see https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Validation.V1.md,
     inline and explace style
-    - complex or collection-valued function parameters need special treatment in /paths - use parameter aliases with alias
-    option of type string
+    - complex or collection-valued function parameters need special treatment in /paths,
+    use parameter aliases with alias option of type string
     - @Extends for entity container: include /paths from referenced container
-    - both "clickable" and freestyle $expand, $select, $orderby - does not work yet, open issue
+    - both "clickable" and freestyle $expand, $select, $orderby - does not work yet, open issue for Swagger UI
     - system query options for actions/functions/imports depending on "Collection("
-    - security/authentication
     - 200 response for PATCH
-    - ETag / If-Match for PATCH
-    - property description for key parameters in single-entity requests - include @Common.Label or @Core.Description
-    - operation descriptions via predefined qualifiers: @Core.Description#GET, #POST, #PATCH (and/or #PUT), #DELETE on entity set,
-    singleton
+    - ETag for GET / If-Match for PATCH depending on @Core.OptimisticConcurrency
     - allow external targeting for @Core.Description similar to @Common.Label
     - remove duplicated code in /paths production
     - Capabilities: SortRestrictions/NonSortableProperties, FilterRestrictions/NonFilterableProperties
@@ -227,7 +227,7 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="Core-Annotation">
-          <xsl:with-param name="node" select="//edm:EntityContainer" />
+          <xsl:with-param name="node" select="//edm:Schema" />
           <xsl:with-param name="term" select="'SchemaVersion'" />
         </xsl:call-template>
       </xsl:otherwise>
@@ -1890,9 +1890,14 @@
     </xsl:choose>
     <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>":{"post":{"summary":"Invoke action </xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>","tags":["</xsl:text>
+    <xsl:text>":{"post":{</xsl:text>
+    <xsl:call-template name="summary-description">
+      <xsl:with-param name="fallback-summary">
+        <xsl:text>Invoke action </xsl:text>
+        <xsl:value-of select="@Name" />
+      </xsl:with-param>
+    </xsl:call-template>
+    <xsl:text>,"tags":["</xsl:text>
     <xsl:value-of select="$entitySet" />
     <xsl:value-of select="$singleton" />
     <xsl:text>"],"parameters":[</xsl:text>
@@ -1954,9 +1959,14 @@
     <xsl:value-of select="@Name" />
     <xsl:text>(</xsl:text>
     <xsl:apply-templates select="edm:Parameter[position()>1]" mode="path" />
-    <xsl:text>)":{"get":{"summary":"Invoke function </xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>","tags":["</xsl:text>
+    <xsl:text>)":{"get":{</xsl:text>
+    <xsl:call-template name="summary-description">
+      <xsl:with-param name="fallback-summary">
+        <xsl:text>Invoke function </xsl:text>
+        <xsl:value-of select="@Name" />
+      </xsl:with-param>
+    </xsl:call-template>
+    <xsl:text>,"tags":["</xsl:text>
     <xsl:value-of select="$entitySet" />
     <xsl:value-of select="$singleton" />
     <xsl:text>"],"parameters":[</xsl:text>
@@ -1975,6 +1985,7 @@
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="nullableFacet" select="@Nullable" />
     </xsl:call-template>
+    <xsl:call-template name="title-description" />
   </xsl:template>
 
   <xsl:template match="edm:Action/edm:Parameter|edm:Function/edm:Parameter" mode="parameter">
@@ -2044,6 +2055,37 @@
         <xsl:text>"</xsl:text>
       </xsl:when>
     </xsl:choose>
+
+    <xsl:variable name="description">
+      <xsl:call-template name="description">
+        <xsl:with-param name="node" select="." />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="$description!=''">
+      <xsl:text>,"description":"</xsl:text>
+      <xsl:value-of select="$description" />
+      <xsl:text>"</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="summary-description">
+    <xsl:param name="fallback-summary" />
+
+    <xsl:variable name="summary">
+      <xsl:call-template name="Common.Label">
+        <xsl:with-param name="node" select="." />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:text>"summary":"</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$summary!=''">
+        <xsl:value-of select="$summary" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$fallback-summary" />
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>"</xsl:text>
 
     <xsl:variable name="description">
       <xsl:call-template name="description">
