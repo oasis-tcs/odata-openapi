@@ -1595,9 +1595,16 @@
     <xsl:variable name="type" select="../../edm:Property[@Name=$name]/@Type" />
     <!-- TODO: inheritance - find key definition in base type (recursively) -->
     <xsl:if test="position()>1">
-      <xsl:text>,</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$key-as-segment">
+          <xsl:text>/</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>,</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
-    <xsl:if test="last()>1">
+    <xsl:if test="last()>1 and not($key-as-segment)">
       <xsl:value-of select="@Name" />
       <xsl:text>=</xsl:text>
     </xsl:if>
