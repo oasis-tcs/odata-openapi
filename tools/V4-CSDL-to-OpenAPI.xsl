@@ -1291,38 +1291,10 @@
       <xsl:value-of select="$type" />
     </xsl:variable>
 
-    <!-- TODO: recursively look for key along BaseType chain -->
-    <xsl:variable name="qualifiedBasetype" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/@BaseType" />
-    <xsl:variable name="basetypeQualifier">
-      <xsl:call-template name="substring-before-last">
-        <xsl:with-param name="input" select="$qualifiedBasetype" />
-        <xsl:with-param name="marker" select="'.'" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="basetypeNamespace">
-      <xsl:choose>
-        <xsl:when test="//edm:Schema[@Alias=$basetypeQualifier]">
-          <xsl:value-of select="//edm:Schema[@Alias=$basetypeQualifier]/@Namespace" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$basetypeQualifier" />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="basetype">
-      <xsl:call-template name="substring-after-last">
-        <xsl:with-param name="input" select="$qualifiedBasetype" />
-        <xsl:with-param name="marker" select="'.'" />
-      </xsl:call-template>
-    </xsl:variable>
-
     <!-- entity path template -->
     <xsl:text>,"/</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="key-in-path" />
-    <xsl:if test="not($key-as-segment)">
-      <xsl:text>)</xsl:text>
-    </xsl:if>
     <xsl:text>":{</xsl:text>
 
     <!-- GET -->
@@ -1335,9 +1307,7 @@
       <xsl:value-of select="@Name" />
       <xsl:text>"]</xsl:text>
       <xsl:text>,"parameters":[</xsl:text>
-      <xsl:apply-templates
-        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]/edm:Key/edm:PropertyRef"
-        mode="parameter" />
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="parameter" />
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
         mode="select" />
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
@@ -1377,9 +1347,7 @@
       <xsl:value-of select="@Name" />
       <xsl:text>"]</xsl:text>
       <xsl:text>,"parameters":[</xsl:text>
-      <xsl:apply-templates
-        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]/edm:Key/edm:PropertyRef"
-        mode="parameter" />
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="parameter" />
       <xsl:text>,{"name":"</xsl:text>
       <xsl:value-of select="$type" />
       <xsl:text>","in":"body"</xsl:text>
@@ -1423,9 +1391,7 @@
       <xsl:value-of select="@Name" />
       <xsl:text>"]</xsl:text>
       <xsl:text>,"parameters":[</xsl:text>
-      <xsl:apply-templates
-        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]/edm:Key/edm:PropertyRef"
-        mode="parameter" />
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="parameter" />
       <xsl:text>,{"name":"If-Match","in":"header","description":"ETag","type":"string"}]</xsl:text>
       <xsl:text>,"responses":{"204":{"description":"Success"},</xsl:text>
       <xsl:value-of select="$defaultResponse" />
@@ -1582,50 +1548,56 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityType" mode="key-in-path">
-    <!-- TODO: BaseType handling -->
-    <!-- TODO: recursively look for key along BaseType chain -->
-    <xsl:variable name="qualifiedBasetype" select="@BaseType" />
-    <xsl:variable name="basetypeQualifier">
-      <xsl:call-template name="substring-before-last">
-        <xsl:with-param name="input" select="$qualifiedBasetype" />
-        <xsl:with-param name="marker" select="'.'" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="basetypeNamespace">
-      <xsl:choose>
-        <xsl:when test="//edm:Schema[@Alias=$basetypeQualifier]">
-          <xsl:value-of select="//edm:Schema[@Alias=$basetypeQualifier]/@Namespace" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$basetypeQualifier" />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="basetype">
-      <xsl:call-template name="substring-after-last">
-        <xsl:with-param name="input" select="$qualifiedBasetype" />
-        <xsl:with-param name="marker" select="'.'" />
-      </xsl:call-template>
-    </xsl:variable>
-
     <xsl:choose>
-      <xsl:when test="$key-as-segment">
-        <xsl:text>/</xsl:text>
+      <xsl:when test="edm:Key">
+        <xsl:choose>
+          <xsl:when test="$key-as-segment">
+            <xsl:text>/</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>(</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+
+        <xsl:apply-templates select="edm:Key/edm:PropertyRef" mode="key-in-path" />
+
+        <xsl:if test="not($key-as-segment)">
+          <xsl:text>)</xsl:text>
+        </xsl:if>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>(</xsl:text>
+        <xsl:variable name="basetypeQualifier">
+          <xsl:call-template name="substring-before-last">
+            <xsl:with-param name="input" select="@BaseType" />
+            <xsl:with-param name="marker" select="'.'" />
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="basetypeNamespace">
+          <xsl:choose>
+            <xsl:when test="//edm:Schema[@Alias=$basetypeQualifier]">
+              <xsl:value-of select="//edm:Schema[@Alias=$basetypeQualifier]/@Namespace" />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$basetypeQualifier" />
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="basetype">
+          <xsl:call-template name="substring-after-last">
+            <xsl:with-param name="input" select="@BaseType" />
+            <xsl:with-param name="marker" select="'.'" />
+          </xsl:call-template>
+        </xsl:variable>
+
+        <xsl:apply-templates select="//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]"
+          mode="key-in-path" />
       </xsl:otherwise>
     </xsl:choose>
-
-    <xsl:apply-templates
-      select="edm:Key/edm:PropertyRef|//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]/edm:Key/edm:PropertyRef"
-      mode="path" />
   </xsl:template>
 
-  <xsl:template match="edm:PropertyRef" mode="path">
+  <xsl:template match="edm:PropertyRef" mode="key-in-path">
     <xsl:variable name="name" select="@Name" />
     <xsl:variable name="type" select="../../edm:Property[@Name=$name]/@Type" />
-    <!-- TODO: inheritance - find key definition in base type (recursively) -->
     <xsl:if test="position()>1">
       <xsl:choose>
         <xsl:when test="$key-as-segment">
@@ -1679,10 +1651,44 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="edm:EntityType" mode="parameter">
+    <xsl:choose>
+      <xsl:when test="edm:Key">
+        <xsl:apply-templates select="edm:Key/edm:PropertyRef" mode="parameter" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="basetypeQualifier">
+          <xsl:call-template name="substring-before-last">
+            <xsl:with-param name="input" select="@BaseType" />
+            <xsl:with-param name="marker" select="'.'" />
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="basetypeNamespace">
+          <xsl:choose>
+            <xsl:when test="//edm:Schema[@Alias=$basetypeQualifier]">
+              <xsl:value-of select="//edm:Schema[@Alias=$basetypeQualifier]/@Namespace" />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$basetypeQualifier" />
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="basetype">
+          <xsl:call-template name="substring-after-last">
+            <xsl:with-param name="input" select="@BaseType" />
+            <xsl:with-param name="marker" select="'.'" />
+          </xsl:call-template>
+        </xsl:variable>
+
+        <xsl:apply-templates select="//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]"
+          mode="parameter" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:template match="edm:PropertyRef" mode="parameter">
     <xsl:variable name="name" select="@Name" />
     <xsl:variable name="type" select="../../edm:Property[@Name=$name]/@Type" />
-    <!-- TODO: inheritance - find key definition in base type (recursively) -->
     <xsl:if test="position()>1">
       <xsl:text>,</xsl:text>
     </xsl:if>
@@ -1925,20 +1931,7 @@
     <xsl:choose>
       <xsl:when test="$entitySet">
         <xsl:value-of select="$entitySet" />
-        <xsl:choose>
-          <xsl:when test="$key-as-segment">
-            <xsl:text>/</xsl:text>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:text>(</xsl:text>
-          </xsl:otherwise>
-        </xsl:choose>
-        <!-- TODO: recursively look for key along BaseType chain -->
-        <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
-          mode="path" />
-        <xsl:if test="not($key-as-segment)">
-          <xsl:text>)</xsl:text>
-        </xsl:if>
+        <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="key-in-path" />
       </xsl:when>
       <xsl:when test="$singleton">
         <xsl:value-of select="$singleton" />
@@ -1970,8 +1963,7 @@
     <xsl:value-of select="$singleton" />
     <xsl:text>"],"parameters":[</xsl:text>
     <xsl:if test="$entitySet">
-      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
-        mode="parameter" />
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="parameter" />
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:text>{"name":"body","in":"body","description":"Action parameters","schema":{"type":"object"</xsl:text>
@@ -2005,19 +1997,7 @@
     <xsl:choose>
       <xsl:when test="$entitySet">
         <xsl:value-of select="$entitySet" />
-        <xsl:choose>
-          <xsl:when test="$key-as-segment">
-            <xsl:text>/</xsl:text>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:text>(</xsl:text>
-          </xsl:otherwise>
-        </xsl:choose>
-        <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
-          mode="path" />
-        <xsl:if test="not($key-as-segment)">
-          <xsl:text>)</xsl:text>
-        </xsl:if>
+        <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="key-in-path" />
       </xsl:when>
       <xsl:when test="$singleton">
         <xsl:value-of select="$singleton" />
@@ -2051,8 +2031,7 @@
     <xsl:value-of select="$singleton" />
     <xsl:text>"],"parameters":[</xsl:text>
     <xsl:apply-templates
-      select="//edm:Schema[@Namespace=$namespace and $entitySet]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|edm:Parameter[position()>1]"
-      mode="parameter" />
+      select="//edm:Schema[@Namespace=$namespace and $entitySet]/edm:EntityType[@Name=$type]|edm:Parameter[position()>1]" mode="parameter" />
     <xsl:text>]</xsl:text>
 
     <xsl:call-template name="responses">
