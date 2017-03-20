@@ -628,7 +628,7 @@
         <xsl:with-param name="nullable" select="$nullable" />
         <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
-        <xsl:text>,"readOnly":true</xsl:text>
+        <xsl:text>,"format":"base64url","title":"Edm.Stream"</xsl:text>
         </xsl:when>
       -->
       <xsl:when test="$singleType='Edm.String'">
@@ -1098,7 +1098,8 @@
         mode="orderby" />
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
         mode="select" />
-      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
+      <xsl:apply-templates
+        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream']"
         mode="expand" />
 
       <xsl:text>],"responses":{"200":{"description":"Retrieved entities","schema":{"type":"object"</xsl:text>
@@ -1239,7 +1240,7 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="edm:NavigationProperty" mode="expand">
+  <xsl:template match="edm:Property|edm:NavigationProperty" mode="expand">
     <xsl:param name="after" select="'something'" />
     <xsl:if test="position()=1">
       <xsl:if test="$after">
@@ -1249,9 +1250,11 @@
       <xsl:text>, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)"</xsl:text>
       <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"},"enum":["*"</xsl:text>
     </xsl:if>
-    <xsl:text>,"</xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>"</xsl:text>
+    <xsl:if test="local-name()='NavigationProperty' or /edmx:Edmx/@Version='4.01'">
+      <xsl:text>,"</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>"</xsl:text>
+    </xsl:if>
     <xsl:if test="position()=last()">
       <xsl:text>]}</xsl:text>
     </xsl:if>
@@ -1310,7 +1313,8 @@
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="parameter" />
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
         mode="select" />
-      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
+      <xsl:apply-templates
+        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream']"
         mode="expand" />
       <xsl:text>],"responses":{"200":{"description":"Retrieved entity","schema":{</xsl:text>
       <xsl:if test="$odata-version='2.0'">
@@ -1471,7 +1475,8 @@
     >
       <xsl:with-param name="after" select="''" />
     </xsl:apply-templates>
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
+    <xsl:apply-templates
+      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream']"
       mode="expand" />
 
     <xsl:text>],"responses":{"200":{"description":"Retrieved entity","schema":{</xsl:text>
