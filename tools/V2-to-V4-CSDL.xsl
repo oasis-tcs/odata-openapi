@@ -29,9 +29,7 @@
         </edmx:Reference>
       </xsl:if>
       <xsl:if test="//@sap:*">
-        <edmx:Reference
-          Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml"
-        >
+        <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
           <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
         </edmx:Reference>
       </xsl:if>
@@ -41,9 +39,7 @@
         </edmx:Reference>
       </xsl:if>
       <xsl:if test="//@sap:super-ordinate">
-        <edmx:Reference
-          Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Aggregation.V1.xml"
-        >
+        <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Aggregation.V1.xml">
           <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation" />
         </edmx:Reference>
       </xsl:if>
@@ -669,6 +665,7 @@
   <xsl:template match="@sap:content-version|@sap:display-format[.='Date']" />
   <xsl:template match="@sap:is-annotation|@sap:is-extension-field|@sap:is-thing-type" />
   <xsl:template match="@sap:supported-formats" />
+  <xsl:template match="@sap:unicode" />
   <xsl:template match="edm2:Association|edm2:AssociationSet|edm2:Using" />
   <xsl:template match="edm3:Association|edm3:AssociationSet|edm3:Using" />
   <xsl:template match="@Collation|@FixedLength|@Mode|edm2:Parameter/@DefaultValue|edm3:Parameter/@DefaultValue" />

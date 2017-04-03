@@ -1204,7 +1204,7 @@
       </xsl:if>
       <xsl:text>{"name":"$orderby","in":"query","description":"Order items by property values</xsl:text>
       <xsl:text>, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374629)"</xsl:text>
-      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"},"enum":[</xsl:text>
+      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string","enum":[</xsl:text>
     </xsl:if>
     <xsl:if test="position()>1">
       <xsl:text>,</xsl:text>
@@ -1215,7 +1215,7 @@
     <xsl:value-of select="@Name" />
     <xsl:text> desc"</xsl:text>
     <xsl:if test="position()=last()">
-      <xsl:text>]}</xsl:text>
+      <xsl:text>]}}</xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -1227,7 +1227,7 @@
       </xsl:if>
       <xsl:text>{"name":"$select","in":"query","description":"Select properties to be returned</xsl:text>
       <xsl:text>, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)"</xsl:text>
-      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"},"enum":[</xsl:text>
+      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string","enum":[</xsl:text>
     </xsl:if>
     <xsl:if test="position()>1">
       <xsl:text>,</xsl:text>
@@ -1236,7 +1236,7 @@
     <xsl:value-of select="@Name" />
     <xsl:text>"</xsl:text>
     <xsl:if test="position()=last()">
-      <xsl:text>]}</xsl:text>
+      <xsl:text>]}}</xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -1248,7 +1248,7 @@
       </xsl:if>
       <xsl:text>{"name":"$expand","in":"query","description":"Expand related entities</xsl:text>
       <xsl:text>, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)"</xsl:text>
-      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"},"enum":["*"</xsl:text>
+      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string","enum":["*"</xsl:text>
     </xsl:if>
     <xsl:if test="local-name()='NavigationProperty' or /edmx:Edmx/@Version='4.01'">
       <xsl:text>,"</xsl:text>
@@ -1256,7 +1256,7 @@
       <xsl:text>"</xsl:text>
     </xsl:if>
     <xsl:if test="position()=last()">
-      <xsl:text>]}</xsl:text>
+      <xsl:text>]}}</xsl:text>
     </xsl:if>
   </xsl:template>
 
