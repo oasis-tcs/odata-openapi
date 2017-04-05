@@ -43,6 +43,11 @@
           <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation" />
         </edmx:Reference>
       </xsl:if>
+      <xsl:if test="//@sap:validation-regexp">
+        <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+          <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation" />
+        </edmx:Reference>
+      </xsl:if>
       <xsl:if test="//@sap:*">
         <edmx:Reference Uri="https://wiki.scn.sap.com/wiki/download/attachments/448470974/Common.xml">
           <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common" />
@@ -640,6 +645,20 @@
 
   <xsl:template match="@sap:display-format[.='NonNegative']">
     <Annotation Term="Common.IsDigitSequence" />
+  </xsl:template>
+
+  <xsl:template match="@sap:validation-regexp">
+    <Annotation Term="Validation.Pattern">
+      <xsl:attribute name="String">
+        <xsl:value-of select="." />
+      </xsl:attribute>
+    </Annotation>
+  </xsl:template>
+
+  <xsl:template match="@sap:default">
+    <xsl:attribute name="DefaultValue">
+      <xsl:value-of select="." />
+    </xsl:attribute>
   </xsl:template>
 
   <xsl:template match="@sap:*">

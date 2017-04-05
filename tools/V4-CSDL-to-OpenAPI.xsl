@@ -8,6 +8,9 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
+    - "type":["string","null"] not supported by Swagger-UI/Editor 3.0.3: bug or "feature"?
+    - - "nullable":true seems to be supported or at least tolerated
+    - odata.error: inline sub-schemas?
     - operation descriptions for entity sets and singletons
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
     - Inline definitions for Edm.* to make OpenAPI documents self-contained
@@ -54,6 +57,7 @@
 
   <xsl:param name="odata-schema" select="'https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json'" />
   <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui'" />
+  <xsl:param name="swagger-ui-major-version" select="'2'" />
   <xsl:param name="openapi-formatoption" select="''" />
 
 
@@ -1204,7 +1208,11 @@
       </xsl:if>
       <xsl:text>{"name":"$orderby","in":"query","description":"Order items by property values</xsl:text>
       <xsl:text>, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374629)"</xsl:text>
-      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string","enum":[</xsl:text>
+      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"</xsl:text>
+      <xsl:if test="$swagger-ui-major-version='2'">
+        <xsl:text>}</xsl:text>
+      </xsl:if>
+      <xsl:text>,"enum":[</xsl:text>
     </xsl:if>
     <xsl:if test="position()>1">
       <xsl:text>,</xsl:text>
@@ -1215,7 +1223,11 @@
     <xsl:value-of select="@Name" />
     <xsl:text> desc"</xsl:text>
     <xsl:if test="position()=last()">
-      <xsl:text>]}}</xsl:text>
+      <xsl:text>]</xsl:text>
+      <xsl:if test="$swagger-ui-major-version!='2'">
+        <xsl:text>}</xsl:text>
+      </xsl:if>
+      <xsl:text>}</xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -1227,7 +1239,11 @@
       </xsl:if>
       <xsl:text>{"name":"$select","in":"query","description":"Select properties to be returned</xsl:text>
       <xsl:text>, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)"</xsl:text>
-      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string","enum":[</xsl:text>
+      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"</xsl:text>
+      <xsl:if test="$swagger-ui-major-version='2'">
+        <xsl:text>}</xsl:text>
+      </xsl:if>
+      <xsl:text>,"enum":[</xsl:text>
     </xsl:if>
     <xsl:if test="position()>1">
       <xsl:text>,</xsl:text>
@@ -1236,7 +1252,11 @@
     <xsl:value-of select="@Name" />
     <xsl:text>"</xsl:text>
     <xsl:if test="position()=last()">
-      <xsl:text>]}}</xsl:text>
+      <xsl:text>]</xsl:text>
+      <xsl:if test="$swagger-ui-major-version!='2'">
+        <xsl:text>}</xsl:text>
+      </xsl:if>
+      <xsl:text>}</xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -1248,7 +1268,11 @@
       </xsl:if>
       <xsl:text>{"name":"$expand","in":"query","description":"Expand related entities</xsl:text>
       <xsl:text>, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)"</xsl:text>
-      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string","enum":["*"</xsl:text>
+      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"</xsl:text>
+      <xsl:if test="$swagger-ui-major-version='2'">
+        <xsl:text>}</xsl:text>
+      </xsl:if>
+      <xsl:text>,"enum":["*"</xsl:text>
     </xsl:if>
     <xsl:if test="local-name()='NavigationProperty' or /edmx:Edmx/@Version='4.01'">
       <xsl:text>,"</xsl:text>
@@ -1256,7 +1280,11 @@
       <xsl:text>"</xsl:text>
     </xsl:if>
     <xsl:if test="position()=last()">
-      <xsl:text>]}}</xsl:text>
+      <xsl:text>]</xsl:text>
+      <xsl:if test="$swagger-ui-major-version!='2'">
+        <xsl:text>}</xsl:text>
+      </xsl:if>
+      <xsl:text>}</xsl:text>
     </xsl:if>
   </xsl:template>
 

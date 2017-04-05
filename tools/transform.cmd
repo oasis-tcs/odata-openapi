@@ -38,7 +38,7 @@ exit /b
     set INPUT=..\examples\%1
   )
 
-  java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui http://petstore.swagger.io -PARAM diagram YES -PARAM references YES -IN %INPUT% -OUT %~n1.tmp.json
+  java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -IN %INPUT% -OUT %~n1.tmp.json
 
   c:\git\yajl\build\yajl-2.1.1\bin\json_reformat.exe < %~n1.tmp.json > ..\examples\%~n1.openapi.json
   if not errorlevel 1 (
