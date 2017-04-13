@@ -20,51 +20,160 @@
   <xsl:strip-space elements="*" />
   <xsl:output method="xml" indent="yes" />
 
+  <xsl:variable name="Core">
+    <xsl:call-template name="include-alias">
+      <xsl:with-param name="schema" select="'Org.OData.Core.V1'" />
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="Capabilities">
+    <xsl:call-template name="include-alias">
+      <xsl:with-param name="schema" select="'Org.OData.Capabilities.V1'" />
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="Measures">
+    <xsl:call-template name="include-alias">
+      <xsl:with-param name="schema" select="'Org.OData.Measures.V1'" />
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="Aggregation">
+    <xsl:call-template name="include-alias">
+      <xsl:with-param name="schema" select="'Org.OData.Aggregation.V1'" />
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="Validation">
+    <xsl:call-template name="include-alias">
+      <xsl:with-param name="schema" select="'Org.OData.Validation.V1'" />
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="Common">
+    <xsl:call-template name="include-alias">
+      <xsl:with-param name="schema" select="'com.sap.vocabularies.Common.v1'" />
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="Analytics">
+    <xsl:call-template name="include-alias">
+      <xsl:with-param name="schema" select="'com.sap.vocabularies.Analytics.v1'" />
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="Communication">
+    <xsl:call-template name="include-alias">
+      <xsl:with-param name="schema" select="'com.sap.vocabularies.Communication.v1'" />
+    </xsl:call-template>
+  </xsl:variable>
 
   <xsl:template match="edmx1:Edmx">
     <edmx:Edmx Version="4.0">
-      <xsl:if test="//edm2:Summary|//edm2:LongDescription|//edm3:Summary|//edm3:LongDescription|//@sap:*">
-        <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
-          <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
-        </edmx:Reference>
-      </xsl:if>
-      <xsl:if test="//@sap:*">
-        <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
-          <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
-        </edmx:Reference>
-      </xsl:if>
-      <xsl:if test="//@sap:unit">
-        <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.xml">
-          <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures" />
-        </edmx:Reference>
-      </xsl:if>
-      <xsl:if test="//@sap:super-ordinate">
-        <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Aggregation.V1.xml">
-          <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation" />
-        </edmx:Reference>
-      </xsl:if>
-      <xsl:if test="//@sap:validation-regexp">
-        <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
-          <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation" />
-        </edmx:Reference>
-      </xsl:if>
-      <xsl:if test="//@sap:*">
-        <edmx:Reference Uri="https://wiki.scn.sap.com/wiki/download/attachments/448470974/Common.xml">
-          <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common" />
-        </edmx:Reference>
-      </xsl:if>
-      <xsl:if test="//@sap:aggregation-role">
-        <edmx:Reference Uri="https://wiki.scn.sap.com/wiki/download/attachments/462030211/Analytics.xml">
-          <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics" />
-        </edmx:Reference>
-      </xsl:if>
-      <xsl:if test="//@sap:semantics[.='email' or .='tel']">
-        <edmx:Reference Uri="https://wiki.scn.sap.com/wiki/download/attachments/448470971/Communication.xml">
-          <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication" />
-        </edmx:Reference>
-      </xsl:if>
+      <xsl:call-template name="add-reference">
+        <xsl:with-param name="condition" select="//edm2:Summary|//edm2:LongDescription|//edm3:Summary|//edm3:LongDescription|//@sap:*" />
+        <xsl:with-param name="schema" select="'Org.OData.Core.V1'" />
+      </xsl:call-template>
+      <xsl:call-template name="add-reference">
+        <xsl:with-param name="condition" select="//@sap:*" />
+        <xsl:with-param name="schema" select="'Org.OData.Capabilities.V1'" />
+      </xsl:call-template>
+      <xsl:call-template name="add-reference">
+        <xsl:with-param name="condition" select="//@sap:unit" />
+        <xsl:with-param name="schema" select="'Org.OData.Measures.V1'" />
+      </xsl:call-template>
+      <xsl:call-template name="add-reference">
+        <xsl:with-param name="condition" select="//@sap:super-ordinate" />
+        <xsl:with-param name="schema" select="'Org.OData.Aggregation.V1'" />
+      </xsl:call-template>
+      <xsl:call-template name="add-reference">
+        <xsl:with-param name="condition" select="//@sap:validation-regexp" />
+        <xsl:with-param name="schema" select="'Org.OData.Validation.V1'" />
+      </xsl:call-template>
+      <xsl:call-template name="add-reference">
+        <xsl:with-param name="condition" select="//@sap:*" />
+        <xsl:with-param name="schema" select="'com.sap.vocabularies.Common.v1'" />
+        <xsl:with-param name="wikipage" select="'448470974'" />
+      </xsl:call-template>
+      <xsl:call-template name="add-reference">
+        <xsl:with-param name="condition" select="//@sap:aggregation-role" />
+        <xsl:with-param name="schema" select="'com.sap.vocabularies.Analytics.v1'" />
+        <xsl:with-param name="wikipage" select="'462030211'" />
+      </xsl:call-template>
+      <xsl:call-template name="add-reference">
+        <xsl:with-param name="condition" select="//@sap:semantics[.='email' or .='tel']" />
+        <xsl:with-param name="schema" select="'com.sap.vocabularies.Communication.v1'" />
+        <xsl:with-param name="wikipage" select="'448470971'" />
+      </xsl:call-template>
       <xsl:apply-templates />
     </edmx:Edmx>
+  </xsl:template>
+
+  <xsl:template name="include-alias">
+    <xsl:param name="schema" />
+    <xsl:choose>
+      <xsl:when test="//edmx:Include[@Namespace=$schema]/@Alias">
+        <xsl:value-of select="//edmx:Include[@Namespace=$schema]/@Alias" />
+      </xsl:when>
+      <xsl:when test="//edmx:Include[@Namespace=$schema]">
+        <xsl:value-of select="$schema" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="default-alias">
+          <xsl:with-param name="schema" select="$schema" />
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="default-alias">
+    <xsl:param name="schema" />
+    <xsl:call-template name="substring-after-last">
+      <xsl:with-param name="input">
+        <xsl:call-template name="substring-before-last">
+          <xsl:with-param name="input" select="$schema" />
+          <xsl:with-param name="marker" select="'.'" />
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="marker" select="'.'" />
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template name="add-reference">
+    <xsl:param name="condition" />
+    <xsl:param name="schema" />
+    <xsl:param name="wikipage" select="false()" />
+    <xsl:if test="$condition">
+      <xsl:if test="not(//edmx:Include[@Namespace=$schema])">
+        <xsl:variable name="alias">
+          <xsl:call-template name="default-alias">
+            <xsl:with-param name="schema" select="$schema" />
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="uri">
+          <xsl:choose>
+            <xsl:when test="substring($schema,1,10)='Org.OData.'">
+              <xsl:text>https://oasis-tcs.github.io/odata-vocabularies/vocabularies/</xsl:text>
+              <xsl:value-of select="$schema" />
+              <xsl:text>.xml</xsl:text>
+            </xsl:when>
+            <xsl:when test="$wikipage">
+              <xsl:text>https://wiki.scn.sap.com/wiki/download/attachments/</xsl:text>
+              <xsl:value-of select="$wikipage" />
+              <xsl:text>/</xsl:text>
+              <xsl:value-of select="$alias" />
+              <xsl:text>.xml</xsl:text>
+            </xsl:when>
+          </xsl:choose>
+        </xsl:variable>
+        <edmx:Reference>
+          <xsl:attribute name="Uri">
+            <xsl:value-of select="$uri" />
+          </xsl:attribute>
+          <edmx:Include>
+            <xsl:attribute name="Namespace">
+              <xsl:value-of select="$schema" />
+            </xsl:attribute>
+            <xsl:attribute name="Alias">
+              <xsl:value-of select="$alias" />
+            </xsl:attribute>
+          </edmx:Include>
+        </edmx:Reference>
+      </xsl:if>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edmx:Reference">
@@ -343,7 +452,11 @@
   </xsl:template>
 
   <xsl:template match="edm2:Summary|edm3:Summary">
-    <Annotation Term="Core.Description">
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Core" />
+        <xsl:text>.Description</xsl:text>
+      </xsl:attribute>
       <String>
         <xsl:value-of select="." />
       </String>
@@ -351,7 +464,11 @@
   </xsl:template>
 
   <xsl:template match="edm2:LongDescription|edm3:LongDescription">
-    <Annotation Term="Core.LongDescription">
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Core" />
+        <xsl:text>.LongDescription</xsl:text>
+      </xsl:attribute>
       <String>
         <xsl:call-template name="replace-all">
         <xsl:with-param name="string" select="." />
@@ -442,7 +559,11 @@
   </xsl:template>
 
   <xsl:template match="@sap:label">
-    <Annotation Term="Common.Label">
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Common" />
+        <xsl:text>.Label</xsl:text>
+      </xsl:attribute>
       <xsl:attribute name="String">
         <xsl:value-of select="." />
       </xsl:attribute>
@@ -450,7 +571,11 @@
   </xsl:template>
 
   <xsl:template match="@sap:heading">
-    <Annotation Term="Common.Heading">
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Common" />
+        <xsl:text>.Heading</xsl:text>
+      </xsl:attribute>
       <xsl:attribute name="String">
         <xsl:value-of select="." />
       </xsl:attribute>
@@ -458,7 +583,11 @@
   </xsl:template>
 
   <xsl:template match="@sap:quickinfo">
-    <Annotation Term="Common.QuickInfo">
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Common" />
+        <xsl:text>.QuickInfo</xsl:text>
+      </xsl:attribute>
       <xsl:attribute name="String">
         <xsl:value-of select="." />
       </xsl:attribute>
@@ -466,7 +595,11 @@
   </xsl:template>
 
   <xsl:template match="@sap:text">
-    <Annotation Term="Common.Text">
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Common" />
+        <xsl:text>.Text</xsl:text>
+      </xsl:attribute>
       <xsl:attribute name="Path">
         <xsl:value-of select="." />
       </xsl:attribute>
@@ -477,14 +610,22 @@
     <xsl:variable name="path" select="." />
     <xsl:choose>
       <xsl:when test="../../edm2:Property[@Name=$path]/@sap:semantics='currency-code'">
-        <Annotation Term="Measures.ISOCurrency">
+        <Annotation>
+          <xsl:attribute name="Term">
+            <xsl:value-of select="$Measures" />
+            <xsl:text>.ISOCurrency</xsl:text>
+          </xsl:attribute>
           <xsl:attribute name="Path">
             <xsl:value-of select="$path" />
           </xsl:attribute>
         </Annotation>
       </xsl:when>
       <xsl:when test="../../edm2:Property[@Name=$path]/@sap:semantics='unit-of-measure'">
-        <Annotation Term="Measures.Unit">
+        <Annotation>
+          <xsl:attribute name="Term">
+            <xsl:value-of select="$Measures" />
+            <xsl:text>.Unit</xsl:text>
+          </xsl:attribute>
           <xsl:attribute name="Path">
             <xsl:value-of select="$path" />
           </xsl:attribute>
@@ -501,7 +642,12 @@
   </xsl:template>
 
   <xsl:template match="edm2:EntityType/@sap:semantics[.='parameters']">
-    <Annotation Term="Common.ResultContext" />
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Common" />
+        <xsl:text>.ResultContext</xsl:text>
+      </xsl:attribute>
+    </Annotation>
   </xsl:template>
   <xsl:template match="edm2:EntityType/@sap:semantics[.='aggregate']" />
 
@@ -509,39 +655,82 @@
   <xsl:template match="edm2:Property/@sap:semantics[.='unit-of-measure']" />
 
   <xsl:template match="edm2:Property/@sap:semantics[.='email']">
-    <Annotation Term="Communication.IsEmailAddress" />
+    <Annotation Term=".IsEmailAddress">
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Communication" />
+        <xsl:text>.IsEmailAddress</xsl:text>
+      </xsl:attribute>
+    </Annotation>
   </xsl:template>
 
   <xsl:template match="edm2:Property/@sap:semantics[.='tel']">
-    <Annotation Term="Communication.IsPhoneNumber" />
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Communication" />
+        <xsl:text>.IsPhoneNumber</xsl:text>
+      </xsl:attribute>
+    </Annotation>
   </xsl:template>
 
   <xsl:template match="edm2:Property/@sap:semantics[.='url']">
-    <Annotation Term="Core.IsURL" />
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Core" />
+        <xsl:text>.IsURL</xsl:text>
+      </xsl:attribute>
+    </Annotation>
   </xsl:template>
 
   <xsl:template match="edm2:Property/@sap:semantics[.='yearmonthday']">
-    <Annotation Term="Common.IsCalendarDate" />
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Common" />
+        <xsl:text>.IsCalendarDate</xsl:text>
+      </xsl:attribute>
+    </Annotation>
   </xsl:template>
 
   <xsl:template match="edm2:Property/@sap:aggregation-role[.='dimension']">
-    <Annotation Term="Analytics.Dimension" />
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Analytics" />
+        <xsl:text>.Dimension</xsl:text>
+      </xsl:attribute>
+    </Annotation>
   </xsl:template>
 
   <xsl:template match="edm2:Property/@sap:aggregation-role[.='measure']">
-    <Annotation Term="Analytics.Measure" />
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Analytics" />
+        <xsl:text>.Measure</xsl:text>
+      </xsl:attribute>
+    </Annotation>
   </xsl:template>
 
   <xsl:template match="edm2:Property/@sap:aggregation-role[.='totaled-properties-list']" />
 
   <xsl:template match="edm2:Property/@sap:parameter[.='mandatory']">
-    <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory" />
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Common" />
+        <xsl:text>.FieldControl</xsl:text>
+      </xsl:attribute>
+      <xsl:attribute name="EnumMember">
+        <xsl:value-of select="$Common" />
+        <xsl:text>.FieldControlType/Mandatory</xsl:text>
+      </xsl:attribute>
+    </Annotation>
   </xsl:template>
 
   <xsl:template match="edm2:Property/@sap:parameter[.='optional']" />
 
   <xsl:template match="edm2:Property/@sap:super-ordinate">
-    <Annotation Term="Aggregation.ContextDefiningProperties">
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Aggregation" />
+        <xsl:text>.ContextDefiningProperties</xsl:text>
+      </xsl:attribute>
       <Collection>
         <xsl:apply-templates select="." mode="propertypath" />
       </Collection>
@@ -557,7 +746,11 @@
 
   <xsl:template match="edm2:EntitySet/@sap:creatable">
     <xsl:if test=". = 'false'">
-      <Annotation Term="Capabilities.InsertRestrictions">
+      <Annotation>
+        <xsl:attribute name="Term">
+          <xsl:value-of select="$Capabilities" />
+          <xsl:text>.InsertRestrictions</xsl:text>
+        </xsl:attribute>
         <Record>
           <PropertyValue Property="Insertable" Bool="false" />
         </Record>
@@ -567,7 +760,11 @@
 
   <xsl:template match="edm2:EntitySet/@sap:updatable">
     <xsl:if test=". = 'false'">
-      <Annotation Term="Capabilities.UpdateRestrictions">
+      <Annotation>
+        <xsl:attribute name="Term">
+          <xsl:value-of select="$Capabilities" />
+          <xsl:text>.UpdateRestrictions</xsl:text>
+        </xsl:attribute>
         <Record>
           <PropertyValue Property="Updatable" Bool="false" />
         </Record>
@@ -577,7 +774,11 @@
 
   <xsl:template match="edm2:EntitySet/@sap:deletable">
     <xsl:if test=". = 'false'">
-      <Annotation Term="Capabilities.DeleteRestrictions">
+      <Annotation>
+        <xsl:attribute name="Term">
+          <xsl:value-of select="$Capabilities" />
+          <xsl:text>.DeleteRestrictions</xsl:text>
+        </xsl:attribute>
         <Record>
           <PropertyValue Property="Deletable" Bool="false" />
         </Record>
@@ -587,8 +788,18 @@
 
   <xsl:template match="edm2:EntitySet/@sap:pageable">
     <xsl:if test=".='false'">
-      <Annotation Term="Capabilities.TopSupported" Bool="false" />
-      <Annotation Term="Capabilities.SkipSupported" Bool="false" />
+      <Annotation Bool="false">
+        <xsl:attribute name="Term">
+          <xsl:value-of select="$Capabilities" />
+          <xsl:text>.TopSupported</xsl:text>
+        </xsl:attribute>
+      </Annotation>
+      <Annotation Bool="false">
+        <xsl:attribute name="Term">
+          <xsl:value-of select="$Capabilities" />
+          <xsl:text>.SkipSupported</xsl:text>
+        </xsl:attribute>
+      </Annotation>
     </xsl:if>
   </xsl:template>
 
@@ -596,10 +807,20 @@
   <xsl:template match="edm2:Property/@sap:updatable">
     <xsl:choose>
       <xsl:when test=".='false' and ../@sap:creatable='false'">
-        <Annotation Term="Core.Computed" />
+        <Annotation>
+          <xsl:attribute name="Term">
+            <xsl:value-of select="$Core" />
+            <xsl:text>.Computed</xsl:text>
+          </xsl:attribute>
+        </Annotation>
       </xsl:when>
       <xsl:when test=".='false'">
-        <Annotation Term="Core.Immutable" />
+        <Annotation>
+          <xsl:attribute name="Term">
+            <xsl:value-of select="$Core" />
+            <xsl:text>.Immutable</xsl:text>
+          </xsl:attribute>
+        </Annotation>
       </xsl:when>
     </xsl:choose>
   </xsl:template>
@@ -640,15 +861,29 @@
   <xsl:template match="edm2:Property/@sap:filterable|edm2:Property/@sap:sortable" />
 
   <xsl:template match="@sap:display-format[.='UpperCase']">
-    <Annotation Term="Common.IsUpperCase" />
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Common" />
+        <xsl:text>.IsUpperCase</xsl:text>
+      </xsl:attribute>
+    </Annotation>
   </xsl:template>
 
   <xsl:template match="@sap:display-format[.='NonNegative']">
-    <Annotation Term="Common.IsDigitSequence" />
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Common" />
+        <xsl:text>.IsDigitSequence</xsl:text>
+      </xsl:attribute>
+    </Annotation>
   </xsl:template>
 
   <xsl:template match="@sap:validation-regexp">
-    <Annotation Term="Validation.Pattern">
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Validation" />
+        <xsl:text>.Pattern</xsl:text>
+      </xsl:attribute>
       <xsl:attribute name="String">
         <xsl:value-of select="." />
       </xsl:attribute>
