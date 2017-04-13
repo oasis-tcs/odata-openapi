@@ -60,6 +60,11 @@
       <xsl:with-param name="schema" select="'com.sap.vocabularies.Communication.v1'" />
     </xsl:call-template>
   </xsl:variable>
+  <xsl:variable name="UI">
+    <xsl:call-template name="include-alias">
+      <xsl:with-param name="schema" select="'com.sap.vocabularies.UI.v1'" />
+    </xsl:call-template>
+  </xsl:variable>
 
   <xsl:template match="edmx1:Edmx">
     <edmx:Edmx Version="4.0">
@@ -97,6 +102,11 @@
         <xsl:with-param name="condition" select="//@sap:semantics[.='email' or .='tel']" />
         <xsl:with-param name="schema" select="'com.sap.vocabularies.Communication.v1'" />
         <xsl:with-param name="wikipage" select="'448470971'" />
+      </xsl:call-template>
+      <xsl:call-template name="add-reference">
+        <xsl:with-param name="condition" select="//@sap:visible" />
+        <xsl:with-param name="schema" select="'com.sap.vocabularies.UI.v1'" />
+        <xsl:with-param name="wikipage" select="'448470968'" />
       </xsl:call-template>
       <xsl:apply-templates />
     </edmx:Edmx>
@@ -723,6 +733,18 @@
     </Annotation>
   </xsl:template>
 
+  <xsl:template match="edm2:Property/@sap:field-control">
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Common" />
+        <xsl:text>.FieldControl</xsl:text>
+      </xsl:attribute>
+      <xsl:attribute name="Path">
+        <xsl:value-of select="." />
+      </xsl:attribute>
+    </Annotation>
+  </xsl:template>
+
   <xsl:template match="edm2:Property/@sap:parameter[.='optional']" />
 
   <xsl:template match="edm2:Property/@sap:super-ordinate">
@@ -781,6 +803,20 @@
         </xsl:attribute>
         <Record>
           <PropertyValue Property="Deletable" Bool="false" />
+        </Record>
+      </Annotation>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="edm2:EntitySet/@sap:searchable">
+    <xsl:if test=".='false'">
+      <Annotation>
+        <xsl:attribute name="Term">
+          <xsl:value-of select="$Capabilities" />
+          <xsl:text>.SearchRestrictions</xsl:text>
+        </xsl:attribute>
+        <Record>
+          <PropertyValue Property="Searchable" Bool="false" />
         </Record>
       </Annotation>
     </xsl:if>
@@ -859,6 +895,18 @@
     </xsl:element>
   </xsl:template>
   <xsl:template match="edm2:Property/@sap:filterable|edm2:Property/@sap:sortable" />
+  <xsl:template match="edm2:Property/@sap:filter-restriction" />
+
+  <xsl:template match="edm2:Property/@sap:visible">
+    <xsl:if test=".='false'">
+      <Annotation>
+        <xsl:attribute name="Term">
+            <xsl:value-of select="$UI" />
+            <xsl:text>.Hidden</xsl:text>
+          </xsl:attribute>
+      </Annotation>
+    </xsl:if>
+  </xsl:template>
 
   <xsl:template match="@sap:display-format[.='UpperCase']">
     <Annotation>
@@ -919,6 +967,7 @@
   <xsl:template match="@sap:content-version|@sap:display-format[.='Date']" />
   <xsl:template match="@sap:is-annotation|@sap:is-extension-field|@sap:is-thing-type" />
   <xsl:template match="@sap:supported-formats" />
+  <xsl:template match="@sap:value-list" />
   <xsl:template match="@sap:unicode" />
   <xsl:template match="edm2:Association|edm2:AssociationSet|edm2:Using" />
   <xsl:template match="edm3:Association|edm3:AssociationSet|edm3:Using" />
