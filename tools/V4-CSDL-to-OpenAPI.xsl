@@ -90,6 +90,9 @@
   <xsl:variable name="capabilitiesNamespace" select="'Org.OData.Capabilities.V1'" />
   <xsl:variable name="capabilitiesAlias"
     select="//edmx:Include[@Namespace=$capabilitiesNamespace]/@Alias|//edm:Schema[@Namespace=$capabilitiesNamespace]/@Alias" />
+  <xsl:variable name="validationNamespace" select="'Org.OData.Validation.V1'" />
+  <xsl:variable name="validationAlias"
+    select="//edmx:Include[@Namespace=$validationNamespace]/@Alias|//edm:Schema[@Namespace=$validationNamespace]/@Alias" />
 
   <xsl:variable name="commonNamespace" select="'com.sap.vocabularies.Common.v1'" />
   <xsl:variable name="commonAlias"
@@ -642,6 +645,8 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:apply-templates select="@MaxLength" />
+        <xsl:call-template name="Validation.AllowedValues" />
+        <xsl:call-template name="Validation.Pattern" />
       </xsl:when>
       <xsl:when test="$singleType='Edm.Binary'">
         <xsl:call-template name="nullableType">
@@ -835,6 +840,35 @@
       </xsl:if>
       <xsl:text>}</xsl:text>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="Validation.Pattern">
+    <xsl:variable name="pattern"
+      select="edm:Annotation[@Term=concat($validationNamespace,'.Pattern') or @Term=concat($validationAlias,'.Pattern')]/@String|edm:Annotation[@Term=concat($validationNamespace,'.Pattern') or @Term=concat($validationAlias,'.Pattern')]/edm:String" />
+    <xsl:if test="$pattern!=''">
+      <xsl:text>,"pattern":"</xsl:text>
+      <xsl:value-of select="$pattern" />
+      <xsl:text>"</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="Validation.AllowedValues">
+    <xsl:variable name="allowedValues"
+      select="edm:Annotation[(@Term=concat($validationNamespace,'.AllowedValues') or @Term=concat($validationAlias,'.AllowedValues')) and not(@Qualifier)]" />
+    <xsl:if test="$allowedValues">
+      <xsl:text>,"enum":[</xsl:text>
+      <xsl:apply-templates select="$allowedValues/edm:Collection/edm:Record" mode="Validation.AllowedValues" />
+      <xsl:text>]</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="edm:Record" mode="Validation.AllowedValues">
+    <xsl:if test="position()>1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="edm:PropertyValue[@Property='Value']/@String|edm:PropertyValue[@Property='Value']/edm:String" />
+    <xsl:text>"</xsl:text>
   </xsl:template>
 
   <xsl:template name="ref">
