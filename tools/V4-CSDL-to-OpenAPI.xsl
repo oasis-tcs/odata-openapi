@@ -10,14 +10,13 @@
     TODO:
     - "type":["string","null"] not supported by Swagger-UI/Editor 3.0.3: bug or "feature"?
     - - "nullable":true seems to be supported or at least tolerated
-    - odata.error: inline sub-schemas?
     - operation descriptions for entity sets and singletons
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
     - Inline definitions for Edm.* to make OpenAPI documents self-contained
     - add securityDefinitions script parameter with default
     "securityDefinitions":{"basic_auth":{"type":"basic","description": "Basic
     Authentication"}}
-    - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, allowed values,
+    - Validation annotations -> minimum, maximum, exclusiveM??imum,
     see https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Validation.V1.md,
     inline and explace style
     - complex or collection-valued function parameters need special treatment in /paths,
@@ -348,10 +347,10 @@
 
   <!-- definitions for standard error response - only needed if there's an entity container -->
   <xsl:template match="edm:EntityContainer" mode="hashpair">
-    <xsl:text>"odata.error":{"type":"object","properties":{"error":{"$ref":"#/definitions/odata.error.main"}}}</xsl:text>
-    <xsl:text>,"odata.error.main":{"type":"object","properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"},"details":</xsl:text>
+    <xsl:text>"odata.error":{"type":"object","required":["error"],"properties":{"error":{"$ref":"#/definitions/odata.error.main"}}}</xsl:text>
+    <xsl:text>,"odata.error.main":{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"},"details":</xsl:text>
     <xsl:text>{"type":"array","items":{"$ref":"#/definitions/odata.error.detail"}},"innererror":{"type":"object","description":"The structure of this object is service-specific"}}}</xsl:text>
-    <xsl:text>,"odata.error.detail":{"type":"object","properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"}}}</xsl:text>
+    <xsl:text>,"odata.error.detail":{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"}}}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:EntityType" mode="description">
@@ -666,7 +665,16 @@
       </xsl:when>
       <xsl:when test="$singleType='Edm.Decimal'">
         <xsl:call-template name="nullableType">
-          <xsl:with-param name="type" select="'number,string'" />
+          <xsl:with-param name="type">
+            <xsl:choose>
+              <xsl:when test="$odata-version='2.0'">
+                <xsl:value-of select="'string'" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="'number,string'" />
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:with-param>
           <xsl:with-param name="nullable" select="$nullable" />
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
@@ -712,6 +720,8 @@
             <xsl:value-of select="$limit" />
             <xsl:text>,"maximum":</xsl:text>
             <xsl:value-of select="$limit" />
+            <xsl:text>,"example":</xsl:text>
+            <xsl:value-of select="$limit" />
           </xsl:if>
         </xsl:if>
       </xsl:when>
@@ -749,7 +759,16 @@
       </xsl:when>
       <xsl:when test="$singleType='Edm.Int64'">
         <xsl:call-template name="nullableType">
-          <xsl:with-param name="type" select="'integer,string'" />
+          <xsl:with-param name="type">
+            <xsl:choose>
+              <xsl:when test="$odata-version='2.0'">
+                <xsl:value-of select="'string'" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="'integer,string'" />
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:with-param>
           <xsl:with-param name="nullable" select="$nullable" />
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
@@ -761,7 +780,15 @@
           <xsl:with-param name="nullable" select="$nullable" />
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
-        <xsl:text>,"format":"date"</xsl:text>
+        <xsl:choose>
+          <xsl:when test="$odata-version='2.0'">
+            <xsl:text>,"example":"/Date(1492041600000)/"</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>,"format":"date"</xsl:text>
+            <xsl:text>,"example":"2017-04-13"</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Double'">
         <xsl:call-template name="nullableType">
@@ -770,6 +797,7 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"double"</xsl:text>
+        <xsl:text>,"example":3.14</xsl:text>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Single'">
         <xsl:call-template name="nullableType">
@@ -778,6 +806,7 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"float"</xsl:text>
+        <xsl:text>,"example":3.14</xsl:text>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Guid'">
         <xsl:call-template name="nullableType">
@@ -786,6 +815,7 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"uuid"</xsl:text>
+        <xsl:text>,"example":"01234567-89ab-cdef-0123-456789abcdef"</xsl:text>
       </xsl:when>
       <xsl:when test="$singleType='Edm.DateTimeOffset'">
         <xsl:call-template name="nullableType">
@@ -793,7 +823,15 @@
           <xsl:with-param name="nullable" select="$nullable" />
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
-        <xsl:text>,"format":"date-time"</xsl:text>
+        <xsl:choose>
+          <xsl:when test="$odata-version='2.0'">
+            <xsl:text>,"example":"/Date(1492098664000)/"</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>,"format":"date-time"</xsl:text>
+            <xsl:text>,"example":"2017-04-13T15:51:04Z"</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
       <xsl:when test="$singleType='Edm.TimeOfDay'">
         <xsl:call-template name="nullableType">
@@ -801,7 +839,15 @@
           <xsl:with-param name="nullable" select="$nullable" />
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
-        <xsl:text>,"format":"time"</xsl:text>
+        <xsl:choose>
+          <xsl:when test="$odata-version='2.0'">
+            <xsl:text>,"example":"PT15H51M04S"</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>,"format":"time"</xsl:text>
+            <xsl:text>,"example":"15:51:04"</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Duration'">
         <xsl:call-template name="nullableType">
@@ -810,6 +856,7 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"duration"</xsl:text>
+        <xsl:text>,"example":"P4DT15H51M04.217S"</xsl:text>
       </xsl:when>
       <xsl:when test="$qualifier='Edm'">
         <xsl:text>"$ref":"</xsl:text>
