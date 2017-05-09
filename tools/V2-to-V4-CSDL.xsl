@@ -230,16 +230,7 @@
   <xsl:template match="edm2:Property|edm3:Property">
     <Property>
       <xsl:copy-of select="@Name" />
-      <xsl:attribute name="Type">
-        <xsl:choose>
-          <xsl:when test="@Type='Time' or @Type='Edm.Time'">Edm.TimeOfDay</xsl:when>
-          <xsl:when test="@Type='Float' or @Type='Edm.Float'">Edm.Single</xsl:when>
-          <xsl:when test="(@Type='DateTime' or @Type='Edm.DateTime') and @sap:display-format='Date'">Edm.Date</xsl:when>
-          <xsl:when test="@Type='DateTime' or @Type='Edm.DateTime'">Edm.DateTimeOffset</xsl:when>
-          <xsl:when test="contains(@Type,'.')"><xsl:value-of select="@Type" /></xsl:when>
-          <xsl:otherwise><xsl:value-of select="concat('Edm.',@Type)" /></xsl:otherwise>
-        </xsl:choose>
-      </xsl:attribute>
+      <xsl:apply-templates select="@Type" />
       <xsl:if test="@Nullable != 'true'">
         <xsl:copy-of select="@Nullable" />
       </xsl:if>
@@ -546,10 +537,14 @@
 
   <xsl:template match="@Type|@UnderlyingType">
     <xsl:attribute name="{name()}"> 
-      <xsl:if test="not(contains(.,'.'))">
-        <xsl:text>Edm.</xsl:text>
-      </xsl:if>
-      <xsl:value-of select="." />
+      <xsl:choose>
+        <xsl:when test=".='Time' or .='Edm.Time'">Edm.TimeOfDay</xsl:when>
+        <xsl:when test=".='Float' or .='Edm.Float'">Edm.Single</xsl:when>
+        <xsl:when test="(.='DateTime' or .='Edm.DateTime') and ../@sap:display-format='Date'">Edm.Date</xsl:when>
+        <xsl:when test=".='DateTime' or .='Edm.DateTime'">Edm.DateTimeOffset</xsl:when>
+        <xsl:when test="contains(.,'.')"><xsl:value-of select="." /></xsl:when>
+        <xsl:otherwise><xsl:value-of select="concat('Edm.',.)" /></xsl:otherwise>
+      </xsl:choose>
     </xsl:attribute>
   </xsl:template>
 
