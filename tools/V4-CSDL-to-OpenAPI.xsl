@@ -596,7 +596,8 @@
     <xsl:param name="type" />
     <xsl:param name="nullableFacet" />
     <xsl:param name="wrap" select="false()" />
-    <xsl:param name="noArray" select="false()" />
+    <xsl:param name="inParameter" select="false()" />
+    <xsl:variable name="noArray" select="$inParameter" />
     <xsl:variable name="nullable">
       <xsl:call-template name="nullableFacetValue">
         <xsl:with-param name="type" select="$type" />
@@ -722,8 +723,10 @@
             <xsl:value-of select="$limit" />
             <xsl:text>,"maximum":</xsl:text>
             <xsl:value-of select="$limit" />
-            <xsl:text>,"example":</xsl:text>
-            <xsl:value-of select="$limit" />
+            <xsl:if test="not($inParameter)">
+              <xsl:text>,"example":</xsl:text>
+              <xsl:value-of select="$limit" />
+            </xsl:if>
           </xsl:if>
         </xsl:if>
       </xsl:when>
@@ -784,11 +787,15 @@
         </xsl:call-template>
         <xsl:choose>
           <xsl:when test="$odata-version='2.0'">
-            <xsl:text>,"example":"/Date(1492041600000)/"</xsl:text>
+            <xsl:if test="not($inParameter)">
+              <xsl:text>,"example":"/Date(1492041600000)/"</xsl:text>
+            </xsl:if>
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>,"format":"date"</xsl:text>
-            <xsl:text>,"example":"2017-04-13"</xsl:text>
+            <xsl:if test="not($inParameter)">
+              <xsl:text>,"example":"2017-04-13"</xsl:text>
+            </xsl:if>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
@@ -799,7 +806,9 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"double"</xsl:text>
-        <xsl:text>,"example":3.14</xsl:text>
+        <xsl:if test="not($inParameter)">
+          <xsl:text>,"example":3.14</xsl:text>
+        </xsl:if>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Single'">
         <xsl:call-template name="nullableType">
@@ -808,7 +817,9 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"float"</xsl:text>
-        <xsl:text>,"example":3.14</xsl:text>
+        <xsl:if test="not($inParameter)">
+          <xsl:text>,"example":3.14</xsl:text>
+        </xsl:if>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Guid'">
         <xsl:call-template name="nullableType">
@@ -817,7 +828,9 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"uuid"</xsl:text>
-        <xsl:text>,"example":"01234567-89ab-cdef-0123-456789abcdef"</xsl:text>
+        <xsl:if test="not($inParameter)">
+          <xsl:text>,"example":"01234567-89ab-cdef-0123-456789abcdef"</xsl:text>
+        </xsl:if>
       </xsl:when>
       <xsl:when test="$singleType='Edm.DateTimeOffset'">
         <xsl:call-template name="nullableType">
@@ -827,11 +840,15 @@
         </xsl:call-template>
         <xsl:choose>
           <xsl:when test="$odata-version='2.0'">
-            <xsl:text>,"example":"/Date(1492098664000)/"</xsl:text>
+            <xsl:if test="not($inParameter)">
+              <xsl:text>,"example":"/Date(1492098664000)/"</xsl:text>
+            </xsl:if>
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>,"format":"date-time"</xsl:text>
-            <xsl:text>,"example":"2017-04-13T15:51:04Z"</xsl:text>
+            <xsl:if test="not($inParameter)">
+              <xsl:text>,"example":"2017-04-13T15:51:04Z"</xsl:text>
+            </xsl:if>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
@@ -843,11 +860,15 @@
         </xsl:call-template>
         <xsl:choose>
           <xsl:when test="$odata-version='2.0'">
-            <xsl:text>,"example":"PT15H51M04S"</xsl:text>
+            <xsl:if test="not($inParameter)">
+              <xsl:text>,"example":"PT15H51M04S"</xsl:text>
+            </xsl:if>
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>,"format":"time"</xsl:text>
-            <xsl:text>,"example":"15:51:04"</xsl:text>
+            <xsl:if test="not($inParameter)">
+              <xsl:text>,"example":"15:51:04"</xsl:text>
+            </xsl:if>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
@@ -858,7 +879,9 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"duration"</xsl:text>
-        <xsl:text>,"example":"P4DT15H51M04.217S"</xsl:text>
+        <xsl:if test="not($inParameter)">
+          <xsl:text>,"example":"P4DT15H51M04.217S"</xsl:text>
+        </xsl:if>
       </xsl:when>
       <xsl:when test="$qualifier='Edm'">
         <xsl:text>"$ref":"</xsl:text>
@@ -2157,7 +2180,7 @@
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="nullableFacet" select="@Nullable" />
-      <xsl:with-param name="noArray" select="true()" />
+      <xsl:with-param name="inParameter" select="true()" />
     </xsl:call-template>
     <xsl:text>}</xsl:text>
   </xsl:template>
