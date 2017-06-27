@@ -430,7 +430,7 @@
     </xsl:variable>
     <!--
       TODO: evaluate Partner to just have one arrow
-      [FeaturedProduct]&lt;0..1-0..1&gt;[Advertisement]
+      [FeaturedProduct]<0..1-0..1>[Advertisement]
     -->
     <xsl:text>,[</xsl:text>
     <xsl:value-of select="../@Name" />
@@ -1000,7 +1000,7 @@
     <xsl:param name="string" />
     <xsl:param name="count" />
     <xsl:value-of select="$string" />
-    <xsl:if test="$count &gt; 1">
+    <xsl:if test="$count > 1">
       <xsl:call-template name="repeat">
         <xsl:with-param name="string" select="$string" />
         <xsl:with-param name="count" select="$count - 1" />
