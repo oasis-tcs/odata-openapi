@@ -268,6 +268,7 @@
       <xsl:if test="$mult='1'">
         <xsl:attribute name="Nullable">false</xsl:attribute>
       </xsl:if>
+      <xsl:apply-templates select="@sap:*" />
       <xsl:variable name="partner"
         select="../../edm2:EntityType/edm2:NavigationProperty[@Relationship=$relation and @FromRole=$torole]/@Name|../../edm3:EntityType/edm3:NavigationProperty[@Relationship=$relation and @FromRole=$torole]/@Name" />
       <xsl:if test="$partner">
@@ -935,6 +936,12 @@
 
   <xsl:template match="@sap:default">
     <xsl:attribute name="DefaultValue">
+      <xsl:value-of select="." />
+    </xsl:attribute>
+  </xsl:template>
+
+  <xsl:template match="@sap:containstarget">
+    <xsl:attribute name="ContainsTarget">
       <xsl:value-of select="." />
     </xsl:attribute>
   </xsl:template>
