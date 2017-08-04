@@ -46,6 +46,15 @@ exit /b
     set INPUT=..\examples\%1
   )
 
+  java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -PARAM openapi-version 3.0.0 -IN %INPUT% -OUT %~n1.tmp3.json
+
+  %YAJL_REFORMAT% < %~n1.tmp3.json > ..\examples\%~n1.openapi3.json
+  if not errorlevel 1 (
+    del %~n1.tmp3.json
+    git.exe --no-pager diff ..\examples\%~n1.openapi3.json
+  )
+
+  
   java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -IN %INPUT% -OUT %~n1.tmp.json
 
   %YAJL_REFORMAT% < %~n1.tmp.json > ..\examples\%~n1.openapi.json
@@ -54,6 +63,12 @@ exit /b
     if [%5]==[V2] del %~n1.V4.xml
     if [%5]==[V3] del %~n1.V4.xml
     git.exe --no-pager diff ..\examples\%~n1.openapi.json
+    
+    call z-schema --ignoreUnknownFormats --pedanticCheck "C:\git\OpenAPI-Specification\schemas\v2.0\schema.json" ..\examples\%~n1.openapi.json >  z-schema.log
+    if %ERRORLEVEL% == 1 (
+      type z-schema.log
+    )
+    del z-schema.log    
   )
 
 exit /b

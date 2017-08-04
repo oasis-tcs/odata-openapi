@@ -8,6 +8,7 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
+    - OpenAPI 3.0.0 support
     - OData 2.0 error response format
     - "type":["string","null"] not supported by Swagger-UI/Editor 3.0.3: bug or "feature"?
     - - "nullable":true seems to be supported or at least tolerated
@@ -61,7 +62,18 @@
     <xsl:param name="swagger-ui-major-version" select="'2'" />
   -->
   <xsl:param name="openapi-formatoption" select="''" />
+  <xsl:param name="openapi-version" select="'2.0'" />
 
+  <xsl:variable name="reusable-schemas">
+    <xsl:choose>
+      <xsl:when test="$openapi-version='2.0'">
+        <xsl:text>#/definitions/</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>#/components/schemas/</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
 
   <xsl:variable name="coreNamespace" select="'Org.OData.Core.V1'" />
   <xsl:variable name="coreAlias"
@@ -198,7 +210,14 @@
       <xsl:message><xsl:value-of select="$commonNamespace"/></xsl:message>
     -->
     <xsl:text>{</xsl:text>
-    <xsl:text>"swagger":"2.0"</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$openapi-version='2.0'">
+        <xsl:text>"swagger":"2.0"</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>"openapi":"3.0.0"</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <xsl:text>,"info":{"title":"</xsl:text>
     <xsl:variable name="schemaDescription">
@@ -302,17 +321,30 @@
     </xsl:if>
 
     <xsl:if test="//edm:EntityContainer">
-      <xsl:text>,"schemes":["</xsl:text>
-      <xsl:value-of select="$scheme" />
-      <xsl:text>"],"host":"</xsl:text>
-      <xsl:value-of select="$host" />
-      <xsl:text>","basePath":"</xsl:text>
-      <xsl:value-of select="$basePath" />
-      <xsl:text>"</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$openapi-version='2.0'">
+          <xsl:text>,"schemes":["</xsl:text>
+          <xsl:value-of select="$scheme" />
+          <xsl:text>"],"host":"</xsl:text>
+          <xsl:value-of select="$host" />
+          <xsl:text>","basePath":"</xsl:text>
+          <xsl:value-of select="$basePath" />
+          <xsl:text>"</xsl:text>
 
-      <!-- TODO: Capabilities.SupportedFormats -->
-      <xsl:text>,"consumes":["application/json"]</xsl:text>
-      <xsl:text>,"produces":["application/json"]</xsl:text>
+          <!-- TODO: Capabilities.SupportedFormats -->
+          <xsl:text>,"consumes":["application/json"]</xsl:text>
+          <xsl:text>,"produces":["application/json"]</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>,"servers":[{"url":"</xsl:text>
+          <xsl:value-of select="$scheme" />
+          <xsl:text>://</xsl:text>
+          <xsl:value-of select="$host" />
+          <xsl:value-of select="$basePath" />
+          <xsl:text>"}]</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+
     </xsl:if>
 
     <xsl:apply-templates select="//edm:EntitySet|//edm:Singleton" mode="tags" />
@@ -322,11 +354,33 @@
     <xsl:apply-templates select="//edm:EntityContainer" mode="paths" />
     <xsl:text>}</xsl:text>
 
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>,"components":{</xsl:text>
+    </xsl:if>
+
     <xsl:apply-templates select="//edm:EntityType|//edm:ComplexType|//edm:TypeDefinition|//edm:EnumType|//edm:EntityContainer"
       mode="hash"
     >
-      <xsl:with-param name="name" select="'definitions'" />
+      <xsl:with-param name="name">
+        <xsl:choose>
+          <xsl:when test="$openapi-version='2.0'">
+            <xsl:text>definitions</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>schemas</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:with-param>
+      <xsl:with-param name="after" select="$openapi-version='2.0'" />
     </xsl:apply-templates>
+
+    <!-- TODO: enable OpenAPI 3.0.0 from here -->
+    <xsl:choose>
+      <xsl:when test="$openapi-version='2.0'">
+      </xsl:when>
+      <xsl:otherwise>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <xsl:if test="//edm:EntityContainer">
       <xsl:text>,"parameters":{</xsl:text>
@@ -341,10 +395,23 @@
       <xsl:text>"search":{"name":"$search","in":"query","description":"Search items by search phrases</xsl:text>
       <xsl:text>, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374633)","type":"string"}}</xsl:text>
 
-      <xsl:text>,"responses":{"error":{"description":"Error","schema":{"$ref":"</xsl:text>
-      <!-- <xsl:value-of select="$odata-schema" /> -->
-      <xsl:text>#/definitions/odata.error"}}}</xsl:text>
+      <xsl:text>,"responses":{"error":{"description":"Error",</xsl:text>
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>"content":{"application/json":{</xsl:text>
+      </xsl:if>
+      <xsl:text>"schema":{"$ref":"</xsl:text>
+      <xsl:value-of select="$reusable-schemas" />
+      <xsl:text>odata.error"}</xsl:text>
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>}}</xsl:text>
+      </xsl:if>
+      <xsl:text>}}</xsl:text>
     </xsl:if>
+
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>}</xsl:text>
+    </xsl:if>
+
     <xsl:text>}</xsl:text>
   </xsl:template>
 
@@ -962,7 +1029,7 @@
     <xsl:call-template name="json-url">
       <xsl:with-param name="url" select="//edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
     </xsl:call-template>
-    <xsl:text>#/definitions/</xsl:text>
+    <xsl:value-of select="$reusable-schemas" />
     <xsl:choose>
       <xsl:when test="$internalNamespace">
         <xsl:value-of select="$internalNamespace" />
@@ -1013,30 +1080,55 @@
     <xsl:param name="type" />
     <xsl:param name="nullable" />
     <xsl:param name="noArray" />
-    <xsl:text>"type":</xsl:text>
-    <xsl:if test="not($noArray) and (not($nullable='false') or contains($type,','))">
-      <xsl:text>[</xsl:text>
-    </xsl:if>
-    <xsl:text>"</xsl:text>
     <xsl:choose>
-      <xsl:when test="$noArray and contains($type,',')">
-        <xsl:value-of select="substring-before($type,',')" />
+      <xsl:when test="$openapi-version='2.0'">
+        <xsl:text>"type":</xsl:text>
+        <xsl:if test="not($noArray) and (not($nullable='false') or contains($type,','))">
+          <xsl:text>[</xsl:text>
+        </xsl:if>
+        <xsl:text>"</xsl:text>
+        <xsl:choose>
+          <xsl:when test="$noArray and contains($type,',')">
+            <xsl:value-of select="substring-before($type,',')" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="replace-all">
+              <xsl:with-param name="string" select="$type" />
+              <xsl:with-param name="old" select="','" />
+              <xsl:with-param name="new" select="'&quot;,&quot;'" />
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:text>"</xsl:text>
+        <xsl:if test="not($noArray) and not($nullable='false')">
+          <xsl:text>,"null"</xsl:text>
+        </xsl:if>
+        <xsl:if test="not($noArray) and (not($nullable='false') or contains($type,','))">
+          <xsl:text>]</xsl:text>
+        </xsl:if>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:call-template name="replace-all">
-          <xsl:with-param name="string" select="$type" />
-          <xsl:with-param name="old" select="','" />
-          <xsl:with-param name="new" select="'&quot;,&quot;'" />
-        </xsl:call-template>
+        <xsl:choose>
+          <xsl:when test="contains($type,',')">
+            <xsl:text>"oneOf":[{"type":"</xsl:text>
+            <xsl:call-template name="replace-all">
+              <xsl:with-param name="string" select="$type" />
+              <xsl:with-param name="old" select="','" />
+              <xsl:with-param name="new" select="'&quot;},{&quot;type&quot;:&quot;'" />
+            </xsl:call-template>
+            <xsl:text>"}]</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>"type":"</xsl:text>
+            <xsl:value-of select="$type" />
+            <xsl:text>"</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:if test="not($nullable='false')">
+          <xsl:text>,"nullable":true</xsl:text>
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>"</xsl:text>
-    <xsl:if test="not($noArray) and not($nullable='false')">
-      <xsl:text>,"null"</xsl:text>
-    </xsl:if>
-    <xsl:if test="not($noArray) and (not($nullable='false') or contains($type,','))">
-      <xsl:text>]</xsl:text>
-    </xsl:if>
   </xsl:template>
 
   <xsl:template match="@MaxLength">
