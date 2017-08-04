@@ -8,6 +8,7 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
+    - OData 2.0 error response format
     - "type":["string","null"] not supported by Swagger-UI/Editor 3.0.3: bug or "feature"?
     - - "nullable":true seems to be supported or at least tolerated
     - operation descriptions for entity sets and singletons
@@ -316,16 +317,16 @@
 
     <xsl:apply-templates select="//edm:EntitySet|//edm:Singleton" mode="tags" />
 
+    <!-- paths is required, so we need it also for documents that do not define an entity container -->
+    <xsl:text>,"paths":{</xsl:text>
+    <xsl:apply-templates select="//edm:EntityContainer" mode="paths" />
+    <xsl:text>}</xsl:text>
+
     <xsl:apply-templates select="//edm:EntityType|//edm:ComplexType|//edm:TypeDefinition|//edm:EnumType|//edm:EntityContainer"
       mode="hash"
     >
       <xsl:with-param name="name" select="'definitions'" />
     </xsl:apply-templates>
-
-    <!-- paths is required, so we need it also for documents that do not define an entity container -->
-    <xsl:text>,"paths":{</xsl:text>
-    <xsl:apply-templates select="//edm:EntityContainer" mode="paths" />
-    <xsl:text>}</xsl:text>
 
     <xsl:if test="//edm:EntityContainer">
       <xsl:text>,"parameters":{</xsl:text>

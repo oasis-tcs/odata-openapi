@@ -45,1016 +45,6 @@
             "name": "Categories35"
         }
     ],
-    "definitions": {
-        "org.example.Measurement": {
-            "type": "object",
-            "properties": {
-                "Dimension": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "default": "Unspecified"
-                },
-                "Length": {
-                    "type": [
-                        "number",
-                        "string"
-                    ],
-                    "format": "decimal",
-                    "multipleOf": 1.0e-2
-                }
-            },
-            "title": "Measurement"
-        },
-        "org.example.Example7to11": {
-            "type": "object",
-            "properties": {
-                "Units": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "SuggestedTimes": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z"
-                    }
-                },
-                "Amount9": {
-                    "type": [
-                        "number",
-                        "string",
-                        "null"
-                    ],
-                    "format": "decimal",
-                    "multipleOf": 1.0e-2,
-                    "minimum": -9.99,
-                    "maximum": 9.99,
-                    "example": 9.99
-                },
-                "Amount11": {
-                    "type": [
-                        "number",
-                        "string",
-                        "null"
-                    ],
-                    "format": "decimal",
-                    "minimum": -999,
-                    "maximum": 999,
-                    "example": 999
-                }
-            },
-            "title": "Example7to11"
-        },
-        "org.example.Product": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "string"
-                },
-                "CategoryID": {
-                    "type": "string"
-                },
-                "Category": {
-                    "$ref": "#/definitions/org.example.Category"
-                },
-                "Supplier": {
-                    "$ref": "#/definitions/org.example.Supplier"
-                }
-            },
-            "title": "Product"
-        },
-        "org.example.Supplier": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "string"
-                }
-            },
-            "title": "Supplier"
-        },
-        "org.example.Customer": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "string"
-                }
-            },
-            "title": "Customer"
-        },
-        "org.example.Order": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": [
-                        "integer",
-                        "string"
-                    ],
-                    "format": "int64"
-                }
-            },
-            "title": "Order"
-        },
-        "org.example.Category": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "string"
-                },
-                "Products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/org.example.Product"
-                    }
-                }
-            },
-            "title": "Category"
-        },
-        "org.example.Employee": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "string"
-                },
-                "FirstName": {
-                    "type": "string"
-                },
-                "LastName": {
-                    "type": "string"
-                },
-                "Manager": {
-                    "$ref": "#/definitions/org.example.Manager"
-                }
-            },
-            "title": "Employee"
-        },
-        "org.example.Manager": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/org.example.Employee"
-                },
-                {
-                    "type": "object",
-                    "properties": {
-                        "AnnualBudget": {
-                            "type": [
-                                "number",
-                                "string",
-                                "null"
-                            ],
-                            "format": "decimal",
-                            "multipleOf": 1
-                        },
-                        "Employees": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/org.example.Employee"
-                            }
-                        }
-                    },
-                    "title": "Manager"
-                }
-            ]
-        },
-        "org.example.Category17": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "Name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                }
-            },
-            "title": "Category17"
-        },
-        "org.example.Category18": {
-            "type": "object",
-            "properties": {
-                "Info": {
-                    "$ref": "#/definitions/org.example.EntityInfo"
-                },
-                "Name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                }
-            },
-            "title": "Category18"
-        },
-        "org.example.EntityInfo": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "Created": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "format": "date-time",
-                    "example": "2017-04-13T15:51:04Z"
-                }
-            },
-            "title": "EntityInfo"
-        },
-        "org.example.OrderLine": {
-            "type": "object",
-            "properties": {
-                "OrderID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "LineNumber": {
-                    "type": "integer",
-                    "format": "int32"
-                }
-            },
-            "title": "OrderLine"
-        },
-        "org.example.Dimensions": {
-            "type": "object",
-            "properties": {
-                "Height": {
-                    "type": [
-                        "number",
-                        "string"
-                    ],
-                    "format": "decimal",
-                    "multipleOf": 1
-                },
-                "Weight": {
-                    "type": [
-                        "number",
-                        "string"
-                    ],
-                    "format": "decimal",
-                    "multipleOf": 1
-                },
-                "Length": {
-                    "type": [
-                        "number",
-                        "string"
-                    ],
-                    "format": "decimal",
-                    "multipleOf": 1
-                }
-            },
-            "title": "Dimensions"
-        },
-        "org.example.Product22": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "string"
-                },
-                "ProductDimensions": {
-                    "$ref": "#/definitions/org.example.Dimensions"
-                },
-                "ShippingDimensions": {
-                    "$ref": "#/definitions/org.example.Dimensions"
-                }
-            },
-            "title": "Product22"
-        },
-        "org.example.ShipmentBox": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "string"
-                },
-                "Dimensions": {
-                    "$ref": "#/definitions/org.example.Dimensions"
-                }
-            },
-            "title": "ShipmentBox"
-        },
-        "org.example.FileAccess": {
-            "type": "string",
-            "enum": [
-                "Read",
-                "Write",
-                "Create",
-                "Delete"
-            ],
-            "title": "FileAccess"
-        },
-        "org.example.ShippingMethod": {
-            "type": "string",
-            "enum": [
-                "FirstClass",
-                "TwoDay",
-                "Overnight"
-            ],
-            "title": "ShippingMethod",
-            "description": "Method of shipping"
-        },
-        "org.example.Pattern": {
-            "type": "string",
-            "enum": [
-                "Plain",
-                "Red",
-                "Blue",
-                "Yellow",
-                "Solid",
-                "Striped",
-                "SolidRed",
-                "SolidBlue",
-                "SolidYellow",
-                "RedBlueStriped",
-                "RedYellowStriped",
-                "BlueYellowStriped"
-            ],
-            "title": "Pattern"
-        },
-        "org.example.Length": {
-            "type": "integer",
-            "format": "int32",
-            "title": "Length"
-        },
-        "org.example.Weight": {
-            "type": "integer",
-            "format": "int32",
-            "title": "Weight"
-        },
-        "org.example.Size": {
-            "type": "object",
-            "properties": {
-                "Height": {
-                    "$ref": "#/definitions/org.example.Length"
-                },
-                "Weight": {
-                    "$ref": "#/definitions/org.example.Weight"
-                }
-            },
-            "title": "Size"
-        },
-        "odata.error": {
-            "type": "object",
-            "required": [
-                "error"
-            ],
-            "properties": {
-                "error": {
-                    "$ref": "#/definitions/odata.error.main"
-                }
-            }
-        },
-        "odata.error.main": {
-            "type": "object",
-            "required": [
-                "code",
-                "message"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "target": {
-                    "type": "string"
-                },
-                "details": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/odata.error.detail"
-                    }
-                },
-                "innererror": {
-                    "type": "object",
-                    "description": "The structure of this object is service-specific"
-                }
-            }
-        },
-        "odata.error.detail": {
-            "type": "object",
-            "required": [
-                "code",
-                "message"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "target": {
-                    "type": "string"
-                }
-            }
-        },
-        "org.example.Product2": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "Name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "Description": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                }
-            },
-            "title": "Product2"
-        },
-        "Model1.NullablePrimitiveTypes": {
-            "type": "object",
-            "properties": {
-                "NullValue": {
-                    "type": [
-                        "boolean",
-                        "null"
-                    ],
-                    "default": null
-                },
-                "TrueValue": {
-                    "type": [
-                        "boolean",
-                        "null"
-                    ],
-                    "default": true
-                },
-                "FalseValue": {
-                    "type": [
-                        "boolean",
-                        "null"
-                    ],
-                    "default": false
-                },
-                "BinaryValue": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "format": "base64url",
-                    "maxLength": 31,
-                    "default": "T0RhdGE"
-                },
-                "IntegerValue": {
-                    "type": [
-                        "integer",
-                        "null"
-                    ],
-                    "format": "int32",
-                    "default": -128
-                },
-                "DoubleValue": {
-                    "type": [
-                        "number",
-                        "string",
-                        "null"
-                    ],
-                    "format": "double",
-                    "example": 3.14,
-                    "default": 3.1415926535897931
-                },
-                "SingleValue": {
-                    "type": [
-                        "number",
-                        "string",
-                        "null"
-                    ],
-                    "format": "float",
-                    "example": 3.14
-                },
-                "DecimalValue": {
-                    "type": [
-                        "number",
-                        "string",
-                        "null"
-                    ],
-                    "format": "decimal",
-                    "default": 34.95
-                },
-                "StringValue": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "default": "Say \"Hello\",\nthen go"
-                },
-                "DateValue": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "format": "date",
-                    "example": "2017-04-13",
-                    "default": "2012-12-03"
-                },
-                "DateTimeOffsetValue": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "format": "date-time",
-                    "example": "2017-04-13T15:51:04Z",
-                    "default": "2012-12-03T07:16:23Z"
-                },
-                "DurationValue": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "format": "duration",
-                    "example": "P4DT15H51M04.217S",
-                    "default": "P12DT23H59M59.999999999999S"
-                },
-                "TimeOfDayValue": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "format": "time",
-                    "example": "15:51:04",
-                    "default": "07:59:59.999"
-                },
-                "GuidValue": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "format": "uuid",
-                    "example": "01234567-89ab-cdef-0123-456789abcdef",
-                    "default": "01234567-89ab-cdef-0123-456789abcdef"
-                },
-                "Int64Value": {
-                    "type": [
-                        "integer",
-                        "string",
-                        "null"
-                    ],
-                    "format": "int64",
-                    "default": 0
-                },
-                "ColorEnumValue": {
-                    "$ref": "#/definitions/Model1.Color",
-                    "default": "yellow"
-                },
-                "GeographyPoint": {
-                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint",
-                    "default": "SRID=0;Point(142.1 64.1)"
-                },
-                "StreamValue": {
-                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.Stream"
-                },
-                "TypeDefValue": {
-                    "$ref": "#/definitions/Model1.IntegerDecimal",
-                    "default": 42
-                },
-                "PrimitiveValue": {
-                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.PrimitiveType"
-                }
-            },
-            "title": "NullablePrimitiveTypes"
-        },
-        "Model1.NonNullablePrimitiveTypes": {
-            "type": "object",
-            "properties": {
-                "NullValue": {
-                    "type": "boolean",
-                    "default": null
-                },
-                "TrueValue": {
-                    "type": "boolean",
-                    "default": true
-                },
-                "FalseValue": {
-                    "type": "boolean",
-                    "default": false
-                },
-                "BinaryValue": {
-                    "type": "string",
-                    "format": "base64url",
-                    "maxLength": 31,
-                    "default": "T0RhdGE"
-                },
-                "IntegerValue": {
-                    "type": "integer",
-                    "format": "int32",
-                    "default": -128
-                },
-                "DoubleValue": {
-                    "type": [
-                        "number",
-                        "string"
-                    ],
-                    "format": "double",
-                    "example": 3.14,
-                    "default": 3.1415926535897931
-                },
-                "SingleValue": {
-                    "type": [
-                        "number",
-                        "string"
-                    ],
-                    "format": "float",
-                    "example": 3.14,
-                    "default": "-INF"
-                },
-                "DecimalValue": {
-                    "type": [
-                        "number",
-                        "string"
-                    ],
-                    "format": "decimal",
-                    "default": 34.95
-                },
-                "StringValue": {
-                    "type": "string",
-                    "default": "Say \"Hello\",\nthen go"
-                },
-                "DateValue": {
-                    "type": "string",
-                    "format": "date",
-                    "example": "2017-04-13",
-                    "default": "2012-12-03"
-                },
-                "DateTimeOffsetValue": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2017-04-13T15:51:04Z",
-                    "default": "2012-12-03T07:16:23Z"
-                },
-                "DurationValue": {
-                    "type": "string",
-                    "format": "duration",
-                    "example": "P4DT15H51M04.217S",
-                    "default": "P12DT23H59M59.999999999999S"
-                },
-                "TimeOfDayValue": {
-                    "type": "string",
-                    "format": "time",
-                    "example": "15:51:04",
-                    "default": "07:59:59.999"
-                },
-                "GuidValue": {
-                    "type": "string",
-                    "format": "uuid",
-                    "example": "01234567-89ab-cdef-0123-456789abcdef",
-                    "default": "01234567-89ab-cdef-0123-456789abcdef"
-                },
-                "Int64Value": {
-                    "type": [
-                        "integer",
-                        "string"
-                    ],
-                    "format": "int64",
-                    "default": 0
-                },
-                "ColorEnumValue": {
-                    "$ref": "#/definitions/Model1.Color",
-                    "default": "yellow"
-                },
-                "GeographyPoint": {
-                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint",
-                    "default": "SRID=0;Point(142.1 64.1)"
-                },
-                "StreamValue": {
-                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.Stream"
-                },
-                "TypeDefValue": {
-                    "$ref": "#/definitions/Model1.IntegerDecimal",
-                    "default": 42
-                },
-                "TextValue": {
-                    "$ref": "#/definitions/Model1.Text",
-                    "maxLength": 60,
-                    "default": "42"
-                },
-                "PrimitiveValue": {
-                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.PrimitiveType"
-                }
-            },
-            "title": "NonNullablePrimitiveTypes"
-        },
-        "Model1.Size": {
-            "type": "string",
-            "enum": [
-                "S",
-                "M",
-                "L"
-            ],
-            "title": "Size",
-            "description": "T-Shirt Size  \nSize, expressed with letters familiar from e.g. T-Shirt sizes"
-        },
-        "Model1.Color": {
-            "type": "string",
-            "enum": [
-                "Yellow",
-                "Striped"
-            ],
-            "title": "Color"
-        },
-        "Model1.Weird": {
-            "type": "object",
-            "properties": {
-                "TheKey": {
-                    "type": "string"
-                },
-                "TheValue": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "TheString": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "maxLength": 20
-                },
-                "Tags": {
-                    "type": "array",
-                    "items": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    }
-                },
-                "Dates": {
-                    "type": "array",
-                    "items": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date",
-                        "example": "2017-04-13"
-                    }
-                },
-                "Price": {
-                    "type": [
-                        "number",
-                        "string",
-                        "null"
-                    ],
-                    "format": "decimal",
-                    "multipleOf": 1.0e-3,
-                    "minimum": -999999999999.999,
-                    "maximum": 999999999999.999,
-                    "example": 999999999999.999
-                },
-                "Permission": {
-                    "$ref": "http://localhost/vocabularies/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Permission"
-                },
-                "AliasPermission": {
-                    "$ref": "http://localhost/vocabularies/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Permission"
-                }
-            },
-            "title": "Weird"
-        },
-        "Model1.Address": {
-            "type": "object",
-            "properties": {
-                "Street": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "City": {
-                    "$ref": "#/definitions/Model1.City"
-                },
-                "Region": {
-                    "$ref": "#/definitions/Model1.Region"
-                },
-                "Country": {
-                    "$ref": "#/definitions/Model1.Country"
-                },
-                "MapLocation": {
-                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint"
-                },
-                "Numbers": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer",
-                        "format": "int16"
-                    }
-                }
-            },
-            "title": "Address"
-        },
-        "Model1.City": {
-            "type": "object",
-            "title": "City"
-        },
-        "Model1.Region": {
-            "type": "object",
-            "title": "Region"
-        },
-        "Model1.Country": {
-            "type": "object",
-            "title": "Country"
-        },
-        "Model1.Planet": {
-            "type": "object",
-            "title": "Planet"
-        },
-        "Model1.NavigationOnly": {
-            "type": "object",
-            "properties": {
-                "Planet": {
-                    "$ref": "#/definitions/Model1.Planet"
-                }
-            },
-            "title": "NavigationOnly"
-        },
-        "Model1.AnnotationOnly": {
-            "type": "object",
-            "title": "AnnotationOnly"
-        },
-        "Model1.Order": {
-            "type": "object",
-            "properties": {
-                "Quantity": {
-                    "type": [
-                        "number",
-                        "string",
-                        "null"
-                    ],
-                    "format": "decimal",
-                    "multipleOf": 1
-                },
-                "ShippingUnit": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "description": "Contains the unit for property Quantity"
-                }
-            },
-            "title": "Order"
-        },
-        "Model1.SpecialByte": {
-            "type": "integer",
-            "format": "uint8",
-            "title": "SpecialByte"
-        },
-        "Model1.Text50": {
-            "type": "string",
-            "maxLength": 50,
-            "title": "Text50"
-        },
-        "Model1.Text": {
-            "type": "string",
-            "title": "Text"
-        },
-        "Model1.LanguageDependentText": {
-            "type": "string",
-            "title": "LanguageDependentText"
-        },
-        "Model1.IntegerDecimal": {
-            "type": [
-                "number",
-                "string"
-            ],
-            "format": "decimal",
-            "multipleOf": 1,
-            "title": "IntegerDecimal",
-            "description": "A decimal without fractional part"
-        },
-        "Model1.IntegerDecimal10": {
-            "type": [
-                "number",
-                "string"
-            ],
-            "format": "decimal",
-            "multipleOf": 1,
-            "minimum": -9999999999,
-            "maximum": 9999999999,
-            "example": 9999999999,
-            "title": "IntegerDecimal10",
-            "description": "A ten-digit integer"
-        },
-        "Model1.VariableDecimal": {
-            "type": [
-                "number",
-                "string"
-            ],
-            "format": "decimal",
-            "title": "VariableDecimal",
-            "description": "A floating decimal"
-        },
-        "Model1.ExactTimestamp": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2017-04-13T15:51:04Z",
-            "title": "ExactTimestamp"
-        },
-        "X.PersonType": {
-            "type": "object",
-            "title": "PersonType"
-        },
-        "X.MovieType": {
-            "type": "object",
-            "title": "MovieType"
-        },
-        "X.FriendType": {
-            "type": "object",
-            "title": "FriendType"
-        },
-        "Y.DeveloperType": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/X.PersonType"
-                },
-                {
-                    "type": "object",
-                    "title": "DeveloperType"
-                }
-            ]
-        },
-        "Y.ScrumTeamType": {
-            "type": "object",
-            "properties": {
-                "ScrumMaster": {
-                    "$ref": "#/definitions/Y.DeveloperType"
-                }
-            },
-            "title": "ScrumTeamType"
-        },
-        "Y.ArchivedMovieType": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/X.MovieType"
-                },
-                {
-                    "type": "object",
-                    "properties": {
-                        "ArchivedAt": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "format": "date",
-                            "example": "2017-04-13"
-                        }
-                    },
-                    "title": "ArchivedMovieType"
-                }
-            ]
-        },
-        "Y.SomeThingType": {
-            "type": "object",
-            "properties": {
-                "SomeProperty": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "Contacts": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/X.PersonType"
-                    }
-                },
-                "VIPs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/X.FriendType"
-                    }
-                }
-            },
-            "title": "SomeThingType"
-        },
-        "Y.ChangeTrackingType": {
-            "type": "object",
-            "properties": {
-                "InlineableStreamProperties": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.PropertyPath"
-                    },
-                    "description": "Change tracking supports inlining these stream properties"
-                }
-            },
-            "title": "ChangeTrackingType"
-        }
-    },
     "paths": {
         "/StandardCustomers": {
             "get": {
@@ -2933,6 +1923,1016 @@
                     }
                 }
             }
+        }
+    },
+    "definitions": {
+        "org.example.Measurement": {
+            "type": "object",
+            "properties": {
+                "Dimension": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "default": "Unspecified"
+                },
+                "Length": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1.0e-2
+                }
+            },
+            "title": "Measurement"
+        },
+        "org.example.Example7to11": {
+            "type": "object",
+            "properties": {
+                "Units": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "SuggestedTimes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z"
+                    }
+                },
+                "Amount9": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1.0e-2,
+                    "minimum": -9.99,
+                    "maximum": 9.99,
+                    "example": 9.99
+                },
+                "Amount11": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "minimum": -999,
+                    "maximum": 999,
+                    "example": 999
+                }
+            },
+            "title": "Example7to11"
+        },
+        "org.example.Product": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "CategoryID": {
+                    "type": "string"
+                },
+                "Category": {
+                    "$ref": "#/definitions/org.example.Category"
+                },
+                "Supplier": {
+                    "$ref": "#/definitions/org.example.Supplier"
+                }
+            },
+            "title": "Product"
+        },
+        "org.example.Supplier": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string"
+                }
+            },
+            "title": "Supplier"
+        },
+        "org.example.Customer": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string"
+                }
+            },
+            "title": "Customer"
+        },
+        "org.example.Order": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": [
+                        "integer",
+                        "string"
+                    ],
+                    "format": "int64"
+                }
+            },
+            "title": "Order"
+        },
+        "org.example.Category": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/org.example.Product"
+                    }
+                }
+            },
+            "title": "Category"
+        },
+        "org.example.Employee": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "FirstName": {
+                    "type": "string"
+                },
+                "LastName": {
+                    "type": "string"
+                },
+                "Manager": {
+                    "$ref": "#/definitions/org.example.Manager"
+                }
+            },
+            "title": "Employee"
+        },
+        "org.example.Manager": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Employee"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "AnnualBudget": {
+                            "type": [
+                                "number",
+                                "string",
+                                "null"
+                            ],
+                            "format": "decimal",
+                            "multipleOf": 1
+                        },
+                        "Employees": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/org.example.Employee"
+                            }
+                        }
+                    },
+                    "title": "Manager"
+                }
+            ]
+        },
+        "org.example.Category17": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "title": "Category17"
+        },
+        "org.example.Category18": {
+            "type": "object",
+            "properties": {
+                "Info": {
+                    "$ref": "#/definitions/org.example.EntityInfo"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "title": "Category18"
+        },
+        "org.example.EntityInfo": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Created": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date-time",
+                    "example": "2017-04-13T15:51:04Z"
+                }
+            },
+            "title": "EntityInfo"
+        },
+        "org.example.OrderLine": {
+            "type": "object",
+            "properties": {
+                "OrderID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "LineNumber": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "title": "OrderLine"
+        },
+        "org.example.Dimensions": {
+            "type": "object",
+            "properties": {
+                "Height": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1
+                },
+                "Weight": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1
+                },
+                "Length": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1
+                }
+            },
+            "title": "Dimensions"
+        },
+        "org.example.Product22": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "ProductDimensions": {
+                    "$ref": "#/definitions/org.example.Dimensions"
+                },
+                "ShippingDimensions": {
+                    "$ref": "#/definitions/org.example.Dimensions"
+                }
+            },
+            "title": "Product22"
+        },
+        "org.example.ShipmentBox": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "Dimensions": {
+                    "$ref": "#/definitions/org.example.Dimensions"
+                }
+            },
+            "title": "ShipmentBox"
+        },
+        "org.example.FileAccess": {
+            "type": "string",
+            "enum": [
+                "Read",
+                "Write",
+                "Create",
+                "Delete"
+            ],
+            "title": "FileAccess"
+        },
+        "org.example.ShippingMethod": {
+            "type": "string",
+            "enum": [
+                "FirstClass",
+                "TwoDay",
+                "Overnight"
+            ],
+            "title": "ShippingMethod",
+            "description": "Method of shipping"
+        },
+        "org.example.Pattern": {
+            "type": "string",
+            "enum": [
+                "Plain",
+                "Red",
+                "Blue",
+                "Yellow",
+                "Solid",
+                "Striped",
+                "SolidRed",
+                "SolidBlue",
+                "SolidYellow",
+                "RedBlueStriped",
+                "RedYellowStriped",
+                "BlueYellowStriped"
+            ],
+            "title": "Pattern"
+        },
+        "org.example.Length": {
+            "type": "integer",
+            "format": "int32",
+            "title": "Length"
+        },
+        "org.example.Weight": {
+            "type": "integer",
+            "format": "int32",
+            "title": "Weight"
+        },
+        "org.example.Size": {
+            "type": "object",
+            "properties": {
+                "Height": {
+                    "$ref": "#/definitions/org.example.Length"
+                },
+                "Weight": {
+                    "$ref": "#/definitions/org.example.Weight"
+                }
+            },
+            "title": "Size"
+        },
+        "odata.error": {
+            "type": "object",
+            "required": [
+                "error"
+            ],
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/odata.error.main"
+                }
+            }
+        },
+        "odata.error.main": {
+            "type": "object",
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/odata.error.detail"
+                    }
+                },
+                "innererror": {
+                    "type": "object",
+                    "description": "The structure of this object is service-specific"
+                }
+            }
+        },
+        "odata.error.detail": {
+            "type": "object",
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                }
+            }
+        },
+        "org.example.Product2": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "title": "Product2"
+        },
+        "Model1.NullablePrimitiveTypes": {
+            "type": "object",
+            "properties": {
+                "NullValue": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "default": null
+                },
+                "TrueValue": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "default": true
+                },
+                "FalseValue": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "default": false
+                },
+                "BinaryValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "base64url",
+                    "maxLength": 31,
+                    "default": "T0RhdGE"
+                },
+                "IntegerValue": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "format": "int32",
+                    "default": -128
+                },
+                "DoubleValue": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "double",
+                    "example": 3.14,
+                    "default": 3.1415926535897931
+                },
+                "SingleValue": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "float",
+                    "example": 3.14
+                },
+                "DecimalValue": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "default": 34.95
+                },
+                "StringValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "default": "Say \"Hello\",\nthen go"
+                },
+                "DateValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date",
+                    "example": "2017-04-13",
+                    "default": "2012-12-03"
+                },
+                "DateTimeOffsetValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date-time",
+                    "example": "2017-04-13T15:51:04Z",
+                    "default": "2012-12-03T07:16:23Z"
+                },
+                "DurationValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "duration",
+                    "example": "P4DT15H51M04.217S",
+                    "default": "P12DT23H59M59.999999999999S"
+                },
+                "TimeOfDayValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "time",
+                    "example": "15:51:04",
+                    "default": "07:59:59.999"
+                },
+                "GuidValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "uuid",
+                    "example": "01234567-89ab-cdef-0123-456789abcdef",
+                    "default": "01234567-89ab-cdef-0123-456789abcdef"
+                },
+                "Int64Value": {
+                    "type": [
+                        "integer",
+                        "string",
+                        "null"
+                    ],
+                    "format": "int64",
+                    "default": 0
+                },
+                "ColorEnumValue": {
+                    "$ref": "#/definitions/Model1.Color",
+                    "default": "yellow"
+                },
+                "GeographyPoint": {
+                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint",
+                    "default": "SRID=0;Point(142.1 64.1)"
+                },
+                "StreamValue": {
+                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.Stream"
+                },
+                "TypeDefValue": {
+                    "$ref": "#/definitions/Model1.IntegerDecimal",
+                    "default": 42
+                },
+                "PrimitiveValue": {
+                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.PrimitiveType"
+                }
+            },
+            "title": "NullablePrimitiveTypes"
+        },
+        "Model1.NonNullablePrimitiveTypes": {
+            "type": "object",
+            "properties": {
+                "NullValue": {
+                    "type": "boolean",
+                    "default": null
+                },
+                "TrueValue": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "FalseValue": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "BinaryValue": {
+                    "type": "string",
+                    "format": "base64url",
+                    "maxLength": 31,
+                    "default": "T0RhdGE"
+                },
+                "IntegerValue": {
+                    "type": "integer",
+                    "format": "int32",
+                    "default": -128
+                },
+                "DoubleValue": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "double",
+                    "example": 3.14,
+                    "default": 3.1415926535897931
+                },
+                "SingleValue": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "float",
+                    "example": 3.14,
+                    "default": "-INF"
+                },
+                "DecimalValue": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "default": 34.95
+                },
+                "StringValue": {
+                    "type": "string",
+                    "default": "Say \"Hello\",\nthen go"
+                },
+                "DateValue": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2017-04-13",
+                    "default": "2012-12-03"
+                },
+                "DateTimeOffsetValue": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2017-04-13T15:51:04Z",
+                    "default": "2012-12-03T07:16:23Z"
+                },
+                "DurationValue": {
+                    "type": "string",
+                    "format": "duration",
+                    "example": "P4DT15H51M04.217S",
+                    "default": "P12DT23H59M59.999999999999S"
+                },
+                "TimeOfDayValue": {
+                    "type": "string",
+                    "format": "time",
+                    "example": "15:51:04",
+                    "default": "07:59:59.999"
+                },
+                "GuidValue": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "01234567-89ab-cdef-0123-456789abcdef",
+                    "default": "01234567-89ab-cdef-0123-456789abcdef"
+                },
+                "Int64Value": {
+                    "type": [
+                        "integer",
+                        "string"
+                    ],
+                    "format": "int64",
+                    "default": 0
+                },
+                "ColorEnumValue": {
+                    "$ref": "#/definitions/Model1.Color",
+                    "default": "yellow"
+                },
+                "GeographyPoint": {
+                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint",
+                    "default": "SRID=0;Point(142.1 64.1)"
+                },
+                "StreamValue": {
+                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.Stream"
+                },
+                "TypeDefValue": {
+                    "$ref": "#/definitions/Model1.IntegerDecimal",
+                    "default": 42
+                },
+                "TextValue": {
+                    "$ref": "#/definitions/Model1.Text",
+                    "maxLength": 60,
+                    "default": "42"
+                },
+                "PrimitiveValue": {
+                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.PrimitiveType"
+                }
+            },
+            "title": "NonNullablePrimitiveTypes"
+        },
+        "Model1.Size": {
+            "type": "string",
+            "enum": [
+                "S",
+                "M",
+                "L"
+            ],
+            "title": "Size",
+            "description": "T-Shirt Size  \nSize, expressed with letters familiar from e.g. T-Shirt sizes"
+        },
+        "Model1.Color": {
+            "type": "string",
+            "enum": [
+                "Yellow",
+                "Striped"
+            ],
+            "title": "Color"
+        },
+        "Model1.Weird": {
+            "type": "object",
+            "properties": {
+                "TheKey": {
+                    "type": "string"
+                },
+                "TheValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "TheString": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "maxLength": 20
+                },
+                "Tags": {
+                    "type": "array",
+                    "items": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "Dates": {
+                    "type": "array",
+                    "items": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date",
+                        "example": "2017-04-13"
+                    }
+                },
+                "Price": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1.0e-3,
+                    "minimum": -999999999999.999,
+                    "maximum": 999999999999.999,
+                    "example": 999999999999.999
+                },
+                "Permission": {
+                    "$ref": "http://localhost/vocabularies/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Permission"
+                },
+                "AliasPermission": {
+                    "$ref": "http://localhost/vocabularies/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Permission"
+                }
+            },
+            "title": "Weird"
+        },
+        "Model1.Address": {
+            "type": "object",
+            "properties": {
+                "Street": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "City": {
+                    "$ref": "#/definitions/Model1.City"
+                },
+                "Region": {
+                    "$ref": "#/definitions/Model1.Region"
+                },
+                "Country": {
+                    "$ref": "#/definitions/Model1.Country"
+                },
+                "MapLocation": {
+                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint"
+                },
+                "Numbers": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "format": "int16"
+                    }
+                }
+            },
+            "title": "Address"
+        },
+        "Model1.City": {
+            "type": "object",
+            "title": "City"
+        },
+        "Model1.Region": {
+            "type": "object",
+            "title": "Region"
+        },
+        "Model1.Country": {
+            "type": "object",
+            "title": "Country"
+        },
+        "Model1.Planet": {
+            "type": "object",
+            "title": "Planet"
+        },
+        "Model1.NavigationOnly": {
+            "type": "object",
+            "properties": {
+                "Planet": {
+                    "$ref": "#/definitions/Model1.Planet"
+                }
+            },
+            "title": "NavigationOnly"
+        },
+        "Model1.AnnotationOnly": {
+            "type": "object",
+            "title": "AnnotationOnly"
+        },
+        "Model1.Order": {
+            "type": "object",
+            "properties": {
+                "Quantity": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1
+                },
+                "ShippingUnit": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "Contains the unit for property Quantity"
+                }
+            },
+            "title": "Order"
+        },
+        "Model1.SpecialByte": {
+            "type": "integer",
+            "format": "uint8",
+            "title": "SpecialByte"
+        },
+        "Model1.Text50": {
+            "type": "string",
+            "maxLength": 50,
+            "title": "Text50"
+        },
+        "Model1.Text": {
+            "type": "string",
+            "title": "Text"
+        },
+        "Model1.LanguageDependentText": {
+            "type": "string",
+            "title": "LanguageDependentText"
+        },
+        "Model1.IntegerDecimal": {
+            "type": [
+                "number",
+                "string"
+            ],
+            "format": "decimal",
+            "multipleOf": 1,
+            "title": "IntegerDecimal",
+            "description": "A decimal without fractional part"
+        },
+        "Model1.IntegerDecimal10": {
+            "type": [
+                "number",
+                "string"
+            ],
+            "format": "decimal",
+            "multipleOf": 1,
+            "minimum": -9999999999,
+            "maximum": 9999999999,
+            "example": 9999999999,
+            "title": "IntegerDecimal10",
+            "description": "A ten-digit integer"
+        },
+        "Model1.VariableDecimal": {
+            "type": [
+                "number",
+                "string"
+            ],
+            "format": "decimal",
+            "title": "VariableDecimal",
+            "description": "A floating decimal"
+        },
+        "Model1.ExactTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04Z",
+            "title": "ExactTimestamp"
+        },
+        "X.PersonType": {
+            "type": "object",
+            "title": "PersonType"
+        },
+        "X.MovieType": {
+            "type": "object",
+            "title": "MovieType"
+        },
+        "X.FriendType": {
+            "type": "object",
+            "title": "FriendType"
+        },
+        "Y.DeveloperType": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/X.PersonType"
+                },
+                {
+                    "type": "object",
+                    "title": "DeveloperType"
+                }
+            ]
+        },
+        "Y.ScrumTeamType": {
+            "type": "object",
+            "properties": {
+                "ScrumMaster": {
+                    "$ref": "#/definitions/Y.DeveloperType"
+                }
+            },
+            "title": "ScrumTeamType"
+        },
+        "Y.ArchivedMovieType": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/X.MovieType"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "ArchivedAt": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "format": "date",
+                            "example": "2017-04-13"
+                        }
+                    },
+                    "title": "ArchivedMovieType"
+                }
+            ]
+        },
+        "Y.SomeThingType": {
+            "type": "object",
+            "properties": {
+                "SomeProperty": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Contacts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/X.PersonType"
+                    }
+                },
+                "VIPs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/X.FriendType"
+                    }
+                }
+            },
+            "title": "SomeThingType"
+        },
+        "Y.ChangeTrackingType": {
+            "type": "object",
+            "properties": {
+                "InlineableStreamProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.PropertyPath"
+                    },
+                    "description": "Change tracking supports inlining these stream properties"
+                }
+            },
+            "title": "ChangeTrackingType"
         }
     },
     "parameters": {

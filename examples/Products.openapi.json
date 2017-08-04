@@ -30,206 +30,6 @@
             "name": "Advertisements"
         }
     ],
-    "definitions": {
-        "ProductService.Product": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "Name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "Description": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "ReleaseDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2017-04-13T15:51:04Z"
-                },
-                "DiscontinuedDate": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "format": "date-time",
-                    "example": "2017-04-13T15:51:04Z"
-                },
-                "Rating": {
-                    "type": "integer",
-                    "format": "int16"
-                },
-                "Price": {
-                    "type": [
-                        "number",
-                        "string"
-                    ],
-                    "format": "double",
-                    "example": 3.14
-                },
-                "Categories": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ProductService.Category"
-                    }
-                },
-                "Supplier": {
-                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/People.openapi.json#/definitions/PeopleService.Supplier"
-                },
-                "ProductDetail": {
-                    "$ref": "#/definitions/ProductService.ProductDetail"
-                }
-            },
-            "title": "Product"
-        },
-        "ProductService.FeaturedProduct": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/ProductService.Product"
-                },
-                {
-                    "type": "object",
-                    "properties": {
-                        "Advertisement": {
-                            "$ref": "#/definitions/ProductService.Advertisement"
-                        }
-                    },
-                    "title": "FeaturedProduct"
-                }
-            ]
-        },
-        "ProductService.ProductDetail": {
-            "type": "object",
-            "properties": {
-                "ProductID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "Details": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "Product": {
-                    "$ref": "#/definitions/ProductService.Product"
-                }
-            },
-            "title": "ProductDetail"
-        },
-        "ProductService.Category": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "Name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "Products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ProductService.Product"
-                    }
-                }
-            },
-            "title": "Category"
-        },
-        "ProductService.Advertisement": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "string",
-                    "format": "uuid",
-                    "example": "01234567-89ab-cdef-0123-456789abcdef"
-                },
-                "Name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "AirDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2017-04-13T15:51:04Z"
-                },
-                "FeaturedProduct": {
-                    "$ref": "#/definitions/ProductService.FeaturedProduct"
-                }
-            },
-            "title": "Advertisement"
-        },
-        "odata.error": {
-            "type": "object",
-            "required": [
-                "error"
-            ],
-            "properties": {
-                "error": {
-                    "$ref": "#/definitions/odata.error.main"
-                }
-            }
-        },
-        "odata.error.main": {
-            "type": "object",
-            "required": [
-                "code",
-                "message"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "target": {
-                    "type": "string"
-                },
-                "details": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/odata.error.detail"
-                    }
-                },
-                "innererror": {
-                    "type": "object",
-                    "description": "The structure of this object is service-specific"
-                }
-            }
-        },
-        "odata.error.detail": {
-            "type": "object",
-            "required": [
-                "code",
-                "message"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "target": {
-                    "type": "string"
-                }
-            }
-        }
-    },
     "paths": {
         "/Products": {
             "get": {
@@ -1241,6 +1041,206 @@
                     "default": {
                         "$ref": "#/responses/error"
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "ProductService.Product": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "ReleaseDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2017-04-13T15:51:04Z"
+                },
+                "DiscontinuedDate": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date-time",
+                    "example": "2017-04-13T15:51:04Z"
+                },
+                "Rating": {
+                    "type": "integer",
+                    "format": "int16"
+                },
+                "Price": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "double",
+                    "example": 3.14
+                },
+                "Categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ProductService.Category"
+                    }
+                },
+                "Supplier": {
+                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/People.openapi.json#/definitions/PeopleService.Supplier"
+                },
+                "ProductDetail": {
+                    "$ref": "#/definitions/ProductService.ProductDetail"
+                }
+            },
+            "title": "Product"
+        },
+        "ProductService.FeaturedProduct": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/ProductService.Product"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "Advertisement": {
+                            "$ref": "#/definitions/ProductService.Advertisement"
+                        }
+                    },
+                    "title": "FeaturedProduct"
+                }
+            ]
+        },
+        "ProductService.ProductDetail": {
+            "type": "object",
+            "properties": {
+                "ProductID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Details": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Product": {
+                    "$ref": "#/definitions/ProductService.Product"
+                }
+            },
+            "title": "ProductDetail"
+        },
+        "ProductService.Category": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ProductService.Product"
+                    }
+                }
+            },
+            "title": "Category"
+        },
+        "ProductService.Advertisement": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "01234567-89ab-cdef-0123-456789abcdef"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "AirDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2017-04-13T15:51:04Z"
+                },
+                "FeaturedProduct": {
+                    "$ref": "#/definitions/ProductService.FeaturedProduct"
+                }
+            },
+            "title": "Advertisement"
+        },
+        "odata.error": {
+            "type": "object",
+            "required": [
+                "error"
+            ],
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/odata.error.main"
+                }
+            }
+        },
+        "odata.error.main": {
+            "type": "object",
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/odata.error.detail"
+                    }
+                },
+                "innererror": {
+                    "type": "object",
+                    "description": "The structure of this object is service-specific"
+                }
+            }
+        },
+        "odata.error.detail": {
+            "type": "object",
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
                 }
             }
         }

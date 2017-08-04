@@ -39,379 +39,6 @@
             "name": "Advertisements"
         }
     ],
-    "definitions": {
-        "ODataDemo.Product": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "Name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "Description": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "ReleaseDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2017-04-13T15:51:04Z"
-                },
-                "DiscontinuedDate": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "format": "date-time",
-                    "example": "2017-04-13T15:51:04Z"
-                },
-                "Rating": {
-                    "type": "integer",
-                    "format": "int16"
-                },
-                "Price": {
-                    "type": [
-                        "number",
-                        "string"
-                    ],
-                    "format": "double",
-                    "example": 3.14
-                },
-                "Categories": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ODataDemo.Category"
-                    }
-                },
-                "Supplier": {
-                    "$ref": "#/definitions/ODataDemo.Supplier"
-                },
-                "ProductDetail": {
-                    "$ref": "#/definitions/ODataDemo.ProductDetail"
-                }
-            },
-            "title": "Product"
-        },
-        "ODataDemo.FeaturedProduct": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/ODataDemo.Product"
-                },
-                {
-                    "type": "object",
-                    "properties": {
-                        "Advertisement": {
-                            "$ref": "#/definitions/ODataDemo.Advertisement"
-                        }
-                    },
-                    "title": "FeaturedProduct"
-                }
-            ]
-        },
-        "ODataDemo.ProductDetail": {
-            "type": "object",
-            "properties": {
-                "ProductID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "Details": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "Product": {
-                    "$ref": "#/definitions/ODataDemo.Product"
-                }
-            },
-            "title": "ProductDetail"
-        },
-        "ODataDemo.Category": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "Name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "Products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ODataDemo.Product"
-                    }
-                }
-            },
-            "title": "Category"
-        },
-        "ODataDemo.Supplier": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "Name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "Address": {
-                    "$ref": "#/definitions/ODataDemo.Address"
-                },
-                "Location": {
-                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint"
-                },
-                "Concurrency": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "Products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ODataDemo.Product"
-                    }
-                }
-            },
-            "title": "Supplier"
-        },
-        "ODataDemo.Address": {
-            "type": "object",
-            "properties": {
-                "Street": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "City": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "State": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "ZipCode": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "Country": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                }
-            },
-            "title": "Address"
-        },
-        "ODataDemo.Person": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "Name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "PersonDetail": {
-                    "$ref": "#/definitions/ODataDemo.PersonDetail"
-                }
-            },
-            "title": "Person"
-        },
-        "ODataDemo.Customer": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/ODataDemo.Person"
-                },
-                {
-                    "type": "object",
-                    "properties": {
-                        "TotalExpense": {
-                            "type": [
-                                "number",
-                                "string"
-                            ],
-                            "format": "decimal",
-                            "multipleOf": 1
-                        }
-                    },
-                    "title": "Customer"
-                }
-            ]
-        },
-        "ODataDemo.Employee": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/ODataDemo.Person"
-                },
-                {
-                    "type": "object",
-                    "properties": {
-                        "EmployeeID": {
-                            "type": [
-                                "integer",
-                                "string"
-                            ],
-                            "format": "int64"
-                        },
-                        "HireDate": {
-                            "type": "string",
-                            "format": "date-time",
-                            "example": "2017-04-13T15:51:04Z"
-                        },
-                        "Salary": {
-                            "type": [
-                                "number",
-                                "string"
-                            ],
-                            "format": "float",
-                            "example": 3.14
-                        }
-                    },
-                    "title": "Employee"
-                }
-            ]
-        },
-        "ODataDemo.PersonDetail": {
-            "type": "object",
-            "properties": {
-                "PersonID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "Age": {
-                    "type": "integer",
-                    "format": "uint8"
-                },
-                "Gender": {
-                    "type": "boolean"
-                },
-                "Phone": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "Address": {
-                    "$ref": "#/definitions/ODataDemo.Address"
-                },
-                "Photo": {
-                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.Stream"
-                },
-                "Person": {
-                    "$ref": "#/definitions/ODataDemo.Person"
-                }
-            },
-            "title": "PersonDetail"
-        },
-        "ODataDemo.Advertisement": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "string",
-                    "format": "uuid",
-                    "example": "01234567-89ab-cdef-0123-456789abcdef"
-                },
-                "Name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "AirDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2017-04-13T15:51:04Z"
-                },
-                "FeaturedProduct": {
-                    "$ref": "#/definitions/ODataDemo.FeaturedProduct"
-                }
-            },
-            "title": "Advertisement"
-        },
-        "odata.error": {
-            "type": "object",
-            "required": [
-                "error"
-            ],
-            "properties": {
-                "error": {
-                    "$ref": "#/definitions/odata.error.main"
-                }
-            }
-        },
-        "odata.error.main": {
-            "type": "object",
-            "required": [
-                "code",
-                "message"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "target": {
-                    "type": "string"
-                },
-                "details": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/odata.error.detail"
-                    }
-                },
-                "innererror": {
-                    "type": "object",
-                    "description": "The structure of this object is service-specific"
-                }
-            }
-        },
-        "odata.error.detail": {
-            "type": "object",
-            "required": [
-                "code",
-                "message"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "target": {
-                    "type": "string"
-                }
-            }
-        }
-    },
     "paths": {
         "/Products": {
             "get": {
@@ -2191,6 +1818,379 @@
                     "default": {
                         "$ref": "#/responses/error"
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "ODataDemo.Product": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "ReleaseDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2017-04-13T15:51:04Z"
+                },
+                "DiscontinuedDate": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date-time",
+                    "example": "2017-04-13T15:51:04Z"
+                },
+                "Rating": {
+                    "type": "integer",
+                    "format": "int16"
+                },
+                "Price": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "double",
+                    "example": 3.14
+                },
+                "Categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ODataDemo.Category"
+                    }
+                },
+                "Supplier": {
+                    "$ref": "#/definitions/ODataDemo.Supplier"
+                },
+                "ProductDetail": {
+                    "$ref": "#/definitions/ODataDemo.ProductDetail"
+                }
+            },
+            "title": "Product"
+        },
+        "ODataDemo.FeaturedProduct": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/ODataDemo.Product"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "Advertisement": {
+                            "$ref": "#/definitions/ODataDemo.Advertisement"
+                        }
+                    },
+                    "title": "FeaturedProduct"
+                }
+            ]
+        },
+        "ODataDemo.ProductDetail": {
+            "type": "object",
+            "properties": {
+                "ProductID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Details": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Product": {
+                    "$ref": "#/definitions/ODataDemo.Product"
+                }
+            },
+            "title": "ProductDetail"
+        },
+        "ODataDemo.Category": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ODataDemo.Product"
+                    }
+                }
+            },
+            "title": "Category"
+        },
+        "ODataDemo.Supplier": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Address": {
+                    "$ref": "#/definitions/ODataDemo.Address"
+                },
+                "Location": {
+                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint"
+                },
+                "Concurrency": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ODataDemo.Product"
+                    }
+                }
+            },
+            "title": "Supplier"
+        },
+        "ODataDemo.Address": {
+            "type": "object",
+            "properties": {
+                "Street": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "City": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "State": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "ZipCode": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Country": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "title": "Address"
+        },
+        "ODataDemo.Person": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "PersonDetail": {
+                    "$ref": "#/definitions/ODataDemo.PersonDetail"
+                }
+            },
+            "title": "Person"
+        },
+        "ODataDemo.Customer": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/ODataDemo.Person"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "TotalExpense": {
+                            "type": [
+                                "number",
+                                "string"
+                            ],
+                            "format": "decimal",
+                            "multipleOf": 1
+                        }
+                    },
+                    "title": "Customer"
+                }
+            ]
+        },
+        "ODataDemo.Employee": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/ODataDemo.Person"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "EmployeeID": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "int64"
+                        },
+                        "HireDate": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2017-04-13T15:51:04Z"
+                        },
+                        "Salary": {
+                            "type": [
+                                "number",
+                                "string"
+                            ],
+                            "format": "float",
+                            "example": 3.14
+                        }
+                    },
+                    "title": "Employee"
+                }
+            ]
+        },
+        "ODataDemo.PersonDetail": {
+            "type": "object",
+            "properties": {
+                "PersonID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Age": {
+                    "type": "integer",
+                    "format": "uint8"
+                },
+                "Gender": {
+                    "type": "boolean"
+                },
+                "Phone": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Address": {
+                    "$ref": "#/definitions/ODataDemo.Address"
+                },
+                "Photo": {
+                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.Stream"
+                },
+                "Person": {
+                    "$ref": "#/definitions/ODataDemo.Person"
+                }
+            },
+            "title": "PersonDetail"
+        },
+        "ODataDemo.Advertisement": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "01234567-89ab-cdef-0123-456789abcdef"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "AirDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2017-04-13T15:51:04Z"
+                },
+                "FeaturedProduct": {
+                    "$ref": "#/definitions/ODataDemo.FeaturedProduct"
+                }
+            },
+            "title": "Advertisement"
+        },
+        "odata.error": {
+            "type": "object",
+            "required": [
+                "error"
+            ],
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/odata.error.main"
+                }
+            }
+        },
+        "odata.error.main": {
+            "type": "object",
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/odata.error.detail"
+                    }
+                },
+                "innererror": {
+                    "type": "object",
+                    "description": "The structure of this object is service-specific"
+                }
+            }
+        },
+        "odata.error.detail": {
+            "type": "object",
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
                 }
             }
         }

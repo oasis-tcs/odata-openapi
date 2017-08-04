@@ -35,227 +35,6 @@
             "name": "Countries"
         }
     ],
-    "definitions": {
-        "ODataDemo.Product": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "string"
-                },
-                "Description": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "ReleaseDate": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "format": "date",
-                    "example": "2017-04-13"
-                },
-                "DiscontinuedDate": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "format": "date",
-                    "example": "2017-04-13"
-                },
-                "Rating": {
-                    "type": [
-                        "integer",
-                        "null"
-                    ],
-                    "format": "int32"
-                },
-                "Price": {
-                    "type": [
-                        "number",
-                        "string",
-                        "null"
-                    ],
-                    "format": "decimal",
-                    "multipleOf": 1
-                },
-                "Currency": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "maxLength": 3
-                },
-                "Category": {
-                    "$ref": "#/definitions/ODataDemo.Category"
-                },
-                "Supplier": {
-                    "$ref": "#/definitions/ODataDemo.Supplier"
-                }
-            },
-            "title": "Product"
-        },
-        "ODataDemo.Category": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "Name": {
-                    "type": "string"
-                },
-                "Products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ODataDemo.Product"
-                    }
-                }
-            },
-            "title": "Category"
-        },
-        "ODataDemo.Supplier": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "string"
-                },
-                "Name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "Address": {
-                    "$ref": "#/definitions/ODataDemo.Address"
-                },
-                "Concurrency": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "Products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ODataDemo.Product"
-                    }
-                }
-            },
-            "title": "Supplier"
-        },
-        "ODataDemo.Country": {
-            "type": "object",
-            "properties": {
-                "Code": {
-                    "type": "string",
-                    "maxLength": 2
-                },
-                "Name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                }
-            },
-            "title": "Country"
-        },
-        "ODataDemo.Address": {
-            "type": "object",
-            "properties": {
-                "Street": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "City": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "State": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "ZipCode": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "CountryName": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "Country": {
-                    "$ref": "#/definitions/ODataDemo.Country"
-                }
-            },
-            "title": "Address"
-        },
-        "odata.error": {
-            "type": "object",
-            "required": [
-                "error"
-            ],
-            "properties": {
-                "error": {
-                    "$ref": "#/definitions/odata.error.main"
-                }
-            }
-        },
-        "odata.error.main": {
-            "type": "object",
-            "required": [
-                "code",
-                "message"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "target": {
-                    "type": "string"
-                },
-                "details": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/odata.error.detail"
-                    }
-                },
-                "innererror": {
-                    "type": "object",
-                    "description": "The structure of this object is service-specific"
-                }
-            }
-        },
-        "odata.error.detail": {
-            "type": "object",
-            "required": [
-                "code",
-                "message"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "target": {
-                    "type": "string"
-                }
-            }
-        }
-    },
     "paths": {
         "/Products": {
             "get": {
@@ -1299,6 +1078,227 @@
                     "default": {
                         "$ref": "#/responses/error"
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "ODataDemo.Product": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "Description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "ReleaseDate": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date",
+                    "example": "2017-04-13"
+                },
+                "DiscontinuedDate": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date",
+                    "example": "2017-04-13"
+                },
+                "Rating": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "format": "int32"
+                },
+                "Price": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1
+                },
+                "Currency": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "maxLength": 3
+                },
+                "Category": {
+                    "$ref": "#/definitions/ODataDemo.Category"
+                },
+                "Supplier": {
+                    "$ref": "#/definitions/ODataDemo.Supplier"
+                }
+            },
+            "title": "Product"
+        },
+        "ODataDemo.Category": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ODataDemo.Product"
+                    }
+                }
+            },
+            "title": "Category"
+        },
+        "ODataDemo.Supplier": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Address": {
+                    "$ref": "#/definitions/ODataDemo.Address"
+                },
+                "Concurrency": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ODataDemo.Product"
+                    }
+                }
+            },
+            "title": "Supplier"
+        },
+        "ODataDemo.Country": {
+            "type": "object",
+            "properties": {
+                "Code": {
+                    "type": "string",
+                    "maxLength": 2
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "title": "Country"
+        },
+        "ODataDemo.Address": {
+            "type": "object",
+            "properties": {
+                "Street": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "City": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "State": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "ZipCode": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "CountryName": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Country": {
+                    "$ref": "#/definitions/ODataDemo.Country"
+                }
+            },
+            "title": "Address"
+        },
+        "odata.error": {
+            "type": "object",
+            "required": [
+                "error"
+            ],
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/odata.error.main"
+                }
+            }
+        },
+        "odata.error.main": {
+            "type": "object",
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/odata.error.detail"
+                    }
+                },
+                "innererror": {
+                    "type": "object",
+                    "description": "The structure of this object is service-specific"
+                }
+            }
+        },
+        "odata.error.detail": {
+            "type": "object",
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
                 }
             }
         }

@@ -33,406 +33,6 @@
             "name": "Me"
         }
     ],
-    "definitions": {
-        "Microsoft.OData.SampleService.Models.TripPin.PersonGender": {
-            "type": "string",
-            "enum": [
-                "Male",
-                "Female",
-                "Unknown"
-            ],
-            "title": "PersonGender"
-        },
-        "Microsoft.OData.SampleService.Models.TripPin.City": {
-            "type": "object",
-            "properties": {
-                "CountryRegion": {
-                    "type": "string"
-                },
-                "Name": {
-                    "type": "string"
-                },
-                "Region": {
-                    "type": "string"
-                }
-            },
-            "title": "City"
-        },
-        "Microsoft.OData.SampleService.Models.TripPin.Location": {
-            "type": "object",
-            "properties": {
-                "Address": {
-                    "type": "string"
-                },
-                "City": {
-                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.City"
-                }
-            },
-            "title": "Location"
-        },
-        "Microsoft.OData.SampleService.Models.TripPin.EventLocation": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
-                },
-                {
-                    "type": "object",
-                    "properties": {
-                        "BuildingInfo": {
-                            "type": [
-                                "string",
-                                "null"
-                            ]
-                        }
-                    },
-                    "title": "EventLocation"
-                }
-            ]
-        },
-        "Microsoft.OData.SampleService.Models.TripPin.AirportLocation": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
-                },
-                {
-                    "type": "object",
-                    "properties": {
-                        "Loc": {
-                            "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint"
-                        }
-                    },
-                    "title": "AirportLocation"
-                }
-            ]
-        },
-        "Microsoft.OData.SampleService.Models.TripPin.Photo": {
-            "type": "object",
-            "properties": {
-                "Id": {
-                    "type": [
-                        "integer",
-                        "string"
-                    ],
-                    "format": "int64"
-                },
-                "Name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                }
-            },
-            "title": "Photo"
-        },
-        "Microsoft.OData.SampleService.Models.TripPin.Person": {
-            "type": "object",
-            "properties": {
-                "UserName": {
-                    "type": "string"
-                },
-                "FirstName": {
-                    "type": "string"
-                },
-                "LastName": {
-                    "type": "string"
-                },
-                "Emails": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "AddressInfo": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
-                    }
-                },
-                "Gender": {
-                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PersonGender"
-                },
-                "Concurrency": {
-                    "type": [
-                        "integer",
-                        "string"
-                    ],
-                    "format": "int64"
-                },
-                "Friends": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
-                    }
-                },
-                "Trips": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
-                    }
-                },
-                "Photo": {
-                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
-                }
-            },
-            "title": "Person"
-        },
-        "Microsoft.OData.SampleService.Models.TripPin.Airline": {
-            "type": "object",
-            "properties": {
-                "AirlineCode": {
-                    "type": "string"
-                },
-                "Name": {
-                    "type": "string"
-                }
-            },
-            "title": "Airline"
-        },
-        "Microsoft.OData.SampleService.Models.TripPin.Airport": {
-            "type": "object",
-            "properties": {
-                "IcaoCode": {
-                    "type": "string"
-                },
-                "Name": {
-                    "type": "string"
-                },
-                "IataCode": {
-                    "type": "string"
-                },
-                "Location": {
-                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.AirportLocation"
-                }
-            },
-            "title": "Airport"
-        },
-        "Microsoft.OData.SampleService.Models.TripPin.PlanItem": {
-            "type": "object",
-            "properties": {
-                "PlanItemId": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "ConfirmationCode": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "StartsAt": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "format": "date-time",
-                    "example": "2017-04-13T15:51:04Z"
-                },
-                "EndsAt": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "format": "date-time",
-                    "example": "2017-04-13T15:51:04Z"
-                },
-                "Duration": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "format": "duration",
-                    "example": "P4DT15H51M04.217S"
-                }
-            },
-            "title": "PlanItem"
-        },
-        "Microsoft.OData.SampleService.Models.TripPin.PublicTransportation": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
-                },
-                {
-                    "type": "object",
-                    "properties": {
-                        "SeatNumber": {
-                            "type": [
-                                "string",
-                                "null"
-                            ]
-                        }
-                    },
-                    "title": "PublicTransportation"
-                }
-            ]
-        },
-        "Microsoft.OData.SampleService.Models.TripPin.Flight": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PublicTransportation"
-                },
-                {
-                    "type": "object",
-                    "properties": {
-                        "FlightNumber": {
-                            "type": "string"
-                        },
-                        "From": {
-                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
-                        },
-                        "To": {
-                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
-                        },
-                        "Airline": {
-                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
-                        }
-                    },
-                    "title": "Flight"
-                }
-            ]
-        },
-        "Microsoft.OData.SampleService.Models.TripPin.Event": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
-                },
-                {
-                    "type": "object",
-                    "properties": {
-                        "Description": {
-                            "type": [
-                                "string",
-                                "null"
-                            ]
-                        },
-                        "OccursAt": {
-                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.EventLocation"
-                        }
-                    },
-                    "title": "Event"
-                }
-            ]
-        },
-        "Microsoft.OData.SampleService.Models.TripPin.Trip": {
-            "type": "object",
-            "properties": {
-                "TripId": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "ShareId": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "format": "uuid",
-                    "example": "01234567-89ab-cdef-0123-456789abcdef"
-                },
-                "Description": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "Name": {
-                    "type": "string"
-                },
-                "Budget": {
-                    "type": [
-                        "number",
-                        "string"
-                    ],
-                    "format": "float",
-                    "example": 3.14
-                },
-                "StartsAt": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2017-04-13T15:51:04Z"
-                },
-                "EndsAt": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2017-04-13T15:51:04Z"
-                },
-                "Tags": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "Photos": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
-                    }
-                },
-                "PlanItems": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
-                    }
-                }
-            },
-            "title": "Trip"
-        },
-        "odata.error": {
-            "type": "object",
-            "required": [
-                "error"
-            ],
-            "properties": {
-                "error": {
-                    "$ref": "#/definitions/odata.error.main"
-                }
-            }
-        },
-        "odata.error.main": {
-            "type": "object",
-            "required": [
-                "code",
-                "message"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "target": {
-                    "type": "string"
-                },
-                "details": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/odata.error.detail"
-                    }
-                },
-                "innererror": {
-                    "type": "object",
-                    "description": "The structure of this object is service-specific"
-                }
-            }
-        },
-        "odata.error.detail": {
-            "type": "object",
-            "required": [
-                "code",
-                "message"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "target": {
-                    "type": "string"
-                }
-            }
-        }
-    },
     "paths": {
         "/Photos": {
             "get": {
@@ -1594,6 +1194,406 @@
                     "default": {
                         "$ref": "#/responses/error"
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Microsoft.OData.SampleService.Models.TripPin.PersonGender": {
+            "type": "string",
+            "enum": [
+                "Male",
+                "Female",
+                "Unknown"
+            ],
+            "title": "PersonGender"
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.City": {
+            "type": "object",
+            "properties": {
+                "CountryRegion": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Region": {
+                    "type": "string"
+                }
+            },
+            "title": "City"
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Location": {
+            "type": "object",
+            "properties": {
+                "Address": {
+                    "type": "string"
+                },
+                "City": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.City"
+                }
+            },
+            "title": "Location"
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.EventLocation": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "BuildingInfo": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        }
+                    },
+                    "title": "EventLocation"
+                }
+            ]
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.AirportLocation": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "Loc": {
+                            "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint"
+                        }
+                    },
+                    "title": "AirportLocation"
+                }
+            ]
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Photo": {
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "type": [
+                        "integer",
+                        "string"
+                    ],
+                    "format": "int64"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "title": "Photo"
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Person": {
+            "type": "object",
+            "properties": {
+                "UserName": {
+                    "type": "string"
+                },
+                "FirstName": {
+                    "type": "string"
+                },
+                "LastName": {
+                    "type": "string"
+                },
+                "Emails": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "AddressInfo": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
+                    }
+                },
+                "Gender": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PersonGender"
+                },
+                "Concurrency": {
+                    "type": [
+                        "integer",
+                        "string"
+                    ],
+                    "format": "int64"
+                },
+                "Friends": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                    }
+                },
+                "Trips": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                    }
+                },
+                "Photo": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+                }
+            },
+            "title": "Person"
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Airline": {
+            "type": "object",
+            "properties": {
+                "AirlineCode": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                }
+            },
+            "title": "Airline"
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Airport": {
+            "type": "object",
+            "properties": {
+                "IcaoCode": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "IataCode": {
+                    "type": "string"
+                },
+                "Location": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.AirportLocation"
+                }
+            },
+            "title": "Airport"
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.PlanItem": {
+            "type": "object",
+            "properties": {
+                "PlanItemId": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "ConfirmationCode": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "StartsAt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date-time",
+                    "example": "2017-04-13T15:51:04Z"
+                },
+                "EndsAt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date-time",
+                    "example": "2017-04-13T15:51:04Z"
+                },
+                "Duration": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "duration",
+                    "example": "P4DT15H51M04.217S"
+                }
+            },
+            "title": "PlanItem"
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.PublicTransportation": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "SeatNumber": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        }
+                    },
+                    "title": "PublicTransportation"
+                }
+            ]
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Flight": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PublicTransportation"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "FlightNumber": {
+                            "type": "string"
+                        },
+                        "From": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+                        },
+                        "To": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+                        },
+                        "Airline": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+                        }
+                    },
+                    "title": "Flight"
+                }
+            ]
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Event": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "Description": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "OccursAt": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.EventLocation"
+                        }
+                    },
+                    "title": "Event"
+                }
+            ]
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Trip": {
+            "type": "object",
+            "properties": {
+                "TripId": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "ShareId": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "uuid",
+                    "example": "01234567-89ab-cdef-0123-456789abcdef"
+                },
+                "Description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Budget": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "float",
+                    "example": 3.14
+                },
+                "StartsAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2017-04-13T15:51:04Z"
+                },
+                "EndsAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2017-04-13T15:51:04Z"
+                },
+                "Tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "Photos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+                    }
+                },
+                "PlanItems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
+                    }
+                }
+            },
+            "title": "Trip"
+        },
+        "odata.error": {
+            "type": "object",
+            "required": [
+                "error"
+            ],
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/odata.error.main"
+                }
+            }
+        },
+        "odata.error.main": {
+            "type": "object",
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/odata.error.detail"
+                    }
+                },
+                "innererror": {
+                    "type": "object",
+                    "description": "The structure of this object is service-specific"
+                }
+            }
+        },
+        "odata.error.detail": {
+            "type": "object",
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
                 }
             }
         }
