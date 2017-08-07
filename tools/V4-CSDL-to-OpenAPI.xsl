@@ -1417,28 +1417,13 @@
         </xsl:otherwise>
       </xsl:choose>
 
-      <xsl:text>,"responses":{"201":{"description":"Created entity",</xsl:text>
-      <xsl:if test="$openapi-version!='2.0'">
-        <xsl:text>"content":{"application/json":{</xsl:text>
-      </xsl:if>
-      <xsl:text>"schema":{</xsl:text>
-      <xsl:if test="$odata-version='2.0'">
-        <xsl:text>"title":"Created </xsl:text>
-        <xsl:value-of select="$type" />
-        <xsl:text>","type":"object","properties":{"d":{</xsl:text>
-      </xsl:if>
-      <xsl:call-template name="schema-ref">
-        <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+      <xsl:call-template name="responses">
+        <xsl:with-param name="code" select="'201'" />
+        <xsl:with-param name="type" select="$qualifiedType" />
+        <xsl:with-param name="description" select="'Created entity'" />
+        <xsl:with-param name="innerDescription" select="concat('Created ',$type)" />
       </xsl:call-template>
-      <xsl:if test="$odata-version='2.0'">
-        <xsl:text>}}</xsl:text>
-      </xsl:if>
-      <xsl:if test="$openapi-version!='2.0'">
-        <xsl:text>}}</xsl:text>
-      </xsl:if>
-      <xsl:text>}},</xsl:text>
-      <xsl:value-of select="$defaultResponse" />
-      <xsl:text>}}</xsl:text>
+      <xsl:text>}</xsl:text>
     </xsl:if>
 
     <xsl:text>}</xsl:text>
@@ -1623,17 +1608,31 @@
       <xsl:value-of select="@Name" />
       <xsl:text>","tags":["</xsl:text>
       <xsl:value-of select="@Name" />
-      <xsl:text>"]</xsl:text>
-      <xsl:text>,"parameters":[</xsl:text>
+      <xsl:text>"],</xsl:text>
+
+      <xsl:text>"parameters":[</xsl:text>
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="parameter" />
-      <xsl:text>,{"name":"</xsl:text>
-      <xsl:value-of select="$type" />
-      <xsl:text>","in":"body",</xsl:text>
+
+      <xsl:choose>
+        <xsl:when test="$openapi-version='2.0'">
+          <xsl:text>,{"name":"</xsl:text>
+          <xsl:value-of select="$type" />
+          <xsl:text>","in":"body",</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>],"requestBody":{</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:call-template name="entityTypeDescription">
         <xsl:with-param name="namespace" select="$namespace" />
         <xsl:with-param name="type" select="$type" />
         <xsl:with-param name="default" select="'New property values'" />
       </xsl:call-template>
+
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>"content":{"application/json":{</xsl:text>
+      </xsl:if>
+
       <xsl:text>"schema":{</xsl:text>
       <xsl:if test="$odata-version='2.0'">
         <xsl:text>"title":"Modified </xsl:text>
@@ -1646,7 +1645,17 @@
       <xsl:if test="$odata-version='2.0'">
         <xsl:text>}}</xsl:text>
       </xsl:if>
-      <xsl:text>}}],"responses":{"204":{"description":"Success"},</xsl:text>
+
+      <xsl:choose>
+        <xsl:when test="$openapi-version='2.0'">
+          <xsl:text>}}]</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>}}}}</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+
+      <xsl:text>,"responses":{"204":{"description":"Success"},</xsl:text>
       <xsl:value-of select="$defaultResponse" />
       <xsl:text>}}</xsl:text>
     </xsl:if>
@@ -1670,8 +1679,8 @@
       <xsl:text>"]</xsl:text>
       <xsl:text>,"parameters":[</xsl:text>
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="parameter" />
-      <xsl:text>,{"name":"If-Match","in":"header","description":"ETag","type":"string"}]</xsl:text>
-      <xsl:text>,"responses":{"204":{"description":"Success"},</xsl:text>
+      <xsl:call-template name="if-match" />
+      <xsl:text>],"responses":{"204":{"description":"Success"},</xsl:text>
       <xsl:value-of select="$defaultResponse" />
       <xsl:text>}}</xsl:text>
     </xsl:if>
@@ -1694,6 +1703,10 @@
       <xsl:with-param name="namespace" select="$namespace" />
       <xsl:with-param name="type" select="$type" />
     </xsl:apply-templates>
+  </xsl:template>
+
+  <xsl:template name="if-match">
+    <xsl:text>,{"name":"If-Match","in":"header","description":"ETag","type":"string"}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Singleton">
@@ -2179,6 +2192,7 @@
   </xsl:template>
 
   <xsl:template name="responses">
+    <xsl:param name="code" select="'200'" />
     <xsl:param name="type" />
     <xsl:param name="description" select="'Success'" />
     <xsl:param name="innerDescription" select="'Result'" />
@@ -2193,7 +2207,9 @@
         <xsl:text>"}</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>"200":{"description":"</xsl:text>
+        <xsl:text>"</xsl:text>
+        <xsl:value-of select="$code" />
+        <xsl:text>":{"description":"</xsl:text>
         <xsl:value-of select="$description" />
         <xsl:text>",</xsl:text>
         <xsl:if test="$openapi-version!='2.0'">
