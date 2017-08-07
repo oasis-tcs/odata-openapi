@@ -8,14 +8,14 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - OpenAPI 3.0.0 support
     - OData 2.0 error response format
-    - "type":["string","null"] not supported by Swagger-UI/Editor 3.0.3: bug or "feature"?
+    - "type":["string","null"] not supported by Swagger-UI/Editor 3.x: bug or "feature"?
     - - "nullable":true seems to be supported or at least tolerated
     - operation descriptions for entity sets and singletons
+    - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
     - Inline definitions for Edm.* to make OpenAPI documents self-contained
-    - add securityDefinitions script parameter with default
+    - securityDefinitions script parameter with default
     "securityDefinitions":{"basic_auth":{"type":"basic","description": "Basic
     Authentication"}}
     - Validation annotations -> minimum, maximum, exclusiveM??imum,
@@ -27,7 +27,7 @@
     - both "clickable" and freestyle $expand, $select, $orderby - does not work yet, open issue for Swagger UI
     - system query options for actions/functions/imports depending on "Collection("
     - 200 response for PATCH
-    - ETag for GET / If-Match for PATCH depending on @Core.OptimisticConcurrency
+    - ETag for GET / If-Match for PATCH and DELETE depending on @Core.OptimisticConcurrency
     - allow external targeting for @Core.Description similar to @Common.Label
     - remove duplicated code in /paths production
     - Capabilities: SortRestrictions/NonSortableProperties, FilterRestrictions/NonFilterableProperties
@@ -1688,9 +1688,9 @@
         </xsl:otherwise>
       </xsl:choose>
 
-      <xsl:text>,"responses":{"204":{"description":"Success"},</xsl:text>
-      <xsl:value-of select="$defaultResponse" />
-      <xsl:text>}}</xsl:text>
+      <xsl:call-template name="responses" />
+
+      <xsl:text>}</xsl:text>
     </xsl:if>
 
     <!-- DELETE -->
@@ -1713,9 +1713,9 @@
       <xsl:text>,"parameters":[</xsl:text>
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="parameter" />
       <xsl:call-template name="if-match" />
-      <xsl:text>],"responses":{"204":{"description":"Success"},</xsl:text>
-      <xsl:value-of select="$defaultResponse" />
-      <xsl:text>}}</xsl:text>
+      <xsl:text>]</xsl:text>
+      <xsl:call-template name="responses" />
+      <xsl:text>}</xsl:text>
     </xsl:if>
 
     <xsl:text>}</xsl:text>
@@ -1859,11 +1859,9 @@
       </xsl:otherwise>
     </xsl:choose>
 
-    <xsl:text>,"responses":{"204":{"description":"Success"},</xsl:text>
-    <xsl:value-of select="$defaultResponse" />
-    <xsl:text>}}</xsl:text>
+    <xsl:call-template name="responses" />
 
-    <xsl:text>}</xsl:text>
+    <xsl:text>}}</xsl:text>
 
     <xsl:apply-templates
       select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
@@ -2278,7 +2276,7 @@
 
   <xsl:template name="responses">
     <xsl:param name="code" select="'200'" />
-    <xsl:param name="type" />
+    <xsl:param name="type" select="null" />
     <xsl:param name="description" select="'Success'" />
     <xsl:param name="innerDescription" select="'Result'" />
 
