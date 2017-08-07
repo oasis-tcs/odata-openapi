@@ -1597,21 +1597,14 @@
       <xsl:apply-templates
         select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream']"
         mode="expand" />
-      <xsl:text>],"responses":{"200":{"description":"Retrieved entity","schema":{</xsl:text>
-      <xsl:if test="$odata-version='2.0'">
-        <xsl:text>"title":"</xsl:text>
-        <xsl:value-of select="$type" />
-        <xsl:text>","type":"object","properties":{"d":{</xsl:text>
-      </xsl:if>
-      <xsl:call-template name="schema-ref">
-        <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+      <xsl:text>]</xsl:text>
+
+      <xsl:call-template name="responses">
+        <xsl:with-param name="type" select="$qualifiedType" />
+        <xsl:with-param name="description" select="'Retrieved entity'" />
+        <xsl:with-param name="innerDescription" select="$type" />
       </xsl:call-template>
-      <xsl:if test="$odata-version='2.0'">
-        <xsl:text>}}</xsl:text>
-      </xsl:if>
-      <xsl:text>}},</xsl:text>
-      <xsl:value-of select="$defaultResponse" />
-      <xsl:text>}}</xsl:text>
+      <xsl:text>}</xsl:text>
     </xsl:if>
 
     <!-- PATCH -->
@@ -2101,6 +2094,7 @@
     <xsl:call-template name="responses">
       <xsl:with-param name="type" select="//edm:Schema[@Namespace=$namespace]/edm:Action[@Name=$action]/edm:ReturnType/@Type" />
     </xsl:call-template>
+    <xsl:text>}}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:FunctionImport">
@@ -2181,22 +2175,35 @@
     <xsl:call-template name="responses">
       <xsl:with-param name="type" select="edm:ReturnType/@Type" />
     </xsl:call-template>
+    <xsl:text>}}</xsl:text>
   </xsl:template>
 
   <xsl:template name="responses">
     <xsl:param name="type" />
+    <xsl:param name="description" select="'Success'" />
+    <xsl:param name="innerDescription" select="'Result'" />
 
     <xsl:variable name="collection" select="starts-with($type,'Collection(')" />
 
     <xsl:text>,"responses":{</xsl:text>
     <xsl:choose>
       <xsl:when test="not($type)">
-        <xsl:text>"204":{"description":"Success"}</xsl:text>
+        <xsl:text>"204":{"description":"</xsl:text>
+        <xsl:value-of select="$description" />
+        <xsl:text>"}</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>"200":{"description":"Success","schema":{</xsl:text>
+        <xsl:text>"200":{"description":"</xsl:text>
+        <xsl:value-of select="$description" />
+        <xsl:text>",</xsl:text>
+        <xsl:if test="$openapi-version!='2.0'">
+          <xsl:text>"content":{"application/json":{</xsl:text>
+        </xsl:if>
+        <xsl:text>"schema":{</xsl:text>
         <xsl:if test="$collection or $odata-version='2.0'">
-          <xsl:text>"title":"Result","type":"object","properties":{"</xsl:text>
+          <xsl:text>"title":"</xsl:text>
+          <xsl:value-of select="$innerDescription" />
+          <xsl:text>","type":"object","properties":{"</xsl:text>
           <xsl:choose>
             <xsl:when test="$odata-version='2.0'">
               <xsl:text>d</xsl:text>
@@ -2214,12 +2221,15 @@
         <xsl:if test="$collection or $odata-version='2.0'">
           <xsl:text>}}</xsl:text>
         </xsl:if>
+        <xsl:if test="$openapi-version!='2.0'">
+          <xsl:text>}}</xsl:text>
+        </xsl:if>
         <xsl:text>}}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>,</xsl:text>
     <xsl:value-of select="$defaultResponse" />
-    <xsl:text>}}}</xsl:text>
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Action" mode="bound">
@@ -2276,6 +2286,7 @@
     <xsl:call-template name="responses">
       <xsl:with-param name="type" select="edm:ReturnType/@Type" />
     </xsl:call-template>
+    <xsl:text>}}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Function" mode="bound">
@@ -2338,6 +2349,7 @@
     <xsl:call-template name="responses">
       <xsl:with-param name="type" select="edm:ReturnType/@Type" />
     </xsl:call-template>
+    <xsl:text>}}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Action/edm:Parameter" mode="hashvalue">
