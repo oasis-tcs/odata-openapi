@@ -1664,11 +1664,9 @@
         <xsl:with-param name="type" select="$type" />
         <xsl:with-param name="default" select="'New property values'" />
       </xsl:call-template>
-
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>"content":{"application/json":{</xsl:text>
       </xsl:if>
-
       <xsl:text>"schema":{</xsl:text>
       <xsl:if test="$odata-version='2.0'">
         <xsl:text>"title":"Modified </xsl:text>
@@ -1681,7 +1679,6 @@
       <xsl:if test="$odata-version='2.0'">
         <xsl:text>}}</xsl:text>
       </xsl:if>
-
       <xsl:choose>
         <xsl:when test="$openapi-version='2.0'">
           <xsl:text>}}]</xsl:text>
@@ -2359,13 +2356,35 @@
     <xsl:text>"],"parameters":[</xsl:text>
     <xsl:if test="$entitySet">
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="parameter" />
-      <xsl:text>,</xsl:text>
     </xsl:if>
-    <xsl:text>{"name":"body","in":"body","description":"Action parameters","schema":{"type":"object"</xsl:text>
+
+    <xsl:choose>
+      <xsl:when test="$openapi-version='2.0'">
+        <xsl:if test="$entitySet">
+          <xsl:text>,</xsl:text>
+        </xsl:if>
+        <xsl:text>{"name":"body","in":"body",</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>],"requestBody":{</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>"description":"Action parameters",</xsl:text>
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>"content":{"application/json":{</xsl:text>
+    </xsl:if>
+    <xsl:text>"schema":{"type":"object"</xsl:text>
     <xsl:apply-templates select="edm:Parameter[position()>1]" mode="hash">
       <xsl:with-param name="name" select="'properties'" />
     </xsl:apply-templates>
-    <xsl:text>}}]</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$openapi-version='2.0'">
+        <xsl:text>}}]</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>}}}}</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <xsl:call-template name="responses">
       <xsl:with-param name="type" select="edm:ReturnType/@Type" />
