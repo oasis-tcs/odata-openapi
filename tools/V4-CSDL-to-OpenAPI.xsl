@@ -1390,7 +1390,6 @@
           <xsl:text>"requestBody":{</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
-
       <xsl:call-template name="entityTypeDescription">
         <xsl:with-param name="namespace" select="$namespace" />
         <xsl:with-param name="type" select="$type" />
@@ -1407,7 +1406,6 @@
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>}}</xsl:text>
       </xsl:if>
-
       <xsl:choose>
         <xsl:when test="$openapi-version='2.0'">
           <xsl:text>}]</xsl:text>
@@ -1706,7 +1704,15 @@
   </xsl:template>
 
   <xsl:template name="if-match">
-    <xsl:text>,{"name":"If-Match","in":"header","description":"ETag","type":"string"}</xsl:text>
+    <xsl:text>,{"name":"If-Match","in":"header","description":"ETag",</xsl:text>
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>"schema":{</xsl:text>
+    </xsl:if>
+    <xsl:text>"type":"string"</xsl:text>
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>}</xsl:text>
+    </xsl:if>
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Singleton">
@@ -1765,14 +1771,15 @@
     <xsl:apply-templates
       select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream']"
       mode="expand" />
+    <xsl:text>]</xsl:text>
 
-    <xsl:text>],"responses":{"200":{"description":"Retrieved entity","schema":{</xsl:text>
-    <xsl:call-template name="schema-ref">
-      <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+    <xsl:call-template name="responses">
+      <xsl:with-param name="type" select="$qualifiedType" />
+      <xsl:with-param name="description" select="'Retrieved entity'" />
+      <xsl:with-param name="innerDescription" select="$type" />
     </xsl:call-template>
-    <xsl:text>}},</xsl:text>
-    <xsl:value-of select="$defaultResponse" />
-    <xsl:text>}}</xsl:text>
+    <xsl:text>}</xsl:text>
+
 
     <!-- PATCH -->
     <xsl:text>,"patch":{</xsl:text>
@@ -1780,21 +1787,44 @@
     <xsl:value-of select="@Name" />
     <xsl:text>","tags":["</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>"]</xsl:text>
-    <xsl:text>,"parameters":[</xsl:text>
-    <xsl:text>{"name":"</xsl:text>
-    <xsl:value-of select="$type" />
-    <xsl:text>","in":"body",</xsl:text>
+    <xsl:text>"],</xsl:text>
+
+    <xsl:choose>
+      <xsl:when test="$openapi-version='2.0'">
+        <xsl:text>"parameters":[{"name":"</xsl:text>
+        <xsl:value-of select="$type" />
+        <xsl:text>","in":"body",</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>"requestBody":{</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:call-template name="entityTypeDescription">
       <xsl:with-param name="namespace" select="$namespace" />
       <xsl:with-param name="type" select="$type" />
       <xsl:with-param name="default" select="'New property values'" />
     </xsl:call-template>
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>"content":{"application/json":{</xsl:text>
+    </xsl:if>
     <xsl:text>"schema":{</xsl:text>
     <xsl:call-template name="schema-ref">
       <xsl:with-param name="qualifiedName" select="$qualifiedType" />
     </xsl:call-template>
-    <xsl:text>}}],"responses":{"204":{"description":"Success"},</xsl:text>
+    <xsl:text>}</xsl:text>
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>}}</xsl:text>
+    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="$openapi-version='2.0'">
+        <xsl:text>}]</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>}</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+
+    <xsl:text>,"responses":{"204":{"description":"Success"},</xsl:text>
     <xsl:value-of select="$defaultResponse" />
     <xsl:text>}}</xsl:text>
 
