@@ -3,12 +3,11 @@
   xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:json="http://json.org/"
 >
   <!--
-    This style sheet transforms OData 4.0 CSDL XML documents into OpenAPI 2.0 JSON
+    This style sheet transforms OData 4.0 CSDL XML documents into OpenAPI 2.0 or OpenAPI 3.0.0 JSON
 
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - OData 2.0 error response format
     - "type":["string","null"] not supported by Swagger-UI/Editor 3.x: bug or "feature"?
     - - "nullable":true seems to be supported or at least tolerated
     - operation descriptions for entity sets and singletons
@@ -29,7 +28,7 @@
     - 200 response for PATCH
     - ETag for GET / If-Match for PATCH and DELETE depending on @Core.OptimisticConcurrency
     - allow external targeting for @Core.Description similar to @Common.Label
-    - remove duplicated code in /paths production
+    - reduce duplicated code in /paths production
     - Capabilities: SortRestrictions/NonSortableProperties, FilterRestrictions/NonFilterableProperties
   -->
 
@@ -461,11 +460,29 @@
     <xsl:text>"odata.error":{"type":"object","required":["error"],"properties":{"error":{"$ref":"</xsl:text>
     <xsl:value-of select="$reuse-schemas" />
     <xsl:text>odata.error.main"}}}</xsl:text>
-    <xsl:text>,"odata.error.main":{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"},"details":</xsl:text>
-    <xsl:text>{"type":"array","items":{"$ref":"</xsl:text>
-    <xsl:value-of select="$reuse-schemas" />
-    <xsl:text>odata.error.detail"}},"innererror":{"type":"object","description":"The structure of this object is service-specific"}}}</xsl:text>
-    <xsl:text>,"odata.error.detail":{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"}}}</xsl:text>
+    <xsl:text>,"odata.error.main":{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$odata-version='4.0'">
+        <xsl:text>{"type":"string"},"target":{"type":"string"},"details":</xsl:text>
+        <xsl:text>{"type":"array","items":{"$ref":"</xsl:text>
+        <xsl:value-of select="$reuse-schemas" />
+        <xsl:text>odata.error.detail"}}</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>{"$ref":"</xsl:text>
+        <xsl:value-of select="$reuse-schemas" />
+        <xsl:text>odata.error.message"}</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>,"innererror":{"type":"object","description":"The structure of this object is service-specific"}}}</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$odata-version='4.0'">
+        <xsl:text>,"odata.error.detail":{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"}}}</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>,"odata.error.message":{"type":"object","required":["lang","value"],"properties":{"lang":{"type":"string"},"value":{"type":"string"}}}</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="edm:EntityType" mode="description">
@@ -708,9 +725,6 @@
   <xsl:template name="type">
     <xsl:param name="type" />
     <xsl:param name="nullableFacet" />
-    <!-- TODO: remove -->
-    <xsl:param name="wrap" select="false()" />
-    <!-- :ODOT -->
     <xsl:param name="inParameter" select="false()" />
     <xsl:variable name="noArray" select="$inParameter" />
     <xsl:variable name="nullable">
