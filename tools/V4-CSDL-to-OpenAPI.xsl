@@ -1995,19 +1995,34 @@
         <xsl:value-of select="$name" />
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>","type":</xsl:text>
+    <xsl:text>",</xsl:text>
+
     <xsl:choose>
-      <xsl:when test="$type='Edm.Int64'">
-        <xsl:text>"integer","format":"int64"</xsl:text>
+      <xsl:when test="$openapi-version='2.0'">
+        <xsl:text>"type":</xsl:text>
+        <xsl:choose>
+          <xsl:when test="$type='Edm.Int64'">
+            <xsl:text>"integer","format":"int64"</xsl:text>
+          </xsl:when>
+          <xsl:when test="$type='Edm.Int32'">
+            <xsl:text>"integer","format":"int32"</xsl:text>
+          </xsl:when>
+          <!-- TODO: handle other Edm types, enumeration types, and type definitions -->
+          <xsl:otherwise>
+            <xsl:text>"string"</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
-      <xsl:when test="$type='Edm.Int32'">
-        <xsl:text>"integer","format":"int32"</xsl:text>
-      </xsl:when>
-      <!-- TODO: handle other Edm types, enumeration types, and type definitions -->
       <xsl:otherwise>
-        <xsl:text>"string"</xsl:text>
+        <xsl:text>"schema":{</xsl:text>
+        <xsl:call-template name="type">
+          <xsl:with-param name="type" select="$type" />
+          <xsl:with-param name="nullableFacet" select="'false'" />
+        </xsl:call-template>
+        <xsl:text>}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
+
     <xsl:text>}</xsl:text>
   </xsl:template>
 
