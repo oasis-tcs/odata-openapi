@@ -64,13 +64,24 @@
   <xsl:param name="openapi-formatoption" select="''" />
   <xsl:param name="openapi-version" select="'2.0'" />
 
-  <xsl:variable name="reusable-schemas">
+  <xsl:variable name="reuse-schemas">
     <xsl:choose>
       <xsl:when test="$openapi-version='2.0'">
         <xsl:text>#/definitions/</xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>#/components/schemas/</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
+  <xsl:variable name="reuse-parameters">
+    <xsl:choose>
+      <xsl:when test="$openapi-version='2.0'">
+        <xsl:text>#/parameters/</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>#/components/parameters/</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
@@ -117,7 +128,11 @@
   <xsl:variable name="commonQuickInfoAliased" select="concat($commonAlias,'.QuickInfo')" />
 
   <xsl:variable name="defaultResponse">
-    <xsl:text>"default":{"$ref":"#/responses/error"}</xsl:text>
+    <xsl:text>"default":{"$ref":"#/</xsl:text>
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>components/</xsl:text>
+    </xsl:if>
+    <xsl:text>responses/error"}</xsl:text>
   </xsl:variable>
 
   <xsl:template name="Core.Description">
@@ -374,14 +389,6 @@
       <xsl:with-param name="after" select="$openapi-version='2.0'" />
     </xsl:apply-templates>
 
-    <!-- TODO: enable OpenAPI 3.0.0 from here -->
-    <xsl:choose>
-      <xsl:when test="$openapi-version='2.0'">
-      </xsl:when>
-      <xsl:otherwise>
-      </xsl:otherwise>
-    </xsl:choose>
-
     <xsl:if test="//edm:EntityContainer">
       <xsl:text>,"parameters":{</xsl:text>
       <xsl:text>"top":{"name":"$top","in":"query","description":"Show only the first n items</xsl:text>
@@ -400,7 +407,7 @@
         <xsl:text>"content":{"application/json":{</xsl:text>
       </xsl:if>
       <xsl:text>"schema":{"$ref":"</xsl:text>
-      <xsl:value-of select="$reusable-schemas" />
+      <xsl:value-of select="$reuse-schemas" />
       <xsl:text>odata.error"}</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>}}</xsl:text>
@@ -1029,7 +1036,7 @@
     <xsl:call-template name="json-url">
       <xsl:with-param name="url" select="//edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
     </xsl:call-template>
-    <xsl:value-of select="$reusable-schemas" />
+    <xsl:value-of select="$reuse-schemas" />
     <xsl:choose>
       <xsl:when test="$internalNamespace">
         <xsl:value-of select="$internalNamespace" />
@@ -1283,7 +1290,9 @@
         </xsl:call-template>
       </xsl:variable>
       <xsl:if test="not($top-supported='false')">
-        <xsl:text>{"$ref":"#/parameters/top"},</xsl:text>
+        <xsl:text>{"$ref":"</xsl:text>
+        <xsl:value-of select="$reuse-parameters"></xsl:value-of>
+        <xsl:text>top"},</xsl:text>
       </xsl:if>
 
       <xsl:variable name="skip-supported">
@@ -1292,10 +1301,22 @@
         </xsl:call-template>
       </xsl:variable>
       <xsl:if test="not($skip-supported='false')">
-        <xsl:text>{"$ref":"#/parameters/skip"},</xsl:text>
+        <xsl:text>{"$ref":"</xsl:text>
+        <xsl:value-of select="$reuse-parameters"></xsl:value-of>
+        <xsl:text>skip"},</xsl:text>
       </xsl:if>
 
-      <xsl:text>{"$ref":"#/parameters/search"},{"$ref":"#/parameters/filter"},{"$ref":"#/parameters/count"}</xsl:text>
+      <xsl:text>{"$ref":"</xsl:text>
+      <xsl:value-of select="$reuse-parameters"></xsl:value-of>
+      <xsl:text>search"},</xsl:text>
+
+      <xsl:text>{"$ref":"</xsl:text>
+      <xsl:value-of select="$reuse-parameters"></xsl:value-of>
+      <xsl:text>filter"},</xsl:text>
+
+      <xsl:text>{"$ref":"</xsl:text>
+      <xsl:value-of select="$reuse-parameters"></xsl:value-of>
+      <xsl:text>count"}</xsl:text>
 
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
         mode="orderby" />
@@ -1305,7 +1326,11 @@
         select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream']"
         mode="expand" />
 
-      <xsl:text>],"responses":{"200":{"description":"Retrieved entities","schema":{"type":"object"</xsl:text>
+      <xsl:text>],"responses":{"200":{"description":"Retrieved entities",</xsl:text>
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>"content":{"application/json":{</xsl:text>
+      </xsl:if>
+      <xsl:text>"schema":{"type":"object"</xsl:text>
       <xsl:if test="$odata-version='2.0'">
         <xsl:text>,"title":"Wrapper","properties":{"d":{"type":"object"</xsl:text>
       </xsl:if>
@@ -1329,6 +1354,9 @@
       <xsl:if test="$odata-version='2.0'">
         <xsl:text>}}</xsl:text>
       </xsl:if>
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>}}</xsl:text>
+      </xsl:if>
       <xsl:text>}},</xsl:text>
       <xsl:value-of select="$defaultResponse" />
       <xsl:text>}}</xsl:text>
@@ -1350,21 +1378,50 @@
       <xsl:value-of select="@Name" />
       <xsl:text>","tags":["</xsl:text>
       <xsl:value-of select="@Name" />
-      <xsl:text>"]</xsl:text>
-      <xsl:text>,"parameters":[{"name":"</xsl:text>
-      <xsl:value-of select="$type" />
-      <xsl:text>","in":"body"</xsl:text>
+      <xsl:text>"],</xsl:text>
+
+      <xsl:choose>
+        <xsl:when test="$openapi-version='2.0'">
+          <xsl:text>"parameters":[{"name":"</xsl:text>
+          <xsl:value-of select="$type" />
+          <xsl:text>","in":"body",</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>"requestBody":{</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+
       <xsl:call-template name="entityTypeDescription">
         <xsl:with-param name="namespace" select="$namespace" />
         <xsl:with-param name="type" select="$type" />
         <xsl:with-param name="default" select="'New entity'" />
       </xsl:call-template>
-      <xsl:text>,"schema":{</xsl:text>
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>"content":{"application/json":{</xsl:text>
+      </xsl:if>
+      <xsl:text>"schema":{</xsl:text>
       <xsl:call-template name="schema-ref">
         <xsl:with-param name="qualifiedName" select="$qualifiedType" />
       </xsl:call-template>
-      <xsl:text>}}]</xsl:text>
-      <xsl:text>,"responses":{"201":{"description":"Created entity","schema":{</xsl:text>
+      <xsl:text>}</xsl:text>
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>}}</xsl:text>
+      </xsl:if>
+
+      <xsl:choose>
+        <xsl:when test="$openapi-version='2.0'">
+          <xsl:text>}]</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>}</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+
+      <xsl:text>,"responses":{"201":{"description":"Created entity",</xsl:text>
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>"content":{"application/json":{</xsl:text>
+      </xsl:if>
+      <xsl:text>"schema":{</xsl:text>
       <xsl:if test="$odata-version='2.0'">
         <xsl:text>"title":"Created </xsl:text>
         <xsl:value-of select="$type" />
@@ -1374,6 +1431,9 @@
         <xsl:with-param name="qualifiedName" select="$qualifiedType" />
       </xsl:call-template>
       <xsl:if test="$odata-version='2.0'">
+        <xsl:text>}}</xsl:text>
+      </xsl:if>
+      <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>}}</xsl:text>
       </xsl:if>
       <xsl:text>}},</xsl:text>
@@ -1406,8 +1466,11 @@
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:text>{"name":"$orderby","in":"query","description":"Order items by property values</xsl:text>
-      <xsl:text>, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374629)"</xsl:text>
-      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string","enum":[</xsl:text>
+      <xsl:text>, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374629)",</xsl:text>
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>"schema":{</xsl:text>
+      </xsl:if>
+      <xsl:text>"type":"array","uniqueItems":true,"items":{"type":"string","enum":[</xsl:text>
     </xsl:if>
     <xsl:if test="position()>1">
       <xsl:text>,</xsl:text>
@@ -1419,6 +1482,9 @@
     <xsl:text> desc"</xsl:text>
     <xsl:if test="position()=last()">
       <xsl:text>]}}</xsl:text>
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>}</xsl:text>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 
@@ -1429,8 +1495,11 @@
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:text>{"name":"$select","in":"query","description":"Select properties to be returned</xsl:text>
-      <xsl:text>, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)"</xsl:text>
-      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string","enum":[</xsl:text>
+      <xsl:text>, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",</xsl:text>
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>"schema":{</xsl:text>
+      </xsl:if>
+      <xsl:text>"type":"array","uniqueItems":true,"items":{"type":"string","enum":[</xsl:text>
     </xsl:if>
     <xsl:if test="position()>1">
       <xsl:text>,</xsl:text>
@@ -1440,6 +1509,9 @@
     <xsl:text>"</xsl:text>
     <xsl:if test="position()=last()">
       <xsl:text>]}}</xsl:text>
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>}</xsl:text>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 
@@ -1450,8 +1522,11 @@
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:text>{"name":"$expand","in":"query","description":"Expand related entities</xsl:text>
-      <xsl:text>, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)"</xsl:text>
-      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string","enum":["*"</xsl:text>
+      <xsl:text>, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",</xsl:text>
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>"schema":{</xsl:text>
+      </xsl:if>
+      <xsl:text>"type":"array","uniqueItems":true,"items":{"type":"string","enum":["*"</xsl:text>
     </xsl:if>
     <xsl:if test="local-name()='NavigationProperty' or /edmx:Edmx/@Version='4.01'">
       <xsl:text>,"</xsl:text>
@@ -1460,6 +1535,9 @@
     </xsl:if>
     <xsl:if test="position()=last()">
       <xsl:text>]}}</xsl:text>
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>}</xsl:text>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 
@@ -1557,13 +1635,13 @@
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="parameter" />
       <xsl:text>,{"name":"</xsl:text>
       <xsl:value-of select="$type" />
-      <xsl:text>","in":"body"</xsl:text>
+      <xsl:text>","in":"body",</xsl:text>
       <xsl:call-template name="entityTypeDescription">
         <xsl:with-param name="namespace" select="$namespace" />
         <xsl:with-param name="type" select="$type" />
         <xsl:with-param name="default" select="'New property values'" />
       </xsl:call-template>
-      <xsl:text>,"schema":{</xsl:text>
+      <xsl:text>"schema":{</xsl:text>
       <xsl:if test="$odata-version='2.0'">
         <xsl:text>"title":"Modified </xsl:text>
         <xsl:value-of select="$type" />
@@ -1700,13 +1778,13 @@
     <xsl:text>,"parameters":[</xsl:text>
     <xsl:text>{"name":"</xsl:text>
     <xsl:value-of select="$type" />
-    <xsl:text>","in":"body"</xsl:text>
+    <xsl:text>","in":"body",</xsl:text>
     <xsl:call-template name="entityTypeDescription">
       <xsl:with-param name="namespace" select="$namespace" />
       <xsl:with-param name="type" select="$type" />
       <xsl:with-param name="default" select="'New property values'" />
     </xsl:call-template>
-    <xsl:text>,"schema":{</xsl:text>
+    <xsl:text>"schema":{</xsl:text>
     <xsl:call-template name="schema-ref">
       <xsl:with-param name="qualifiedName" select="$qualifiedType" />
     </xsl:call-template>
@@ -1738,7 +1816,7 @@
     <xsl:param name="namespace" />
     <xsl:param name="type" />
     <xsl:param name="default" />
-    <xsl:text>,"description":"</xsl:text>
+    <xsl:text>"description":"</xsl:text>
     <xsl:variable name="description">
       <xsl:call-template name="Core.Description">
         <xsl:with-param name="node" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" />
@@ -1752,7 +1830,7 @@
         <xsl:value-of select="$default" />
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>"</xsl:text>
+    <xsl:text>",</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:EntityType" mode="key-in-path">
