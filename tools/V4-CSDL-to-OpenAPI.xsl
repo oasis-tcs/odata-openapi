@@ -392,15 +392,35 @@
     <xsl:if test="//edm:EntityContainer">
       <xsl:text>,"parameters":{</xsl:text>
       <xsl:text>"top":{"name":"$top","in":"query","description":"Show only the first n items</xsl:text>
-      <xsl:text>, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374630)","type":"integer"},</xsl:text>
+      <xsl:text>, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374630)",</xsl:text>
+      <xsl:call-template name="parameter-type">
+        <xsl:with-param name="type" select="'integer'" />
+      </xsl:call-template>
+      <xsl:text>},</xsl:text>
       <xsl:text>"skip":{"name":"$skip","in":"query","description":"Skip the first n items</xsl:text>
-      <xsl:text>, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374631)","type":"integer"},</xsl:text>
+      <xsl:text>, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374631)",</xsl:text>
+      <xsl:call-template name="parameter-type">
+        <xsl:with-param name="type" select="'integer'" />
+      </xsl:call-template>
+      <xsl:text>},</xsl:text>
       <xsl:text>"count":{"name":"$count","in":"query","description":"Include count of items</xsl:text>
-      <xsl:text>, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374632)","type":"boolean"},</xsl:text>
+      <xsl:text>, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374632)",</xsl:text>
+      <xsl:call-template name="parameter-type">
+        <xsl:with-param name="type" select="'boolean'" />
+      </xsl:call-template>
+      <xsl:text>},</xsl:text>
       <xsl:text>"filter":{"name":"$filter","in":"query","description":"Filter items by property values</xsl:text>
-      <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374625)","type":"string"},</xsl:text>
+      <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374625)",</xsl:text>
+      <xsl:call-template name="parameter-type">
+        <xsl:with-param name="type" select="'string'" />
+      </xsl:call-template>
+      <xsl:text>},</xsl:text>
       <xsl:text>"search":{"name":"$search","in":"query","description":"Search items by search phrases</xsl:text>
-      <xsl:text>, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374633)","type":"string"}}</xsl:text>
+      <xsl:text>, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374633)",</xsl:text>
+      <xsl:call-template name="parameter-type">
+        <xsl:with-param name="type" select="'string'" />
+      </xsl:call-template>
+      <xsl:text>}}</xsl:text>
 
       <xsl:text>,"responses":{"error":{"description":"Error",</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
@@ -422,11 +442,29 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
+  <xsl:template name="parameter-type">
+    <xsl:param name="type" />
+
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>"schema":{</xsl:text>
+    </xsl:if>
+    <xsl:text>"type":"</xsl:text>
+    <xsl:value-of select="$type" />
+    <xsl:text>"</xsl:text>
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>}</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
   <!-- definitions for standard error response - only needed if there's an entity container -->
   <xsl:template match="edm:EntityContainer" mode="hashpair">
-    <xsl:text>"odata.error":{"type":"object","required":["error"],"properties":{"error":{"$ref":"#/definitions/odata.error.main"}}}</xsl:text>
+    <xsl:text>"odata.error":{"type":"object","required":["error"],"properties":{"error":{"$ref":"</xsl:text>
+    <xsl:value-of select="$reuse-schemas" />
+    <xsl:text>odata.error.main"}}}</xsl:text>
     <xsl:text>,"odata.error.main":{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"},"details":</xsl:text>
-    <xsl:text>{"type":"array","items":{"$ref":"#/definitions/odata.error.detail"}},"innererror":{"type":"object","description":"The structure of this object is service-specific"}}}</xsl:text>
+    <xsl:text>{"type":"array","items":{"$ref":"</xsl:text>
+    <xsl:value-of select="$reuse-schemas" />
+    <xsl:text>odata.error.detail"}},"innererror":{"type":"object","description":"The structure of this object is service-specific"}}}</xsl:text>
     <xsl:text>,"odata.error.detail":{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"}}}</xsl:text>
   </xsl:template>
 
@@ -2421,11 +2459,17 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>,"required":true,</xsl:text>
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>"schema":{</xsl:text>
+    </xsl:if>
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
-      <xsl:with-param name="nullableFacet" select="@Nullable" />
+      <xsl:with-param name="nullableFacet" select="'false'" />
       <xsl:with-param name="inParameter" select="true()" />
     </xsl:call-template>
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>}</xsl:text>
+    </xsl:if>
     <xsl:text>}</xsl:text>
   </xsl:template>
 
