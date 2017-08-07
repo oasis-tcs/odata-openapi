@@ -708,7 +708,9 @@
   <xsl:template name="type">
     <xsl:param name="type" />
     <xsl:param name="nullableFacet" />
+    <!-- TODO: remove -->
     <xsl:param name="wrap" select="false()" />
+    <!-- :ODOT -->
     <xsl:param name="inParameter" select="false()" />
     <xsl:variable name="noArray" select="$inParameter" />
     <xsl:variable name="nullable">
@@ -734,10 +736,16 @@
         <xsl:with-param name="marker" select="'.'" />
       </xsl:call-template>
     </xsl:variable>
+    <xsl:variable name="simpleName">
+      <xsl:call-template name="substring-after-last">
+        <xsl:with-param name="input" select="$singleType" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
     <xsl:if test="$collection">
       <xsl:if test="$odata-version='2.0'">
-        <xsl:text>"title":"Related </xsl:text>
-        <xsl:value-of select="$type" />
+        <xsl:text>"title":"Collection of </xsl:text>
+        <xsl:value-of select="$simpleName" />
         <xsl:text>","type":"object","properties":{"results":{</xsl:text>
       </xsl:if>
       <xsl:text>"type":"array","items":{</xsl:text>
@@ -1364,40 +1372,16 @@
         select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream']"
         mode="expand" />
 
-      <xsl:text>],"responses":{"200":{"description":"Retrieved entities",</xsl:text>
-      <xsl:if test="$openapi-version!='2.0'">
-        <xsl:text>"content":{"application/json":{</xsl:text>
-      </xsl:if>
-      <xsl:text>"schema":{"type":"object"</xsl:text>
-      <xsl:if test="$odata-version='2.0'">
-        <xsl:text>,"title":"Wrapper","properties":{"d":{"type":"object"</xsl:text>
-      </xsl:if>
-      <xsl:text>,"title":"Collection of </xsl:text>
-      <xsl:value-of select="$type" />
-      <xsl:text>"</xsl:text>
-      <xsl:text>,"properties":{</xsl:text>
-      <xsl:choose>
-        <xsl:when test="$odata-version='2.0'">
-          <xsl:text>"results"</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>"value"</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
-      <xsl:text>:{"type":"array","items":{</xsl:text>
-      <xsl:call-template name="schema-ref">
-        <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+      <xsl:text>]</xsl:text>
+
+      <xsl:call-template name="responses">
+        <xsl:with-param name="code" select="'200'" />
+        <xsl:with-param name="type" select="concat('Collection(',$qualifiedType,')')" />
+        <xsl:with-param name="description" select="'Retrieved entities'" />
+        <xsl:with-param name="innerDescription" select="concat('Collection of ',$type)" />
       </xsl:call-template>
-      <xsl:text>}}}</xsl:text>
-      <xsl:if test="$odata-version='2.0'">
-        <xsl:text>}}</xsl:text>
-      </xsl:if>
-      <xsl:if test="$openapi-version!='2.0'">
-        <xsl:text>}}</xsl:text>
-      </xsl:if>
-      <xsl:text>}},</xsl:text>
-      <xsl:value-of select="$defaultResponse" />
-      <xsl:text>}}</xsl:text>
+
+      <xsl:text>}</xsl:text>
     </xsl:if>
 
     <!-- POST -->
@@ -2301,7 +2285,14 @@
         <xsl:text>"schema":{</xsl:text>
         <xsl:if test="$collection or $odata-version='2.0'">
           <xsl:text>"title":"</xsl:text>
-          <xsl:value-of select="$innerDescription" />
+          <xsl:choose>
+            <xsl:when test="$collection and $odata-version='2.0'">
+              <xsl:text>Wrapper</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$innerDescription" />
+            </xsl:otherwise>
+          </xsl:choose>
           <xsl:text>","type":"object","properties":{"</xsl:text>
           <xsl:choose>
             <xsl:when test="$odata-version='2.0'">
