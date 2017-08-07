@@ -2150,24 +2150,44 @@
         <xsl:text>Service Operations</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>"],"parameters":[</xsl:text>
+    <xsl:text>"]</xsl:text>
     <xsl:variable name="parameters"
       select="//edm:Schema[@Namespace=$namespace]/edm:Action[@Name=$action and not(@IsBound='true')]/edm:Parameter" />
     <xsl:if test="$parameters">
       <xsl:choose>
         <xsl:when test="$odata-version='2.0'">
+          <xsl:text>,"parameters":[</xsl:text>
           <xsl:apply-templates select="$parameters" mode="parameter" />
+          <xsl:text>]</xsl:text>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>{"name":"body","in":"body","description":"Action parameters","schema":{"type":"object"</xsl:text>
+          <xsl:choose>
+            <xsl:when test="$openapi-version='2.0'">
+              <xsl:text>,"parameters":[{"name":"body","in":"body",</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>,"requestBody":{</xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
+          <xsl:text>"description":"Action parameters",</xsl:text>
+          <xsl:if test="$openapi-version!='2.0'">
+            <xsl:text>"content":{"application/json":{</xsl:text>
+          </xsl:if>
+          <xsl:text>"schema":{"type":"object"</xsl:text>
           <xsl:apply-templates select="$parameters" mode="hash">
             <xsl:with-param name="name" select="'properties'" />
           </xsl:apply-templates>
-          <xsl:text>}}</xsl:text>
+          <xsl:choose>
+            <xsl:when test="$openapi-version='2.0'">
+              <xsl:text>}}]</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>}}}}</xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
-    <xsl:text>]</xsl:text>
 
     <xsl:call-template name="responses">
       <xsl:with-param name="type" select="//edm:Schema[@Namespace=$namespace]/edm:Action[@Name=$action]/edm:ReturnType/@Type" />
