@@ -2882,7 +2882,11 @@
       <xsl:choose>
         <xsl:when test="substring($url,string-length($url)-3) = '.xml'">
           <xsl:value-of select="substring($url,1,string-length($url)-4)" />
-          <xsl:value-of select="'.openapi.json'" />
+          <xsl:text>.openapi</xsl:text>
+          <xsl:if test="$openapi-version!='2.0'">
+            <xsl:text>3</xsl:text>
+          </xsl:if>
+          <xsl:text>.json</xsl:text>
         </xsl:when>
         <xsl:when test="string-length($url) = 0">
           <xsl:value-of select="$url" />
