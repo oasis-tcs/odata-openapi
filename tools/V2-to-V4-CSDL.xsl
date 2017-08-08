@@ -268,7 +268,6 @@
       <xsl:if test="$mult='1'">
         <xsl:attribute name="Nullable">false</xsl:attribute>
       </xsl:if>
-      <xsl:apply-templates select="@sap:*" />
       <xsl:variable name="partner"
         select="../../edm2:EntityType/edm2:NavigationProperty[@Relationship=$relation and @FromRole=$torole]/@Name|../../edm3:EntityType/edm3:NavigationProperty[@Relationship=$relation and @FromRole=$torole]/@Name" />
       <xsl:if test="$partner">
@@ -276,6 +275,7 @@
           <xsl:value-of select="$partner" />
         </xsl:attribute>
       </xsl:if>
+      <xsl:apply-templates select="@sap:*" />
       <xsl:apply-templates mode="NavProp"
         select="../../edm2:Association[@Name=$assoc]/edm2:End[@Role=$fromrole]/edm2:OnDelete|../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$fromrole]/edm3:OnDelete" />
       <xsl:apply-templates mode="NavProp"
