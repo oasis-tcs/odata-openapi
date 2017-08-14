@@ -1423,7 +1423,7 @@
           <xsl:text>","in":"body",</xsl:text>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>"requestBody":{</xsl:text>
+          <xsl:text>"requestBody":{"required":true,</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
       <xsl:call-template name="entityTypeDescription">
@@ -1654,7 +1654,7 @@
           <xsl:text>","in":"body",</xsl:text>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>],"requestBody":{</xsl:text>
+          <xsl:text>],"requestBody":{"required":true,</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
       <xsl:call-template name="entityTypeDescription">
@@ -1829,7 +1829,7 @@
         <xsl:text>","in":"body",</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>"requestBody":{</xsl:text>
+        <xsl:text>"requestBody":{"required":true,</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:call-template name="entityTypeDescription">
