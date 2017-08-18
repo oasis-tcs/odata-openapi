@@ -8,8 +8,8 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - "type":["string","null"] not supported by Swagger-UI/Editor 3.x: bug or "feature"?
-    - - "nullable":true seems to be supported or at least tolerated
+    - 3.0.0
+    - - oneOf:[null,$ref] for nullable single-valued navigation properties
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -30,6 +30,7 @@
     - allow external targeting for @Core.Description similar to @Common.Label
     - reduce duplicated code in /paths production
     - Capabilities: SortRestrictions/NonSortableProperties, FilterRestrictions/NonFilterableProperties
+    - header sap-message for V2 services from SAP in 20x responses
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
