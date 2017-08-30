@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# This script tranforms all *.xml files in the examples folder into OpenAPI 2.0 and OpenAPI 3.0 JSON files
+#
+# Prerequisites
+# - Java           sudo apt-get install default-jre
+# - Git            sudo apt-get install git
+# - Xalan 2.7.1    sudo apt-get install libxalan2-java
+# - json_reformat  sudo apt-get install yajl-tools
+# - Node.js        sudo apt-get install nodejs
+# - ajv-cli        sudo npm install -g ajv-cli
+# - https://github.com/OAI/OpenAPI-Specification is cloned next to this project
+
+process() {
+  local name=$(basename -s .xml $1)
+  echo $name
+  
+  if [ "$5" = "V2" ]
+  then
+    java -cp /usr/share/java/xalan2.jar org.apache.xalan.xslt.Process -L -XSL V2-to-V4-CSDL.xsl -IN ../examples/$1 -OUT $name.V4.xml
+    VERSION="2.0"
+    INPUT="$name.V4.xml"
+  elif [ "$5" = "V3" ]
+  then
+    java -cp /usr/share/java/xalan2.jar org.apache.xalan.xslt.Process -L -XSL V2-to-V4-CSDL.xsl -IN ../examples/$1 -OUT $name.V4.xml
+    VERSION="3.0"
+    INPUT="$name.V4.xml"
+  else
+    VERSION="4.0"
+    INPUT="../examples/$1"
+  fi
+  
+  java -cp /usr/share/java/xalan2.jar org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-OpenAPI.xsl -PARAM scheme $2 -PARAM host $3 -PARAM basePath $4 -PARAM odata-version $VERSION  -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -PARAM openapi-version 3.0.0 -IN $INPUT -OUT $name.tmp3.json
+  
+  json_reformat < $name.tmp3.json > ../examples/$name.openapi3.json
+  if [ $? = 0 ]
+  then 
+    rm $name.tmp3.json
+    git --no-pager diff --ignore-space-at-eol ../examples/$name.openapi3.json  
+  fi
+
+  java -cp /usr/share/java/xalan2.jar org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-OpenAPI.xsl -PARAM scheme $2 -PARAM host $3 -PARAM basePath $4 -PARAM odata-version $VERSION  -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -IN $INPUT -OUT $name.tmp.json
+  
+  json_reformat < $name.tmp.json > ../examples/$name.openapi.json
+  if [ $? = 0 ]
+  then 
+    rm $name.tmp.json
+    if [ "$5" = "V2" ] || [ "$5" = "V3" ]; then rm $name.V4.xml; fi
+    git --no-pager diff --ignore-space-at-eol ../examples/$name.openapi.json  
+    ajv validate -s ../../OpenAPI-Specification/schemas/v2.0/schema.json -d ../examples/$name.openapi.json > /dev/null
+  fi
+}
+
+while IFS=$' \r' read f g h i j || [[ -n "$f" ]]
+do
+  if [ -n "$f" ] && [ "$f" != "#" ]
+  then
+    if [ -z "$1" ] || [ "$f" = "$1" ] || [ "$f" = "$1.xml" ]
+    then
+      process $f $g $h $i $j
+    fi
+  fi
+done < $0.txt
