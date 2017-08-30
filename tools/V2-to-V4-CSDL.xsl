@@ -3,7 +3,7 @@
   xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edmx1="http://schemas.microsoft.com/ado/2007/06/edmx"
   xmlns:edm2="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:edm3="http://schemas.microsoft.com/ado/2009/11/edm"
   xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
-  xmlns:sap="http://www.sap.com/Protocols/SAPData" xmlns="http://docs.oasis-open.org/odata/ns/edm"
+  xmlns:sap="http://www.sap.com/Protocols/SAPData" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:nodeinfo="xalan://org.apache.xalan.lib.NodeInfo"
 >
   <!--
     This style sheet transforms OData 2.0 or 3.0 $metadata documents into OData 4.0 CSDL documents.
@@ -374,47 +374,35 @@
   </xsl:template>
 
   <xsl:template match="edm2:FunctionImport|edm3:FunctionImport">
-    <xsl:choose>
-      <xsl:when test="@m:HttpMethod='POST'">
-        <ActionImport>
-          <xsl:copy-of select="@Name|@EntitySet" />
-          <xsl:attribute name="Action">
+    <xsl:if test="not(@IsBindable='true')">
+      <xsl:choose>
+        <xsl:when test="@m:HttpMethod='GET' or @IsSideEffecting='false'">
+          <FunctionImport>
+            <xsl:copy-of select="@Name|@EntitySet" />
+            <xsl:attribute name="Function">
             <xsl:value-of select="../../@Namespace" />.<xsl:value-of select="@Name" />
           </xsl:attribute>
-          <xsl:apply-templates select="@sap:*" />
-        </ActionImport>
-      </xsl:when>
-      <xsl:otherwise>
-        <FunctionImport>
-          <xsl:copy-of select="@Name|@EntitySet" />
-          <xsl:attribute name="Function">
+            <xsl:if test="not(*[local-name()='Parameter'])">
+              <xsl:attribute name="IncludeInServiceDocument">true</xsl:attribute>
+            </xsl:if>
+          </FunctionImport>
+        </xsl:when>
+        <xsl:otherwise>
+          <ActionImport>
+            <xsl:copy-of select="@Name|@EntitySet" />
+            <xsl:attribute name="Action">
             <xsl:value-of select="../../@Namespace" />.<xsl:value-of select="@Name" />
           </xsl:attribute>
-          <xsl:if test="not(*[local-name()='Parameter'])">
-            <xsl:attribute name="IncludeInServiceDocument">true</xsl:attribute>
-          </xsl:if>
-        </FunctionImport>
-      </xsl:otherwise>
-    </xsl:choose>
+            <xsl:apply-templates select="@sap:*" />
+          </ActionImport>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edm2:FunctionImport|edm3:FunctionImport" mode="Schema">
     <xsl:choose>
-      <xsl:when test="@m:HttpMethod='POST'">
-        <Action>
-          <xsl:copy-of select="@Name|@EntitySetPath" />
-          <xsl:if test="@IsBindable">
-            <xsl:attribute name="IsBound"><xsl:value-of select="@IsBindable" /></xsl:attribute>
-          </xsl:if>
-          <xsl:apply-templates />
-          <xsl:if test="@ReturnType">
-            <ReturnType>
-              <xsl:attribute name="Type"><xsl:value-of select="@ReturnType" /></xsl:attribute>
-            </ReturnType>
-          </xsl:if>
-        </Action>
-      </xsl:when>
-      <xsl:otherwise>
+      <xsl:when test="@m:HttpMethod='GET' or @IsSideEffecting='false'">
         <Function>
           <xsl:copy-of select="@Name|@EntitySetPath|@IsComposable" />
           <xsl:if test="@IsBindable">
@@ -427,6 +415,20 @@
             </ReturnType>
           </xsl:if>
         </Function>
+      </xsl:when>
+      <xsl:otherwise>
+        <Action>
+          <xsl:copy-of select="@Name|@EntitySetPath" />
+          <xsl:if test="@IsBindable">
+            <xsl:attribute name="IsBound"><xsl:value-of select="@IsBindable" /></xsl:attribute>
+          </xsl:if>
+          <xsl:apply-templates />
+          <xsl:if test="@ReturnType">
+            <ReturnType>
+              <xsl:attribute name="Type"><xsl:value-of select="@ReturnType" /></xsl:attribute>
+            </ReturnType>
+          </xsl:if>
+        </Action>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -951,7 +953,8 @@
       <xsl:value-of select="name()" />
       <xsl:text>="</xsl:text>
       <xsl:value-of select="." />
-      <xsl:text>"</xsl:text>
+      <xsl:text>" in line </xsl:text>
+      <xsl:value-of select="nodeinfo:lineNumber()" />
     </xsl:message>
     <Annotation>
       <xsl:attribute name="Term">

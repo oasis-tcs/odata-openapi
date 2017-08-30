@@ -9,8 +9,9 @@ setlocal
 @rem  - git is installed and in the PATH - download from https://git-for-windows.github.io/
 @rem  - Eclipse is installed with Xalan (contained in Eclipse Web Tools Platform), and ECLIPSE_HOME environment variable is set
 set CLASSPATH=%CLASSPATH%;%ECLIPSE_HOME%\plugins\org.apache.xml.serializer_2.7.1.v201005080400.jar;%ECLIPSE_HOME%\plugins\org.apache.xalan_2.7.1.v201005080400.jar
-@rem  - YAJL's json_reformat from https://github.com/lloyd/yajl has been compiled and environment variable YAJL_REFORMAT set to its location
-set YAJL_REFORMAT=c:\git\yajl\build\yajl-2.1.1\bin\json_reformat.exe
+@rem  - YAJL's json_reformat from https://github.com/lloyd/yajl has been compiled and is in the PATH
+@rem  - Node.js is installed - download from https://nodejs.org/
+@rem  - ajv-cli is installed - npm install -g ajv-cli
 
 set done=false
 
@@ -34,11 +35,11 @@ exit /b
   echo %~n1
   
   if [%5]==[V2] (
-    java.exe org.apache.xalan.xslt.Process -XSL V2-to-V4-CSDL.xsl -IN ..\examples\%1 -OUT %~n1.V4.xml
+    java.exe org.apache.xalan.xslt.Process -L -XSL V2-to-V4-CSDL.xsl -IN ..\examples\%1 -OUT %~n1.V4.xml
     set VERSION=2.0
     set INPUT=%~n1.V4.xml
   ) else if [%5]==[V3] (
-    java.exe org.apache.xalan.xslt.Process -XSL V2-to-V4-CSDL.xsl -IN ..\examples\%1 -OUT %~n1.V4.xml
+    java.exe org.apache.xalan.xslt.Process -L -XSL V2-to-V4-CSDL.xsl -IN ..\examples\%1 -OUT %~n1.V4.xml
     set VERSION=3.0
     set INPUT=%~n1.V4.xml
   ) else (
@@ -46,29 +47,24 @@ exit /b
     set INPUT=..\examples\%1
   )
 
-  java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -PARAM openapi-version 3.0.0 -IN %INPUT% -OUT %~n1.tmp3.json
+  java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -PARAM openapi-version 3.0.0 -IN %INPUT% -OUT %~n1.tmp3.json
 
-  %YAJL_REFORMAT% < %~n1.tmp3.json > ..\examples\%~n1.openapi3.json
+  json_reformat.exe < %~n1.tmp3.json > ..\examples\%~n1.openapi3.json
   if not errorlevel 1 (
     del %~n1.tmp3.json
     git.exe --no-pager diff ..\examples\%~n1.openapi3.json
   )
 
-  
-  java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -IN %INPUT% -OUT %~n1.tmp.json
+  java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -IN %INPUT% -OUT %~n1.tmp.json
 
-  %YAJL_REFORMAT% < %~n1.tmp.json > ..\examples\%~n1.openapi.json
+  json_reformat.exe < %~n1.tmp.json > ..\examples\%~n1.openapi.json
   if not errorlevel 1 (
     del %~n1.tmp.json
     if [%5]==[V2] del %~n1.V4.xml
     if [%5]==[V3] del %~n1.V4.xml
     git.exe --no-pager diff ..\examples\%~n1.openapi.json
     
-    call z-schema --ignoreUnknownFormats --pedanticCheck "C:\git\OpenAPI-Specification\schemas\v2.0\schema.json" ..\examples\%~n1.openapi.json >  z-schema.log
-    if %ERRORLEVEL% == 1 (
-      type z-schema.log
-    )
-    del z-schema.log    
+    call ajv -s C:\git\OpenAPI-Specification\schemas\v2.0\schema.json -d ..\examples\%~n1.openapi.json > nul
   )
 
 exit /b
