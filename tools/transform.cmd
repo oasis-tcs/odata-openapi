@@ -12,6 +12,7 @@ set CLASSPATH=%CLASSPATH%;%ECLIPSE_HOME%\plugins\org.apache.xml.serializer_2.7.1
 @rem  - YAJL's json_reformat from https://github.com/lloyd/yajl has been compiled and is in the PATH
 @rem  - Node.js is installed - download from https://nodejs.org/
 @rem  - ajv-cli is installed - npm install -g ajv-cli
+@rem  - https://github.com/OAI/OpenAPI-Specification is cloned next to this project
 
 set done=false
 
@@ -47,7 +48,7 @@ exit /b
     set INPUT=..\examples\%1
   )
 
-  java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -PARAM openapi-version 3.0.0 -IN %INPUT% -OUT %~n1.tmp3.json
+  java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-OpenAPI.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -PARAM openapi-version 3.0.0 -IN %INPUT% -OUT %~n1.tmp3.json
 
   json_reformat.exe < %~n1.tmp3.json > ..\examples\%~n1.openapi3.json
   if not errorlevel 1 (
@@ -64,7 +65,7 @@ exit /b
     if [%5]==[V3] del %~n1.V4.xml
     git.exe --no-pager diff ..\examples\%~n1.openapi.json
     
-    call ajv -s C:\git\OpenAPI-Specification\schemas\v2.0\schema.json -d ..\examples\%~n1.openapi.json > nul
+    call ajv -s ..\..\OpenAPI-Specification\schemas\v2.0\schema.json -d ..\examples\%~n1.openapi.json > nul
   )
 
 exit /b
