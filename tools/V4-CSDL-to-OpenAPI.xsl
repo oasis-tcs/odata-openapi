@@ -414,13 +414,16 @@
       <xsl:call-template name="parameter-type">
         <xsl:with-param name="type" select="'string'" />
       </xsl:call-template>
-      <xsl:text>},</xsl:text>
-      <xsl:text>"search":{"name":"$search","in":"query","description":"Search items by search phrases</xsl:text>
-      <xsl:text>, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374633)",</xsl:text>
-      <xsl:call-template name="parameter-type">
-        <xsl:with-param name="type" select="'string'" />
-      </xsl:call-template>
-      <xsl:text>}}</xsl:text>
+      <xsl:text>}</xsl:text>
+      <xsl:if test="$odata-version='4.0'">
+        <xsl:text>,"search":{"name":"$search","in":"query","description":"Search items by search phrases</xsl:text>
+        <xsl:text>, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374633)",</xsl:text>
+        <xsl:call-template name="parameter-type">
+          <xsl:with-param name="type" select="'string'" />
+        </xsl:call-template>
+        <xsl:text>}</xsl:text>
+      </xsl:if>
+      <xsl:text>}</xsl:text>
 
       <xsl:text>,"responses":{"error":{"description":"Error",</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
@@ -1367,9 +1370,11 @@
         <xsl:text>skip"},</xsl:text>
       </xsl:if>
 
-      <xsl:text>{"$ref":"</xsl:text>
-      <xsl:value-of select="$reuse-parameters"></xsl:value-of>
-      <xsl:text>search"},</xsl:text>
+      <xsl:if test="$odata-version='4.0'">
+        <xsl:text>{"$ref":"</xsl:text>
+        <xsl:value-of select="$reuse-parameters"></xsl:value-of>
+        <xsl:text>search"},</xsl:text>
+      </xsl:if>
 
       <xsl:text>{"$ref":"</xsl:text>
       <xsl:value-of select="$reuse-parameters"></xsl:value-of>
