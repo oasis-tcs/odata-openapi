@@ -299,9 +299,9 @@
                 }
             }
         },
-        "/Products({ID})/ODataDemo.Discount(discountPercentage={discountPercentage})": {
-            "get": {
-                "summary": "Invoke function Discount",
+        "/Products({ID})/ODataDemo.Discount": {
+            "post": {
+                "summary": "Invoke action Discount",
                 "tags": [
                     "Products"
                 ],
@@ -315,11 +315,18 @@
                         "format": "int32"
                     },
                     {
-                        "name": "discountPercentage",
-                        "in": "path",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
+                        "name": "body",
+                        "in": "body",
+                        "description": "Action parameters",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "discountPercentage": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            }
+                        }
                     }
                 ],
                 "responses": {
@@ -1816,58 +1823,26 @@
                 }
             }
         },
-        "/Discount(product='{product}',discountPercentage={discountPercentage})": {
-            "get": {
-                "summary": "Invoke function Discount",
+        "/IncreaseSalaries": {
+            "post": {
+                "summary": "Invoke action IncreaseSalaries",
                 "tags": [
                     "Service Operations"
                 ],
                 "parameters": [
                     {
-                        "name": "product",
-                        "in": "path",
-                        "required": true,
-                        "$ref": "#/definitions/ODataDemo.Product"
-                    },
-                    {
-                        "name": "discountPercentage",
-                        "in": "path",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
+                        "name": "body",
+                        "in": "body",
+                        "description": "Action parameters",
                         "schema": {
-                            "type": [
-                                "number",
-                                "string"
-                            ],
-                            "format": "double",
-                            "example": 3.14
+                            "type": "object",
+                            "properties": {
+                                "percentage": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            }
                         }
-                    },
-                    "default": {
-                        "$ref": "#/responses/error"
-                    }
-                }
-            }
-        },
-        "/IncreaseSalaries(percentage={percentage})": {
-            "get": {
-                "summary": "Invoke function IncreaseSalaries",
-                "tags": [
-                    "Service Operations"
-                ],
-                "parameters": [
-                    {
-                        "name": "percentage",
-                        "in": "path",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
                     }
                 ],
                 "responses": {

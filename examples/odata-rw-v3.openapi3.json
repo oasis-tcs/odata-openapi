@@ -327,9 +327,9 @@
                 }
             }
         },
-        "/Products({ID})/ODataDemo.Discount(discountPercentage={discountPercentage})": {
-            "get": {
-                "summary": "Invoke function Discount",
+        "/Products({ID})/ODataDemo.Discount": {
+            "post": {
+                "summary": "Invoke action Discount",
                 "tags": [
                     "Products"
                 ],
@@ -343,17 +343,24 @@
                             "type": "integer",
                             "format": "int32"
                         }
-                    },
-                    {
-                        "name": "discountPercentage",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
                     }
                 ],
+                "requestBody": {
+                    "description": "Action parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "discountPercentage": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -2072,74 +2079,28 @@
                 }
             }
         },
-        "/Discount(product='{product}',discountPercentage={discountPercentage})": {
-            "get": {
-                "summary": "Invoke function Discount",
+        "/IncreaseSalaries": {
+            "post": {
+                "summary": "Invoke action IncreaseSalaries",
                 "tags": [
                     "Service Operations"
                 ],
-                "parameters": [
-                    {
-                        "name": "product",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/components/schemas/ODataDemo.Product"
-                        }
-                    },
-                    {
-                        "name": "discountPercentage",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "oneOf": [
-                                        {
-                                            "type": "number"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ],
-                                    "format": "double",
-                                    "example": 3.14
+                "requestBody": {
+                    "description": "Action parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "percentage": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
                                 }
                             }
                         }
-                    },
-                    "default": {
-                        "$ref": "#/components/responses/error"
                     }
-                }
-            }
-        },
-        "/IncreaseSalaries(percentage={percentage})": {
-            "get": {
-                "summary": "Invoke function IncreaseSalaries",
-                "tags": [
-                    "Service Operations"
-                ],
-                "parameters": [
-                    {
-                        "name": "percentage",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
+                },
                 "responses": {
                     "204": {
                         "description": "Success"
