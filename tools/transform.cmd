@@ -1,8 +1,8 @@
 @echo off 
 setlocal
 
-@rem  This script uses Apache Xalan 2.7.1 as XSLT processor
-@rem  For a description of Xalan command-line parameters see http://xalan.apache.org/old/xalan-j/commandline.html
+@rem  This script uses the Apache Xalan 2.7.1 XSLT processor
+@rem  For a description of Xalan command-line parameters see http://xalan.apache.org/xalan-j/commandline.html
 @rem
 @rem  Prerequisites
 @rem  - Java SE 8 is installed and in the PATH - download from http://www.oracle.com/technetwork/java/javase/downloads/index.html 
@@ -54,6 +54,8 @@ exit /b
   if not errorlevel 1 (
     del %~n1.tmp3.json
     git.exe --no-pager diff ..\examples\%~n1.openapi3.json
+
+    call ajv validate --unknown-formats=uriref -s openapi-3.0.0.schema.json -d ..\examples\%~n1.openapi3.json > nul
   )
 
   java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -IN %INPUT% -OUT %~n1.tmp.json

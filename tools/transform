@@ -12,7 +12,7 @@
 # - https://github.com/OAI/OpenAPI-Specification is cloned next to this project
 
 process() {
-  local name=$(basename -s .xml $1)
+  local name=${1##*/}; name=${name%.*}
   echo $name
   
   if [ "$5" = "V2" ]
@@ -37,6 +37,8 @@ process() {
   then 
     rm $name.tmp3.json
     git --no-pager diff --ignore-space-at-eol ../examples/$name.openapi3.json  
+    
+    # ajv validate --unknown-formats=uriref -s openapi-3.0.0.schema.json -d ../examples/$name.openapi3.json > /dev/null
   fi
 
   java -cp /usr/share/java/xalan2.jar org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-OpenAPI.xsl -PARAM scheme $2 -PARAM host $3 -PARAM basePath $4 -PARAM odata-version $VERSION  -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -IN $INPUT -OUT $name.tmp.json
@@ -53,7 +55,7 @@ process() {
 
 while IFS=$' \r' read f g h i j || [[ -n "$f" ]]
 do
-  if [ -n "$f" ] && [ "$f" != "#" ]
+  if [ -n "$f" ] && [ "${f:0:1}" != "#" ]
   then
     if [ -z "$1" ] || [ "$f" = "$1" ] || [ "$f" = "$1.xml" ]
     then
