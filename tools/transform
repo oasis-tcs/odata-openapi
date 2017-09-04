@@ -38,7 +38,7 @@ process() {
     rm $name.tmp3.json
     git --no-pager diff --ignore-space-at-eol ../examples/$name.openapi3.json  
     
-    # ajv validate --unknown-formats=uriref -s openapi-3.0.0.schema.json -d ../examples/$name.openapi3.json > /dev/null
+    ajv validate --unknown-formats=uriref -s openapi-3.0.0.schema.json -d ../examples/$name.openapi3.json > /dev/null
   fi
 
   java -cp /usr/share/java/xalan2.jar org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-OpenAPI.xsl -PARAM scheme $2 -PARAM host $3 -PARAM basePath $4 -PARAM odata-version $VERSION  -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -IN $INPUT -OUT $name.tmp.json

@@ -9,7 +9,8 @@
 
     TODO:
     - 3.0.0
-    - - oneOf:[null,$ref] for nullable single-valued navigation properties
+    - - oneOf:[null,$ref] for nullable single-valued navigation properties,
+    oneOf not yet fully supported as of Swagger UI 3.1.7, see https://github.com/swagger-api/swagger-ui/issues/3490
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -403,11 +404,25 @@
         <xsl:with-param name="type" select="'integer'" />
       </xsl:call-template>
       <xsl:text>},</xsl:text>
-      <xsl:text>"count":{"name":"$count","in":"query","description":"Include count of items</xsl:text>
-      <xsl:text>, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374632)",</xsl:text>
-      <xsl:call-template name="parameter-type">
-        <xsl:with-param name="type" select="'boolean'" />
-      </xsl:call-template>
+      <xsl:choose>
+        <xsl:when test="$odata-version='4.0'">
+          <xsl:text>"count":{"name":"$count","in":"query","description":"Include count of items</xsl:text>
+          <xsl:text>, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374632)",</xsl:text>
+          <xsl:call-template name="parameter-type">
+            <xsl:with-param name="type" select="'boolean'" />
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>"count":{"name": "$inlinecount","in":"query","description":"Include count of items</xsl:text>
+          <xsl:text>, see [OData Count](http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#InlinecountSystemQueryOption)",</xsl:text>
+          <xsl:call-template name="parameter-type">
+            <xsl:with-param name="type" select="'string'" />
+            <xsl:with-param name="plus">
+              <xsl:text>,"enum":["allpages","none"]</xsl:text>
+            </xsl:with-param>
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:text>},</xsl:text>
       <xsl:text>"filter":{"name":"$filter","in":"query","description":"Filter items by property values</xsl:text>
       <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374625)",</xsl:text>
@@ -447,6 +462,7 @@
 
   <xsl:template name="parameter-type">
     <xsl:param name="type" />
+    <xsl:param name="plus" select="null" />
 
     <xsl:if test="$openapi-version!='2.0'">
       <xsl:text>"schema":{</xsl:text>
@@ -454,6 +470,11 @@
     <xsl:text>"type":"</xsl:text>
     <xsl:value-of select="$type" />
     <xsl:text>"</xsl:text>
+
+    <xsl:if test="$plus">
+      <xsl:value-of select="$plus" />
+    </xsl:if>
+
     <xsl:if test="$openapi-version!='2.0'">
       <xsl:text>}</xsl:text>
     </xsl:if>
