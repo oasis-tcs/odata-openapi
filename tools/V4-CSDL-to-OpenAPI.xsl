@@ -312,7 +312,7 @@
       </xsl:when>
     </xsl:choose>
     <xsl:if test="$diagram">
-      <xsl:apply-templates select="//edm:EntityType" mode="description" />
+      <xsl:apply-templates select="//edm:EntityType|//edm:ComplexType" mode="description" />
     </xsl:if>
     <xsl:if test="$references">
       <xsl:apply-templates select="//edmx:Include" mode="description" />
@@ -510,7 +510,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="edm:EntityType" mode="description">
+  <xsl:template match="edm:EntityType|edm:ComplexType" mode="description">
     <xsl:if test="position() = 1">
       <xsl:text>\n\n## Entity Data Model\n![ER Diagram](http://yuml.me/diagram/class/</xsl:text>
     </xsl:if>
@@ -520,8 +520,11 @@
     <xsl:apply-templates select="@BaseType" mode="description" />
     <xsl:text>[</xsl:text>
     <xsl:value-of select="@Name" />
+    <xsl:if test="local-name()='EntityType'">
+      <xsl:text>{bg:orange}</xsl:text>
+    </xsl:if>
     <xsl:text>]</xsl:text>
-    <xsl:apply-templates select="edm:NavigationProperty" mode="description" />
+    <xsl:apply-templates select="edm:NavigationProperty|edm:Property" mode="description" />
     <xsl:if test="position() = last()">
       <xsl:text>)</xsl:text>
     </xsl:if>
@@ -547,13 +550,13 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="@Type" />
-        <xsl:text>{bg:white}</xsl:text>
+        <xsl:text>{bg:whitesmoke}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>]^</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:NavigationProperty" mode="description">
+  <xsl:template match="edm:NavigationProperty|edm:Property" mode="description">
     <xsl:variable name="singleType">
       <xsl:choose>
         <xsl:when test="starts-with(@Type,'Collection(')">
@@ -587,28 +590,30 @@
       TODO: evaluate Partner to just have one arrow
       [FeaturedProduct]<0..1-0..1>[Advertisement]
     -->
-    <xsl:text>,[</xsl:text>
-    <xsl:value-of select="../@Name" />
-    <xsl:text>]-</xsl:text>
-    <xsl:choose>
-      <xsl:when test="$collection">
-        <xsl:text>*</xsl:text>
-      </xsl:when>
-      <xsl:when test="$nullable">
-        <xsl:text>0..1</xsl:text>
-      </xsl:when>
-    </xsl:choose>
-    <xsl:text>>[</xsl:text>
-    <xsl:choose>
-      <xsl:when test="$qualifier=../../@Namespace or $qualifier=../../@Alias">
-        <xsl:value-of select="$type" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$singleType" />
-        <xsl:text>{bg:white}</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>]</xsl:text>
+    <xsl:if test="$qualifier!='Edm' or local-name='NavigationProperty'">
+      <xsl:text>,[</xsl:text>
+      <xsl:value-of select="../@Name" />
+      <xsl:text>]-</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$collection">
+          <xsl:text>*</xsl:text>
+        </xsl:when>
+        <xsl:when test="$nullable">
+          <xsl:text>0..1</xsl:text>
+        </xsl:when>
+      </xsl:choose>
+      <xsl:text>>[</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$qualifier=../../@Namespace or $qualifier=../../@Alias">
+          <xsl:value-of select="$type" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$singleType" />
+          <xsl:text>{bg:whitesmoke}</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:text>]</xsl:text>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edmx:Include" mode="description">
