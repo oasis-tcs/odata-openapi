@@ -953,8 +953,11 @@
       <xsl:value-of select="name()" />
       <xsl:text>="</xsl:text>
       <xsl:value-of select="." />
-      <xsl:text>" in line </xsl:text>
-      <xsl:value-of select="nodeinfo:lineNumber()" />
+      <xsl:text>"</xsl:text>
+      <!--
+        <xsl:text> in line </xsl:text>
+        <xsl:value-of select="nodeinfo:lineNumber()" />
+      -->
     </xsl:message>
     <Annotation>
       <xsl:attribute name="Term">
