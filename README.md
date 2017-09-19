@@ -41,13 +41,13 @@ The entity-relationship diagrams visualizing the resource models of each service
 
 OpenAPI descriptions for live example OData services at [www.odata.org](http://www.odata.org/)
 
- - [Simple read/write service](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/example.openapi.json)
- - [TripPin (read/write)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/TripPin.openapi.json)
- - [Northwind (read)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/Northwind.openapi.json)
+ - [Simple read/write service](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/example.openapi3.json)
+ - [TripPin (read/write)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/TripPin.openapi3.json)
+ - [Northwind (read)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/Northwind.openapi3.json)
 
 OpenAPI descriptions for OData services that reference each other (cross-service references)
- - [People](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/People.openapi.json)
- - [Products](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/Products.openapi.json)
+ - [People](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/People.openapi3.json)
+ - [Products](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/Products.openapi3.json)
 
 <div>
 

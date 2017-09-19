@@ -56,6 +56,7 @@
   <xsl:param name="odata-version" select="'4.0'" />
   <xsl:param name="diagram" select="null" />
   <xsl:param name="references" select="null" />
+  <xsl:param name="top-example" select="50" />
 
   <xsl:param name="odata-schema" select="'https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json'" />
   <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui'" />
@@ -396,12 +397,18 @@
       <xsl:text>, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374630)",</xsl:text>
       <xsl:call-template name="parameter-type">
         <xsl:with-param name="type" select="'integer'" />
+        <xsl:with-param name="plus" select="',&quot;minimum&quot;:0'" />
       </xsl:call-template>
+      <xsl:if test="number($top-example) and $openapi-version!='2.0'">
+        <xsl:text>,"example":</xsl:text>
+        <xsl:value-of select="$top-example" />
+      </xsl:if>
       <xsl:text>},</xsl:text>
       <xsl:text>"skip":{"name":"$skip","in":"query","description":"Skip the first n items</xsl:text>
       <xsl:text>, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374631)",</xsl:text>
       <xsl:call-template name="parameter-type">
         <xsl:with-param name="type" select="'integer'" />
+        <xsl:with-param name="plus" select="',&quot;minimum&quot;:0'" />
       </xsl:call-template>
       <xsl:text>},</xsl:text>
       <xsl:choose>
