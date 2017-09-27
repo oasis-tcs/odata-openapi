@@ -16,6 +16,10 @@
 
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V2-to-V4-CSDL.xsl
 
+    TODO:
+    - sap:filter-restriction
+    - sap:applicable-path
+
   -->
   <xsl:strip-space elements="*" />
   <xsl:output method="xml" indent="yes" />
@@ -340,12 +344,15 @@
       <!-- TODO: refactor so that just current entity set is passed and all logic is hidden in template "restrictions" -->
       <xsl:call-template name="restriction">
         <xsl:with-param name="capability" select="'Filter'" />
-        <xsl:with-param name="properties"
+        <xsl:with-param name="required" select="@sap:requires-filter='true'" />
+        <xsl:with-param name="required-properties"
+          select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]/edm2:Property/@sap:required-in-filter[.='true']" />
+        <xsl:with-param name="excluded-properties"
           select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]/edm2:Property/@sap:filterable[.='false']" />
       </xsl:call-template>
       <xsl:call-template name="restriction">
         <xsl:with-param name="capability" select="'Sort'" />
-        <xsl:with-param name="properties"
+        <xsl:with-param name="excluded-properties"
           select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]/edm2:Property/@sap:sortable[.='false']" />
       </xsl:call-template>
     </EntitySet>
@@ -865,35 +872,53 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template match="edm2:EntitySet/@sap:requires-filter" />
   <xsl:template name="restriction">
     <xsl:param name="capability" />
-    <xsl:param name="properties" />
-    <xsl:if test="$properties">
+    <xsl:param name="required" select="false()" />
+    <xsl:param name="required-properties" select="null" />
+    <xsl:param name="excluded-properties" />
+
+    <xsl:if test="$required or $required-properties or $excluded-properties">
       <xsl:element name="Annotation">
         <xsl:attribute name="Term">
           <xsl:value-of select="concat('Capabilities.',$capability,'Restrictions')" />
         </xsl:attribute>
         <Record>
-          <xsl:element name="PropertyValue">
-            <xsl:attribute name="Property">
+          <xsl:if test="$required">
+            <PropertyValue Property="RequiresFilter" Bool="true" />
+          </xsl:if>
+          <xsl:if test="$required-properties">
+            <xsl:element name="PropertyValue">
+              <xsl:attribute name="Property">RequiredProperties</xsl:attribute>
+              <Collection>
+                <xsl:apply-templates select="$required-properties" mode="restriction" />
+              </Collection>
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="$excluded-properties">
+            <xsl:element name="PropertyValue">
+              <xsl:attribute name="Property">
               <xsl:value-of select="concat('Non',$capability,'ableProperties')" />
             </xsl:attribute>
-            <Collection>
-              <xsl:apply-templates select="$properties" mode="restriction" />
-            </Collection>
-          </xsl:element>
+              <Collection>
+                <xsl:apply-templates select="$excluded-properties" mode="restriction" />
+              </Collection>
+            </xsl:element>
+          </xsl:if>
         </Record>
       </xsl:element>
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="edm2:Property/@sap:filterable|edm2:Property/@sap:sortable" mode="restriction">
+  <xsl:template match="edm2:Property/@sap:filterable|edm2:Property/@sap:sortable|edm2:Property/@sap:required-in-filter"
+    mode="restriction"
+  >
     <xsl:element name="PropertyPath">
       <xsl:value-of select="../@Name" />
     </xsl:element>
   </xsl:template>
-  <xsl:template match="edm2:Property/@sap:filterable|edm2:Property/@sap:sortable" />
-  <xsl:template match="edm2:Property/@sap:filter-restriction" />
+  <xsl:template match="edm2:Property/@sap:filterable|edm2:Property/@sap:sortable|edm2:Property/@sap:required-in-filter" />
 
   <xsl:template match="edm2:Property/@sap:visible">
     <xsl:if test=".='false'">

@@ -9,8 +9,7 @@
 
     TODO:
     - 3.0.0
-    - - oneOf:[null,$ref] for nullable single-valued navigation properties,
-    oneOf not yet fully supported as of Swagger UI 3.1.7, see https://github.com/swagger-api/swagger-ui/issues/3490
+    - - anyOf:[null,$ref] for nullable single-valued navigation properties,
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -30,7 +29,6 @@
     - ETag for GET / If-Match for PATCH and DELETE depending on @Core.OptimisticConcurrency
     - allow external targeting for @Core.Description similar to @Common.Label
     - reduce duplicated code in /paths production
-    - Capabilities: SortRestrictions/NonSortableProperties, FilterRestrictions/NonFilterableProperties
     - header sap-message for V2 services from SAP in 20x responses
   -->
 
@@ -1411,19 +1409,35 @@
         <xsl:text>search"},</xsl:text>
       </xsl:if>
 
-      <xsl:text>{"$ref":"</xsl:text>
-      <xsl:value-of select="$reuse-parameters" />
-      <xsl:text>filter"},</xsl:text>
+      <xsl:variable name="filter-required">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'FilterRestrictions'" />
+          <xsl:with-param name="property" select="'RequiresFilter'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:text>{"name":"$filter","in":"query","description":"Filter items by property values</xsl:text>
+      <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374625)</xsl:text>
+      <xsl:apply-templates
+        select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.FilterRestrictions') or @Term=concat($capabilitiesAlias,'.FilterRestrictions')]/edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath"
+        mode="filter-RequiredProperties" />
+      <xsl:text>",</xsl:text>
+      <xsl:call-template name="parameter-type">
+        <xsl:with-param name="type" select="'string'" />
+      </xsl:call-template>
+      <xsl:if test="$filter-required='true'">
+        <xsl:text>,"required":true</xsl:text>
+      </xsl:if>
+      <xsl:text>},</xsl:text>
 
       <xsl:text>{"$ref":"</xsl:text>
       <xsl:value-of select="$reuse-parameters" />
       <xsl:text>count"}</xsl:text>
 
       <xsl:variable name="non-sortable"
-        select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/@*|edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/*" />
-      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[not(@Name=$non-sortable/edm:PropertyPath)]"
-        mode="orderby" />
-        
+        select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
+      <xsl:apply-templates
+        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[not(@Name=$non-sortable)]" mode="orderby" />
+
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
         mode="select" />
       <xsl:apply-templates
@@ -1514,11 +1528,11 @@
     <xsl:choose>
       <xsl:when test="$property">
         <xsl:value-of
-          select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/@Bool|edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/edm:Bool" />
+          select="$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/@Bool|edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/edm:Bool" />
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of
-          select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/@Bool|edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Bool" />
+          select="$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/@Bool|edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Bool" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2458,13 +2472,14 @@
 
     <xsl:text>,"parameters":[</xsl:text>
 
-    <!-- TODO: get target entity set, look there for annotations -->
     <xsl:variable name="name" select="@Name" />
-    <xsl:variable name="targetEntitySet" select="//edm:EntitySet[@Name=$entitySet]/edm:NavigationPropertyBinding[@Path=$name]/@Target" />
+    <xsl:variable name="targetEntitySetName" select="//edm:EntitySet[@Name=$entitySet]/edm:NavigationPropertyBinding[@Path=$name]/@Target" />
+    <xsl:variable name="targetSet" select="//edm:EntitySet[@Name=$targetEntitySetName]" />
 
     <xsl:variable name="top-supported">
       <xsl:call-template name="capability">
         <xsl:with-param name="term" select="'TopSupported'" />
+        <xsl:with-param name="target" select="$targetSet" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:if test="not($top-supported='false')">
@@ -2476,6 +2491,7 @@
     <xsl:variable name="skip-supported">
       <xsl:call-template name="capability">
         <xsl:with-param name="term" select="'SkipSupported'" />
+        <xsl:with-param name="target" select="$targetSet" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:if test="not($skip-supported='false')">
@@ -2490,17 +2506,36 @@
       <xsl:text>search"},</xsl:text>
     </xsl:if>
 
-    <xsl:text>{"$ref":"</xsl:text>
-    <xsl:value-of select="$reuse-parameters" />
-    <xsl:text>filter"},</xsl:text>
+    <xsl:variable name="filter-required">
+      <xsl:call-template name="capability">
+        <xsl:with-param name="term" select="'FilterRestrictions'" />
+        <xsl:with-param name="property" select="'RequiresFilter'" />
+        <xsl:with-param name="target" select="$targetSet" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:text>{"name":"$filter","in":"query","description":"Filter items by property values</xsl:text>
+    <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374625)</xsl:text>
+    <xsl:apply-templates
+      select="$targetSet/edm:Annotation[@Term=concat($capabilitiesNamespace,'.FilterRestrictions') or @Term=concat($capabilitiesAlias,'.FilterRestrictions')]/edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath"
+      mode="filter-RequiredProperties" />
+    <xsl:text>",</xsl:text>
+    <xsl:call-template name="parameter-type">
+      <xsl:with-param name="type" select="'string'" />
+    </xsl:call-template>
+    <xsl:if test="$filter-required='true'">
+      <xsl:text>,"required":true</xsl:text>
+    </xsl:if>
+    <xsl:text>},</xsl:text>
 
     <xsl:text>{"$ref":"</xsl:text>
     <xsl:value-of select="$reuse-parameters" />
     <xsl:text>count"}</xsl:text>
 
-    <!-- TODO: restrict to sortable properties -->
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$simpleName]/edm:Property"
-      mode="orderby" />
+    <xsl:variable name="non-sortable"
+      select="$targetSet/edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
+    <xsl:apply-templates
+      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$simpleName]/edm:Property[not(@Name=$non-sortable)]" mode="orderby" />
+
     <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$simpleName]/edm:Property"
       mode="select" />
     <xsl:apply-templates
@@ -2517,6 +2552,14 @@
     </xsl:call-template>
 
     <xsl:text>}}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:PropertyPath" mode="filter-RequiredProperties">
+    <xsl:if test="position()=1">
+      <xsl:text>\n\nRequired filter properties:</xsl:text>
+    </xsl:if>
+    <xsl:text>\n- </xsl:text>
+    <xsl:value-of select="." />
   </xsl:template>
 
   <xsl:template match="edm:Action" mode="bound">
