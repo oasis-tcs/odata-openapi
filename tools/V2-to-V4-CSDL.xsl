@@ -17,7 +17,7 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V2-to-V4-CSDL.xsl
 
     TODO:
-    - sap:filter-restriction
+    - sap:action-for translates into bound action without action import
     - sap:applicable-path
     - parameter entity sets: translate into containment navigation properties
 
@@ -348,6 +348,8 @@
         <xsl:with-param name="required" select="@sap:requires-filter='true'" />
         <xsl:with-param name="required-properties"
           select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]/edm2:Property/@sap:required-in-filter[.='true']" />
+        <xsl:with-param name="restricted-properties"
+          select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]/edm2:Property/@sap:filter-restriction" />
         <xsl:with-param name="excluded-properties"
           select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]/edm2:Property/@sap:filterable[.='false']" />
       </xsl:call-template>
@@ -878,6 +880,7 @@
     <xsl:param name="capability" />
     <xsl:param name="required" select="false()" />
     <xsl:param name="required-properties" select="null" />
+    <xsl:param name="restricted-properties" select="null" />
     <xsl:param name="excluded-properties" />
 
     <xsl:if test="$required or $required-properties or $excluded-properties">
@@ -894,6 +897,14 @@
               <xsl:attribute name="Property">RequiredProperties</xsl:attribute>
               <Collection>
                 <xsl:apply-templates select="$required-properties" mode="restriction" />
+              </Collection>
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="$restricted-properties">
+            <xsl:element name="PropertyValue">
+              <xsl:attribute name="Property">FilterExpressionRestrictions</xsl:attribute>
+              <Collection>
+                <xsl:apply-templates select="$restricted-properties" mode="restriction" />
               </Collection>
             </xsl:element>
           </xsl:if>
@@ -920,6 +931,41 @@
     </xsl:element>
   </xsl:template>
   <xsl:template match="edm2:Property/@sap:filterable|edm2:Property/@sap:sortable|edm2:Property/@sap:required-in-filter" />
+
+  <xsl:template match="edm2:Property/@sap:filter-restriction" mode="restriction">
+    <Record>
+      <PropertyValue Property="Property">
+        <xsl:attribute name="PropertyPath">
+          <xsl:value-of select="../@Name" />
+        </xsl:attribute>
+      </PropertyValue>
+      <PropertyValue Property="AllowedExpressions">
+        <xsl:attribute name="String">
+          <xsl:choose>
+            <xsl:when test=".='single-value'">
+              <xsl:text>SingleValue</xsl:text>
+            </xsl:when>
+            <xsl:when test=".='multi-value'">
+              <xsl:text>MultiValue</xsl:text>
+            </xsl:when>
+            <xsl:when test=".='interval'">
+              <xsl:text>SingleRange</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>TODO:</xsl:text>
+              <xsl:value-of select="." />
+              <xsl:message>
+                <xsl:text>sap:filter-restriction="</xsl:text>
+                <xsl:value-of select="." />
+                <xsl:text>"</xsl:text>
+              </xsl:message>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:attribute>
+      </PropertyValue>
+    </Record>
+  </xsl:template>
+  <xsl:template match="edm2:Property/@sap:filter-restriction" />
 
   <xsl:template match="edm2:Property/@sap:visible">
     <xsl:if test=".='false'">
