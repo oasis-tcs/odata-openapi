@@ -1371,7 +1371,9 @@
 
     <!-- GET -->
     <xsl:variable name="addressable" select="edm:Annotation[@Term='TODO.Addressable']/@Bool" />
-    <xsl:if test="not($addressable='false')">
+    <xsl:variable name="resultContext"
+      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
+    <xsl:if test="not($addressable='false') and not($resultContext)">
       <xsl:text>"get":{</xsl:text>
       <xsl:text>"summary":"Get entities from </xsl:text>
       <xsl:value-of select="@Name" />
@@ -1388,7 +1390,7 @@
       </xsl:variable>
       <xsl:if test="not($top-supported='false')">
         <xsl:text>{"$ref":"</xsl:text>
-        <xsl:value-of select="$reuse-parameters"></xsl:value-of>
+        <xsl:value-of select="$reuse-parameters" />
         <xsl:text>top"},</xsl:text>
       </xsl:if>
 
@@ -1399,26 +1401,29 @@
       </xsl:variable>
       <xsl:if test="not($skip-supported='false')">
         <xsl:text>{"$ref":"</xsl:text>
-        <xsl:value-of select="$reuse-parameters"></xsl:value-of>
+        <xsl:value-of select="$reuse-parameters" />
         <xsl:text>skip"},</xsl:text>
       </xsl:if>
 
       <xsl:if test="$odata-version='4.0'">
         <xsl:text>{"$ref":"</xsl:text>
-        <xsl:value-of select="$reuse-parameters"></xsl:value-of>
+        <xsl:value-of select="$reuse-parameters" />
         <xsl:text>search"},</xsl:text>
       </xsl:if>
 
       <xsl:text>{"$ref":"</xsl:text>
-      <xsl:value-of select="$reuse-parameters"></xsl:value-of>
+      <xsl:value-of select="$reuse-parameters" />
       <xsl:text>filter"},</xsl:text>
 
       <xsl:text>{"$ref":"</xsl:text>
-      <xsl:value-of select="$reuse-parameters"></xsl:value-of>
+      <xsl:value-of select="$reuse-parameters" />
       <xsl:text>count"}</xsl:text>
 
-      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
+      <xsl:variable name="non-sortable"
+        select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/@*|edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/*" />
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[not(@Name=$non-sortable/edm:PropertyPath)]"
         mode="orderby" />
+        
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
         mode="select" />
       <xsl:apply-templates
@@ -1444,7 +1449,7 @@
         <xsl:with-param name="property" select="'Insertable'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="not($addressable='false') and not($insertable='false')">
+    <xsl:if test="not($addressable='false') and not($resultContext) and not($insertable='false')">
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:if test="not($insertable='false')">
@@ -1505,6 +1510,7 @@
   <xsl:template name="capability">
     <xsl:param name="term" />
     <xsl:param name="property" select="false()" />
+    <xsl:param name="target" select="." />
     <xsl:choose>
       <xsl:when test="$property">
         <xsl:value-of
@@ -1641,7 +1647,9 @@
 
     <!-- GET -->
     <xsl:variable name="addressable" select="edm:Annotation[@Term='TODO.Addressable']/@Bool" />
-    <xsl:if test="not($addressable='false')">
+    <xsl:variable name="resultContext"
+      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
+    <xsl:if test="not($addressable='false') and not($resultContext)">
       <xsl:text>"get":{</xsl:text>
       <xsl:text>"summary":"Get entity from </xsl:text>
       <xsl:value-of select="@Name" />
@@ -1672,7 +1680,7 @@
         <xsl:with-param name="property" select="'Updatable'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="not($addressable='false') and not($updatable='false')">
+    <xsl:if test="not($addressable='false') and not($resultContext) and not($updatable='false')">
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:if test="not($updatable='false')">
@@ -1773,6 +1781,16 @@
       <xsl:with-param name="namespace" select="$namespace" />
       <xsl:with-param name="type" select="$type" />
     </xsl:apply-templates>
+
+    <xsl:if test="$resultContext">
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
+        mode="resultContext"
+      >
+        <xsl:with-param name="entitySet" select="@Name" />
+        <xsl:with-param name="namespace" select="$namespace" />
+        <xsl:with-param name="type" select="$type" />
+      </xsl:apply-templates>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template name="if-match">
@@ -2373,6 +2391,132 @@
     <xsl:text>,</xsl:text>
     <xsl:value-of select="$defaultResponse" />
     <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:NavigationProperty" mode="resultContext">
+    <xsl:param name="entitySet" />
+    <xsl:param name="namespace" />
+    <xsl:param name="type" />
+
+    <xsl:variable name="nullable">
+      <xsl:call-template name="nullableFacetValue">
+        <xsl:with-param name="type" select="@Type" />
+        <xsl:with-param name="nullableFacet" select="@Nullable" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="collection" select="starts-with(@Type,'Collection(')" />
+    <xsl:variable name="singleType">
+      <xsl:choose>
+        <xsl:when test="$collection">
+          <xsl:value-of select="substring-before(substring-after(@Type,'('),')')" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@Type" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="qualifier">
+      <xsl:call-template name="substring-before-last">
+        <xsl:with-param name="input" select="$singleType" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="namespace">
+      <xsl:choose>
+        <xsl:when test="//edm:Schema[@Alias=$qualifier]">
+          <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$qualifier" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="simpleName">
+      <xsl:call-template name="substring-after-last">
+        <xsl:with-param name="input" select="$singleType" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="qualifiedType">
+      <xsl:value-of select="$namespace" />
+      <xsl:text>.</xsl:text>
+      <xsl:value-of select="$simpleName" />
+    </xsl:variable>
+
+    <xsl:text>,"/</xsl:text>
+    <xsl:value-of select="$entitySet" />
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="key-in-path" />
+    <xsl:text>/</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>":{"get":{</xsl:text>
+    <!-- TODO: better summary / description -->
+    <xsl:text>"summary":"Get </xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>","tags":["</xsl:text>
+    <xsl:value-of select="$entitySet" />
+    <xsl:text>"]</xsl:text>
+
+    <xsl:text>,"parameters":[</xsl:text>
+
+    <!-- TODO: get target entity set, look there for annotations -->
+    <xsl:variable name="name" select="@Name" />
+    <xsl:variable name="targetEntitySet" select="//edm:EntitySet[@Name=$entitySet]/edm:NavigationPropertyBinding[@Path=$name]/@Target" />
+
+    <xsl:variable name="top-supported">
+      <xsl:call-template name="capability">
+        <xsl:with-param name="term" select="'TopSupported'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="not($top-supported='false')">
+      <xsl:text>{"$ref":"</xsl:text>
+      <xsl:value-of select="$reuse-parameters" />
+      <xsl:text>top"},</xsl:text>
+    </xsl:if>
+
+    <xsl:variable name="skip-supported">
+      <xsl:call-template name="capability">
+        <xsl:with-param name="term" select="'SkipSupported'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="not($skip-supported='false')">
+      <xsl:text>{"$ref":"</xsl:text>
+      <xsl:value-of select="$reuse-parameters" />
+      <xsl:text>skip"},</xsl:text>
+    </xsl:if>
+
+    <xsl:if test="$odata-version='4.0'">
+      <xsl:text>{"$ref":"</xsl:text>
+      <xsl:value-of select="$reuse-parameters" />
+      <xsl:text>search"},</xsl:text>
+    </xsl:if>
+
+    <xsl:text>{"$ref":"</xsl:text>
+    <xsl:value-of select="$reuse-parameters" />
+    <xsl:text>filter"},</xsl:text>
+
+    <xsl:text>{"$ref":"</xsl:text>
+    <xsl:value-of select="$reuse-parameters" />
+    <xsl:text>count"}</xsl:text>
+
+    <!-- TODO: restrict to sortable properties -->
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$simpleName]/edm:Property"
+      mode="orderby" />
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$simpleName]/edm:Property"
+      mode="select" />
+    <xsl:apply-templates
+      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$simpleName]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$simpleName]/edm:Property[@Type='Edm.Stream']"
+      mode="expand" />
+
+    <xsl:text>]</xsl:text>
+
+    <xsl:call-template name="responses">
+      <xsl:with-param name="code" select="'200'" />
+      <xsl:with-param name="type" select="concat('Collection(',$qualifiedType,')')" />
+      <xsl:with-param name="description" select="'Retrieved entities'" />
+      <xsl:with-param name="innerDescription" select="concat('Collection of ',$type)" />
+    </xsl:call-template>
+
+    <xsl:text>}}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Action" mode="bound">
