@@ -19,6 +19,7 @@
     TODO:
     - sap:filter-restriction
     - sap:applicable-path
+    - parameter entity sets: translate into containment navigation properties
 
   -->
   <xsl:strip-space elements="*" />

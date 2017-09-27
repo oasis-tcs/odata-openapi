@@ -302,12 +302,27 @@
         <xsl:value-of select="$containerLongDescription" />
       </xsl:when>
       <xsl:when test="//edm:EntityContainer">
-        <xsl:text>This OData service is located at </xsl:text>
+        <xsl:text>This OData service is located at [</xsl:text>
         <xsl:value-of select="$scheme" />
         <xsl:text>://</xsl:text>
         <xsl:value-of select="$host" />
         <xsl:value-of select="$basePath" />
-        <xsl:text>/</xsl:text>
+        <xsl:text>/](</xsl:text>
+        <xsl:value-of select="$scheme" />
+        <xsl:text>://</xsl:text>
+        <xsl:value-of select="$host" />
+        <xsl:call-template name="replace-all">
+          <xsl:with-param name="string">
+            <xsl:call-template name="replace-all">
+              <xsl:with-param name="string" select="$basePath" />
+              <xsl:with-param name="old" select="'('" />
+              <xsl:with-param name="new" select="'%28'" />
+            </xsl:call-template>
+          </xsl:with-param>
+          <xsl:with-param name="old" select="')'" />
+          <xsl:with-param name="new" select="'%29'" />
+        </xsl:call-template>
+        <xsl:text>/)</xsl:text>
       </xsl:when>
     </xsl:choose>
     <xsl:if test="$diagram">
