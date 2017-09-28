@@ -138,7 +138,8 @@
   <xsl:template name="Core.Description">
     <xsl:param name="node" />
     <xsl:variable name="description"
-      select="$node/edm:Annotation[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/@String|$node/edm:Annotation[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/edm:String" />
+      select="$node/edm:Annotation[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/@String
+             |$node/edm:Annotation[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/edm:String" />
     <xsl:call-template name="escape">
       <xsl:with-param name="string" select="normalize-space($description)" />
     </xsl:call-template>
@@ -158,7 +159,8 @@
     <xsl:param name="term" />
     <xsl:call-template name="escape">
       <xsl:with-param name="string"
-        select="$node/edm:Annotation[(@Term=concat('Org.OData.Core.V1.',$term) or @Term=concat($coreAlias,'.',$term)) and not(@Qualifier)]/@String|$node/edm:Annotation[(@Term=concat('Org.OData.Core.V1.',$term) or @Term=concat($coreAlias,'.',$term)) and not(@Qualifier)]/edm:String" />
+        select="$node/edm:Annotation[(@Term=concat('Org.OData.Core.V1.',$term) or @Term=concat($coreAlias,'.',$term)) and not(@Qualifier)]/@String
+               |$node/edm:Annotation[(@Term=concat('Org.OData.Core.V1.',$term) or @Term=concat($coreAlias,'.',$term)) and not(@Qualifier)]/edm:String" />
     </xsl:call-template>
   </xsl:template>
 
@@ -1296,7 +1298,8 @@
         <xsl:text>"</xsl:text>
       </xsl:when>
       <xsl:when
-        test="$underlyingType='Edm.Boolean' or $underlyingType='Edm.Decimal' or $underlyingType='Edm.Double' or $underlyingType='Edm.Single' or $underlyingType='Edm.Byte' or $underlyingType='Edm.SByte' or $underlyingType='Edm.Int16' or $underlyingType='Edm.Int32' or $underlyingType='Edm.Int64'"
+        test="$underlyingType='Edm.Boolean' or $underlyingType='Edm.Decimal' or $underlyingType='Edm.Double' or $underlyingType='Edm.Single'
+              or $underlyingType='Edm.Byte' or $underlyingType='Edm.SByte' or $underlyingType='Edm.Int16' or $underlyingType='Edm.Int32' or $underlyingType='Edm.Int64'"
       >
         <xsl:value-of select="." />
       </xsl:when>
@@ -1543,11 +1546,13 @@
     <xsl:choose>
       <xsl:when test="$property">
         <xsl:value-of
-          select="$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/@Bool|edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/edm:Bool" />
+          select="$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/@Bool
+                 |$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/edm:Bool" />
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of
-          select="$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/@Bool|edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Bool" />
+          select="$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/@Bool
+                 |$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Bool" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2442,7 +2447,7 @@
         <xsl:with-param name="marker" select="'.'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:variable name="namespace">
+    <xsl:variable name="targetNamespace">
       <xsl:choose>
         <xsl:when test="//edm:Schema[@Alias=$qualifier]">
           <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
@@ -2458,8 +2463,8 @@
         <xsl:with-param name="marker" select="'.'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:variable name="qualifiedType">
-      <xsl:value-of select="$namespace" />
+    <xsl:variable name="targetType">
+      <xsl:value-of select="$targetNamespace" />
       <xsl:text>.</xsl:text>
       <xsl:value-of select="$simpleName" />
     </xsl:variable>
@@ -2542,21 +2547,22 @@
     <xsl:variable name="non-sortable"
       select="$targetSet/edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
     <xsl:apply-templates
-      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$simpleName]/edm:Property[not(@Name=$non-sortable)]" mode="orderby" />
+      select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property[not(@Name=$non-sortable)]"
+      mode="orderby" />
 
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$simpleName]/edm:Property"
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property"
       mode="select" />
     <xsl:apply-templates
-      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$simpleName]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$simpleName]/edm:Property[@Type='Edm.Stream']"
+      select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:NavigationProperty|//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property[@Type='Edm.Stream']"
       mode="expand" />
 
     <xsl:text>]</xsl:text>
 
     <xsl:call-template name="responses">
       <xsl:with-param name="code" select="'200'" />
-      <xsl:with-param name="type" select="concat('Collection(',$qualifiedType,')')" />
+      <xsl:with-param name="type" select="concat('Collection(',$targetType,')')" />
       <xsl:with-param name="description" select="'Retrieved entities'" />
-      <xsl:with-param name="innerDescription" select="concat('Collection of ',$type)" />
+      <xsl:with-param name="innerDescription" select="concat('Collection of ',$simpleName)" />
     </xsl:call-template>
 
     <xsl:text>}}</xsl:text>
