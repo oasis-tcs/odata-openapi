@@ -2220,13 +2220,9 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>","tags":["</xsl:text>
-    <xsl:variable name="action-for" select="edm:Annotation[@Term='SAP.ActionFor']/@String" />
     <xsl:choose>
       <xsl:when test="@EntitySet">
         <xsl:value-of select="@EntitySet" />
-      </xsl:when>
-      <xsl:when test="$action-for">
-        <xsl:value-of select="//edm:EntitySet[@EntityType=$action-for]/@Name" />
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>Service Operations</xsl:text>
@@ -2335,13 +2331,9 @@
     </xsl:choose>
 
     <xsl:text>","tags":["</xsl:text>
-    <xsl:variable name="action-for" select="edm:Annotation[@Term='SAP.ActionFor']/@String" />
     <xsl:choose>
       <xsl:when test="$entitySet">
         <xsl:value-of select="$entitySet" />
-      </xsl:when>
-      <xsl:when test="$action-for">
-        <xsl:value-of select="//edm:EntitySet[@EntityType=$action-for]/@Name" />
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>Service Operations</xsl:text>
@@ -2486,40 +2478,11 @@
     <xsl:text>"]</xsl:text>
 
     <xsl:text>,"parameters":[</xsl:text>
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="parameter" />
 
     <xsl:variable name="name" select="@Name" />
     <xsl:variable name="targetEntitySetName" select="//edm:EntitySet[@Name=$entitySet]/edm:NavigationPropertyBinding[@Path=$name]/@Target" />
     <xsl:variable name="targetSet" select="//edm:EntitySet[@Name=$targetEntitySetName]" />
-
-    <xsl:variable name="top-supported">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'TopSupported'" />
-        <xsl:with-param name="target" select="$targetSet" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:if test="not($top-supported='false')">
-      <xsl:text>{"$ref":"</xsl:text>
-      <xsl:value-of select="$reuse-parameters" />
-      <xsl:text>top"},</xsl:text>
-    </xsl:if>
-
-    <xsl:variable name="skip-supported">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'SkipSupported'" />
-        <xsl:with-param name="target" select="$targetSet" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:if test="not($skip-supported='false')">
-      <xsl:text>{"$ref":"</xsl:text>
-      <xsl:value-of select="$reuse-parameters" />
-      <xsl:text>skip"},</xsl:text>
-    </xsl:if>
-
-    <xsl:if test="$odata-version='4.0'">
-      <xsl:text>{"$ref":"</xsl:text>
-      <xsl:value-of select="$reuse-parameters" />
-      <xsl:text>search"},</xsl:text>
-    </xsl:if>
 
     <xsl:variable name="filter-required">
       <xsl:call-template name="capability">
@@ -2528,7 +2491,7 @@
         <xsl:with-param name="target" select="$targetSet" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:text>{"name":"$filter","in":"query","description":"Filter items by property values</xsl:text>
+    <xsl:text>,{"name":"$filter","in":"query","description":"Filter items by property values</xsl:text>
     <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374625)</xsl:text>
     <xsl:apply-templates
       select="$targetSet/edm:Annotation[@Term=concat($capabilitiesNamespace,'.FilterRestrictions') or @Term=concat($capabilitiesAlias,'.FilterRestrictions')]/edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath"
@@ -2540,9 +2503,39 @@
     <xsl:if test="$filter-required='true'">
       <xsl:text>,"required":true</xsl:text>
     </xsl:if>
-    <xsl:text>},</xsl:text>
+    <xsl:text>}</xsl:text>
 
-    <xsl:text>{"$ref":"</xsl:text>
+    <xsl:variable name="top-supported">
+      <xsl:call-template name="capability">
+        <xsl:with-param name="term" select="'TopSupported'" />
+        <xsl:with-param name="target" select="$targetSet" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="not($top-supported='false')">
+      <xsl:text>,{"$ref":"</xsl:text>
+      <xsl:value-of select="$reuse-parameters" />
+      <xsl:text>top"}</xsl:text>
+    </xsl:if>
+
+    <xsl:variable name="skip-supported">
+      <xsl:call-template name="capability">
+        <xsl:with-param name="term" select="'SkipSupported'" />
+        <xsl:with-param name="target" select="$targetSet" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="not($skip-supported='false')">
+      <xsl:text>,{"$ref":"</xsl:text>
+      <xsl:value-of select="$reuse-parameters" />
+      <xsl:text>skip"}</xsl:text>
+    </xsl:if>
+
+    <xsl:if test="$odata-version='4.0'">
+      <xsl:text>,{"$ref":"</xsl:text>
+      <xsl:value-of select="$reuse-parameters" />
+      <xsl:text>search"}</xsl:text>
+    </xsl:if>
+
+    <xsl:text>,{"$ref":"</xsl:text>
     <xsl:value-of select="$reuse-parameters" />
     <xsl:text>count"}</xsl:text>
 

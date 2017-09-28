@@ -17,8 +17,8 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V2-to-V4-CSDL.xsl
 
     TODO:
-    - sap:action-for translates into bound action without action import
-    - sap:applicable-path
+    - sap:action-for translates into bound action/function without import
+    - sap:applicable-path translates into Core.OperationAvailable
     - parameter entity sets: translate into containment navigation properties
 
   -->
@@ -568,13 +568,7 @@
   </xsl:template>
 
   <!-- SAP annotations -->
-  <xsl:template match="@sap:action-for">
-    <Annotation Term="SAP.ActionFor">
-      <xsl:attribute name="String">
-        <xsl:value-of select="." />
-      </xsl:attribute>
-    </Annotation>
-  </xsl:template>
+  <xsl:template match="@sap:action-for|@sap:applicable-path" />
 
   <xsl:template match="@sap:label">
     <Annotation>
