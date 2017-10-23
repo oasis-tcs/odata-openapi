@@ -8,7 +8,6 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - 3.0.0: no additional keywords in $ref objects, use anyOf e.g. with default
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -1070,19 +1069,28 @@
         </xsl:if>
       </xsl:when>
       <xsl:when test="$qualifier='Edm'">
-        <xsl:if test="not($openapi-version='2.0') and not($nullable='false')">
-          <xsl:text>"nullable":true,"anyOf":[{</xsl:text>
+        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue)">
+          <xsl:if test="not($nullable='false')">
+            <xsl:text>"nullable":true,</xsl:text>
+          </xsl:if>
+          <xsl:text>"anyOf":[{</xsl:text>
         </xsl:if>
         <xsl:text>"$ref":"</xsl:text>
         <xsl:value-of select="$odata-schema" />
         <xsl:text>#/definitions/</xsl:text>
         <xsl:value-of select="$singleType" />
         <xsl:text>"</xsl:text>
-        <xsl:if test="not($openapi-version='2.0') and not($nullable='false')">
+        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue)">
           <xsl:text>}]</xsl:text>
         </xsl:if>
       </xsl:when>
       <xsl:otherwise>
+        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue or @MaxLength)">
+          <xsl:if test="not($nullable='false')">
+            <xsl:text>"nullable":true,</xsl:text>
+          </xsl:if>
+          <xsl:text>"anyOf":[{</xsl:text>
+        </xsl:if>
         <xsl:call-template name="ref">
           <xsl:with-param name="qualifier" select="$qualifier" />
           <xsl:with-param name="name">
@@ -1091,8 +1099,10 @@
               <xsl:with-param name="marker" select="'.'" />
             </xsl:call-template>
           </xsl:with-param>
-          <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
+        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue or @MaxLength)">
+          <xsl:text>}]</xsl:text>
+        </xsl:if>
         <xsl:apply-templates select="@MaxLength" />
       </xsl:otherwise>
     </xsl:choose>
@@ -1139,7 +1149,6 @@
   <xsl:template name="ref">
     <xsl:param name="qualifier" />
     <xsl:param name="name" />
-    <xsl:param name="nullable" />
     <xsl:variable name="internalNamespace" select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
     <xsl:variable name="externalNamespace">
       <xsl:choose>
@@ -1151,9 +1160,6 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:if test="not($openapi-version='2.0') and not($nullable='false')">
-      <xsl:text>"nullable":true,"anyOf":[{</xsl:text>
-    </xsl:if>
     <xsl:text>"$ref":"</xsl:text>
     <xsl:call-template name="json-url">
       <xsl:with-param name="url" select="//edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
@@ -1173,9 +1179,6 @@
     <xsl:text>.</xsl:text>
     <xsl:value-of select="$name" />
     <xsl:text>"</xsl:text>
-    <xsl:if test="not($openapi-version='2.0') and not($nullable='false')">
-      <xsl:text>}]</xsl:text>
-    </xsl:if>
   </xsl:template>
 
   <xsl:template name="schema-ref">
@@ -1193,7 +1196,6 @@
           <xsl:with-param name="marker" select="'.'" />
         </xsl:call-template>
       </xsl:with-param>
-      <xsl:with-param name="nullable" select="'false'" />
     </xsl:call-template>
   </xsl:template>
 
