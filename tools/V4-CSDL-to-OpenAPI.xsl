@@ -8,8 +8,8 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - 3.0.0
-    - - anyOf:[null,$ref] for nullable single-valued navigation properties,
+    - 3.0.0: nullable:true,anyOf:[{$ref:...}] for nullable single-valued navigation properties, see https://github.com/OAI/OpenAPI-Specification/issues/1368
+    - 3.0.0: no additional keywords in $ref objects, use anyOf e.g. with default
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -1229,7 +1229,7 @@
       <xsl:otherwise>
         <xsl:choose>
           <xsl:when test="contains($type,',')">
-            <xsl:text>"oneOf":[{"type":"</xsl:text>
+            <xsl:text>"anyOf":[{"type":"</xsl:text>
             <xsl:call-template name="replace-all">
               <xsl:with-param name="string" select="$type" />
               <xsl:with-param name="old" select="','" />
