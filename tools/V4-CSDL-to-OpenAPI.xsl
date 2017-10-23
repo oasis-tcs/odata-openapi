@@ -8,7 +8,6 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - 3.0.0: nullable:true,anyOf:[{$ref:...}] for nullable single-valued navigation properties, see https://github.com/OAI/OpenAPI-Specification/issues/1368
     - 3.0.0: no additional keywords in $ref objects, use anyOf e.g. with default
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
@@ -1071,11 +1070,17 @@
         </xsl:if>
       </xsl:when>
       <xsl:when test="$qualifier='Edm'">
+        <xsl:if test="not($openapi-version='2.0') and not($nullable='false')">
+          <xsl:text>"nullable":true,"anyOf":[{</xsl:text>
+        </xsl:if>
         <xsl:text>"$ref":"</xsl:text>
         <xsl:value-of select="$odata-schema" />
         <xsl:text>#/definitions/</xsl:text>
         <xsl:value-of select="$singleType" />
         <xsl:text>"</xsl:text>
+        <xsl:if test="not($openapi-version='2.0') and not($nullable='false')">
+          <xsl:text>}]</xsl:text>
+        </xsl:if>
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="ref">
@@ -1086,6 +1091,7 @@
               <xsl:with-param name="marker" select="'.'" />
             </xsl:call-template>
           </xsl:with-param>
+          <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
         <xsl:apply-templates select="@MaxLength" />
       </xsl:otherwise>
@@ -1133,6 +1139,7 @@
   <xsl:template name="ref">
     <xsl:param name="qualifier" />
     <xsl:param name="name" />
+    <xsl:param name="nullable" />
     <xsl:variable name="internalNamespace" select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
     <xsl:variable name="externalNamespace">
       <xsl:choose>
@@ -1144,6 +1151,9 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <xsl:if test="not($openapi-version='2.0') and not($nullable='false')">
+      <xsl:text>"nullable":true,"anyOf":[{</xsl:text>
+    </xsl:if>
     <xsl:text>"$ref":"</xsl:text>
     <xsl:call-template name="json-url">
       <xsl:with-param name="url" select="//edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
@@ -1163,6 +1173,9 @@
     <xsl:text>.</xsl:text>
     <xsl:value-of select="$name" />
     <xsl:text>"</xsl:text>
+    <xsl:if test="not($openapi-version='2.0') and not($nullable='false')">
+      <xsl:text>}]</xsl:text>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template name="schema-ref">
@@ -1180,6 +1193,7 @@
           <xsl:with-param name="marker" select="'.'" />
         </xsl:call-template>
       </xsl:with-param>
+      <xsl:with-param name="nullable" select="'false'" />
     </xsl:call-template>
   </xsl:template>
 
