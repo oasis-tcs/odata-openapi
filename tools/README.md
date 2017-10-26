@@ -1,10 +1,10 @@
 # odata-openapi
 
-Tools for transforming [OData](www.odata.org) CSDL (`$metadata`) XML documents into [OpenAPI](https://github.com/OAI/OpenAPI-Specification) documents.
+Tools for transforming [OData](http://www.odata.org) CSDL (`$metadata`) XML documents into [OpenAPI](https://github.com/OAI/OpenAPI-Specification) documents.
 
-The core ingredient is the [`V4-CSDL-to-OpenAPI.xsl`](V4-CSDL-to-OpenAPI.xsl) transformation. It transforms OData CSDL Version 4.0 documents into either OpenAPI 3.0.0 or Swagger 2.0 documents.
+The core ingredient is the [`V4-CSDL-to-OpenAPI.xsl`](V4-CSDL-to-OpenAPI.xsl) transformation. It transforms OData CSDL XML Version 4.0 documents into either OpenAPI 3.0.0 or Swagger 2.0 documents.
 
-If the OData CSDL XML document to be transformed conforms to one of the predecessor OData versions 2.0 or 3.0, it can be transformed into OData 4.0 with the [`V2-to-V4-CSDL.xsl`](V2-to-V4-CSDL.xsl) transformation.
+OData CSDL XML documents conforming to one of the predecessor OData versions 2.0 or 3.0 can be transformed into OData 4.0 with the [`V2-to-V4-CSDL.xsl`](V2-to-V4-CSDL.xsl) transformation.
 
 The three files [`transform`](transform), [`transform.cmd`](transform.cmd), and [`transform.js`](transform.js) are wrapper scripts for Unix Bash, Windows Command, and Node.js.
 
@@ -40,7 +40,7 @@ In `tools` folder type
 ```sh
 node transform -h
 ```
-to see the Usage hints
+to get usage hints
 ```
 Usage: node transform <options> <source files>
 Options:
@@ -49,6 +49,7 @@ Options:
  -h, --help              show this info
  --host                  host (default: localhost)
  -o, --openapi-version   3.0.0 or 2.0 (default: 3.0.0)
+ -p, --pretty            pretty-print JSON result
  -r, --references        include references to other files
  --scheme                scheme (default: http)
  -u, --swagger-ui        URL of Swagger UI for cross-service references
