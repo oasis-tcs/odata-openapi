@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
-  xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:json="http://json.org/"
+  xmlns:edm="http://docs.oasis-open.org/odata/ns/edm"
 >
   <!--
     This style sheet transforms OData 4.0 CSDL XML documents into OpenAPI 2.0 or OpenAPI 3.0.0 JSON
@@ -18,6 +18,7 @@
     - Validation annotations -> minimum, maximum, exclusiveM??imum,
     see https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Validation.V1.md,
     inline and explace style
+    - Capabilities.SearchSupported
     - complex or collection-valued function parameters need special treatment in /paths,
     use parameter aliases with alias option of type string
     - @Extends for entity container: include /paths from referenced container
