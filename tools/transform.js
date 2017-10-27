@@ -51,9 +51,10 @@ var argv = minimist(process.argv.slice(2), {
 if (argv.o == '2') argv.o = "2.0";
 if (argv.o == '3') argv.o = "3.0.0";
 
+var xsltpath = path.dirname(require.main.filename) + path.sep;
 
 if (unknown || argv._.length == 0 || argv.h) {
-    console.log(`Usage: node transform <options> <source files>
+    console.log('Usage: ' + path.basename(process.argv[1]) + ` <options> <source files>
 Options:
  --basePath              base path (default: /service-root)
  -d, --diagram           include YUML diagram
@@ -79,7 +80,7 @@ function transform(source) {
     xslt4node.transform(
         // TODO: suppress stderr
         {
-            xsltPath: 'OData-Version.xsl',
+            xsltPath: xsltpath + 'OData-Version.xsl',
             sourcePath: source,
             result: String
         },
@@ -101,7 +102,7 @@ function transformV2V3(source, version) {
     var target = source.substring(0, source.lastIndexOf('.') + 1) + 'tmp';
     xslt4node.transform(
         {
-            xsltPath: 'V2-to-V4-CSDL.xsl',
+            xsltPath: xsltpath + 'V2-to-V4-CSDL.xsl',
             sourcePath: source,
             result: target
         },
@@ -119,7 +120,7 @@ function transformV4(source, version, deleteSource) {
     var target = source.substring(0, source.lastIndexOf('.') + 1) + 'openapi.json';
     xslt4node.transform(
         {
-            xsltPath: 'V4-CSDL-to-OpenAPI.xsl',
+            xsltPath: xsltpath + 'V4-CSDL-to-OpenAPI.xsl',
             sourcePath: source,
             result: (argv.pretty ? String : target),
             params: {

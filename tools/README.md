@@ -33,16 +33,28 @@ npm install
 ```
 a second time. This has always worked for me. Hints on avoiding this are welcome!
 
+To install globally type
+```sh
+npm install -g
+```
+
 
 ### Usage
 
-In `tools` folder type
+Assuming you installed the script globally and your metadata file is `MyMetadata.xml`, then
 ```sh
-node transform -h
+odata2openapi -drp MyMetadata.xml
+```
+will transform it into `MyMetadata.openapi.json` with a nice [yUML](https://yuml.me/) diagram, references to included services / vocabularies, and pretty-printed JSON. 
+
+
+Just type
+```sh
+odata2openapi -h
 ```
 to get usage hints
 ```
-Usage: node transform <options> <source files>
+Usage: odata2openapi <options> <source files>
 Options:
  --basePath              base path (default: /service-root)
  -d, --diagram           include YUML diagram
@@ -55,12 +67,11 @@ Options:
  -u, --swagger-ui        URL of Swagger UI for cross-service references
 ```
 
-Or type
+If you installed the script locally, start it via
 ```sh
-node transform -drp MyMetadata.xml
+node path_to_tools/transform.js ...
 ```
-to transform `MyMetadata.xml` into `MyMetadata.openapi.json` with a nice [yUML](https://yuml.me/) diagram, references to included services / vocabularies, and pretty-printed JSON. 
-
+(replace `path_to_tools` with your local installation path).
 
 
 
