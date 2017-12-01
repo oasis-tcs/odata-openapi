@@ -1583,7 +1583,7 @@
       <xsl:text>{"name":"$orderby","in":"query","description":"Order items by property values</xsl:text>
       <xsl:text>, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374629)",</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
-        <xsl:text>"schema":{</xsl:text>
+        <xsl:text>"explode":false,"schema":{</xsl:text>
       </xsl:if>
       <xsl:text>"type":"array","uniqueItems":true,"items":{"type":"string","enum":[</xsl:text>
     </xsl:if>
@@ -1612,7 +1612,7 @@
       <xsl:text>{"name":"$select","in":"query","description":"Select properties to be returned</xsl:text>
       <xsl:text>, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
-        <xsl:text>"schema":{</xsl:text>
+        <xsl:text>"explode":false,"schema":{</xsl:text>
       </xsl:if>
       <xsl:text>"type":"array","uniqueItems":true,"items":{"type":"string","enum":[</xsl:text>
     </xsl:if>
@@ -1639,7 +1639,7 @@
       <xsl:text>{"name":"$expand","in":"query","description":"Expand related entities</xsl:text>
       <xsl:text>, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
-        <xsl:text>"schema":{</xsl:text>
+        <xsl:text>"explode":false,"schema":{</xsl:text>
       </xsl:if>
       <xsl:text>"type":"array","uniqueItems":true,"items":{"type":"string","enum":["*"</xsl:text>
     </xsl:if>
