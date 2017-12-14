@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="edmx1 edm2 edm3 edm m annotation sap" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="1.0" exclude-result-prefixes="edmx1 edm2 edm3 edm m annotation sap nodeinfo" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edmx1="http://schemas.microsoft.com/ado/2007/06/edmx"
   xmlns:edm2="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:edm3="http://schemas.microsoft.com/ado/2009/11/edm"
   xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
