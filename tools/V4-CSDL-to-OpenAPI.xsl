@@ -18,7 +18,6 @@
     - Validation annotations -> minimum, maximum, exclusiveM??imum,
     see https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Validation.V1.md,
     inline and explace style
-    - Capabilities.SearchSupported
     - complex or collection-valued function parameters need special treatment in /paths,
     use parameter aliases with alias option of type string
     - @Extends for entity container: include /paths from referenced container
@@ -86,8 +85,7 @@
   </xsl:variable>
 
   <xsl:variable name="coreNamespace" select="'Org.OData.Core.V1'" />
-  <xsl:variable name="coreAlias"
-    select="//edmx:Include[@Namespace=$coreNamespace]/@Alias|//edm:Schema[@Namespace=$coreNamespace]/@Alias" />
+  <xsl:variable name="coreAlias" select="//edmx:Include[@Namespace=$coreNamespace]/@Alias|//edm:Schema[@Namespace=$coreNamespace]/@Alias" />
   <xsl:variable name="coreDescription" select="concat($coreNamespace,'.Description')" />
   <xsl:variable name="coreDescriptionAliased">
     <xsl:choose>
@@ -119,8 +117,7 @@
     select="//edmx:Include[@Namespace=$validationNamespace]/@Alias|//edm:Schema[@Namespace=$validationNamespace]/@Alias" />
 
   <xsl:variable name="commonNamespace" select="'com.sap.vocabularies.Common.v1'" />
-  <xsl:variable name="commonAlias"
-    select="//edmx:Include[@Namespace=$commonNamespace]/@Alias|//edm:Schema[@Namespace=$commonNamespace]/@Alias" />
+  <xsl:variable name="commonAlias" select="//edmx:Include[@Namespace=$commonNamespace]/@Alias|//edm:Schema[@Namespace=$commonNamespace]/@Alias" />
   <xsl:variable name="commonLabel" select="concat($commonNamespace,'.Label')" />
   <xsl:variable name="commonLabelAliased" select="concat($commonAlias,'.Label')" />
   <xsl:variable name="commonQuickInfo" select="concat($commonNamespace,'.QuickInfo')" />
@@ -451,14 +448,26 @@
         <xsl:with-param name="type" select="'string'" />
       </xsl:call-template>
       <xsl:text>}</xsl:text>
-      <xsl:if test="$odata-version='4.0'">
-        <xsl:text>,"search":{"name":"$search","in":"query","description":"Search items by search phrases</xsl:text>
-        <xsl:text>, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374633)",</xsl:text>
-        <xsl:call-template name="parameter-type">
-          <xsl:with-param name="type" select="'string'" />
-        </xsl:call-template>
-        <xsl:text>}</xsl:text>
-      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="$odata-version='4.0'">
+          <xsl:text>,"search":{"name":"$search","in":"query","description":"Search items by search phrases</xsl:text>
+          <xsl:text>, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374633)",</xsl:text>
+          <xsl:call-template name="parameter-type">
+            <xsl:with-param name="type" select="'string'" />
+          </xsl:call-template>
+          <xsl:text>}</xsl:text>
+        </xsl:when>
+        <xsl:when
+          test="//edm:Annotation[@Term=concat($capabilitiesNamespace,'.SearchRestrictions') or @Term=concat($capabilitiesAlias,'.SearchRestrictions')]/edm:Record/edm:PropertyValue[@Property='Searchable' and @Bool='true']"
+        >
+          <xsl:text>,"search":{"name":"search","in":"query","description":"Search items by search phrases</xsl:text>
+          <xsl:text>, see [OData Searching](https://wiki.scn.sap.com/wiki/display/EmTech/SAP+Annotations+for+OData+Version+2.0#SAPAnnotationsforODataVersion2.0-Query_Option_searchQueryOptionsearch)",</xsl:text>
+          <xsl:call-template name="parameter-type">
+            <xsl:with-param name="type" select="'string'" />
+          </xsl:call-template>
+          <xsl:text>}</xsl:text>
+        </xsl:when>
+      </xsl:choose>
       <xsl:text>}</xsl:text>
 
       <xsl:text>,"responses":{"error":{"description":"Error",</xsl:text>
@@ -1438,7 +1447,13 @@
         <xsl:text>skip"},</xsl:text>
       </xsl:if>
 
-      <xsl:if test="$odata-version='4.0'">
+      <xsl:variable name="searchable">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'SearchRestrictions'" />
+          <xsl:with-param name="property" select="'Searchable'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="not($searchable='false')">
         <xsl:text>{"$ref":"</xsl:text>
         <xsl:value-of select="$reuse-parameters" />
         <xsl:text>search"},</xsl:text>
@@ -1470,11 +1485,10 @@
 
       <xsl:variable name="non-sortable"
         select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
-      <xsl:apply-templates
-        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[not(@Name=$non-sortable)]" mode="orderby" />
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[not(@Name=$non-sortable)]"
+        mode="orderby" />
 
-      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
-        mode="select" />
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property" mode="select" />
       <xsl:apply-templates
         select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream']"
         mode="expand" />
@@ -1709,8 +1723,7 @@
       <xsl:text>"]</xsl:text>
       <xsl:text>,"parameters":[</xsl:text>
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="parameter" />
-      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
-        mode="select" />
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property" mode="select" />
       <xsl:apply-templates
         select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream']"
         mode="expand" />
@@ -1825,8 +1838,7 @@
       <xsl:with-param name="type" select="$type" />
     </xsl:apply-templates>
     <xsl:apply-templates
-      select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
-      mode="bound"
+      select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]" mode="bound"
     >
       <xsl:with-param name="entitySet" select="@Name" />
       <xsl:with-param name="namespace" select="$namespace" />
@@ -1904,9 +1916,7 @@
     <xsl:text>"]</xsl:text>
     <xsl:text>,"parameters":[</xsl:text>
 
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
-      mode="select"
-    >
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property" mode="select">
       <xsl:with-param name="after" select="''" />
     </xsl:apply-templates>
     <xsl:apply-templates
@@ -1978,8 +1988,7 @@
       <xsl:with-param name="type" select="$type" />
     </xsl:apply-templates>
     <xsl:apply-templates
-      select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
-      mode="bound"
+      select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]" mode="bound"
     >
       <xsl:with-param name="singleton" select="@Name" />
       <xsl:with-param name="namespace" select="$namespace" />
@@ -2050,8 +2059,7 @@
           </xsl:call-template>
         </xsl:variable>
 
-        <xsl:apply-templates select="//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]"
-          mode="key-in-path" />
+        <xsl:apply-templates select="//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]" mode="key-in-path" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2141,8 +2149,7 @@
           </xsl:call-template>
         </xsl:variable>
 
-        <xsl:apply-templates select="//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]"
-          mode="parameter" />
+        <xsl:apply-templates select="//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]" mode="parameter" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2251,8 +2258,7 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>"]</xsl:text>
-    <xsl:variable name="parameters"
-      select="//edm:Schema[@Namespace=$namespace]/edm:Action[@Name=$action and not(@IsBound='true')]/edm:Parameter" />
+    <xsl:variable name="parameters" select="//edm:Schema[@Namespace=$namespace]/edm:Action[@Name=$action and not(@IsBound='true')]/edm:Parameter" />
     <xsl:if test="$parameters">
       <xsl:choose>
         <xsl:when test="$odata-version='2.0'">
@@ -2551,7 +2557,14 @@
       <xsl:text>skip"}</xsl:text>
     </xsl:if>
 
-    <xsl:if test="$odata-version='4.0'">
+    <xsl:variable name="searchable">
+      <xsl:call-template name="capability">
+        <xsl:with-param name="term" select="'SearchRestrictions'" />
+        <xsl:with-param name="property" select="'Searchable'" />
+        <xsl:with-param name="target" select="$targetSet" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="not($searchable='false')">
       <xsl:text>,{"$ref":"</xsl:text>
       <xsl:value-of select="$reuse-parameters" />
       <xsl:text>search"}</xsl:text>
@@ -2564,8 +2577,7 @@
     <xsl:variable name="non-sortable"
       select="$targetSet/edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
     <xsl:apply-templates
-      select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property[not(@Name=$non-sortable)]"
-      mode="orderby" />
+      select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property[not(@Name=$non-sortable)]" mode="orderby" />
 
     <xsl:apply-templates select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property"
       mode="select" />
@@ -2725,8 +2737,8 @@
     <xsl:value-of select="$entitySet" />
     <xsl:value-of select="$singleton" />
     <xsl:text>"],"parameters":[</xsl:text>
-    <xsl:apply-templates
-      select="//edm:Schema[@Namespace=$namespace and $entitySet]/edm:EntityType[@Name=$type]|edm:Parameter[position()>1]" mode="parameter" />
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace and $entitySet]/edm:EntityType[@Name=$type]|edm:Parameter[position()>1]"
+      mode="parameter" />
     <xsl:text>]</xsl:text>
 
     <xsl:call-template name="responses">

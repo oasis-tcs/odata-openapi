@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="edmx1 edm2 edm3 edm m annotation sap nodeinfo" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edmx1="http://schemas.microsoft.com/ado/2007/06/edmx"
-  xmlns:edm2="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:edm3="http://schemas.microsoft.com/ado/2009/11/edm"
-  xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
-  xmlns:sap="http://www.sap.com/Protocols/SAPData" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:nodeinfo="xalan://org.apache.xalan.lib.NodeInfo"
+  xmlns:edm2="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:edm3="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+  xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:sap="http://www.sap.com/Protocols/SAPData" xmlns="http://docs.oasis-open.org/odata/ns/edm"
+  xmlns:nodeinfo="xalan://org.apache.xalan.lib.NodeInfo"
 >
   <!--
     This style sheet transforms OData 2.0 or 3.0 $metadata documents into OData 4.0 CSDL documents.
@@ -78,7 +78,7 @@
         <xsl:with-param name="schema" select="'Org.OData.Core.V1'" />
       </xsl:call-template>
       <xsl:call-template name="add-reference">
-        <xsl:with-param name="condition" select="//@sap:*" />
+        <xsl:with-param name="condition" select="true()" />
         <xsl:with-param name="schema" select="'Org.OData.Capabilities.V1'" />
       </xsl:call-template>
       <xsl:call-template name="add-reference">
@@ -219,8 +219,8 @@
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <xsl:copy-of select="@Namespace|@Alias" />
       <xsl:apply-templates />
-      <xsl:apply-templates
-        select="*[local-name()='EntityContainer' and @m:IsDefaultEntityContainer='true']/*[local-name()='FunctionImport']" mode="Schema" />
+      <xsl:apply-templates select="*[local-name()='EntityContainer' and @m:IsDefaultEntityContainer='true']/*[local-name()='FunctionImport']"
+        mode="Schema" />
     </Schema>
   </xsl:template>
 
@@ -358,6 +358,27 @@
         <xsl:with-param name="excluded-properties"
           select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]/edm2:Property/@sap:sortable[.='false']" />
       </xsl:call-template>
+
+      <Annotation>
+        <xsl:attribute name="Term">
+          <xsl:value-of select="$Capabilities" />
+          <xsl:text>.SearchRestrictions</xsl:text>
+        </xsl:attribute>
+        <Record>
+          <PropertyValue Property="Searchable" Bool="false">
+            <xsl:attribute name="Bool">
+              <xsl:choose>
+                <xsl:when test="@sap:searchable='true'">
+                  <xsl:text>true</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:text>false</xsl:text>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:attribute>
+          </PropertyValue>
+        </Record>
+      </Annotation>
     </EntitySet>
   </xsl:template>
 
@@ -810,19 +831,7 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="edm2:EntitySet/@sap:searchable">
-    <xsl:if test=".='false'">
-      <Annotation>
-        <xsl:attribute name="Term">
-          <xsl:value-of select="$Capabilities" />
-          <xsl:text>.SearchRestrictions</xsl:text>
-        </xsl:attribute>
-        <Record>
-          <PropertyValue Property="Searchable" Bool="false" />
-        </Record>
-      </Annotation>
-    </xsl:if>
-  </xsl:template>
+  <xsl:template match="edm2:EntitySet/@sap:searchable" />
 
   <xsl:template match="edm2:EntitySet/@sap:pageable">
     <xsl:if test=".='false'">
@@ -917,9 +926,7 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="edm2:Property/@sap:filterable|edm2:Property/@sap:sortable|edm2:Property/@sap:required-in-filter"
-    mode="restriction"
-  >
+  <xsl:template match="edm2:Property/@sap:filterable|edm2:Property/@sap:sortable|edm2:Property/@sap:required-in-filter" mode="restriction">
     <xsl:element name="PropertyPath">
       <xsl:value-of select="../@Name" />
     </xsl:element>
