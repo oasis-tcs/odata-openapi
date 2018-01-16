@@ -5,7 +5,7 @@ setlocal
 @rem  For a description of Xalan command-line parameters see http://xalan.apache.org/xalan-j/commandline.html
 @rem
 @rem  Prerequisites
-@rem  - Java SE 8 is installed and in the PATH - download from http://www.oracle.com/technetwork/java/javase/downloads/index.html 
+@rem  - Java SE is installed and in the PATH - download from http://www.oracle.com/technetwork/java/javase/downloads/index.html 
 @rem  - git is installed and in the PATH - download from https://git-for-windows.github.io/
 @rem  - Eclipse is installed with Xalan (contained in Eclipse Web Tools Platform), and ECLIPSE_HOME environment variable is set
 set CLASSPATH=%CLASSPATH%;%ECLIPSE_HOME%\plugins\org.apache.xml.serializer_2.7.1.v201005080400.jar;%ECLIPSE_HOME%\plugins\org.apache.xalan_2.7.1.v201005080400.jar
