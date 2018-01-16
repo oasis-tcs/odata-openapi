@@ -1488,7 +1488,9 @@
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[not(@Name=$non-sortable)]"
         mode="orderby" />
 
-      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property" mode="select" />
+      <xsl:apply-templates
+        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty[$odata-version='2.0']"
+        mode="select" />
       <xsl:apply-templates
         select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
         mode="expand" />
@@ -1617,7 +1619,7 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="edm:Property" mode="select">
+  <xsl:template match="edm:Property|edm:NavigationProperty" mode="select">
     <xsl:param name="after" select="'something'" />
     <xsl:if test="position()=1">
       <xsl:if test="$after">
@@ -1727,7 +1729,9 @@
       <xsl:text>"]</xsl:text>
       <xsl:text>,"parameters":[</xsl:text>
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="parameter" />
-      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property" mode="select" />
+      <xsl:apply-templates
+        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty[$odata-version='2.0']"
+        mode="select" />
       <xsl:apply-templates
         select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
         mode="expand" />
@@ -1920,7 +1924,10 @@
     <xsl:text>"]</xsl:text>
     <xsl:text>,"parameters":[</xsl:text>
 
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property" mode="select">
+    <xsl:apply-templates
+      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty[$odata-version='2.0']"
+      mode="select"
+    >
       <xsl:with-param name="after" select="''" />
     </xsl:apply-templates>
     <xsl:apply-templates
@@ -2583,7 +2590,8 @@
     <xsl:apply-templates
       select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property[not(@Name=$non-sortable)]" mode="orderby" />
 
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property"
+    <xsl:apply-templates
+      select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property|//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:NavigationProperty[$odata-version='2.0']"
       mode="select" />
     <xsl:apply-templates
       select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:NavigationProperty|//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
