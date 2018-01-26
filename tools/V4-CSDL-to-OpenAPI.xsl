@@ -1590,6 +1590,34 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="capability-indexablebykey">
+    <xsl:param name="term" select="'IndexableByKey'" />
+    <xsl:param name="target" select="." />
+    <!-- might be needed when folding into capability template
+      <xsl:choose>
+      <xsl:when test="local-name($target)='EntitySet'">
+      </xsl:when>
+      </xsl:choose>
+    -->
+
+    <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="anno"
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased) and not(@Qualifier)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)) 
+      and not(@Qualifier)]" />
+    <xsl:choose>
+      <xsl:when test="$anno/@Bool|$anno/edm:Bool">
+        <xsl:value-of select="$anno/@Bool|$anno/edm:Bool" />
+      </xsl:when>
+      <xsl:when test="$anno">
+        <xsl:text>true</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>false</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:template match="edm:Property" mode="orderby">
     <xsl:param name="after" select="'something'" />
     <xsl:if test="position()=1">
@@ -1718,9 +1746,19 @@
 
     <!-- GET -->
     <xsl:variable name="addressable" select="edm:Annotation[@Term='TODO.Addressable']/@Bool" />
+    <xsl:variable name="indexable">
+      <xsl:call-template name="capability-indexablebykey" />
+    </xsl:variable>
+    <!-- TODO: check for Capabilities.IndexableByKey via external targeting
+    <xsl:message>
+      <xsl:value-of select="@Name" />
+      <xsl:text>:</xsl:text>
+      <xsl:value-of select="$indexable" />
+    </xsl:message>
+     -->
     <xsl:variable name="resultContext"
       select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
-    <xsl:if test="not($addressable='false') and not($resultContext)">
+    <xsl:if test="not($addressable='false' and $indexable='false') and not($resultContext)">
       <xsl:text>"get":{</xsl:text>
       <xsl:text>"summary":"Get entity from </xsl:text>
       <xsl:value-of select="@Name" />
@@ -1752,7 +1790,7 @@
         <xsl:with-param name="property" select="'Updatable'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="not($addressable='false') and not($resultContext) and not($updatable='false')">
+    <xsl:if test="not($addressable='false' and $indexable='false') and not($resultContext) and not($updatable='false')">
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:if test="not($updatable='false')">
@@ -1817,7 +1855,7 @@
         <xsl:with-param name="property" select="'Deletable'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="(not($addressable='false') or not($updatable='false')) and not($deletable='false')">
+    <xsl:if test="(not($addressable='false' and $indexable='false') or not($updatable='false')) and not($deletable='false')">
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:if test="not($deletable='false')">
