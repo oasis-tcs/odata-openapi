@@ -1750,12 +1750,12 @@
       <xsl:call-template name="capability-indexablebykey" />
     </xsl:variable>
     <!-- TODO: check for Capabilities.IndexableByKey via external targeting
-    <xsl:message>
+      <xsl:message>
       <xsl:value-of select="@Name" />
       <xsl:text>:</xsl:text>
       <xsl:value-of select="$indexable" />
-    </xsl:message>
-     -->
+      </xsl:message>
+    -->
     <xsl:variable name="resultContext"
       select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
     <xsl:if test="not($addressable='false' and $indexable='false') and not($resultContext)">
@@ -2813,13 +2813,16 @@
     <xsl:value-of select="@Name" />
     <xsl:choose>
       <xsl:when test="$odata-version='2.0'">
-        <xsl:text>","in":"query"</xsl:text>
+        <xsl:text>","in":"query",</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>","in":"path"</xsl:text>
+        <xsl:text>","in":"path",</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>,"required":true,</xsl:text>
+    <!-- only in V4 and if not nullable in V2 -->
+    <xsl:if test="$odata-version!='2.0' or not(@Nullable='true')">
+      <xsl:text>"required":true,</xsl:text>
+    </xsl:if>
     <xsl:if test="$openapi-version!='2.0'">
       <xsl:text>"schema":{</xsl:text>
     </xsl:if>
