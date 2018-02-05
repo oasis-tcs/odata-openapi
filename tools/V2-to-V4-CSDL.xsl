@@ -499,19 +499,21 @@
   </xsl:template>
 
   <xsl:template match="edm2:LongDescription|edm3:LongDescription">
-    <Annotation>
-      <xsl:attribute name="Term">
-        <xsl:value-of select="$Core" />
-        <xsl:text>.LongDescription</xsl:text>
-      </xsl:attribute>
-      <String>
+    <xsl:if test=".!=''">
+      <Annotation>
+        <xsl:attribute name="Term">
+      <xsl:value-of select="$Core" />
+      <xsl:text>.LongDescription</xsl:text>
+    </xsl:attribute>
+        <String>
         <xsl:call-template name="replace-all">
-        <xsl:with-param name="string" select="." />
-        <xsl:with-param name="old" select="'&#x0A;'" />
-        <xsl:with-param name="new" select="'  &#x0A;'" />
+          <xsl:with-param name="string" select="." />
+          <xsl:with-param name="old" select="'&#x0A;'" />
+          <xsl:with-param name="new" select="'  &#x0A;'" />
         </xsl:call-template>
       </String>
-    </Annotation>
+      </Annotation>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edm3:ValueTerm">
