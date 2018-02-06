@@ -576,7 +576,8 @@
       <xsl:choose>
         <xsl:when test=".='Time' or .='Edm.Time'">Edm.TimeOfDay</xsl:when>
         <xsl:when test=".='Float' or .='Edm.Float'">Edm.Single</xsl:when>
-        <xsl:when test="(.='DateTime' or .='Edm.DateTime') and ../@sap:display-format='Date'">Edm.Date</xsl:when>
+        <!-- TODO: better heuristics for parameters -->
+        <xsl:when test="(.='DateTime' or .='Edm.DateTime') and (../@sap:display-format='Date' or local-name(..)='Parameter')">Edm.Date</xsl:when>
         <xsl:when test=".='DateTime' or .='Edm.DateTime'">Edm.DateTimeOffset</xsl:when>
         <xsl:when test="contains(.,'.')"><xsl:value-of select="." /></xsl:when>
         <xsl:otherwise><xsl:value-of select="concat('Edm.',.)" /></xsl:otherwise>

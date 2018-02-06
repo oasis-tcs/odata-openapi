@@ -8,6 +8,7 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
+    - V2 function import parameters: "pattern":"^'[^']*(''[^']*)*'$" etc.
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -843,6 +844,7 @@
         </xsl:call-template>
         <xsl:apply-templates select="@MaxLength" />
         <xsl:call-template name="Validation.AllowedValues" />
+        <!-- TODO: "pattern":"^'[^']*(''[^']*)*'$" -->
         <xsl:call-template name="Validation.Pattern" />
       </xsl:when>
       <xsl:when test="$singleType='Edm.Binary'">
@@ -1593,6 +1595,13 @@
   <xsl:template name="capability-indexablebykey">
     <xsl:param name="term" select="'IndexableByKey'" />
     <xsl:param name="target" select="." />
+    <!-- TODO: check for Capabilities.IndexableByKey via external targeting
+      <xsl:message>
+      <xsl:value-of select="@Name" />
+      <xsl:text>:</xsl:text>
+      <xsl:value-of select="$indexable" />
+      </xsl:message>
+    -->
     <!-- might be needed when folding into capability template
       <xsl:choose>
       <xsl:when test="local-name($target)='EntitySet'">
@@ -1749,13 +1758,6 @@
     <xsl:variable name="indexable">
       <xsl:call-template name="capability-indexablebykey" />
     </xsl:variable>
-    <!-- TODO: check for Capabilities.IndexableByKey via external targeting
-      <xsl:message>
-      <xsl:value-of select="@Name" />
-      <xsl:text>:</xsl:text>
-      <xsl:value-of select="$indexable" />
-      </xsl:message>
-    -->
     <xsl:variable name="resultContext"
       select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
     <xsl:if test="not($addressable='false' and $indexable='false') and not($resultContext)">
@@ -2823,6 +2825,52 @@
     <xsl:if test="$odata-version!='2.0' or not(@Nullable='true')">
       <xsl:text>"required":true,</xsl:text>
     </xsl:if>
+    <xsl:variable name="description">
+      <xsl:call-template name="description">
+        <xsl:with-param name="node" select="." />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="hint">
+      <xsl:if test="$odata-version='2.0'">
+        <xsl:choose>
+          <xsl:when test="@Type='Edm.Boolean'" />
+          <xsl:when test="@Type='Edm.Byte'" />
+          <xsl:when test="@Type='Edm.Date'"> <!-- Note: was Edm.DateTime in the V2 source XML -->
+            <xsl:text>Value needs to be enclosed in single quotes and prefixed with `datetime`, e.g. `datetime'2017-12-31T00:00'`</xsl:text>
+          </xsl:when>
+          <xsl:when test="@Type='Edm.DateTimeOffset'">
+            <xsl:text>Value needs to be enclosed in single quotes and prefixed with `datetimeoffset`, e.g. `datetimeoffset'2017-12-31T00:00:00Z'`</xsl:text>
+          </xsl:when>
+          <xsl:when test="@Type='Edm.Decimal' and @Scale>0">
+            <xsl:text>Value needs to be suffixed with M</xsl:text>
+          </xsl:when>
+          <xsl:when test="@Type='Edm.Int16'" />
+          <xsl:when test="@Type='Edm.Int32'" />
+          <xsl:when test="@Type='Edm.SByte'" />
+          <xsl:when test="@Type='Edm.String'">
+            <xsl:text>Value needs to be enclosed in single quotes</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:message>
+              <xsl:text>Parameter of type </xsl:text>
+              <xsl:value-of select="@Type" />
+            </xsl:message>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
+    </xsl:variable>
+    <xsl:if test="$description!='' or $hint!=''">
+      <xsl:text>"description":"</xsl:text>
+      <xsl:value-of select="$description" />
+      <xsl:if test="$description!='' and $hint!=''">
+        <xsl:text>  \n(</xsl:text>
+      </xsl:if>
+      <xsl:value-of select="$hint" />
+      <xsl:if test="$description!='' and $hint!=''">
+        <xsl:text>)</xsl:text>
+      </xsl:if>
+      <xsl:text>",</xsl:text>
+    </xsl:if>
     <xsl:if test="$openapi-version!='2.0'">
       <xsl:text>"schema":{</xsl:text>
     </xsl:if>
@@ -2840,7 +2888,14 @@
   <xsl:template match="edm:Parameter/@MaxLength">
     <xsl:if test=".!='max'">
       <xsl:text>,"maxLength":</xsl:text>
-      <xsl:value-of select="." />
+      <xsl:choose>
+        <xsl:when test="$odata-version='2.0'">
+          <xsl:value-of select=".+2" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="." />
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
   </xsl:template>
 
