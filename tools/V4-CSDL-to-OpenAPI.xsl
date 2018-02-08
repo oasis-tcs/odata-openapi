@@ -9,11 +9,15 @@
 
     TODO:
     - V2 function import parameters: "pattern":"^'[^']*(''[^']*)*'$" etc.
-    - create additional schemas for update omitting navigation, immutable, and computed properties
+    - create additional schemas for create and update
+    - - update structure omits navigation, immutable, and computed properties
+    - - create structure is allOf update plus navigation, immutable 
+    - - get structure is allOf create plus computed
+    - - check how (two-level) allOf is supported by Swagger UIs 2.x and 3.x
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
-    - Inline definitions for Edm.* to make OpenAPI documents self-contained
+    - inline definitions for Edm.* to make OpenAPI documents self-contained
     - securityDefinitions script parameter with default
     "securityDefinitions":{"basic_auth":{"type":"basic","description": "Basic
     Authentication"}}
@@ -25,7 +29,7 @@
     - @Extends for entity container: include /paths from referenced container
     - both "clickable" and freestyle $expand, $select, $orderby - does not work yet, open issue for Swagger UI
     - system query options for actions/functions/imports depending on "Collection("
-    - 200 response for PATCH
+    - 200 response for PATCH if $odata-version!='2.0'
     - ETag for GET / If-Match for PATCH and DELETE depending on @Core.OptimisticConcurrency
     - allow external targeting for @Core.Description similar to @Common.Label
     - reduce duplicated code in /paths production
@@ -2847,6 +2851,9 @@
     <xsl:variable name="hint">
       <xsl:if test="$odata-version='2.0'">
         <xsl:choose>
+          <xsl:when test="@Type='Edm.Binary'">
+            <xsl:text>Value needs to be in hex-pair format, enclosed in single quotes, and prefixed with `X`, e.g. `X'4F44617461'`</xsl:text>
+          </xsl:when>
           <xsl:when test="@Type='Edm.Boolean'" />
           <xsl:when test="@Type='Edm.Byte'" />
           <xsl:when test="@Type='Edm.Date'"> <!-- Note: was Edm.DateTime in the V2 source XML -->
@@ -2906,8 +2913,11 @@
     <xsl:if test=".!='max'">
       <xsl:text>,"maxLength":</xsl:text>
       <xsl:choose>
-        <xsl:when test="$odata-version='2.0'">
+        <xsl:when test="$odata-version='2.0' and ../@Type='Edm.String'">
           <xsl:value-of select=".+2" />
+        </xsl:when>
+        <xsl:when test="$odata-version='2.0' and ../@Type='Edm.Binary'">
+          <xsl:value-of select="2*.+3" />
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="." />
