@@ -1281,7 +1281,14 @@
   <xsl:template match="@MaxLength">
     <xsl:if test=".!='max'">
       <xsl:text>,"maxLength":</xsl:text>
-      <xsl:value-of select="." />
+      <xsl:choose>
+        <xsl:when test="../@Type='Edm.Binary'">
+          <xsl:value-of select="ceiling(4 * . div 3)" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="." />
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
   </xsl:template>
 
