@@ -9,6 +9,7 @@
 
     TODO:
     - V2 function import parameters: "pattern":"^'[^']*(''[^']*)*'$" etc.
+    - create additional schemas for update omitting navigation, immutable, and computed properties
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -922,7 +923,13 @@
             <xsl:value-of select="$limit" />
             <xsl:if test="not($inParameter)">
               <xsl:text>,"example":</xsl:text>
+              <xsl:if test="$odata-version='2.0'">
+                <xsl:text>"</xsl:text>
+              </xsl:if>
               <xsl:value-of select="$limit" />
+              <xsl:if test="$odata-version='2.0'">
+                <xsl:text>"</xsl:text>
+              </xsl:if>
             </xsl:if>
           </xsl:if>
         </xsl:if>
@@ -2849,7 +2856,10 @@
             <xsl:text>Value needs to be enclosed in single quotes and prefixed with `datetimeoffset`, e.g. `datetimeoffset'2017-12-31T00:00:00Z'`</xsl:text>
           </xsl:when>
           <xsl:when test="@Type='Edm.Decimal' and @Scale>0">
-            <xsl:text>Value needs to be suffixed with M</xsl:text>
+            <xsl:text>Value needs to be suffixed with `M`</xsl:text>
+          </xsl:when>
+          <xsl:when test="@Type='Edm.Guid'">
+            <xsl:text>Value needs to be enclosed in single quotes and prefixed with `guid`, e.g. `guid'01234567-0123-0123-0123-0123456789ab'`</xsl:text>
           </xsl:when>
           <xsl:when test="@Type='Edm.Int16'" />
           <xsl:when test="@Type='Edm.Int32'" />
