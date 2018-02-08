@@ -1435,6 +1435,28 @@
                 "title": "PersonGender"
             },
             "Microsoft.OData.SampleService.Models.TripPin.City": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.City-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "City"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.City-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.City-update"
+                    },
+                    {
+                        "type": "object",
+                        "title": "City (for create)"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.City-update": {
                 "type": "object",
                 "properties": {
                     "CountryRegion": {
@@ -1447,9 +1469,31 @@
                         "type": "string"
                     }
                 },
-                "title": "City"
+                "title": "City (for update)"
             },
             "Microsoft.OData.SampleService.Models.TripPin.Location": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Location-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Location"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Location-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Location-update"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Location (for create)"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Location-update": {
                 "type": "object",
                 "properties": {
                     "Address": {
@@ -1459,12 +1503,40 @@
                         "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.City"
                     }
                 },
-                "title": "Location"
+                "title": "Location (for update)"
             },
             "Microsoft.OData.SampleService.Models.TripPin.EventLocation": {
                 "allOf": [
                     {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.EventLocation-create"
+                    },
+                    {
                         "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Location"
+                    },
+                    {
+                        "type": "object",
+                        "title": "EventLocation"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.EventLocation-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.EventLocation-update"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Location-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "EventLocation (for create)"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.EventLocation-update": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Location-update"
                     },
                     {
                         "type": "object",
@@ -1474,14 +1546,42 @@
                                 "nullable": true
                             }
                         },
-                        "title": "EventLocation"
+                        "title": "EventLocation (for update)"
                     }
                 ]
             },
             "Microsoft.OData.SampleService.Models.TripPin.AirportLocation": {
                 "allOf": [
                     {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.AirportLocation-create"
+                    },
+                    {
                         "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Location"
+                    },
+                    {
+                        "type": "object",
+                        "title": "AirportLocation"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.AirportLocation-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.AirportLocation-update"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Location-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "AirportLocation (for create)"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.AirportLocation-update": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Location-update"
                     },
                     {
                         "type": "object",
@@ -1490,37 +1590,118 @@
                                 "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint"
                             }
                         },
-                        "title": "AirportLocation"
+                        "title": "AirportLocation (for update)"
                     }
                 ]
             },
             "Microsoft.OData.SampleService.Models.TripPin.Photo": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Photo-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Photo"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Photo-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Photo-update"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "Id": {
+                                "anyOf": [
+                                    {
+                                        "type": "integer"
+                                    },
+                                    {
+                                        "type": "string"
+                                    }
+                                ],
+                                "format": "int64"
+                            }
+                        },
+                        "title": "Photo (for create)"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Photo-update": {
                 "type": "object",
                 "properties": {
-                    "Id": {
-                        "anyOf": [
-                            {
-                                "type": "integer"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "int64"
-                    },
                     "Name": {
                         "type": "string",
                         "nullable": true
                     }
                 },
-                "title": "Photo"
+                "title": "Photo (for update)"
             },
             "Microsoft.OData.SampleService.Models.TripPin.Person": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Person-create"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "Concurrency": {
+                                "anyOf": [
+                                    {
+                                        "type": "integer"
+                                    },
+                                    {
+                                        "type": "string"
+                                    }
+                                ],
+                                "format": "int64"
+                            }
+                        },
+                        "title": "Person"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Person-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Person-update"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "UserName": {
+                                "type": "string"
+                            },
+                            "Friends": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Person"
+                                }
+                            },
+                            "Trips": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                                }
+                            },
+                            "Photo": {
+                                "nullable": true,
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Photo"
+                                    }
+                                ]
+                            }
+                        },
+                        "title": "Person (for create)"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Person-update": {
                 "type": "object",
                 "properties": {
-                    "UserName": {
-                        "type": "string"
-                    },
                     "FirstName": {
                         "type": "string"
                     },
@@ -1546,78 +1727,119 @@
                                 "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PersonGender"
                             }
                         ]
-                    },
-                    "Concurrency": {
-                        "anyOf": [
-                            {
-                                "type": "integer"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "int64"
-                    },
-                    "Friends": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Person"
-                        }
-                    },
-                    "Trips": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Trip"
-                        }
-                    },
-                    "Photo": {
-                        "nullable": true,
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Photo"
-                            }
-                        ]
                     }
                 },
-                "title": "Person"
+                "title": "Person (for update)"
             },
             "Microsoft.OData.SampleService.Models.TripPin.Airline": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Airline-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Airline"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Airline-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Airline-update"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "AirlineCode": {
+                                "type": "string"
+                            }
+                        },
+                        "title": "Airline (for create)"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Airline-update": {
                 "type": "object",
                 "properties": {
-                    "AirlineCode": {
-                        "type": "string"
-                    },
                     "Name": {
                         "type": "string"
                     }
                 },
-                "title": "Airline"
+                "title": "Airline (for update)"
             },
             "Microsoft.OData.SampleService.Models.TripPin.Airport": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Airport-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Airport"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Airport-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Airport-update"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "IcaoCode": {
+                                "type": "string"
+                            },
+                            "IataCode": {
+                                "type": "string"
+                            }
+                        },
+                        "title": "Airport (for create)"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Airport-update": {
                 "type": "object",
                 "properties": {
-                    "IcaoCode": {
-                        "type": "string"
-                    },
                     "Name": {
-                        "type": "string"
-                    },
-                    "IataCode": {
                         "type": "string"
                     },
                     "Location": {
                         "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.AirportLocation"
                     }
                 },
-                "title": "Airport"
+                "title": "Airport (for update)"
             },
             "Microsoft.OData.SampleService.Models.TripPin.PlanItem": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PlanItem-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "PlanItem"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.PlanItem-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PlanItem-update"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "PlanItemId": {
+                                "type": "integer",
+                                "format": "int32"
+                            }
+                        },
+                        "title": "PlanItem (for create)"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.PlanItem-update": {
                 "type": "object",
                 "properties": {
-                    "PlanItemId": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
                     "ConfirmationCode": {
                         "type": "string",
                         "nullable": true
@@ -1641,12 +1863,40 @@
                         "example": "P4DT15H51M04.217S"
                     }
                 },
-                "title": "PlanItem"
+                "title": "PlanItem (for update)"
             },
             "Microsoft.OData.SampleService.Models.TripPin.PublicTransportation": {
                 "allOf": [
                     {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PublicTransportation-create"
+                    },
+                    {
                         "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
+                    },
+                    {
+                        "type": "object",
+                        "title": "PublicTransportation"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.PublicTransportation-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PublicTransportation-update"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PlanItem-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "PublicTransportation (for create)"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.PublicTransportation-update": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PlanItem-update"
                     },
                     {
                         "type": "object",
@@ -1656,21 +1906,35 @@
                                 "nullable": true
                             }
                         },
-                        "title": "PublicTransportation"
+                        "title": "PublicTransportation (for update)"
                     }
                 ]
             },
             "Microsoft.OData.SampleService.Models.TripPin.Flight": {
                 "allOf": [
                     {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Flight-create"
+                    },
+                    {
                         "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PublicTransportation"
                     },
                     {
                         "type": "object",
+                        "title": "Flight"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Flight-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Flight-update"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PublicTransportation-create"
+                    },
+                    {
+                        "type": "object",
                         "properties": {
-                            "FlightNumber": {
-                                "type": "string"
-                            },
                             "From": {
                                 "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Airport"
                             },
@@ -1681,14 +1945,58 @@
                                 "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Airline"
                             }
                         },
-                        "title": "Flight"
+                        "title": "Flight (for create)"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Flight-update": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PublicTransportation-update"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "FlightNumber": {
+                                "type": "string"
+                            }
+                        },
+                        "title": "Flight (for update)"
                     }
                 ]
             },
             "Microsoft.OData.SampleService.Models.TripPin.Event": {
                 "allOf": [
                     {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Event-create"
+                    },
+                    {
                         "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Event"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Event-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Event-update"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PlanItem-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Event (for create)"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Event-update": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PlanItem-update"
                     },
                     {
                         "type": "object",
@@ -1701,17 +2009,53 @@
                                 "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.EventLocation"
                             }
                         },
-                        "title": "Event"
+                        "title": "Event (for update)"
                     }
                 ]
             },
             "Microsoft.OData.SampleService.Models.TripPin.Trip": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Trip-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Trip"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Trip-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Trip-update"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "TripId": {
+                                "type": "integer",
+                                "format": "int32"
+                            },
+                            "Photos": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Photo"
+                                }
+                            },
+                            "PlanItems": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
+                                }
+                            }
+                        },
+                        "title": "Trip (for create)"
+                    }
+                ]
+            },
+            "Microsoft.OData.SampleService.Models.TripPin.Trip-update": {
                 "type": "object",
                 "properties": {
-                    "TripId": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
                     "ShareId": {
                         "type": "string",
                         "nullable": true,
@@ -1752,21 +2096,9 @@
                         "items": {
                             "type": "string"
                         }
-                    },
-                    "Photos": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Photo"
-                        }
-                    },
-                    "PlanItems": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
-                        }
                     }
                 },
-                "title": "Trip"
+                "title": "Trip (for update)"
             },
             "odata.error": {
                 "type": "object",
