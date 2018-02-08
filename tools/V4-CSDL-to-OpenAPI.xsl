@@ -8,10 +8,9 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - V2 function import parameters: "pattern":"^'[^']*(''[^']*)*'$" etc.
     - create additional schemas for create and update
     - - update structure omits navigation, immutable, and computed properties
-    - - create structure is allOf update plus navigation, immutable 
+    - - create structure is allOf update plus navigation, immutable
     - - get structure is allOf create plus computed
     - - check how (two-level) allOf is supported by Swagger UIs 2.x and 3.x
     - operation descriptions for entity sets and singletons
@@ -849,8 +848,14 @@
         </xsl:call-template>
         <xsl:apply-templates select="@MaxLength" />
         <xsl:call-template name="Validation.AllowedValues" />
-        <!-- TODO: "pattern":"^'[^']*(''[^']*)*'$" -->
-        <xsl:call-template name="Validation.Pattern" />
+        <xsl:choose>
+          <xsl:when test="$inParameter and $odata-version='2.0'">
+            <xsl:text>,"pattern":"^'[^']*(''[^']*)*'$"</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="Validation.Pattern" />
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Binary'">
         <xsl:call-template name="nullableType">
@@ -858,7 +863,14 @@
           <xsl:with-param name="nullable" select="$nullable" />
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
-        <xsl:text>,"format":"base64url"</xsl:text>
+        <xsl:choose>
+          <xsl:when test="$inParameter and $odata-version='2.0'">
+            <xsl:text>,"pattern":"^X'([0-9a-fA-F][0-9a-fA-F])*'$"</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>,"format":"base64url"</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:apply-templates select="@MaxLength" />
       </xsl:when>
       <xsl:when test="$singleType='Edm.Boolean'">
@@ -884,6 +896,9 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"decimal"</xsl:text>
+        <xsl:if test="$inParameter and $odata-version='2.0'">
+          <xsl:text>,"pattern":"^[-]?[0-9]+(\\.[0-9]+[mM])?$"</xsl:text>
+        </xsl:if>
         <xsl:choose>
           <xsl:when test="not(@Scale) or @Scale='0'">
             <xsl:text>,"multipleOf":1</xsl:text>
