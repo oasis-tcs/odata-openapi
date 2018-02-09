@@ -140,7 +140,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.odata.salesservice.Sales-create"
+                                "$ref": "#/components/schemas/org.example.odata.salesservice.Sales"
                             }
                         }
                     }
@@ -255,7 +255,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.odata.salesservice.Sales-update"
+                                "$ref": "#/components/schemas/org.example.odata.salesservice.Sales"
                             }
                         }
                     }
@@ -403,7 +403,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.odata.salesservice.Currency-create"
+                                "$ref": "#/components/schemas/org.example.odata.salesservice.Currency"
                             }
                         }
                     }
@@ -497,7 +497,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.odata.salesservice.Currency-update"
+                                "$ref": "#/components/schemas/org.example.odata.salesservice.Currency"
                             }
                         }
                     }
@@ -549,84 +549,27 @@
     "components": {
         "schemas": {
             "org.example.odata.salesservice.Currency": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/org.example.odata.salesservice.Currency-create"
-                    }
-                ],
-                "title": "Currency"
-            },
-            "org.example.odata.salesservice.Currency-create": {
-                "allOf": [
-                    {
-                        "type": "object",
-                        "properties": {
-                            "Code": {
-                                "type": "string",
-                                "nullable": true,
-                                "example": "string"
-                            }
-                        }
-                    },
-                    {
-                        "$ref": "#/components/schemas/org.example.odata.salesservice.Currency-update"
-                    }
-                ],
-                "title": "Currency (for create)"
-            },
-            "org.example.odata.salesservice.Currency-update": {
                 "type": "object",
                 "properties": {
+                    "Code": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "string"
+                    },
                     "Name": {
                         "type": "string",
                         "nullable": true,
                         "example": "string"
                     }
                 },
-                "title": "Currency (for update)"
+                "title": "Currency"
             },
             "org.example.odata.salesservice.Sales": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/org.example.odata.salesservice.Sales-create"
-                    }
-                ],
-                "title": "Sales"
-            },
-            "org.example.odata.salesservice.Sales-create": {
-                "allOf": [
-                    {
-                        "type": "object",
-                        "properties": {
-                            "ID": {
-                                "type": "string"
-                            },
-                            "Customer": {
-                                "$ref": "#/components/schemas/org.example.odata.salesservice.Customer"
-                            },
-                            "Currency": {
-                                "$ref": "#/components/schemas/org.example.odata.salesservice.Currency"
-                            },
-                            "Product": {
-                                "$ref": "#/components/schemas/org.example.odata.salesservice.Product"
-                            },
-                            "SalesOrganization": {
-                                "$ref": "#/components/schemas/org.example.odata.salesservice.SalesOrganization"
-                            },
-                            "Time": {
-                                "$ref": "#/components/schemas/org.example.odata.salesservice.Time"
-                            }
-                        }
-                    },
-                    {
-                        "$ref": "#/components/schemas/org.example.odata.salesservice.Sales-update"
-                    }
-                ],
-                "title": "Sales (for create)"
-            },
-            "org.example.odata.salesservice.Sales-update": {
                 "type": "object",
                 "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
                     "Amount": {
                         "anyOf": [
                             {
@@ -638,9 +581,24 @@
                         ],
                         "nullable": true,
                         "format": "decimal"
+                    },
+                    "Customer": {
+                        "$ref": "#/components/schemas/org.example.odata.salesservice.Customer"
+                    },
+                    "Currency": {
+                        "$ref": "#/components/schemas/org.example.odata.salesservice.Currency"
+                    },
+                    "Product": {
+                        "$ref": "#/components/schemas/org.example.odata.salesservice.Product"
+                    },
+                    "SalesOrganization": {
+                        "$ref": "#/components/schemas/org.example.odata.salesservice.SalesOrganization"
+                    },
+                    "Time": {
+                        "$ref": "#/components/schemas/org.example.odata.salesservice.Time"
                     }
                 },
-                "title": "Sales (for update)"
+                "title": "Sales"
             },
             "odata.error": {
                 "type": "object",

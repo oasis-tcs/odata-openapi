@@ -163,7 +163,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Product-create"
+                                "$ref": "#/components/schemas/ODataDemo.Product"
                             }
                         }
                     }
@@ -280,7 +280,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Product-update"
+                                "$ref": "#/components/schemas/ODataDemo.Product"
                             }
                         }
                     }
@@ -445,7 +445,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Category-create"
+                                "$ref": "#/components/schemas/ODataDemo.Category"
                             }
                         }
                     }
@@ -558,7 +558,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Category-update"
+                                "$ref": "#/components/schemas/ODataDemo.Category"
                             }
                         }
                     }
@@ -730,7 +730,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Supplier-create"
+                                "$ref": "#/components/schemas/ODataDemo.Supplier"
                             }
                         }
                     }
@@ -843,7 +843,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Supplier-update"
+                                "$ref": "#/components/schemas/ODataDemo.Supplier"
                             }
                         }
                     }
@@ -962,7 +962,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Supplier-update"
+                                "$ref": "#/components/schemas/ODataDemo.Supplier"
                             }
                         }
                     }
@@ -1077,7 +1077,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Country-create"
+                                "$ref": "#/components/schemas/ODataDemo.Country"
                             }
                         }
                     }
@@ -1171,7 +1171,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Country-update"
+                                "$ref": "#/components/schemas/ODataDemo.Country"
                             }
                         }
                     }
@@ -1266,43 +1266,11 @@
     "components": {
         "schemas": {
             "ODataDemo.Product": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Product-create"
-                    }
-                ],
-                "title": "Product"
-            },
-            "ODataDemo.Product-create": {
-                "allOf": [
-                    {
-                        "type": "object",
-                        "properties": {
-                            "ID": {
-                                "type": "string"
-                            },
-                            "Category": {
-                                "$ref": "#/components/schemas/ODataDemo.Category"
-                            },
-                            "Supplier": {
-                                "nullable": true,
-                                "anyOf": [
-                                    {
-                                        "$ref": "#/components/schemas/ODataDemo.Supplier"
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Product-update"
-                    }
-                ],
-                "title": "Product (for create)"
-            },
-            "ODataDemo.Product-update": {
                 "type": "object",
                 "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
                     "Description": {
                         "type": "string",
                         "nullable": true,
@@ -1343,83 +1311,46 @@
                         "nullable": true,
                         "maxLength": 3,
                         "example": "string"
+                    },
+                    "Category": {
+                        "$ref": "#/components/schemas/ODataDemo.Category"
+                    },
+                    "Supplier": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Supplier"
+                            }
+                        ]
                     }
                 },
-                "title": "Product (for update)"
+                "title": "Product"
             },
             "ODataDemo.Category": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Category-create"
-                    }
-                ],
-                "title": "Category"
-            },
-            "ODataDemo.Category-create": {
-                "allOf": [
-                    {
-                        "type": "object",
-                        "properties": {
-                            "ID": {
-                                "type": "integer",
-                                "format": "int32"
-                            },
-                            "Products": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/ODataDemo.Product"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Category-update"
-                    }
-                ],
-                "title": "Category (for create)"
-            },
-            "ODataDemo.Category-update": {
                 "type": "object",
                 "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
                     "Name": {
                         "type": "string"
+                    },
+                    "Products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ODataDemo.Product"
+                        }
                     }
                 },
-                "title": "Category (for update)"
+                "title": "Category"
             },
             "ODataDemo.Supplier": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Supplier-create"
-                    }
-                ],
-                "title": "Supplier"
-            },
-            "ODataDemo.Supplier-create": {
-                "allOf": [
-                    {
-                        "type": "object",
-                        "properties": {
-                            "ID": {
-                                "type": "string"
-                            },
-                            "Products": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/ODataDemo.Product"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Supplier-update"
-                    }
-                ],
-                "title": "Supplier (for create)"
-            },
-            "ODataDemo.Supplier-update": {
                 "type": "object",
                 "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
                     "Name": {
                         "type": "string",
                         "nullable": true,
@@ -1431,76 +1362,32 @@
                     "Concurrency": {
                         "type": "integer",
                         "format": "int32"
+                    },
+                    "Products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ODataDemo.Product"
+                        }
                     }
                 },
-                "title": "Supplier (for update)"
+                "title": "Supplier"
             },
             "ODataDemo.Country": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Country-create"
-                    }
-                ],
-                "title": "Country"
-            },
-            "ODataDemo.Country-create": {
-                "allOf": [
-                    {
-                        "type": "object",
-                        "properties": {
-                            "Code": {
-                                "type": "string",
-                                "maxLength": 2
-                            }
-                        }
-                    },
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Country-update"
-                    }
-                ],
-                "title": "Country (for create)"
-            },
-            "ODataDemo.Country-update": {
                 "type": "object",
                 "properties": {
+                    "Code": {
+                        "type": "string",
+                        "maxLength": 2
+                    },
                     "Name": {
                         "type": "string",
                         "nullable": true,
                         "example": "string"
                     }
                 },
-                "title": "Country (for update)"
+                "title": "Country"
             },
             "ODataDemo.Address": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Address-create"
-                    }
-                ],
-                "title": "Address"
-            },
-            "ODataDemo.Address-create": {
-                "allOf": [
-                    {
-                        "type": "object",
-                        "properties": {
-                            "Country": {
-                                "nullable": true,
-                                "anyOf": [
-                                    {
-                                        "$ref": "#/components/schemas/ODataDemo.Country"
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Address-update"
-                    }
-                ],
-                "title": "Address (for create)"
-            },
-            "ODataDemo.Address-update": {
                 "type": "object",
                 "properties": {
                     "Street": {
@@ -1527,9 +1414,17 @@
                         "type": "string",
                         "nullable": true,
                         "example": "string"
+                    },
+                    "Country": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Country"
+                            }
+                        ]
                     }
                 },
-                "title": "Address (for update)"
+                "title": "Address"
             },
             "odata.error": {
                 "type": "object",

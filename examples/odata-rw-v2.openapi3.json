@@ -159,7 +159,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Product-create"
+                                "$ref": "#/components/schemas/ODataDemo.Product"
                             }
                         }
                     }
@@ -295,7 +295,7 @@
                                 "type": "object",
                                 "properties": {
                                     "d": {
-                                        "$ref": "#/components/schemas/ODataDemo.Product-update"
+                                        "$ref": "#/components/schemas/ODataDemo.Product"
                                     }
                                 }
                             }
@@ -466,7 +466,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Category-create"
+                                "$ref": "#/components/schemas/ODataDemo.Category"
                             }
                         }
                     }
@@ -595,7 +595,7 @@
                                 "type": "object",
                                 "properties": {
                                     "d": {
-                                        "$ref": "#/components/schemas/ODataDemo.Category-update"
+                                        "$ref": "#/components/schemas/ODataDemo.Category"
                                     }
                                 }
                             }
@@ -772,7 +772,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Supplier-create"
+                                "$ref": "#/components/schemas/ODataDemo.Supplier"
                             }
                         }
                     }
@@ -903,7 +903,7 @@
                                 "type": "object",
                                 "properties": {
                                     "d": {
-                                        "$ref": "#/components/schemas/ODataDemo.Supplier-update"
+                                        "$ref": "#/components/schemas/ODataDemo.Supplier"
                                     }
                                 }
                             }
@@ -1007,49 +1007,12 @@
     "components": {
         "schemas": {
             "ODataDemo.Product": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Product-create"
-                    }
-                ],
-                "title": "Product"
-            },
-            "ODataDemo.Product-create": {
-                "allOf": [
-                    {
-                        "type": "object",
-                        "properties": {
-                            "ID": {
-                                "type": "integer",
-                                "format": "int32"
-                            },
-                            "Category": {
-                                "nullable": true,
-                                "anyOf": [
-                                    {
-                                        "$ref": "#/components/schemas/ODataDemo.Category"
-                                    }
-                                ]
-                            },
-                            "Supplier": {
-                                "nullable": true,
-                                "anyOf": [
-                                    {
-                                        "$ref": "#/components/schemas/ODataDemo.Supplier"
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Product-update"
-                    }
-                ],
-                "title": "Product (for create)"
-            },
-            "ODataDemo.Product-update": {
                 "type": "object",
                 "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
                     "Name": {
                         "type": "string",
                         "nullable": true,
@@ -1077,98 +1040,60 @@
                         "type": "string",
                         "format": "decimal",
                         "multipleOf": 1
+                    },
+                    "Category": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Category"
+                            }
+                        ]
+                    },
+                    "Supplier": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Supplier"
+                            }
+                        ]
                     }
                 },
-                "title": "Product (for update)"
+                "title": "Product"
             },
             "ODataDemo.Category": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Category-create"
-                    }
-                ],
-                "title": "Category"
-            },
-            "ODataDemo.Category-create": {
-                "allOf": [
-                    {
-                        "type": "object",
-                        "properties": {
-                            "ID": {
-                                "type": "integer",
-                                "format": "int32"
-                            },
-                            "Products": {
-                                "title": "Collection of Product",
-                                "type": "object",
-                                "properties": {
-                                    "results": {
-                                        "type": "array",
-                                        "items": {
-                                            "$ref": "#/components/schemas/ODataDemo.Product"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Category-update"
-                    }
-                ],
-                "title": "Category (for create)"
-            },
-            "ODataDemo.Category-update": {
                 "type": "object",
                 "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
                     "Name": {
                         "type": "string",
                         "nullable": true,
                         "example": "string"
-                    }
-                },
-                "title": "Category (for update)"
-            },
-            "ODataDemo.Supplier": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Supplier-create"
-                    }
-                ],
-                "title": "Supplier"
-            },
-            "ODataDemo.Supplier-create": {
-                "allOf": [
-                    {
+                    },
+                    "Products": {
+                        "title": "Collection of Product",
                         "type": "object",
                         "properties": {
-                            "ID": {
-                                "type": "integer",
-                                "format": "int32"
-                            },
-                            "Products": {
-                                "title": "Collection of Product",
-                                "type": "object",
-                                "properties": {
-                                    "results": {
-                                        "type": "array",
-                                        "items": {
-                                            "$ref": "#/components/schemas/ODataDemo.Product"
-                                        }
-                                    }
+                            "results": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ODataDemo.Product"
                                 }
                             }
                         }
-                    },
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Supplier-update"
                     }
-                ],
-                "title": "Supplier (for create)"
+                },
+                "title": "Category"
             },
-            "ODataDemo.Supplier-update": {
+            "ODataDemo.Supplier": {
                 "type": "object",
                 "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
                     "Name": {
                         "type": "string",
                         "nullable": true,
@@ -1180,27 +1105,23 @@
                     "Concurrency": {
                         "type": "integer",
                         "format": "int32"
+                    },
+                    "Products": {
+                        "title": "Collection of Product",
+                        "type": "object",
+                        "properties": {
+                            "results": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ODataDemo.Product"
+                                }
+                            }
+                        }
                     }
                 },
-                "title": "Supplier (for update)"
+                "title": "Supplier"
             },
             "ODataDemo.Address": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Address-create"
-                    }
-                ],
-                "title": "Address"
-            },
-            "ODataDemo.Address-create": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Address-update"
-                    }
-                ],
-                "title": "Address (for create)"
-            },
-            "ODataDemo.Address-update": {
                 "type": "object",
                 "properties": {
                     "Street": {
@@ -1229,7 +1150,7 @@
                         "example": "string"
                     }
                 },
-                "title": "Address (for update)"
+                "title": "Address"
             },
             "odata.error": {
                 "type": "object",

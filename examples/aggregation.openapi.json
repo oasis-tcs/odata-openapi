@@ -131,7 +131,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/org.example.odata.salesservice.Sales-create"
+                            "$ref": "#/definitions/org.example.odata.salesservice.Sales"
                         }
                     }
                 ],
@@ -225,7 +225,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/org.example.odata.salesservice.Sales-update"
+                            "$ref": "#/definitions/org.example.odata.salesservice.Sales"
                         }
                     }
                 ],
@@ -356,7 +356,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/org.example.odata.salesservice.Currency-create"
+                            "$ref": "#/definitions/org.example.odata.salesservice.Currency"
                         }
                     }
                 ],
@@ -432,7 +432,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/org.example.odata.salesservice.Currency-update"
+                            "$ref": "#/definitions/org.example.odata.salesservice.Currency"
                         }
                     }
                 ],
@@ -478,36 +478,15 @@
     },
     "definitions": {
         "org.example.odata.salesservice.Currency": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/org.example.odata.salesservice.Currency-create"
-                }
-            ],
-            "title": "Currency"
-        },
-        "org.example.odata.salesservice.Currency-create": {
-            "allOf": [
-                {
-                    "type": "object",
-                    "properties": {
-                        "Code": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "example": "string"
-                        }
-                    }
-                },
-                {
-                    "$ref": "#/definitions/org.example.odata.salesservice.Currency-update"
-                }
-            ],
-            "title": "Currency (for create)"
-        },
-        "org.example.odata.salesservice.Currency-update": {
             "type": "object",
             "properties": {
+                "Code": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "string"
+                },
                 "Name": {
                     "type": [
                         "string",
@@ -516,50 +495,14 @@
                     "example": "string"
                 }
             },
-            "title": "Currency (for update)"
+            "title": "Currency"
         },
         "org.example.odata.salesservice.Sales": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/org.example.odata.salesservice.Sales-create"
-                }
-            ],
-            "title": "Sales"
-        },
-        "org.example.odata.salesservice.Sales-create": {
-            "allOf": [
-                {
-                    "type": "object",
-                    "properties": {
-                        "ID": {
-                            "type": "string"
-                        },
-                        "Customer": {
-                            "$ref": "#/definitions/org.example.odata.salesservice.Customer"
-                        },
-                        "Currency": {
-                            "$ref": "#/definitions/org.example.odata.salesservice.Currency"
-                        },
-                        "Product": {
-                            "$ref": "#/definitions/org.example.odata.salesservice.Product"
-                        },
-                        "SalesOrganization": {
-                            "$ref": "#/definitions/org.example.odata.salesservice.SalesOrganization"
-                        },
-                        "Time": {
-                            "$ref": "#/definitions/org.example.odata.salesservice.Time"
-                        }
-                    }
-                },
-                {
-                    "$ref": "#/definitions/org.example.odata.salesservice.Sales-update"
-                }
-            ],
-            "title": "Sales (for create)"
-        },
-        "org.example.odata.salesservice.Sales-update": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "type": "string"
+                },
                 "Amount": {
                     "type": [
                         "number",
@@ -567,9 +510,24 @@
                         "null"
                     ],
                     "format": "decimal"
+                },
+                "Customer": {
+                    "$ref": "#/definitions/org.example.odata.salesservice.Customer"
+                },
+                "Currency": {
+                    "$ref": "#/definitions/org.example.odata.salesservice.Currency"
+                },
+                "Product": {
+                    "$ref": "#/definitions/org.example.odata.salesservice.Product"
+                },
+                "SalesOrganization": {
+                    "$ref": "#/definitions/org.example.odata.salesservice.SalesOrganization"
+                },
+                "Time": {
+                    "$ref": "#/definitions/org.example.odata.salesservice.Time"
                 }
             },
-            "title": "Sales (for update)"
+            "title": "Sales"
         },
         "odata.error": {
             "type": "object",

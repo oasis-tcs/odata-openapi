@@ -148,7 +148,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/PeopleService.Supplier-create"
+                                "$ref": "#/components/schemas/PeopleService.Supplier"
                             }
                         }
                     }
@@ -264,7 +264,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/PeopleService.Supplier-update"
+                                "$ref": "#/components/schemas/PeopleService.Supplier"
                             }
                         }
                     }
@@ -430,7 +430,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/PeopleService.Person-create"
+                                "$ref": "#/components/schemas/PeopleService.Person"
                             }
                         }
                     }
@@ -543,7 +543,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/PeopleService.Person-update"
+                                "$ref": "#/components/schemas/PeopleService.Person"
                             }
                         }
                     }
@@ -721,7 +721,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/PeopleService.PersonDetail-create"
+                                "$ref": "#/components/schemas/PeopleService.PersonDetail"
                             }
                         }
                     }
@@ -838,7 +838,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/PeopleService.PersonDetail-update"
+                                "$ref": "#/components/schemas/PeopleService.PersonDetail"
                             }
                         }
                     }
@@ -891,39 +891,12 @@
     "components": {
         "schemas": {
             "PeopleService.Supplier": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/PeopleService.Supplier-create"
-                    }
-                ],
-                "title": "Supplier"
-            },
-            "PeopleService.Supplier-create": {
-                "allOf": [
-                    {
-                        "type": "object",
-                        "properties": {
-                            "ID": {
-                                "type": "integer",
-                                "format": "int32"
-                            },
-                            "Products": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/Products.openapi3.json#/components/schemas/ProductService.Product"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "$ref": "#/components/schemas/PeopleService.Supplier-update"
-                    }
-                ],
-                "title": "Supplier (for create)"
-            },
-            "PeopleService.Supplier-update": {
                 "type": "object",
                 "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
                     "Name": {
                         "type": "string",
                         "nullable": true,
@@ -948,27 +921,17 @@
                     "Concurrency": {
                         "type": "integer",
                         "format": "int32"
+                    },
+                    "Products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/Products.openapi3.json#/components/schemas/ProductService.Product"
+                        }
                     }
                 },
-                "title": "Supplier (for update)"
+                "title": "Supplier"
             },
             "PeopleService.Address": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/PeopleService.Address-create"
-                    }
-                ],
-                "title": "Address"
-            },
-            "PeopleService.Address-create": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/PeopleService.Address-update"
-                    }
-                ],
-                "title": "Address (for create)"
-            },
-            "PeopleService.Address-update": {
                 "type": "object",
                 "properties": {
                     "Street": {
@@ -997,78 +960,35 @@
                         "example": "string"
                     }
                 },
-                "title": "Address (for update)"
+                "title": "Address"
             },
             "PeopleService.Person": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/PeopleService.Person-create"
-                    }
-                ],
-                "title": "Person"
-            },
-            "PeopleService.Person-create": {
-                "allOf": [
-                    {
-                        "type": "object",
-                        "properties": {
-                            "ID": {
-                                "type": "integer",
-                                "format": "int32"
-                            },
-                            "PersonDetail": {
-                                "nullable": true,
-                                "anyOf": [
-                                    {
-                                        "$ref": "#/components/schemas/PeopleService.PersonDetail"
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    {
-                        "$ref": "#/components/schemas/PeopleService.Person-update"
-                    }
-                ],
-                "title": "Person (for create)"
-            },
-            "PeopleService.Person-update": {
                 "type": "object",
                 "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
                     "Name": {
                         "type": "string",
                         "nullable": true,
                         "example": "string"
+                    },
+                    "PersonDetail": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/PeopleService.PersonDetail"
+                            }
+                        ]
                     }
                 },
-                "title": "Person (for update)"
+                "title": "Person"
             },
             "PeopleService.Customer": {
                 "allOf": [
                     {
                         "$ref": "#/components/schemas/PeopleService.Person"
-                    },
-                    {
-                        "$ref": "#/components/schemas/PeopleService.Customer-create"
-                    }
-                ],
-                "title": "Customer"
-            },
-            "PeopleService.Customer-create": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/PeopleService.Person-create"
-                    },
-                    {
-                        "$ref": "#/components/schemas/PeopleService.Customer-update"
-                    }
-                ],
-                "title": "Customer (for create)"
-            },
-            "PeopleService.Customer-update": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/PeopleService.Person-update"
                     },
                     {
                         "type": "object",
@@ -1088,34 +1008,12 @@
                         }
                     }
                 ],
-                "title": "Customer (for update)"
+                "title": "Customer"
             },
             "PeopleService.Employee": {
                 "allOf": [
                     {
                         "$ref": "#/components/schemas/PeopleService.Person"
-                    },
-                    {
-                        "$ref": "#/components/schemas/PeopleService.Employee-create"
-                    }
-                ],
-                "title": "Employee"
-            },
-            "PeopleService.Employee-create": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/PeopleService.Person-create"
-                    },
-                    {
-                        "$ref": "#/components/schemas/PeopleService.Employee-update"
-                    }
-                ],
-                "title": "Employee (for create)"
-            },
-            "PeopleService.Employee-update": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/PeopleService.Person-update"
                     },
                     {
                         "type": "object",
@@ -1152,44 +1050,15 @@
                         }
                     }
                 ],
-                "title": "Employee (for update)"
+                "title": "Employee"
             },
             "PeopleService.PersonDetail": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/PeopleService.PersonDetail-create"
-                    }
-                ],
-                "title": "PersonDetail"
-            },
-            "PeopleService.PersonDetail-create": {
-                "allOf": [
-                    {
-                        "type": "object",
-                        "properties": {
-                            "PersonID": {
-                                "type": "integer",
-                                "format": "int32"
-                            },
-                            "Person": {
-                                "nullable": true,
-                                "anyOf": [
-                                    {
-                                        "$ref": "#/components/schemas/PeopleService.Person"
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    {
-                        "$ref": "#/components/schemas/PeopleService.PersonDetail-update"
-                    }
-                ],
-                "title": "PersonDetail (for create)"
-            },
-            "PeopleService.PersonDetail-update": {
                 "type": "object",
                 "properties": {
+                    "PersonID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
                     "Age": {
                         "type": "integer",
                         "format": "uint8"
@@ -1212,9 +1081,17 @@
                     },
                     "Photo": {
                         "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.Stream"
+                    },
+                    "Person": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/PeopleService.Person"
+                            }
+                        ]
                     }
                 },
-                "title": "PersonDetail (for update)"
+                "title": "PersonDetail"
             },
             "odata.error": {
                 "type": "object",
