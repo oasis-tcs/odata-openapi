@@ -741,24 +741,22 @@
       <xsl:with-param name="name" select="@Name" />
       <xsl:with-param name="suffix" select="'-create'" />
     </xsl:call-template>
-    <xsl:text>},{</xsl:text>
+    <xsl:text>}</xsl:text>
 
-    <xsl:text>"type":"object"</xsl:text>
+    <xsl:variable name="computed-non-key-properties"
+      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')] and not(@Name=../edm:Key/edm:PropertyRef/@Name)]" />
+    <xsl:if test="$computed-non-key-properties">
+      <xsl:text>,{"type":"object"</xsl:text>
+      <xsl:apply-templates select="$computed-non-key-properties" mode="hash">
+        <xsl:with-param name="name" select="'properties'" />
+      </xsl:apply-templates>
+      <xsl:text>}</xsl:text>
+    </xsl:if>
 
-    <!-- only computed non-key properties -->
-    <xsl:apply-templates
-      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')] and not(@Name=../edm:Key/edm:PropertyRef/@Name)]"
-      mode="hash"
-    >
-      <xsl:with-param name="name" select="'properties'" />
-    </xsl:apply-templates>
-
-    <xsl:text>}]</xsl:text>
-
+    <xsl:text>]</xsl:text>
     <xsl:call-template name="title-description">
       <xsl:with-param name="fallback-title" select="@Name" />
     </xsl:call-template>
-
     <xsl:text>}</xsl:text>
 
     <!-- create structure -->
@@ -777,17 +775,17 @@
       </xsl:call-template>
       <xsl:text>},{</xsl:text>
     </xsl:if>
-    <xsl:text>"type":"object"</xsl:text>
 
-    <!-- only immutable, key, and navigation properties -->
-    <xsl:apply-templates
-      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable')] or @Name=../edm:Key/edm:PropertyRef/@Name]|edm:NavigationProperty"
-      mode="hash"
-    >
-      <xsl:with-param name="name" select="'properties'" />
-    </xsl:apply-templates>
+    <xsl:variable name="immutable-and-key-and-navigation-properties"
+      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable')] or @Name=../edm:Key/edm:PropertyRef/@Name]|edm:NavigationProperty" />
+    <xsl:if test="$immutable-and-key-and-navigation-properties">
+      <xsl:text>"type":"object"</xsl:text>
+      <xsl:apply-templates select="$immutable-and-key-and-navigation-properties" mode="hash">
+        <xsl:with-param name="name" select="'properties'" />
+      </xsl:apply-templates>
+      <xsl:text>},{</xsl:text>
+    </xsl:if>
 
-    <xsl:text>},{</xsl:text>
     <xsl:call-template name="ref">
       <xsl:with-param name="qualifier" select="../@Namespace" />
       <xsl:with-param name="name" select="@Name" />
