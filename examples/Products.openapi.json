@@ -150,7 +150,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/ProductService.Product"
+                            "$ref": "#/definitions/ProductService.Product-create"
                         }
                     }
                 ],
@@ -249,7 +249,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/ProductService.Product"
+                            "$ref": "#/definitions/ProductService.Product-update"
                         }
                     }
                 ],
@@ -443,7 +443,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/ProductService.ProductDetail"
+                            "$ref": "#/definitions/ProductService.ProductDetail-create"
                         }
                     }
                 ],
@@ -535,7 +535,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/ProductService.ProductDetail"
+                            "$ref": "#/definitions/ProductService.ProductDetail-update"
                         }
                     }
                 ],
@@ -681,7 +681,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/ProductService.Category"
+                            "$ref": "#/definitions/ProductService.Category-create"
                         }
                     }
                 ],
@@ -773,7 +773,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/ProductService.Category"
+                            "$ref": "#/definitions/ProductService.Category-update"
                         }
                     }
                 ],
@@ -922,7 +922,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/ProductService.Advertisement"
+                            "$ref": "#/definitions/ProductService.Advertisement-create"
                         }
                     }
                 ],
@@ -1013,7 +1013,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/ProductService.Advertisement"
+                            "$ref": "#/definitions/ProductService.Advertisement-update"
                         }
                     }
                 ],
@@ -1059,12 +1059,48 @@
     },
     "definitions": {
         "ProductService.Product": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/ProductService.Product-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Product"
+                }
+            ]
+        },
+        "ProductService.Product-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "ID": {
+                            "type": "integer",
+                            "format": "int32"
+                        },
+                        "Categories": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ProductService.Category"
+                            }
+                        },
+                        "Supplier": {
+                            "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/People.openapi.json#/definitions/PeopleService.Supplier"
+                        },
+                        "ProductDetail": {
+                            "$ref": "#/definitions/ProductService.ProductDetail"
+                        }
+                    },
+                    "title": "Product (for create)"
+                },
+                {
+                    "$ref": "#/definitions/ProductService.Product-update"
+                }
+            ]
+        },
+        "ProductService.Product-update": {
             "type": "object",
             "properties": {
-                "ID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
                 "Name": {
                     "type": [
                         "string",
@@ -1101,26 +1137,28 @@
                     ],
                     "format": "double",
                     "example": 3.14
-                },
-                "Categories": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ProductService.Category"
-                    }
-                },
-                "Supplier": {
-                    "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/People.openapi.json#/definitions/PeopleService.Supplier"
-                },
-                "ProductDetail": {
-                    "$ref": "#/definitions/ProductService.ProductDetail"
                 }
             },
-            "title": "Product"
+            "title": "Product (for update)"
         },
         "ProductService.FeaturedProduct": {
             "allOf": [
                 {
                     "$ref": "#/definitions/ProductService.Product"
+                },
+                {
+                    "$ref": "#/definitions/ProductService.FeaturedProduct-create"
+                },
+                {
+                    "type": "object",
+                    "title": "FeaturedProduct"
+                }
+            ]
+        },
+        "ProductService.FeaturedProduct-create": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/ProductService.Product-create"
                 },
                 {
                     "type": "object",
@@ -1129,59 +1167,148 @@
                             "$ref": "#/definitions/ProductService.Advertisement"
                         }
                     },
-                    "title": "FeaturedProduct"
+                    "title": "FeaturedProduct (for create)"
+                },
+                {
+                    "$ref": "#/definitions/ProductService.FeaturedProduct-update"
+                }
+            ]
+        },
+        "ProductService.FeaturedProduct-update": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/ProductService.Product-update"
+                },
+                {
+                    "type": "object",
+                    "title": "FeaturedProduct (for update)"
                 }
             ]
         },
         "ProductService.ProductDetail": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/ProductService.ProductDetail-create"
+                },
+                {
+                    "type": "object",
+                    "title": "ProductDetail"
+                }
+            ]
+        },
+        "ProductService.ProductDetail-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "ProductID": {
+                            "type": "integer",
+                            "format": "int32"
+                        },
+                        "Product": {
+                            "$ref": "#/definitions/ProductService.Product"
+                        }
+                    },
+                    "title": "ProductDetail (for create)"
+                },
+                {
+                    "$ref": "#/definitions/ProductService.ProductDetail-update"
+                }
+            ]
+        },
+        "ProductService.ProductDetail-update": {
             "type": "object",
             "properties": {
-                "ProductID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
                 "Details": {
                     "type": [
                         "string",
                         "null"
                     ]
-                },
-                "Product": {
-                    "$ref": "#/definitions/ProductService.Product"
                 }
             },
-            "title": "ProductDetail"
+            "title": "ProductDetail (for update)"
         },
         "ProductService.Category": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/ProductService.Category-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Category"
+                }
+            ]
+        },
+        "ProductService.Category-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "ID": {
+                            "type": "integer",
+                            "format": "int32"
+                        },
+                        "Products": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ProductService.Product"
+                            }
+                        }
+                    },
+                    "title": "Category (for create)"
+                },
+                {
+                    "$ref": "#/definitions/ProductService.Category-update"
+                }
+            ]
+        },
+        "ProductService.Category-update": {
             "type": "object",
             "properties": {
-                "ID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
                 "Name": {
                     "type": [
                         "string",
                         "null"
                     ]
-                },
-                "Products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ProductService.Product"
-                    }
                 }
             },
-            "title": "Category"
+            "title": "Category (for update)"
         },
         "ProductService.Advertisement": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/ProductService.Advertisement-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Advertisement"
+                }
+            ]
+        },
+        "ProductService.Advertisement-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "01234567-89ab-cdef-0123-456789abcdef"
+                        },
+                        "FeaturedProduct": {
+                            "$ref": "#/definitions/ProductService.FeaturedProduct"
+                        }
+                    },
+                    "title": "Advertisement (for create)"
+                },
+                {
+                    "$ref": "#/definitions/ProductService.Advertisement-update"
+                }
+            ]
+        },
+        "ProductService.Advertisement-update": {
             "type": "object",
             "properties": {
-                "ID": {
-                    "type": "string",
-                    "format": "uuid",
-                    "example": "01234567-89ab-cdef-0123-456789abcdef"
-                },
                 "Name": {
                     "type": [
                         "string",
@@ -1192,12 +1319,9 @@
                     "type": "string",
                     "format": "date-time",
                     "example": "2017-04-13T15:51:04Z"
-                },
-                "FeaturedProduct": {
-                    "$ref": "#/definitions/ProductService.FeaturedProduct"
                 }
             },
-            "title": "Advertisement"
+            "title": "Advertisement (for update)"
         },
         "odata.error": {
             "type": "object",

@@ -131,7 +131,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/org.example.odata.salesservice.Sales"
+                            "$ref": "#/definitions/org.example.odata.salesservice.Sales-create"
                         }
                     }
                 ],
@@ -225,7 +225,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/org.example.odata.salesservice.Sales"
+                            "$ref": "#/definitions/org.example.odata.salesservice.Sales-update"
                         }
                     }
                 ],
@@ -356,7 +356,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/org.example.odata.salesservice.Currency"
+                            "$ref": "#/definitions/org.example.odata.salesservice.Currency-create"
                         }
                     }
                 ],
@@ -432,7 +432,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/org.example.odata.salesservice.Currency"
+                            "$ref": "#/definitions/org.example.odata.salesservice.Currency-update"
                         }
                     }
                 ],
@@ -478,14 +478,38 @@
     },
     "definitions": {
         "org.example.odata.salesservice.Currency": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.odata.salesservice.Currency-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Currency"
+                }
+            ]
+        },
+        "org.example.odata.salesservice.Currency-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "Code": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        }
+                    },
+                    "title": "Currency (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.odata.salesservice.Currency-update"
+                }
+            ]
+        },
+        "org.example.odata.salesservice.Currency-update": {
             "type": "object",
             "properties": {
-                "Code": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
                 "Name": {
                     "type": [
                         "string",
@@ -493,14 +517,53 @@
                     ]
                 }
             },
-            "title": "Currency"
+            "title": "Currency (for update)"
         },
         "org.example.odata.salesservice.Sales": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.odata.salesservice.Sales-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Sales"
+                }
+            ]
+        },
+        "org.example.odata.salesservice.Sales-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "ID": {
+                            "type": "string"
+                        },
+                        "Customer": {
+                            "$ref": "#/definitions/org.example.odata.salesservice.Customer"
+                        },
+                        "Currency": {
+                            "$ref": "#/definitions/org.example.odata.salesservice.Currency"
+                        },
+                        "Product": {
+                            "$ref": "#/definitions/org.example.odata.salesservice.Product"
+                        },
+                        "SalesOrganization": {
+                            "$ref": "#/definitions/org.example.odata.salesservice.SalesOrganization"
+                        },
+                        "Time": {
+                            "$ref": "#/definitions/org.example.odata.salesservice.Time"
+                        }
+                    },
+                    "title": "Sales (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.odata.salesservice.Sales-update"
+                }
+            ]
+        },
+        "org.example.odata.salesservice.Sales-update": {
             "type": "object",
             "properties": {
-                "ID": {
-                    "type": "string"
-                },
                 "Amount": {
                     "type": [
                         "number",
@@ -508,24 +571,9 @@
                         "null"
                     ],
                     "format": "decimal"
-                },
-                "Customer": {
-                    "$ref": "#/definitions/org.example.odata.salesservice.Customer"
-                },
-                "Currency": {
-                    "$ref": "#/definitions/org.example.odata.salesservice.Currency"
-                },
-                "Product": {
-                    "$ref": "#/definitions/org.example.odata.salesservice.Product"
-                },
-                "SalesOrganization": {
-                    "$ref": "#/definitions/org.example.odata.salesservice.SalesOrganization"
-                },
-                "Time": {
-                    "$ref": "#/definitions/org.example.odata.salesservice.Time"
                 }
             },
-            "title": "Sales"
+            "title": "Sales (for update)"
         },
         "odata.error": {
             "type": "object",

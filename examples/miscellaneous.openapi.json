@@ -131,7 +131,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Customer"
+                            "$ref": "#/definitions/org.example.Customer-create"
                         }
                     }
                 ],
@@ -206,7 +206,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Customer"
+                            "$ref": "#/definitions/org.example.Customer-update"
                         }
                     }
                 ],
@@ -334,7 +334,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Customer"
+                            "$ref": "#/definitions/org.example.Customer-create"
                         }
                     }
                 ],
@@ -409,7 +409,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Customer"
+                            "$ref": "#/definitions/org.example.Customer-update"
                         }
                     }
                 ],
@@ -537,7 +537,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Order"
+                            "$ref": "#/definitions/org.example.Order-create"
                         }
                     }
                 ],
@@ -614,7 +614,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Order"
+                            "$ref": "#/definitions/org.example.Order-update"
                         }
                     }
                 ],
@@ -801,7 +801,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Product"
+                            "$ref": "#/definitions/org.example.Product-create"
                         }
                     }
                 ],
@@ -892,7 +892,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Product"
+                            "$ref": "#/definitions/org.example.Product-update"
                         }
                     }
                 ],
@@ -1034,7 +1034,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Category"
+                            "$ref": "#/definitions/org.example.Category-create"
                         }
                     }
                 ],
@@ -1123,7 +1123,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Category"
+                            "$ref": "#/definitions/org.example.Category-update"
                         }
                     }
                 ],
@@ -1251,7 +1251,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Supplier"
+                            "$ref": "#/definitions/org.example.Supplier-create"
                         }
                     }
                 ],
@@ -1326,7 +1326,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Supplier"
+                            "$ref": "#/definitions/org.example.Supplier-update"
                         }
                     }
                 ],
@@ -1413,7 +1413,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Supplier"
+                            "$ref": "#/definitions/org.example.Supplier-update"
                         }
                     }
                 ],
@@ -1582,7 +1582,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Category"
+                            "$ref": "#/definitions/org.example.Category-create"
                         }
                     }
                 ],
@@ -1671,7 +1671,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Category"
+                            "$ref": "#/definitions/org.example.Category-update"
                         }
                     }
                 ],
@@ -1813,7 +1813,7 @@
                         "in": "body",
                         "description": "New entity",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Category"
+                            "$ref": "#/definitions/org.example.Category-create"
                         }
                     }
                 ],
@@ -1902,7 +1902,7 @@
                         "in": "body",
                         "description": "New property values",
                         "schema": {
-                            "$ref": "#/definitions/org.example.Category"
+                            "$ref": "#/definitions/org.example.Category-update"
                         }
                     }
                 ],
@@ -1948,6 +1948,28 @@
     },
     "definitions": {
         "org.example.Measurement": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Measurement-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Measurement"
+                }
+            ]
+        },
+        "org.example.Measurement-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "Measurement (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Measurement-update"
+                }
+            ]
+        },
+        "org.example.Measurement-update": {
             "type": "object",
             "properties": {
                 "Dimension": {
@@ -1964,9 +1986,31 @@
                     "multipleOf": 1.0e-2
                 }
             },
-            "title": "Measurement"
+            "title": "Measurement (for update)"
         },
         "org.example.Example7to11": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Example7to11-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Example7to11"
+                }
+            ]
+        },
+        "org.example.Example7to11-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "Example7to11 (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Example7to11-update"
+                }
+            ]
+        },
+        "org.example.Example7to11-update": {
             "type": "object",
             "properties": {
                 "Units": {
@@ -2007,94 +2051,266 @@
                     "example": 999
                 }
             },
-            "title": "Example7to11"
+            "title": "Example7to11 (for update)"
         },
         "org.example.Product": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Product-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Product"
+                }
+            ]
+        },
+        "org.example.Product-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "ID": {
+                            "type": "string"
+                        },
+                        "Category": {
+                            "$ref": "#/definitions/org.example.Category"
+                        },
+                        "Supplier": {
+                            "$ref": "#/definitions/org.example.Supplier"
+                        }
+                    },
+                    "title": "Product (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Product-update"
+                }
+            ]
+        },
+        "org.example.Product-update": {
             "type": "object",
             "properties": {
-                "ID": {
-                    "type": "string"
-                },
                 "CategoryID": {
                     "type": "string"
-                },
-                "Category": {
-                    "$ref": "#/definitions/org.example.Category"
-                },
-                "Supplier": {
-                    "$ref": "#/definitions/org.example.Supplier"
                 }
             },
-            "title": "Product"
+            "title": "Product (for update)"
         },
         "org.example.Supplier": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "string"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Supplier-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Supplier"
                 }
-            },
-            "title": "Supplier"
+            ]
+        },
+        "org.example.Supplier-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "ID": {
+                            "type": "string"
+                        }
+                    },
+                    "title": "Supplier (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Supplier-update"
+                }
+            ]
+        },
+        "org.example.Supplier-update": {
+            "type": "object",
+            "title": "Supplier (for update)"
         },
         "org.example.Customer": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "string"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Customer-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Customer"
                 }
-            },
-            "title": "Customer"
+            ]
+        },
+        "org.example.Customer-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "ID": {
+                            "type": "string"
+                        }
+                    },
+                    "title": "Customer (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Customer-update"
+                }
+            ]
+        },
+        "org.example.Customer-update": {
+            "type": "object",
+            "title": "Customer (for update)"
         },
         "org.example.Order": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": [
-                        "integer",
-                        "string"
-                    ],
-                    "format": "int64"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Order-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Order"
                 }
-            },
-            "title": "Order"
+            ]
+        },
+        "org.example.Order-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "ID": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "int64"
+                        }
+                    },
+                    "title": "Order (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Order-update"
+                }
+            ]
+        },
+        "org.example.Order-update": {
+            "type": "object",
+            "title": "Order (for update)"
         },
         "org.example.Category": {
-            "type": "object",
-            "properties": {
-                "ID": {
-                    "type": "string"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Category-create"
                 },
-                "Products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/org.example.Product"
-                    }
+                {
+                    "type": "object",
+                    "title": "Category"
                 }
-            },
-            "title": "Category"
+            ]
+        },
+        "org.example.Category-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "ID": {
+                            "type": "string"
+                        },
+                        "Products": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/org.example.Product"
+                            }
+                        }
+                    },
+                    "title": "Category (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Category-update"
+                }
+            ]
+        },
+        "org.example.Category-update": {
+            "type": "object",
+            "title": "Category (for update)"
         },
         "org.example.Employee": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Employee-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Employee"
+                }
+            ]
+        },
+        "org.example.Employee-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "ID": {
+                            "type": "string"
+                        },
+                        "Manager": {
+                            "$ref": "#/definitions/org.example.Manager"
+                        }
+                    },
+                    "title": "Employee (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Employee-update"
+                }
+            ]
+        },
+        "org.example.Employee-update": {
             "type": "object",
             "properties": {
-                "ID": {
-                    "type": "string"
-                },
                 "FirstName": {
                     "type": "string"
                 },
                 "LastName": {
                     "type": "string"
-                },
-                "Manager": {
-                    "$ref": "#/definitions/org.example.Manager"
                 }
             },
-            "title": "Employee"
+            "title": "Employee (for update)"
         },
         "org.example.Manager": {
             "allOf": [
                 {
                     "$ref": "#/definitions/org.example.Employee"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Manager-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Manager"
+                }
+            ]
+        },
+        "org.example.Manager-create": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Employee-create"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "Employees": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/org.example.Employee"
+                            }
+                        }
+                    },
+                    "title": "Manager (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Manager-update"
+                }
+            ]
+        },
+        "org.example.Manager-update": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Employee-update"
                 },
                 {
                     "type": "object",
@@ -2107,25 +2323,43 @@
                             ],
                             "format": "decimal",
                             "multipleOf": 1
-                        },
-                        "Employees": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/org.example.Employee"
-                            }
                         }
                     },
-                    "title": "Manager"
+                    "title": "Manager (for update)"
                 }
             ]
         },
         "org.example.Category17": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Category17-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Category17"
+                }
+            ]
+        },
+        "org.example.Category17-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "ID": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "title": "Category17 (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Category17-update"
+                }
+            ]
+        },
+        "org.example.Category17-update": {
             "type": "object",
             "properties": {
-                "ID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
                 "Name": {
                     "type": [
                         "string",
@@ -2133,9 +2367,31 @@
                     ]
                 }
             },
-            "title": "Category17"
+            "title": "Category17 (for update)"
         },
         "org.example.Category18": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Category18-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Category18"
+                }
+            ]
+        },
+        "org.example.Category18-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "Category18 (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Category18-update"
+                }
+            ]
+        },
+        "org.example.Category18-update": {
             "type": "object",
             "properties": {
                 "Info": {
@@ -2148,9 +2404,31 @@
                     ]
                 }
             },
-            "title": "Category18"
+            "title": "Category18 (for update)"
         },
         "org.example.EntityInfo": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.EntityInfo-create"
+                },
+                {
+                    "type": "object",
+                    "title": "EntityInfo"
+                }
+            ]
+        },
+        "org.example.EntityInfo-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "EntityInfo (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.EntityInfo-update"
+                }
+            ]
+        },
+        "org.example.EntityInfo-update": {
             "type": "object",
             "properties": {
                 "ID": {
@@ -2166,23 +2444,67 @@
                     "example": "2017-04-13T15:51:04Z"
                 }
             },
-            "title": "EntityInfo"
+            "title": "EntityInfo (for update)"
         },
         "org.example.OrderLine": {
-            "type": "object",
-            "properties": {
-                "OrderID": {
-                    "type": "integer",
-                    "format": "int32"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.OrderLine-create"
                 },
-                "LineNumber": {
-                    "type": "integer",
-                    "format": "int32"
+                {
+                    "type": "object",
+                    "title": "OrderLine"
                 }
-            },
-            "title": "OrderLine"
+            ]
+        },
+        "org.example.OrderLine-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "OrderID": {
+                            "type": "integer",
+                            "format": "int32"
+                        },
+                        "LineNumber": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "title": "OrderLine (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.OrderLine-update"
+                }
+            ]
+        },
+        "org.example.OrderLine-update": {
+            "type": "object",
+            "title": "OrderLine (for update)"
         },
         "org.example.Dimensions": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Dimensions-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Dimensions"
+                }
+            ]
+        },
+        "org.example.Dimensions-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "Dimensions (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Dimensions-update"
+                }
+            ]
+        },
+        "org.example.Dimensions-update": {
             "type": "object",
             "properties": {
                 "Height": {
@@ -2210,14 +2532,38 @@
                     "multipleOf": 1
                 }
             },
-            "title": "Dimensions"
+            "title": "Dimensions (for update)"
         },
         "org.example.Product22": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Product22-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Product22"
+                }
+            ]
+        },
+        "org.example.Product22-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "ID": {
+                            "type": "string"
+                        }
+                    },
+                    "title": "Product22 (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Product22-update"
+                }
+            ]
+        },
+        "org.example.Product22-update": {
             "type": "object",
             "properties": {
-                "ID": {
-                    "type": "string"
-                },
                 "ProductDimensions": {
                     "$ref": "#/definitions/org.example.Dimensions"
                 },
@@ -2225,19 +2571,43 @@
                     "$ref": "#/definitions/org.example.Dimensions"
                 }
             },
-            "title": "Product22"
+            "title": "Product22 (for update)"
         },
         "org.example.ShipmentBox": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.ShipmentBox-create"
+                },
+                {
+                    "type": "object",
+                    "title": "ShipmentBox"
+                }
+            ]
+        },
+        "org.example.ShipmentBox-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "ID": {
+                            "type": "string"
+                        }
+                    },
+                    "title": "ShipmentBox (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.ShipmentBox-update"
+                }
+            ]
+        },
+        "org.example.ShipmentBox-update": {
             "type": "object",
             "properties": {
-                "ID": {
-                    "type": "string"
-                },
                 "Dimensions": {
                     "$ref": "#/definitions/org.example.Dimensions"
                 }
             },
-            "title": "ShipmentBox"
+            "title": "ShipmentBox (for update)"
         },
         "org.example.FileAccess": {
             "type": "string",
@@ -2288,6 +2658,28 @@
             "title": "Weight"
         },
         "org.example.Size": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Size-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Size"
+                }
+            ]
+        },
+        "org.example.Size-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "Size (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Size-update"
+                }
+            ]
+        },
+        "org.example.Size-update": {
             "type": "object",
             "properties": {
                 "Height": {
@@ -2297,7 +2689,7 @@
                     "$ref": "#/definitions/org.example.Weight"
                 }
             },
-            "title": "Size"
+            "title": "Size (for update)"
         },
         "odata.error": {
             "type": "object",
@@ -2357,12 +2749,36 @@
             }
         },
         "org.example.Product2": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Product2-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Product2"
+                }
+            ]
+        },
+        "org.example.Product2-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "ID": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "title": "Product2 (for create)"
+                },
+                {
+                    "$ref": "#/definitions/org.example.Product2-update"
+                }
+            ]
+        },
+        "org.example.Product2-update": {
             "type": "object",
             "properties": {
-                "ID": {
-                    "type": "integer",
-                    "format": "int32"
-                },
                 "Name": {
                     "type": [
                         "string",
@@ -2376,9 +2792,31 @@
                     ]
                 }
             },
-            "title": "Product2"
+            "title": "Product2 (for update)"
         },
         "Model1.NullablePrimitiveTypes": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Model1.NullablePrimitiveTypes-create"
+                },
+                {
+                    "type": "object",
+                    "title": "NullablePrimitiveTypes"
+                }
+            ]
+        },
+        "Model1.NullablePrimitiveTypes-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "NullablePrimitiveTypes (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Model1.NullablePrimitiveTypes-update"
+                }
+            ]
+        },
+        "Model1.NullablePrimitiveTypes-update": {
             "type": "object",
             "properties": {
                 "NullValue": {
@@ -2527,9 +2965,31 @@
                     "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.PrimitiveType"
                 }
             },
-            "title": "NullablePrimitiveTypes"
+            "title": "NullablePrimitiveTypes (for update)"
         },
         "Model1.NonNullablePrimitiveTypes": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Model1.NonNullablePrimitiveTypes-create"
+                },
+                {
+                    "type": "object",
+                    "title": "NonNullablePrimitiveTypes"
+                }
+            ]
+        },
+        "Model1.NonNullablePrimitiveTypes-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "NonNullablePrimitiveTypes (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Model1.NonNullablePrimitiveTypes-update"
+                }
+            ]
+        },
+        "Model1.NonNullablePrimitiveTypes-update": {
             "type": "object",
             "properties": {
                 "NullValue": {
@@ -2647,7 +3107,7 @@
                     "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.PrimitiveType"
                 }
             },
-            "title": "NonNullablePrimitiveTypes"
+            "title": "NonNullablePrimitiveTypes (for update)"
         },
         "Model1.Size": {
             "type": "string",
@@ -2668,11 +3128,35 @@
             "title": "Color"
         },
         "Model1.Weird": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Model1.Weird-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Weird"
+                }
+            ]
+        },
+        "Model1.Weird-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "TheKey": {
+                            "type": "string"
+                        }
+                    },
+                    "title": "Weird (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Model1.Weird-update"
+                }
+            ]
+        },
+        "Model1.Weird-update": {
             "type": "object",
             "properties": {
-                "TheKey": {
-                    "type": "string"
-                },
                 "TheValue": {
                     "type": [
                         "string",
@@ -2725,9 +3209,42 @@
                     "$ref": "http://localhost/vocabularies/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Permission"
                 }
             },
-            "title": "Weird"
+            "title": "Weird (for update)"
         },
         "Model1.Address": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Model1.Address-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Address"
+                }
+            ]
+        },
+        "Model1.Address-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "City": {
+                            "$ref": "#/definitions/Model1.City"
+                        },
+                        "Region": {
+                            "$ref": "#/definitions/Model1.Region"
+                        },
+                        "Country": {
+                            "$ref": "#/definitions/Model1.Country"
+                        }
+                    },
+                    "title": "Address (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Model1.Address-update"
+                }
+            ]
+        },
+        "Model1.Address-update": {
             "type": "object",
             "properties": {
                 "Street": {
@@ -2735,15 +3252,6 @@
                         "string",
                         "null"
                     ]
-                },
-                "City": {
-                    "$ref": "#/definitions/Model1.City"
-                },
-                "Region": {
-                    "$ref": "#/definitions/Model1.Region"
-                },
-                "Country": {
-                    "$ref": "#/definitions/Model1.Country"
                 },
                 "MapLocation": {
                     "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint"
@@ -2756,38 +3264,192 @@
                     }
                 }
             },
-            "title": "Address"
+            "title": "Address (for update)"
         },
         "Model1.City": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Model1.City-create"
+                },
+                {
+                    "type": "object",
+                    "title": "City"
+                }
+            ]
+        },
+        "Model1.City-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "City (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Model1.City-update"
+                }
+            ]
+        },
+        "Model1.City-update": {
             "type": "object",
-            "title": "City"
+            "title": "City (for update)"
         },
         "Model1.Region": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Model1.Region-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Region"
+                }
+            ]
+        },
+        "Model1.Region-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "Region (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Model1.Region-update"
+                }
+            ]
+        },
+        "Model1.Region-update": {
             "type": "object",
-            "title": "Region"
+            "title": "Region (for update)"
         },
         "Model1.Country": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Model1.Country-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Country"
+                }
+            ]
+        },
+        "Model1.Country-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "Country (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Model1.Country-update"
+                }
+            ]
+        },
+        "Model1.Country-update": {
             "type": "object",
-            "title": "Country"
+            "title": "Country (for update)"
         },
         "Model1.Planet": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Model1.Planet-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Planet"
+                }
+            ]
+        },
+        "Model1.Planet-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "Planet (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Model1.Planet-update"
+                }
+            ]
+        },
+        "Model1.Planet-update": {
             "type": "object",
-            "title": "Planet"
+            "title": "Planet (for update)"
         },
         "Model1.NavigationOnly": {
-            "type": "object",
-            "properties": {
-                "Planet": {
-                    "$ref": "#/definitions/Model1.Planet"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Model1.NavigationOnly-create"
+                },
+                {
+                    "type": "object",
+                    "title": "NavigationOnly"
                 }
-            },
-            "title": "NavigationOnly"
+            ]
+        },
+        "Model1.NavigationOnly-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "Planet": {
+                            "$ref": "#/definitions/Model1.Planet"
+                        }
+                    },
+                    "title": "NavigationOnly (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Model1.NavigationOnly-update"
+                }
+            ]
+        },
+        "Model1.NavigationOnly-update": {
+            "type": "object",
+            "title": "NavigationOnly (for update)"
         },
         "Model1.AnnotationOnly": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Model1.AnnotationOnly-create"
+                },
+                {
+                    "type": "object",
+                    "title": "AnnotationOnly"
+                }
+            ]
+        },
+        "Model1.AnnotationOnly-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "AnnotationOnly (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Model1.AnnotationOnly-update"
+                }
+            ]
+        },
+        "Model1.AnnotationOnly-update": {
             "type": "object",
-            "title": "AnnotationOnly"
+            "title": "AnnotationOnly (for update)"
         },
         "Model1.Order": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Model1.Order-create"
+                },
+                {
+                    "type": "object",
+                    "title": "Order"
+                }
+            ]
+        },
+        "Model1.Order-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "Order (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Model1.Order-update"
+                }
+            ]
+        },
+        "Model1.Order-update": {
             "type": "object",
             "properties": {
                 "Quantity": {
@@ -2807,7 +3469,7 @@
                     "description": "Contains the unit for property Quantity"
                 }
             },
-            "title": "Order"
+            "title": "Order (for update)"
         },
         "Model1.SpecialByte": {
             "type": "integer",
@@ -2866,16 +3528,82 @@
             "title": "ExactTimestamp"
         },
         "X.PersonType": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/X.PersonType-create"
+                },
+                {
+                    "type": "object",
+                    "title": "PersonType"
+                }
+            ]
+        },
+        "X.PersonType-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "PersonType (for create)"
+                },
+                {
+                    "$ref": "#/definitions/X.PersonType-update"
+                }
+            ]
+        },
+        "X.PersonType-update": {
             "type": "object",
-            "title": "PersonType"
+            "title": "PersonType (for update)"
         },
         "X.MovieType": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/X.MovieType-create"
+                },
+                {
+                    "type": "object",
+                    "title": "MovieType"
+                }
+            ]
+        },
+        "X.MovieType-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "MovieType (for create)"
+                },
+                {
+                    "$ref": "#/definitions/X.MovieType-update"
+                }
+            ]
+        },
+        "X.MovieType-update": {
             "type": "object",
-            "title": "MovieType"
+            "title": "MovieType (for update)"
         },
         "X.FriendType": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/X.FriendType-create"
+                },
+                {
+                    "type": "object",
+                    "title": "FriendType"
+                }
+            ]
+        },
+        "X.FriendType-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "FriendType (for create)"
+                },
+                {
+                    "$ref": "#/definitions/X.FriendType-update"
+                }
+            ]
+        },
+        "X.FriendType-update": {
             "type": "object",
-            "title": "FriendType"
+            "title": "FriendType (for update)"
         },
         "Y.DeveloperType": {
             "allOf": [
@@ -2883,24 +3611,102 @@
                     "$ref": "#/definitions/X.PersonType"
                 },
                 {
+                    "$ref": "#/definitions/Y.DeveloperType-create"
+                },
+                {
                     "type": "object",
                     "title": "DeveloperType"
                 }
             ]
         },
+        "Y.DeveloperType-create": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/X.PersonType-create"
+                },
+                {
+                    "type": "object",
+                    "title": "DeveloperType (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Y.DeveloperType-update"
+                }
+            ]
+        },
+        "Y.DeveloperType-update": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/X.PersonType-update"
+                },
+                {
+                    "type": "object",
+                    "title": "DeveloperType (for update)"
+                }
+            ]
+        },
         "Y.ScrumTeamType": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Y.ScrumTeamType-create"
+                },
+                {
+                    "type": "object",
+                    "title": "ScrumTeamType"
+                }
+            ]
+        },
+        "Y.ScrumTeamType-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "ScrumTeamType (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Y.ScrumTeamType-update"
+                }
+            ]
+        },
+        "Y.ScrumTeamType-update": {
             "type": "object",
             "properties": {
                 "ScrumMaster": {
                     "$ref": "#/definitions/Y.DeveloperType"
                 }
             },
-            "title": "ScrumTeamType"
+            "title": "ScrumTeamType (for update)"
         },
         "Y.ArchivedMovieType": {
             "allOf": [
                 {
                     "$ref": "#/definitions/X.MovieType"
+                },
+                {
+                    "$ref": "#/definitions/Y.ArchivedMovieType-create"
+                },
+                {
+                    "type": "object",
+                    "title": "ArchivedMovieType"
+                }
+            ]
+        },
+        "Y.ArchivedMovieType-create": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/X.MovieType-create"
+                },
+                {
+                    "type": "object",
+                    "title": "ArchivedMovieType (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Y.ArchivedMovieType-update"
+                }
+            ]
+        },
+        "Y.ArchivedMovieType-update": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/X.MovieType-update"
                 },
                 {
                     "type": "object",
@@ -2914,11 +3720,41 @@
                             "example": "2017-04-13"
                         }
                     },
-                    "title": "ArchivedMovieType"
+                    "title": "ArchivedMovieType (for update)"
                 }
             ]
         },
         "Y.SomeThingType": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Y.SomeThingType-create"
+                },
+                {
+                    "type": "object",
+                    "title": "SomeThingType"
+                }
+            ]
+        },
+        "Y.SomeThingType-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "VIPs": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/X.FriendType"
+                            }
+                        }
+                    },
+                    "title": "SomeThingType (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Y.SomeThingType-update"
+                }
+            ]
+        },
+        "Y.SomeThingType-update": {
             "type": "object",
             "properties": {
                 "SomeProperty": {
@@ -2932,17 +3768,33 @@
                     "items": {
                         "$ref": "#/definitions/X.PersonType"
                     }
-                },
-                "VIPs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/X.FriendType"
-                    }
                 }
             },
-            "title": "SomeThingType"
+            "title": "SomeThingType (for update)"
         },
         "Y.ChangeTrackingType": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Y.ChangeTrackingType-create"
+                },
+                {
+                    "type": "object",
+                    "title": "ChangeTrackingType"
+                }
+            ]
+        },
+        "Y.ChangeTrackingType-create": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "title": "ChangeTrackingType (for create)"
+                },
+                {
+                    "$ref": "#/definitions/Y.ChangeTrackingType-update"
+                }
+            ]
+        },
+        "Y.ChangeTrackingType-update": {
             "type": "object",
             "properties": {
                 "InlineableStreamProperties": {
@@ -2953,7 +3805,7 @@
                     "description": "Change tracking supports inlining these stream properties"
                 }
             },
-            "title": "ChangeTrackingType"
+            "title": "ChangeTrackingType (for update)"
         }
     },
     "parameters": {

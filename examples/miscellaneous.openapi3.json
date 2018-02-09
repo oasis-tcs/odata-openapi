@@ -137,7 +137,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Customer"
+                                "$ref": "#/components/schemas/org.example.Customer-create"
                             }
                         }
                     }
@@ -230,7 +230,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Customer"
+                                "$ref": "#/components/schemas/org.example.Customer-update"
                             }
                         }
                     }
@@ -375,7 +375,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Customer"
+                                "$ref": "#/components/schemas/org.example.Customer-create"
                             }
                         }
                     }
@@ -468,7 +468,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Customer"
+                                "$ref": "#/components/schemas/org.example.Customer-update"
                             }
                         }
                     }
@@ -613,7 +613,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Order"
+                                "$ref": "#/components/schemas/org.example.Order-create"
                             }
                         }
                     }
@@ -722,7 +722,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Order"
+                                "$ref": "#/components/schemas/org.example.Order-update"
                             }
                         }
                     }
@@ -949,7 +949,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Product"
+                                "$ref": "#/components/schemas/org.example.Product-create"
                             }
                         }
                     }
@@ -1061,7 +1061,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Product"
+                                "$ref": "#/components/schemas/org.example.Product-update"
                             }
                         }
                     }
@@ -1223,7 +1223,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Category"
+                                "$ref": "#/components/schemas/org.example.Category-create"
                             }
                         }
                     }
@@ -1333,7 +1333,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Category"
+                                "$ref": "#/components/schemas/org.example.Category-update"
                             }
                         }
                     }
@@ -1478,7 +1478,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Supplier"
+                                "$ref": "#/components/schemas/org.example.Supplier-create"
                             }
                         }
                     }
@@ -1571,7 +1571,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Supplier"
+                                "$ref": "#/components/schemas/org.example.Supplier-update"
                             }
                         }
                     }
@@ -1670,7 +1670,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Supplier"
+                                "$ref": "#/components/schemas/org.example.Supplier-update"
                             }
                         }
                     }
@@ -1868,7 +1868,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Category"
+                                "$ref": "#/components/schemas/org.example.Category-create"
                             }
                         }
                     }
@@ -1978,7 +1978,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Category"
+                                "$ref": "#/components/schemas/org.example.Category-update"
                             }
                         }
                     }
@@ -2140,7 +2140,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Category"
+                                "$ref": "#/components/schemas/org.example.Category-create"
                             }
                         }
                     }
@@ -2250,7 +2250,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/org.example.Category"
+                                "$ref": "#/components/schemas/org.example.Category-update"
                             }
                         }
                     }
@@ -2302,6 +2302,28 @@
     "components": {
         "schemas": {
             "org.example.Measurement": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Measurement-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Measurement"
+                    }
+                ]
+            },
+            "org.example.Measurement-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "Measurement (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Measurement-update"
+                    }
+                ]
+            },
+            "org.example.Measurement-update": {
                 "type": "object",
                 "properties": {
                     "Dimension": {
@@ -2322,9 +2344,31 @@
                         "multipleOf": 1.0e-2
                     }
                 },
-                "title": "Measurement"
+                "title": "Measurement (for update)"
             },
             "org.example.Example7to11": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Example7to11-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Example7to11"
+                    }
+                ]
+            },
+            "org.example.Example7to11-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "Example7to11 (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Example7to11-update"
+                    }
+                ]
+            },
+            "org.example.Example7to11-update": {
                 "type": "object",
                 "properties": {
                     "Units": {
@@ -2373,108 +2417,280 @@
                         "example": 999
                     }
                 },
-                "title": "Example7to11"
+                "title": "Example7to11 (for update)"
             },
             "org.example.Product": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Product-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Product"
+                    }
+                ]
+            },
+            "org.example.Product-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "ID": {
+                                "type": "string"
+                            },
+                            "Category": {
+                                "$ref": "#/components/schemas/org.example.Category"
+                            },
+                            "Supplier": {
+                                "nullable": true,
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/org.example.Supplier"
+                                    }
+                                ]
+                            }
+                        },
+                        "title": "Product (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Product-update"
+                    }
+                ]
+            },
+            "org.example.Product-update": {
                 "type": "object",
                 "properties": {
-                    "ID": {
-                        "type": "string"
-                    },
                     "CategoryID": {
                         "type": "string"
-                    },
-                    "Category": {
-                        "$ref": "#/components/schemas/org.example.Category"
-                    },
-                    "Supplier": {
-                        "nullable": true,
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/org.example.Supplier"
-                            }
-                        ]
                     }
                 },
-                "title": "Product"
+                "title": "Product (for update)"
             },
             "org.example.Supplier": {
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "string"
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Supplier-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Supplier"
                     }
-                },
-                "title": "Supplier"
+                ]
             },
-            "org.example.Customer": {
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "string"
-                    }
-                },
-                "title": "Customer"
-            },
-            "org.example.Order": {
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "anyOf": [
-                            {
-                                "type": "integer"
-                            },
-                            {
+            "org.example.Supplier-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "ID": {
                                 "type": "string"
                             }
-                        ],
-                        "format": "int64"
+                        },
+                        "title": "Supplier (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Supplier-update"
                     }
-                },
-                "title": "Order"
+                ]
+            },
+            "org.example.Supplier-update": {
+                "type": "object",
+                "title": "Supplier (for update)"
+            },
+            "org.example.Customer": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Customer-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Customer"
+                    }
+                ]
+            },
+            "org.example.Customer-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "ID": {
+                                "type": "string"
+                            }
+                        },
+                        "title": "Customer (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Customer-update"
+                    }
+                ]
+            },
+            "org.example.Customer-update": {
+                "type": "object",
+                "title": "Customer (for update)"
+            },
+            "org.example.Order": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Order-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Order"
+                    }
+                ]
+            },
+            "org.example.Order-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "ID": {
+                                "anyOf": [
+                                    {
+                                        "type": "integer"
+                                    },
+                                    {
+                                        "type": "string"
+                                    }
+                                ],
+                                "format": "int64"
+                            }
+                        },
+                        "title": "Order (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Order-update"
+                    }
+                ]
+            },
+            "org.example.Order-update": {
+                "type": "object",
+                "title": "Order (for update)"
             },
             "org.example.Category": {
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "string"
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Category-create"
                     },
-                    "Products": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/org.example.Product"
-                        }
+                    {
+                        "type": "object",
+                        "title": "Category"
                     }
-                },
-                "title": "Category"
+                ]
+            },
+            "org.example.Category-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "ID": {
+                                "type": "string"
+                            },
+                            "Products": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/org.example.Product"
+                                }
+                            }
+                        },
+                        "title": "Category (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Category-update"
+                    }
+                ]
+            },
+            "org.example.Category-update": {
+                "type": "object",
+                "title": "Category (for update)"
             },
             "org.example.Employee": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Employee-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Employee"
+                    }
+                ]
+            },
+            "org.example.Employee-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "ID": {
+                                "type": "string"
+                            },
+                            "Manager": {
+                                "nullable": true,
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/org.example.Manager"
+                                    }
+                                ]
+                            }
+                        },
+                        "title": "Employee (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Employee-update"
+                    }
+                ]
+            },
+            "org.example.Employee-update": {
                 "type": "object",
                 "properties": {
-                    "ID": {
-                        "type": "string"
-                    },
                     "FirstName": {
                         "type": "string"
                     },
                     "LastName": {
                         "type": "string"
-                    },
-                    "Manager": {
-                        "nullable": true,
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/org.example.Manager"
-                            }
-                        ]
                     }
                 },
-                "title": "Employee"
+                "title": "Employee (for update)"
             },
             "org.example.Manager": {
                 "allOf": [
                     {
                         "$ref": "#/components/schemas/org.example.Employee"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Manager-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Manager"
+                    }
+                ]
+            },
+            "org.example.Manager-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Employee-create"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "Employees": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/org.example.Employee"
+                                }
+                            }
+                        },
+                        "title": "Manager (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Manager-update"
+                    }
+                ]
+            },
+            "org.example.Manager-update": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Employee-update"
                     },
                     {
                         "type": "object",
@@ -2491,33 +2707,73 @@
                                 "nullable": true,
                                 "format": "decimal",
                                 "multipleOf": 1
-                            },
-                            "Employees": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/org.example.Employee"
-                                }
                             }
                         },
-                        "title": "Manager"
+                        "title": "Manager (for update)"
                     }
                 ]
             },
             "org.example.Category17": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Category17-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Category17"
+                    }
+                ]
+            },
+            "org.example.Category17-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "ID": {
+                                "type": "integer",
+                                "format": "int32"
+                            }
+                        },
+                        "title": "Category17 (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Category17-update"
+                    }
+                ]
+            },
+            "org.example.Category17-update": {
                 "type": "object",
                 "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
                     "Name": {
                         "type": "string",
                         "nullable": true
                     }
                 },
-                "title": "Category17"
+                "title": "Category17 (for update)"
             },
             "org.example.Category18": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Category18-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Category18"
+                    }
+                ]
+            },
+            "org.example.Category18-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "Category18 (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Category18-update"
+                    }
+                ]
+            },
+            "org.example.Category18-update": {
                 "type": "object",
                 "properties": {
                     "Info": {
@@ -2528,9 +2784,31 @@
                         "nullable": true
                     }
                 },
-                "title": "Category18"
+                "title": "Category18 (for update)"
             },
             "org.example.EntityInfo": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.EntityInfo-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "EntityInfo"
+                    }
+                ]
+            },
+            "org.example.EntityInfo-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "EntityInfo (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.EntityInfo-update"
+                    }
+                ]
+            },
+            "org.example.EntityInfo-update": {
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -2544,23 +2822,67 @@
                         "example": "2017-04-13T15:51:04Z"
                     }
                 },
-                "title": "EntityInfo"
+                "title": "EntityInfo (for update)"
             },
             "org.example.OrderLine": {
-                "type": "object",
-                "properties": {
-                    "OrderID": {
-                        "type": "integer",
-                        "format": "int32"
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.OrderLine-create"
                     },
-                    "LineNumber": {
-                        "type": "integer",
-                        "format": "int32"
+                    {
+                        "type": "object",
+                        "title": "OrderLine"
                     }
-                },
-                "title": "OrderLine"
+                ]
+            },
+            "org.example.OrderLine-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "OrderID": {
+                                "type": "integer",
+                                "format": "int32"
+                            },
+                            "LineNumber": {
+                                "type": "integer",
+                                "format": "int32"
+                            }
+                        },
+                        "title": "OrderLine (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.OrderLine-update"
+                    }
+                ]
+            },
+            "org.example.OrderLine-update": {
+                "type": "object",
+                "title": "OrderLine (for update)"
             },
             "org.example.Dimensions": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Dimensions-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Dimensions"
+                    }
+                ]
+            },
+            "org.example.Dimensions-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "Dimensions (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Dimensions-update"
+                    }
+                ]
+            },
+            "org.example.Dimensions-update": {
                 "type": "object",
                 "properties": {
                     "Height": {
@@ -2600,14 +2922,38 @@
                         "multipleOf": 1
                     }
                 },
-                "title": "Dimensions"
+                "title": "Dimensions (for update)"
             },
             "org.example.Product22": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Product22-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Product22"
+                    }
+                ]
+            },
+            "org.example.Product22-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "ID": {
+                                "type": "string"
+                            }
+                        },
+                        "title": "Product22 (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Product22-update"
+                    }
+                ]
+            },
+            "org.example.Product22-update": {
                 "type": "object",
                 "properties": {
-                    "ID": {
-                        "type": "string"
-                    },
                     "ProductDimensions": {
                         "nullable": true,
                         "anyOf": [
@@ -2625,14 +2971,38 @@
                         ]
                     }
                 },
-                "title": "Product22"
+                "title": "Product22 (for update)"
             },
             "org.example.ShipmentBox": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.ShipmentBox-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "ShipmentBox"
+                    }
+                ]
+            },
+            "org.example.ShipmentBox-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "ID": {
+                                "type": "string"
+                            }
+                        },
+                        "title": "ShipmentBox (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.ShipmentBox-update"
+                    }
+                ]
+            },
+            "org.example.ShipmentBox-update": {
                 "type": "object",
                 "properties": {
-                    "ID": {
-                        "type": "string"
-                    },
                     "Dimensions": {
                         "nullable": true,
                         "anyOf": [
@@ -2642,7 +3012,7 @@
                         ]
                     }
                 },
-                "title": "ShipmentBox"
+                "title": "ShipmentBox (for update)"
             },
             "org.example.FileAccess": {
                 "type": "string",
@@ -2693,6 +3063,28 @@
                 "title": "Weight"
             },
             "org.example.Size": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Size-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Size"
+                    }
+                ]
+            },
+            "org.example.Size-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "Size (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Size-update"
+                    }
+                ]
+            },
+            "org.example.Size-update": {
                 "type": "object",
                 "properties": {
                     "Height": {
@@ -2712,7 +3104,7 @@
                         ]
                     }
                 },
-                "title": "Size"
+                "title": "Size (for update)"
             },
             "odata.error": {
                 "type": "object",
@@ -2772,12 +3164,36 @@
                 }
             },
             "org.example.Product2": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Product2-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Product2"
+                    }
+                ]
+            },
+            "org.example.Product2-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "ID": {
+                                "type": "integer",
+                                "format": "int32"
+                            }
+                        },
+                        "title": "Product2 (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/org.example.Product2-update"
+                    }
+                ]
+            },
+            "org.example.Product2-update": {
                 "type": "object",
                 "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
                     "Name": {
                         "type": "string",
                         "nullable": true
@@ -2787,9 +3203,31 @@
                         "nullable": true
                     }
                 },
-                "title": "Product2"
+                "title": "Product2 (for update)"
             },
             "Model1.NullablePrimitiveTypes": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Model1.NullablePrimitiveTypes-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "NullablePrimitiveTypes"
+                    }
+                ]
+            },
+            "Model1.NullablePrimitiveTypes-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "NullablePrimitiveTypes (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Model1.NullablePrimitiveTypes-update"
+                    }
+                ]
+            },
+            "Model1.NullablePrimitiveTypes-update": {
                 "type": "object",
                 "properties": {
                     "NullValue": {
@@ -2957,9 +3395,31 @@
                         ]
                     }
                 },
-                "title": "NullablePrimitiveTypes"
+                "title": "NullablePrimitiveTypes (for update)"
             },
             "Model1.NonNullablePrimitiveTypes": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Model1.NonNullablePrimitiveTypes-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "NonNullablePrimitiveTypes"
+                    }
+                ]
+            },
+            "Model1.NonNullablePrimitiveTypes-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "NonNullablePrimitiveTypes (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Model1.NonNullablePrimitiveTypes-update"
+                    }
+                ]
+            },
+            "Model1.NonNullablePrimitiveTypes-update": {
                 "type": "object",
                 "properties": {
                     "NullValue": {
@@ -3109,7 +3569,7 @@
                         "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.PrimitiveType"
                     }
                 },
-                "title": "NonNullablePrimitiveTypes"
+                "title": "NonNullablePrimitiveTypes (for update)"
             },
             "Model1.Size": {
                 "type": "string",
@@ -3130,11 +3590,35 @@
                 "title": "Color"
             },
             "Model1.Weird": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Model1.Weird-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Weird"
+                    }
+                ]
+            },
+            "Model1.Weird-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "TheKey": {
+                                "type": "string"
+                            }
+                        },
+                        "title": "Weird (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Model1.Weird-update"
+                    }
+                ]
+            },
+            "Model1.Weird-update": {
                 "type": "object",
                 "properties": {
-                    "TheKey": {
-                        "type": "string"
-                    },
                     "TheValue": {
                         "type": "string",
                         "nullable": true
@@ -3188,38 +3672,62 @@
                         ]
                     }
                 },
-                "title": "Weird"
+                "title": "Weird (for update)"
             },
             "Model1.Address": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Model1.Address-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Address"
+                    }
+                ]
+            },
+            "Model1.Address-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "City": {
+                                "nullable": true,
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Model1.City"
+                                    }
+                                ]
+                            },
+                            "Region": {
+                                "nullable": true,
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Model1.Region"
+                                    }
+                                ]
+                            },
+                            "Country": {
+                                "nullable": true,
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Model1.Country"
+                                    }
+                                ]
+                            }
+                        },
+                        "title": "Address (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Model1.Address-update"
+                    }
+                ]
+            },
+            "Model1.Address-update": {
                 "type": "object",
                 "properties": {
                     "Street": {
                         "type": "string",
                         "nullable": true
-                    },
-                    "City": {
-                        "nullable": true,
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/Model1.City"
-                            }
-                        ]
-                    },
-                    "Region": {
-                        "nullable": true,
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/Model1.Region"
-                            }
-                        ]
-                    },
-                    "Country": {
-                        "nullable": true,
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/Model1.Country"
-                            }
-                        ]
                     },
                     "MapLocation": {
                         "nullable": true,
@@ -3237,43 +3745,197 @@
                         }
                     }
                 },
-                "title": "Address"
+                "title": "Address (for update)"
             },
             "Model1.City": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Model1.City-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "City"
+                    }
+                ]
+            },
+            "Model1.City-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "City (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Model1.City-update"
+                    }
+                ]
+            },
+            "Model1.City-update": {
                 "type": "object",
-                "title": "City"
+                "title": "City (for update)"
             },
             "Model1.Region": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Model1.Region-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Region"
+                    }
+                ]
+            },
+            "Model1.Region-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "Region (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Model1.Region-update"
+                    }
+                ]
+            },
+            "Model1.Region-update": {
                 "type": "object",
-                "title": "Region"
+                "title": "Region (for update)"
             },
             "Model1.Country": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Model1.Country-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Country"
+                    }
+                ]
+            },
+            "Model1.Country-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "Country (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Model1.Country-update"
+                    }
+                ]
+            },
+            "Model1.Country-update": {
                 "type": "object",
-                "title": "Country"
+                "title": "Country (for update)"
             },
             "Model1.Planet": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Model1.Planet-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Planet"
+                    }
+                ]
+            },
+            "Model1.Planet-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "Planet (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Model1.Planet-update"
+                    }
+                ]
+            },
+            "Model1.Planet-update": {
                 "type": "object",
-                "title": "Planet"
+                "title": "Planet (for update)"
             },
             "Model1.NavigationOnly": {
-                "type": "object",
-                "properties": {
-                    "Planet": {
-                        "nullable": true,
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/Model1.Planet"
-                            }
-                        ]
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Model1.NavigationOnly-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "NavigationOnly"
                     }
-                },
-                "title": "NavigationOnly"
+                ]
+            },
+            "Model1.NavigationOnly-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "Planet": {
+                                "nullable": true,
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Model1.Planet"
+                                    }
+                                ]
+                            }
+                        },
+                        "title": "NavigationOnly (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Model1.NavigationOnly-update"
+                    }
+                ]
+            },
+            "Model1.NavigationOnly-update": {
+                "type": "object",
+                "title": "NavigationOnly (for update)"
             },
             "Model1.AnnotationOnly": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Model1.AnnotationOnly-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "AnnotationOnly"
+                    }
+                ]
+            },
+            "Model1.AnnotationOnly-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "AnnotationOnly (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Model1.AnnotationOnly-update"
+                    }
+                ]
+            },
+            "Model1.AnnotationOnly-update": {
                 "type": "object",
-                "title": "AnnotationOnly"
+                "title": "AnnotationOnly (for update)"
             },
             "Model1.Order": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Model1.Order-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "Order"
+                    }
+                ]
+            },
+            "Model1.Order-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "Order (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Model1.Order-update"
+                    }
+                ]
+            },
+            "Model1.Order-update": {
                 "type": "object",
                 "properties": {
                     "Quantity": {
@@ -3295,7 +3957,7 @@
                         "description": "Contains the unit for property Quantity"
                     }
                 },
-                "title": "Order"
+                "title": "Order (for update)"
             },
             "Model1.SpecialByte": {
                 "type": "integer",
@@ -3366,16 +4028,82 @@
                 "title": "ExactTimestamp"
             },
             "X.PersonType": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/X.PersonType-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "PersonType"
+                    }
+                ]
+            },
+            "X.PersonType-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "PersonType (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/X.PersonType-update"
+                    }
+                ]
+            },
+            "X.PersonType-update": {
                 "type": "object",
-                "title": "PersonType"
+                "title": "PersonType (for update)"
             },
             "X.MovieType": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/X.MovieType-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "MovieType"
+                    }
+                ]
+            },
+            "X.MovieType-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "MovieType (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/X.MovieType-update"
+                    }
+                ]
+            },
+            "X.MovieType-update": {
                 "type": "object",
-                "title": "MovieType"
+                "title": "MovieType (for update)"
             },
             "X.FriendType": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/X.FriendType-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "FriendType"
+                    }
+                ]
+            },
+            "X.FriendType-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "FriendType (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/X.FriendType-update"
+                    }
+                ]
+            },
+            "X.FriendType-update": {
                 "type": "object",
-                "title": "FriendType"
+                "title": "FriendType (for update)"
             },
             "Y.DeveloperType": {
                 "allOf": [
@@ -3383,12 +4111,62 @@
                         "$ref": "#/components/schemas/X.PersonType"
                     },
                     {
+                        "$ref": "#/components/schemas/Y.DeveloperType-create"
+                    },
+                    {
                         "type": "object",
                         "title": "DeveloperType"
                     }
                 ]
             },
+            "Y.DeveloperType-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/X.PersonType-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "DeveloperType (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Y.DeveloperType-update"
+                    }
+                ]
+            },
+            "Y.DeveloperType-update": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/X.PersonType-update"
+                    },
+                    {
+                        "type": "object",
+                        "title": "DeveloperType (for update)"
+                    }
+                ]
+            },
             "Y.ScrumTeamType": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Y.ScrumTeamType-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "ScrumTeamType"
+                    }
+                ]
+            },
+            "Y.ScrumTeamType-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "ScrumTeamType (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Y.ScrumTeamType-update"
+                    }
+                ]
+            },
+            "Y.ScrumTeamType-update": {
                 "type": "object",
                 "properties": {
                     "ScrumMaster": {
@@ -3400,12 +4178,40 @@
                         ]
                     }
                 },
-                "title": "ScrumTeamType"
+                "title": "ScrumTeamType (for update)"
             },
             "Y.ArchivedMovieType": {
                 "allOf": [
                     {
                         "$ref": "#/components/schemas/X.MovieType"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Y.ArchivedMovieType-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "ArchivedMovieType"
+                    }
+                ]
+            },
+            "Y.ArchivedMovieType-create": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/X.MovieType-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "ArchivedMovieType (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Y.ArchivedMovieType-update"
+                    }
+                ]
+            },
+            "Y.ArchivedMovieType-update": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/X.MovieType-update"
                     },
                     {
                         "type": "object",
@@ -3417,11 +4223,41 @@
                                 "example": "2017-04-13"
                             }
                         },
-                        "title": "ArchivedMovieType"
+                        "title": "ArchivedMovieType (for update)"
                     }
                 ]
             },
             "Y.SomeThingType": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Y.SomeThingType-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "SomeThingType"
+                    }
+                ]
+            },
+            "Y.SomeThingType-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "VIPs": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/X.FriendType"
+                                }
+                            }
+                        },
+                        "title": "SomeThingType (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Y.SomeThingType-update"
+                    }
+                ]
+            },
+            "Y.SomeThingType-update": {
                 "type": "object",
                 "properties": {
                     "SomeProperty": {
@@ -3433,17 +4269,33 @@
                         "items": {
                             "$ref": "#/components/schemas/X.PersonType"
                         }
-                    },
-                    "VIPs": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/X.FriendType"
-                        }
                     }
                 },
-                "title": "SomeThingType"
+                "title": "SomeThingType (for update)"
             },
             "Y.ChangeTrackingType": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Y.ChangeTrackingType-create"
+                    },
+                    {
+                        "type": "object",
+                        "title": "ChangeTrackingType"
+                    }
+                ]
+            },
+            "Y.ChangeTrackingType-create": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "title": "ChangeTrackingType (for create)"
+                    },
+                    {
+                        "$ref": "#/components/schemas/Y.ChangeTrackingType-update"
+                    }
+                ]
+            },
+            "Y.ChangeTrackingType-update": {
                 "type": "object",
                 "properties": {
                     "InlineableStreamProperties": {
@@ -3454,7 +4306,7 @@
                         "description": "Change tracking supports inlining these stream properties"
                     }
                 },
-                "title": "ChangeTrackingType"
+                "title": "ChangeTrackingType (for update)"
             }
         },
         "parameters": {

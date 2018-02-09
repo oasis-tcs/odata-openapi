@@ -8,11 +8,6 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - create additional schemas for create and update
-    - - update structure omits navigation, immutable, and computed properties
-    - - create structure is allOf update plus navigation, immutable
-    - - get structure is allOf create plus computed
-    - - check how (two-level) allOf is supported by Swagger UIs 2.x and 3.x
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -726,33 +721,122 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="hashpair">
+    <!-- full structure -->
     <xsl:text>"</xsl:text>
     <xsl:value-of select="../@Namespace" />
     <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{</xsl:text>
 
+    <!-- allOf create structure and basetype's full structure -->
+    <xsl:text>"allOf":[{</xsl:text>
+    <xsl:if test="@BaseType">
+      <xsl:call-template name="schema-ref">
+        <xsl:with-param name="qualifiedName" select="@BaseType" />
+      </xsl:call-template>
+      <xsl:text>},{</xsl:text>
+    </xsl:if>
+    <xsl:call-template name="ref">
+      <xsl:with-param name="qualifier" select="../@Namespace" />
+      <xsl:with-param name="name" select="@Name" />
+      <xsl:with-param name="suffix" select="'-create'" />
+    </xsl:call-template>
+    <xsl:text>},{</xsl:text>
+
+    <xsl:text>"type":"object"</xsl:text>
+
+    <!-- only computed non-key properties -->
+    <xsl:apply-templates
+      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')] and not(@Name=../edm:Key/edm:PropertyRef/@Name)]"
+      mode="hash"
+    >
+      <xsl:with-param name="name" select="'properties'" />
+    </xsl:apply-templates>
+
+    <xsl:text>}]</xsl:text>
+
+    <xsl:call-template name="title-description">
+      <xsl:with-param name="fallback-title" select="@Name" />
+    </xsl:call-template>
+
+    <xsl:text>}</xsl:text>
+
+    <!-- create structure -->
+    <xsl:text>,"</xsl:text>
+    <xsl:value-of select="../@Namespace" />
+    <xsl:text>.</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>-create":{</xsl:text>
+
+    <!-- allOf update structure and basetype's create structure -->
+    <xsl:text>"allOf":[{</xsl:text>
+    <xsl:if test="@BaseType">
+      <xsl:call-template name="schema-ref">
+        <xsl:with-param name="qualifiedName" select="@BaseType" />
+        <xsl:with-param name="suffix" select="'-create'" />
+      </xsl:call-template>
+      <xsl:text>},{</xsl:text>
+    </xsl:if>
+    <xsl:text>"type":"object"</xsl:text>
+
+    <!-- only immutable, key, and navigation properties -->
+    <xsl:apply-templates
+      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable')] or @Name=../edm:Key/edm:PropertyRef/@Name]|edm:NavigationProperty"
+      mode="hash"
+    >
+      <xsl:with-param name="name" select="'properties'" />
+    </xsl:apply-templates>
+
+    <xsl:text>},{</xsl:text>
+    <xsl:call-template name="ref">
+      <xsl:with-param name="qualifier" select="../@Namespace" />
+      <xsl:with-param name="name" select="@Name" />
+      <xsl:with-param name="suffix" select="'-update'" />
+    </xsl:call-template>
+    <xsl:text>}]</xsl:text>
+
+    <xsl:call-template name="title-description">
+      <xsl:with-param name="fallback-title" select="@Name" />
+      <xsl:with-param name="suffix" select="' (for create)'" />
+    </xsl:call-template>
+
+    <xsl:text>}</xsl:text>
+
+    <!-- update structure -->
+    <xsl:text>,"</xsl:text>
+    <xsl:value-of select="../@Namespace" />
+    <xsl:text>.</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>-update":{</xsl:text>
+
     <xsl:if test="@BaseType">
       <xsl:text>"allOf":[{</xsl:text>
       <xsl:call-template name="schema-ref">
         <xsl:with-param name="qualifiedName" select="@BaseType" />
+        <xsl:with-param name="suffix" select="'-update'" />
       </xsl:call-template>
       <xsl:text>},{</xsl:text>
     </xsl:if>
 
     <xsl:text>"type":"object"</xsl:text>
 
-    <xsl:apply-templates select="edm:Property|edm:NavigationProperty" mode="hash">
+    <!-- only updatable non-key properties -->
+    <xsl:apply-templates
+      select="edm:Property[not(edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable') or @Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')] or @Name=../edm:Key/edm:PropertyRef/@Name)]"
+      mode="hash"
+    >
       <xsl:with-param name="name" select="'properties'" />
     </xsl:apply-templates>
-
-    <xsl:call-template name="title-description">
-      <xsl:with-param name="fallback-title" select="@Name" />
-    </xsl:call-template>
 
     <xsl:if test="@BaseType">
       <xsl:text>}]</xsl:text>
     </xsl:if>
+
+    <xsl:call-template name="title-description">
+      <xsl:with-param name="fallback-title" select="@Name" />
+      <xsl:with-param name="suffix" select="' (for update)'" />
+    </xsl:call-template>
+
     <xsl:text>}</xsl:text>
   </xsl:template>
 
@@ -856,6 +940,9 @@
             <xsl:call-template name="Validation.Pattern" />
           </xsl:otherwise>
         </xsl:choose>
+        <xsl:if test="not($inParameter) and not($nullable='false')">
+          <xsl:text>,"example":"string"</xsl:text>
+        </xsl:if>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Binary'">
         <xsl:call-template name="nullableType">
@@ -1001,6 +1088,9 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"int64"</xsl:text>
+        <xsl:if test="not($inParameter)">
+          <xsl:text>,"example":"42"</xsl:text>
+        </xsl:if>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Date'">
         <xsl:call-template name="nullableType">
@@ -1187,6 +1277,7 @@
   <xsl:template name="ref">
     <xsl:param name="qualifier" />
     <xsl:param name="name" />
+    <xsl:param name="suffix" select="null" />
     <xsl:variable name="internalNamespace" select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
     <xsl:variable name="externalNamespace">
       <xsl:choose>
@@ -1216,11 +1307,13 @@
     </xsl:choose>
     <xsl:text>.</xsl:text>
     <xsl:value-of select="$name" />
+    <xsl:value-of select="$suffix" />
     <xsl:text>"</xsl:text>
   </xsl:template>
 
   <xsl:template name="schema-ref">
     <xsl:param name="qualifiedName" />
+    <xsl:param name="suffix" select="null" />
     <xsl:call-template name="ref">
       <xsl:with-param name="qualifier">
         <xsl:call-template name="substring-before-last">
@@ -1234,6 +1327,7 @@
           <xsl:with-param name="marker" select="'.'" />
         </xsl:call-template>
       </xsl:with-param>
+      <xsl:with-param name="suffix" select="$suffix" />
     </xsl:call-template>
   </xsl:template>
 
@@ -1581,6 +1675,7 @@
       <xsl:text>"schema":{</xsl:text>
       <xsl:call-template name="schema-ref">
         <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+        <xsl:with-param name="suffix" select="'-create'" />
       </xsl:call-template>
       <xsl:text>}</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
@@ -1865,6 +1960,7 @@
       </xsl:if>
       <xsl:call-template name="schema-ref">
         <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+        <xsl:with-param name="suffix" select="'-update'" />
       </xsl:call-template>
       <xsl:if test="$odata-version='2.0'">
         <xsl:text>}}</xsl:text>
@@ -2045,6 +2141,7 @@
     <xsl:text>"schema":{</xsl:text>
     <xsl:call-template name="schema-ref">
       <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+      <xsl:with-param name="suffix" select="'-update'" />
     </xsl:call-template>
     <xsl:text>}</xsl:text>
     <xsl:if test="$openapi-version!='2.0'">
@@ -2960,6 +3057,7 @@
 
   <xsl:template name="title-description">
     <xsl:param name="fallback-title" select="null" />
+    <xsl:param name="suffix" select="null" />
 
     <xsl:variable name="title">
       <xsl:call-template name="Common.Label">
@@ -2970,11 +3068,13 @@
       <xsl:when test="$title!=''">
         <xsl:text>,"title":"</xsl:text>
         <xsl:value-of select="$title" />
+        <xsl:value-of select="$suffix" />
         <xsl:text>"</xsl:text>
       </xsl:when>
       <xsl:when test="$fallback-title">
         <xsl:text>,"title":"</xsl:text>
         <xsl:value-of select="$fallback-title" />
+        <xsl:value-of select="$suffix" />
         <xsl:text>"</xsl:text>
       </xsl:when>
     </xsl:choose>
