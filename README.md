@@ -41,8 +41,8 @@ The entity-relationship diagrams visualizing the resource models of each service
 
 OpenAPI descriptions for live example OData services at [www.odata.org](http://www.odata.org/)
 
- - [Simple read/write service](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/example.openapi3.json)
  - [TripPin (read/write)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/TripPin.openapi3.json)
+ - [Simple read/write service](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/example.openapi3.json)
  - [Northwind (read)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/Northwind.openapi3.json)
 
 OpenAPI descriptions for OData services that reference each other (cross-service references)
