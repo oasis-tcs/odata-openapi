@@ -767,12 +767,14 @@
     </xsl:if>
 
     <xsl:text>"type":"object"</xsl:text>
-    <!-- everything exceot computed properties -->
+    <!-- everything except computed properties -->
+    <!-- TODO: Complex Props and Nav Props also reference create structures -->
     <xsl:apply-templates
       select="edm:Property[not(edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')])]|edm:NavigationProperty"
       mode="hash"
     >
       <xsl:with-param name="name" select="'properties'" />
+      <xsl:with-param name="suffix" select="'-create'" />
     </xsl:apply-templates>
 
     <xsl:if test="@BaseType">
@@ -822,9 +824,11 @@
   </xsl:template>
 
   <xsl:template match="edm:Property|edm:NavigationProperty" mode="hashvalue">
+    <xsl:param name="suffix" select="null" />
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="nullableFacet" select="@Nullable" />
+      <xsl:with-param name="suffix" select="$suffix" />
     </xsl:call-template>
     <xsl:choose>
       <xsl:when test="local-name()='Property'">
@@ -856,6 +860,7 @@
     <xsl:param name="type" />
     <xsl:param name="nullableFacet" />
     <xsl:param name="inParameter" select="false()" />
+    <xsl:param name="suffix" select="null" />
     <xsl:variable name="noArray" select="$inParameter" />
     <xsl:variable name="nullable">
       <xsl:call-template name="nullableFacetValue">
@@ -1208,6 +1213,7 @@
               <xsl:with-param name="marker" select="'.'" />
             </xsl:call-template>
           </xsl:with-param>
+          <xsl:with-param name="suffix" select="$suffix" />
         </xsl:call-template>
         <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue or @MaxLength)">
           <xsl:text>}]</xsl:text>
@@ -1288,7 +1294,12 @@
     </xsl:choose>
     <xsl:text>.</xsl:text>
     <xsl:value-of select="$name" />
-    <xsl:value-of select="$suffix" />
+    <xsl:message>
+      <xsl:value-of select="$internalNamespace" />
+    </xsl:message>
+    <xsl:if test="not(//edm:Schema[@Namespace=$qualifier or $internalNamespace]/edm:EnumType[@Name=$name])">
+      <xsl:value-of select="$suffix" />
+    </xsl:if>
     <xsl:text>"</xsl:text>
   </xsl:template>
 
@@ -3233,6 +3244,7 @@
     <xsl:param name="key" select="'Name'" />
     <xsl:param name="after" select="'something'" />
     <xsl:param name="constantProperties" />
+    <xsl:param name="suffix" select="null" />
     <xsl:if test="position()=1">
       <xsl:if test="$after">
         <xsl:text>,</xsl:text>
@@ -3244,6 +3256,7 @@
     <xsl:apply-templates select="." mode="hashpair">
       <xsl:with-param name="name" select="$name" />
       <xsl:with-param name="key" select="$key" />
+      <xsl:with-param name="suffix" select="$suffix" />
     </xsl:apply-templates>
     <xsl:if test="position()!=last()">
       <xsl:text>,</xsl:text>
@@ -3257,12 +3270,14 @@
   <xsl:template match="*" mode="hashpair">
     <xsl:param name="name" />
     <xsl:param name="key" select="'Name'" />
+    <xsl:param name="suffix" select="null" />
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@*[local-name()=$key]" />
     <xsl:text>":{</xsl:text>
     <xsl:apply-templates select="." mode="hashvalue">
       <xsl:with-param name="name" select="$name" />
       <xsl:with-param name="key" select="$key" />
+      <xsl:with-param name="suffix" select="$suffix" />
     </xsl:apply-templates>
     <xsl:text>}</xsl:text>
   </xsl:template>
