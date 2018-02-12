@@ -1294,10 +1294,9 @@
     </xsl:choose>
     <xsl:text>.</xsl:text>
     <xsl:value-of select="$name" />
-    <xsl:message>
-      <xsl:value-of select="$internalNamespace" />
-    </xsl:message>
-    <xsl:if test="not(//edm:Schema[@Namespace=$qualifier or $internalNamespace]/edm:EnumType[@Name=$name])">
+    <xsl:if
+      test="//edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:EntityType[@Name=$name]|//edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:ComplexType[@Name=$name]"
+    >
       <xsl:value-of select="$suffix" />
     </xsl:if>
     <xsl:text>"</xsl:text>
