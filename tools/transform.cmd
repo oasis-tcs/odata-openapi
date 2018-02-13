@@ -50,7 +50,7 @@ exit /b
     set INPUT=..\examples\%1
   )
 
-  java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-OpenAPI.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -PARAM openapi-version 3.0.0 -IN %INPUT% -OUT %~n1.tmp3.json
+  java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-OpenAPI.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui "" -PARAM diagram YES -PARAM references YES -PARAM openapi-root "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/" -PARAM openapi-version 3.0.0 -IN %INPUT% -OUT %~n1.tmp3.json
 
   json_reformat.exe < %~n1.tmp3.json > ..\examples\%~n1.openapi3.json
   if not errorlevel 1 (
@@ -60,7 +60,7 @@ exit /b
     call ajv validate --unknown-formats=uriref -s openapi-3.0.0.schema.json -d ..\examples\%~n1.openapi3.json > nul
   )
 
-  java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui http://petstore.swagger.io -PARAM swagger-ui-major-version 3 -PARAM diagram YES -PARAM references YES -IN %INPUT% -OUT %~n1.tmp.json
+  java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui "" -PARAM diagram YES -PARAM references YES -PARAM openapi-root "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/" -IN %INPUT% -OUT %~n1.tmp.json
 
   json_reformat.exe < %~n1.tmp.json > ..\examples\%~n1.openapi.json
   if not errorlevel 1 (

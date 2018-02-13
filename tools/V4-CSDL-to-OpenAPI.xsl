@@ -55,12 +55,11 @@
   <xsl:param name="top-example" select="50" />
 
   <xsl:param name="odata-schema" select="'https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json'" />
-  <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui'" />
-  <!--
-    <xsl:param name="swagger-ui-major-version" select="'2'" />
-  -->
+  <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui/'" />
   <xsl:param name="openapi-formatoption" select="''" />
   <xsl:param name="openapi-version" select="'2.0'" />
+  <xsl:param name="openapi-root" select="''" />
+
 
   <xsl:variable name="reuse-schemas">
     <xsl:choose>
@@ -665,11 +664,12 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$swagger-ui" />
-        <xsl:text>/?url=</xsl:text>
+        <xsl:text>?url=</xsl:text>
         <xsl:call-template name="replace-all">
           <xsl:with-param name="string">
             <xsl:call-template name="json-url">
               <xsl:with-param name="url" select="../@Uri" />
+              <xsl:with-param name="root" select="$openapi-root" />
             </xsl:call-template>
           </xsl:with-param>
           <xsl:with-param name="old" select="')'" />
@@ -3395,6 +3395,7 @@
 
   <xsl:template name="json-url">
     <xsl:param name="url" />
+    <xsl:param name="root" select="''" />
     <xsl:variable name="jsonUrl">
       <xsl:choose>
         <xsl:when test="substring($url,string-length($url)-3) = '.xml'">
@@ -3429,7 +3430,10 @@
         <xsl:text>/</xsl:text>
         <xsl:value-of select="$jsonUrl" />
       </xsl:when>
-      <!-- TODO: more rules for recognizing relative URLs and doing the needful -->
+      <xsl:when test="substring($jsonUrl,1,2) = './' and $root!=''">
+        <xsl:value-of select="$root" />
+        <xsl:value-of select="substring($jsonUrl,3)" />
+      </xsl:when>      <!-- TODO: more rules for recognizing relative URLs and doing the needful -->
       <xsl:otherwise>
         <xsl:value-of select="$jsonUrl" />
       </xsl:otherwise>
