@@ -768,7 +768,6 @@
 
     <xsl:text>"type":"object"</xsl:text>
     <!-- everything except computed properties -->
-    <!-- TODO: Complex Props and Nav Props also reference create structures -->
     <xsl:apply-templates
       select="edm:Property[not(edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')])]|edm:NavigationProperty"
       mode="hash"
@@ -776,6 +775,10 @@
       <xsl:with-param name="name" select="'properties'" />
       <xsl:with-param name="suffix" select="'-create'" />
     </xsl:apply-templates>
+    <!-- non-computed key properties are required -->
+    <xsl:apply-templates
+      select="edm:Property[@Name=../edm:Key/edm:PropertyRef/@Name and not(edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')])]"
+      mode="required" />
 
     <xsl:if test="@BaseType">
       <xsl:text>}]</xsl:text>
@@ -821,6 +824,23 @@
       <xsl:with-param name="suffix" select="' (for update)'" />
     </xsl:call-template>
     <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:Property" mode="required">
+    <xsl:if test="position() = 1">
+      <xsl:text>,"required":[</xsl:text>
+    </xsl:if>
+    <xsl:if test="position()>1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>"</xsl:text>
+
+    <xsl:if test="position() = last()">
+      <xsl:text>]</xsl:text>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edm:Property|edm:NavigationProperty" mode="hashvalue">
