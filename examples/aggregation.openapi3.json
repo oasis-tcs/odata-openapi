@@ -3,7 +3,7 @@
     "info": {
         "title": "OData Service for namespace org.example.odata.salesservice",
         "version": "",
-        "description": "This OData service is located at [http://localhost/Sales.svc/](http://localhost/Sales.svc/)\n\n## Entity Data Model\n![ER Diagram](http://yuml.me/diagram/class/[Currency{bg:orange}],[Sales{bg:orange}],[Sales]-0..1>[Customer],[Sales]-0..1>[Currency],[Sales]-0..1>[Product],[Sales]-0..1>[SalesOrganization],[Sales]-0..1>[Time])\n\n## References\n- [Org.OData.Aggregation.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Aggregation.V1.md)"
+        "description": "This OData service is located at [http://localhost/Sales.svc/](http://localhost/Sales.svc/)\n\n## Entity Data Model\n![ER Diagram](http://yuml.me/diagram/class/[Category{bg:orange}],[Category]-*>[Product],[Currency{bg:orange}],[Customer{bg:orange}],[Customer]-*>[Sales],[Product{bg:orange}],[Product]-0..1>[Category],[Product]-*>[Sales],[Sales{bg:orange}],[Sales]-0..1>[Customer],[Sales]-0..1>[Time],[Sales]-0..1>[Product],[Sales]-0..1>[SalesOrganization],[Sales]-0..1>[Currency],[SalesOrganization{bg:orange}],[SalesOrganization]-0..1>[SalesOrganization],[Time{bg:orange}])\n\n## References\n- [Org.OData.Aggregation.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Aggregation.V1.md)"
     },
     "servers": [
         {
@@ -95,10 +95,10 @@
                                 "enum": [
                                     "*",
                                     "Customer",
-                                    "Currency",
+                                    "Time",
                                     "Product",
                                     "SalesOrganization",
-                                    "Time"
+                                    "Currency"
                                 ]
                             }
                         }
@@ -208,10 +208,10 @@
                                 "enum": [
                                     "*",
                                     "Customer",
-                                    "Currency",
+                                    "Time",
                                     "Product",
                                     "SalesOrganization",
-                                    "Time"
+                                    "Currency"
                                 ]
                             }
                         }
@@ -548,6 +548,54 @@
     },
     "components": {
         "schemas": {
+            "org.example.odata.salesservice.Category": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
+                    "Products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/org.example.odata.salesservice.Product"
+                        }
+                    },
+                    "Name": {
+                        "type": "string"
+                    }
+                },
+                "title": "Category"
+            },
+            "org.example.odata.salesservice.Category-create": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
+                    "Products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/org.example.odata.salesservice.Product-create"
+                        }
+                    },
+                    "Name": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "ID"
+                ],
+                "title": "Category (for create)"
+            },
+            "org.example.odata.salesservice.Category-update": {
+                "type": "object",
+                "properties": {
+                    "Name": {
+                        "type": "string"
+                    }
+                },
+                "title": "Category (for update)"
+            },
             "org.example.odata.salesservice.Currency": {
                 "type": "object",
                 "properties": {
@@ -594,11 +642,189 @@
                 },
                 "title": "Currency (for update)"
             },
+            "org.example.odata.salesservice.Customer": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
+                    "Sales": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/org.example.odata.salesservice.Sales"
+                        }
+                    },
+                    "Name": {
+                        "type": "string"
+                    },
+                    "Country": {
+                        "type": "string"
+                    }
+                },
+                "title": "Customer"
+            },
+            "org.example.odata.salesservice.Customer-create": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
+                    "Sales": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/org.example.odata.salesservice.Sales-create"
+                        }
+                    },
+                    "Name": {
+                        "type": "string"
+                    },
+                    "Country": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "ID"
+                ],
+                "title": "Customer (for create)"
+            },
+            "org.example.odata.salesservice.Customer-update": {
+                "type": "object",
+                "properties": {
+                    "Name": {
+                        "type": "string"
+                    },
+                    "Country": {
+                        "type": "string"
+                    }
+                },
+                "title": "Customer (for update)"
+            },
+            "org.example.odata.salesservice.Product": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
+                    "Category": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/org.example.odata.salesservice.Category"
+                            }
+                        ]
+                    },
+                    "Sales": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/org.example.odata.salesservice.Sales"
+                        }
+                    },
+                    "Name": {
+                        "type": "string"
+                    },
+                    "Color": {
+                        "type": "string"
+                    },
+                    "TaxRate": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal"
+                    }
+                },
+                "title": "Product"
+            },
+            "org.example.odata.salesservice.Product-create": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
+                    "Category": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/org.example.odata.salesservice.Category-create"
+                            }
+                        ]
+                    },
+                    "Sales": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/org.example.odata.salesservice.Sales-create"
+                        }
+                    },
+                    "Name": {
+                        "type": "string"
+                    },
+                    "Color": {
+                        "type": "string"
+                    },
+                    "TaxRate": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal"
+                    }
+                },
+                "required": [
+                    "ID"
+                ],
+                "title": "Product (for create)"
+            },
+            "org.example.odata.salesservice.Product-update": {
+                "type": "object",
+                "properties": {
+                    "Name": {
+                        "type": "string"
+                    },
+                    "Color": {
+                        "type": "string"
+                    },
+                    "TaxRate": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal"
+                    }
+                },
+                "title": "Product (for update)"
+            },
             "org.example.odata.salesservice.Sales": {
                 "type": "object",
                 "properties": {
                     "ID": {
                         "type": "string"
+                    },
+                    "Customer": {
+                        "$ref": "#/components/schemas/org.example.odata.salesservice.Customer"
+                    },
+                    "Time": {
+                        "$ref": "#/components/schemas/org.example.odata.salesservice.Time"
+                    },
+                    "Product": {
+                        "$ref": "#/components/schemas/org.example.odata.salesservice.Product"
+                    },
+                    "SalesOrganization": {
+                        "$ref": "#/components/schemas/org.example.odata.salesservice.SalesOrganization"
+                    },
+                    "Currency": {
+                        "$ref": "#/components/schemas/org.example.odata.salesservice.Currency"
                     },
                     "Amount": {
                         "anyOf": [
@@ -611,21 +837,6 @@
                         ],
                         "nullable": true,
                         "format": "decimal"
-                    },
-                    "Customer": {
-                        "$ref": "#/components/schemas/org.example.odata.salesservice.Customer"
-                    },
-                    "Currency": {
-                        "$ref": "#/components/schemas/org.example.odata.salesservice.Currency"
-                    },
-                    "Product": {
-                        "$ref": "#/components/schemas/org.example.odata.salesservice.Product"
-                    },
-                    "SalesOrganization": {
-                        "$ref": "#/components/schemas/org.example.odata.salesservice.SalesOrganization"
-                    },
-                    "Time": {
-                        "$ref": "#/components/schemas/org.example.odata.salesservice.Time"
                     }
                 },
                 "title": "Sales"
@@ -636,6 +847,21 @@
                     "ID": {
                         "type": "string"
                     },
+                    "Customer": {
+                        "$ref": "#/components/schemas/org.example.odata.salesservice.Customer-create"
+                    },
+                    "Time": {
+                        "$ref": "#/components/schemas/org.example.odata.salesservice.Time-create"
+                    },
+                    "Product": {
+                        "$ref": "#/components/schemas/org.example.odata.salesservice.Product-create"
+                    },
+                    "SalesOrganization": {
+                        "$ref": "#/components/schemas/org.example.odata.salesservice.SalesOrganization-create"
+                    },
+                    "Currency": {
+                        "$ref": "#/components/schemas/org.example.odata.salesservice.Currency-create"
+                    },
                     "Amount": {
                         "anyOf": [
                             {
@@ -647,21 +873,6 @@
                         ],
                         "nullable": true,
                         "format": "decimal"
-                    },
-                    "Customer": {
-                        "$ref": "#/components/schemas/org.example.odata.salesservice.Customer"
-                    },
-                    "Currency": {
-                        "$ref": "#/components/schemas/org.example.odata.salesservice.Currency-create"
-                    },
-                    "Product": {
-                        "$ref": "#/components/schemas/org.example.odata.salesservice.Product"
-                    },
-                    "SalesOrganization": {
-                        "$ref": "#/components/schemas/org.example.odata.salesservice.SalesOrganization"
-                    },
-                    "Time": {
-                        "$ref": "#/components/schemas/org.example.odata.salesservice.Time"
                     }
                 },
                 "required": [
@@ -686,6 +897,136 @@
                     }
                 },
                 "title": "Sales (for update)"
+            },
+            "org.example.odata.salesservice.SalesOrganization": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
+                    "Superordinate": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/org.example.odata.salesservice.SalesOrganization"
+                            }
+                        ]
+                    },
+                    "Name": {
+                        "type": "string"
+                    }
+                },
+                "title": "SalesOrganization"
+            },
+            "org.example.odata.salesservice.SalesOrganization-create": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
+                    "Superordinate": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/org.example.odata.salesservice.SalesOrganization-create"
+                            }
+                        ]
+                    },
+                    "Name": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "ID"
+                ],
+                "title": "SalesOrganization (for create)"
+            },
+            "org.example.odata.salesservice.SalesOrganization-update": {
+                "type": "object",
+                "properties": {
+                    "Name": {
+                        "type": "string"
+                    }
+                },
+                "title": "SalesOrganization (for update)"
+            },
+            "org.example.odata.salesservice.Time": {
+                "type": "object",
+                "properties": {
+                    "Date": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date",
+                        "example": "2017-04-13"
+                    },
+                    "Month": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "string"
+                    },
+                    "Quarter": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "string"
+                    },
+                    "Year": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "string"
+                    }
+                },
+                "title": "Time"
+            },
+            "org.example.odata.salesservice.Time-create": {
+                "type": "object",
+                "properties": {
+                    "Date": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date",
+                        "example": "2017-04-13"
+                    },
+                    "Month": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "string"
+                    },
+                    "Quarter": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "string"
+                    },
+                    "Year": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "string"
+                    }
+                },
+                "required": [
+                    "Date"
+                ],
+                "title": "Time (for create)"
+            },
+            "org.example.odata.salesservice.Time-update": {
+                "type": "object",
+                "properties": {
+                    "Month": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "string"
+                    },
+                    "Quarter": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "string"
+                    },
+                    "Year": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "string"
+                    }
+                },
+                "title": "Time (for update)"
             },
             "odata.error": {
                 "type": "object",

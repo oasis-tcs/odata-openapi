@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm"
-  Version="4.0"
->
-  <edmx:Reference
-    Uri="http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs01/vocabularies/Org.OData.Aggregation.V1.xml"
-  >
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.0">
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs01/vocabularies/Org.OData.Aggregation.V1.xml">
     <edmx:Include Alias="Aggregation" Namespace="Org.OData.Aggregation.V1" />
   </edmx:Reference>
   <edmx:DataServices>
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Alias="SalesModel" Namespace="org.example.odata.salesservice">
+
+      <EntityType Name="Category">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="Products" Type="Collection(SalesModel.Product)" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+      </EntityType>
 
       <EntityType Name="Currency">
         <Key>
@@ -22,12 +27,38 @@
         </Property>
       </EntityType>
 
+      <EntityType Name="Customer">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="Sales" Type="Collection(SalesModel.Sales)" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="Country" Type="Edm.String" Nullable="false" />
+      </EntityType>
+
+      <EntityType Name="Product">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="Category" Type="SalesModel.Category" />
+        <NavigationProperty Name="Sales" Type="Collection(SalesModel.Sales)" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="Color" Type="Edm.String" Nullable="false" />
+        <Property Name="TaxRate" Type="Edm.Decimal" Nullable="false" Scale="variable" />
+      </EntityType>
+
       <EntityType Name="Sales">
         <Key>
           <PropertyRef Name="ID" />
         </Key>
         <Property Name="ID" Type="Edm.String" Nullable="false" />
-
+        <NavigationProperty Name="Customer" Type="SalesModel.Customer" Nullable="false" />
+        <NavigationProperty Name="Time" Type="SalesModel.Time" Nullable="false" />
+        <NavigationProperty Name="Product" Type="SalesModel.Product" Nullable="false" />
+        <NavigationProperty Name="SalesOrganization" Type="SalesModel.SalesOrganization" Nullable="false" />
+        <NavigationProperty Name="Currency" Type="SalesModel.Currency" Nullable="false" />
         <Property Name="Amount" Type="Edm.Decimal" Scale="variable">
           <Annotation Term="Aggregation.Aggregateable" />
           <Annotation Term="Aggregation.ContextDefiningProperties">
@@ -36,13 +67,6 @@
             </Collection>
           </Annotation>
         </Property>
-
-        <NavigationProperty Name="Customer" Type="SalesModel.Customer" Nullable="false" />
-        <NavigationProperty Name="Currency" Type="SalesModel.Currency" Nullable="false" />
-        <NavigationProperty Name="Product" Type="SalesModel.Product" Nullable="false" />
-        <NavigationProperty Name="SalesOrganization" Type="SalesModel.SalesOrganization" Nullable="false" />
-        <NavigationProperty Name="Time" Type="SalesModel.Time" Nullable="false" />
-
         <Annotation Term="Aggregation.CustomAggregate" Qualifier="Forecast" String="Edm.Decimal">
           <Annotation Term="Aggregation.ContextDefiningProperties">
             <Collection>
@@ -50,6 +74,25 @@
             </Collection>
           </Annotation>
         </Annotation>
+      </EntityType>
+
+      <EntityType Name="SalesOrganization">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="Superordinate" Type="SalesModel.SalesOrganization" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+      </EntityType>
+
+      <EntityType Name="Time">
+        <Key>
+          <PropertyRef Name="Date" />
+        </Key>
+        <Property Name="Date" Type="Edm.Date" />
+        <Property Name="Month" Type="Edm.String" />
+        <Property Name="Quarter" Type="Edm.String" />
+        <Property Name="Year" Type="Edm.String" />
       </EntityType>
 
       <Annotations Target="SalesModel.Product">
