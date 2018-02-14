@@ -1291,6 +1291,14 @@
         <xsl:text>"$ref":"</xsl:text>
         <xsl:value-of select="$reuse-schemas" />
         <xsl:value-of select="$internalNamespace" />
+        <xsl:if test="not(//edm:Schema[@Namespace=$internalNamespace]/edm:*[@Name=$name])">
+          <xsl:message>
+            <xsl:text>Unknown type: </xsl:text>
+            <xsl:value-of select="$qualifier" />
+            <xsl:text>.</xsl:text>
+            <xsl:value-of select="$name" />
+          </xsl:message>
+        </xsl:if>
       </xsl:when>
       <xsl:otherwise>
         <!-- TODO: use x-ref if https://github.com/swagger-api/swagger-ui/issues/4214 is not solved -->
