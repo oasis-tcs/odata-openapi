@@ -1285,31 +1285,28 @@
     <xsl:param name="qualifier" />
     <xsl:param name="name" />
     <xsl:param name="suffix" select="null" />
-    <xsl:variable name="internalNamespace" select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
-    <xsl:variable name="externalNamespace">
-      <xsl:choose>
-        <xsl:when test="//edmx:Include[@Alias=$qualifier]/@Namespace">
-          <xsl:value-of select="//edmx:Include[@Alias=$qualifier]/@Namespace" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="//edmx:Include[@Namespace=$qualifier]/@Namespace" />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:text>"$ref":"</xsl:text>
-    <xsl:call-template name="json-url">
-      <xsl:with-param name="url" select="//edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
-    </xsl:call-template>
-    <xsl:value-of select="$reuse-schemas" />
+    <xsl:variable name="internalNamespace" select="//edm:Schema[@Alias=$qualifier]/@Namespace|//edm:Schema[@Namespace=$qualifier]/@Namespace" />
     <xsl:choose>
       <xsl:when test="$internalNamespace">
+        <xsl:text>"$ref":"</xsl:text>
+        <xsl:value-of select="$reuse-schemas" />
         <xsl:value-of select="$internalNamespace" />
       </xsl:when>
-      <xsl:when test="string-length($externalNamespace)>0">
-        <xsl:value-of select="$externalNamespace" />
-      </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$qualifier" />
+        <!-- TODO: use x-ref if https://github.com/swagger-api/swagger-ui/issues/4214 is not solved -->
+        <xsl:text>"$ref":"</xsl:text>
+        <xsl:variable name="externalNamespace" select="//edmx:Include[@Alias=$qualifier]/@Namespace|//edmx:Include[@Namespace=$qualifier]/@Namespace" />
+        <xsl:call-template name="json-url">
+          <xsl:with-param name="url" select="//edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
+        </xsl:call-template>
+        <xsl:value-of select="$reuse-schemas" />
+        <xsl:value-of select="$externalNamespace" />
+        <xsl:if test="not($externalNamespace)">
+          <xsl:message>
+            <xsl:text>Unknown qualifier: </xsl:text>
+            <xsl:value-of select="$qualifier" />
+          </xsl:message>
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>.</xsl:text>
