@@ -920,16 +920,6 @@
       <xsl:text>"type":"array","items":{</xsl:text>
     </xsl:if>
     <xsl:choose>
-      <!--
-        <xsl:when test="$singleType='Edm.Stream'">
-        <xsl:call-template name="nullableType">
-        <xsl:with-param name="type" select="'string'" />
-        <xsl:with-param name="nullable" select="$nullable" />
-        <xsl:with-param name="noArray" select="$noArray" />
-        </xsl:call-template>
-        <xsl:text>,"format":"base64url","title":"Edm.Stream"</xsl:text>
-        </xsl:when>
-      -->
       <xsl:when test="$singleType='Edm.String'">
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'string'" />
@@ -949,6 +939,14 @@
         <xsl:if test="not($inParameter) and not($nullable='false')">
           <xsl:text>,"example":"string"</xsl:text>
         </xsl:if>
+      </xsl:when>
+      <xsl:when test="$singleType='Edm.Stream'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'string'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
+        </xsl:call-template>
+        <xsl:text>,"format":"base64url"</xsl:text>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Binary'">
         <xsl:call-template name="nullableType">
