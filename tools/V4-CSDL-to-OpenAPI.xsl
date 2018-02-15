@@ -1208,6 +1208,13 @@
           <xsl:text>,"example":"P4DT15H51M04.217S"</xsl:text>
         </xsl:if>
       </xsl:when>
+      <xsl:when test="$singleType='Edm.PrimitiveType'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'boolean,number,string'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
+        </xsl:call-template>
+      </xsl:when>
       <xsl:when test="$singleType='Edm.GeographyPoint' or $singleType='Edm.GeometryPoint'">
         <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue)">
           <xsl:if test="not($nullable='false')">
