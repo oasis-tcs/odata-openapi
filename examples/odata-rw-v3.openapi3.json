@@ -2540,7 +2540,7 @@
                         "nullable": true,
                         "anyOf": [
                             {
-                                "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint"
+                                "$ref": "#/components/schemas/geoPoint"
                             }
                         ]
                     },
@@ -2581,7 +2581,7 @@
                         "nullable": true,
                         "anyOf": [
                             {
-                                "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint"
+                                "$ref": "#/components/schemas/geoPoint"
                             }
                         ]
                     },
@@ -2621,7 +2621,7 @@
                         "nullable": true,
                         "anyOf": [
                             {
-                                "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint"
+                                "$ref": "#/components/schemas/geoPoint"
                             }
                         ]
                     },
@@ -3179,6 +3179,32 @@
                     }
                 },
                 "title": "Advertisement (for update)"
+            },
+            "geoPoint": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "Point"
+                        ],
+                        "default": "Point"
+                    },
+                    "coordinates": {
+                        "$ref": "#/components/schemas/geoPosition"
+                    }
+                },
+                "required": [
+                    "type",
+                    "coordinates"
+                ]
+            },
+            "geoPosition": {
+                "type": "array",
+                "items": {
+                    "type": "number"
+                },
+                "minItems": 2
             },
             "odata.error": {
                 "type": "object",

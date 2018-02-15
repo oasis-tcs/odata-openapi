@@ -1367,7 +1367,7 @@
                     "type": "object",
                     "properties": {
                         "Loc": {
-                            "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint"
+                            "$ref": "#/definitions/geoPoint"
                         }
                     }
                 }
@@ -1383,7 +1383,7 @@
                     "type": "object",
                     "properties": {
                         "Loc": {
-                            "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint"
+                            "$ref": "#/definitions/geoPoint"
                         }
                     }
                 }
@@ -1399,7 +1399,7 @@
                     "type": "object",
                     "properties": {
                         "Loc": {
-                            "$ref": "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json#/definitions/Edm.GeographyPoint"
+                            "$ref": "#/definitions/geoPoint"
                         }
                     }
                 }
@@ -2174,6 +2174,32 @@
                 }
             },
             "title": "Trip (for update)"
+        },
+        "geoPoint": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "Point"
+                    ],
+                    "default": "Point"
+                },
+                "coordinates": {
+                    "$ref": "#/definitions/geoPosition"
+                }
+            },
+            "required": [
+                "type",
+                "coordinates"
+            ]
+        },
+        "geoPosition": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 2
         },
         "odata.error": {
             "type": "object",

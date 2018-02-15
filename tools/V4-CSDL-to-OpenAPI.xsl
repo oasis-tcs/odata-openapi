@@ -511,6 +511,14 @@
 
   <!-- definitions for standard error response - only needed if there's an entity container -->
   <xsl:template match="edm:EntityContainer" mode="hashpair">
+    <xsl:if test="//@Type[.='Edm.GeographyPoint' or .='Edm.GeometryPoint']">
+      <xsl:text>"geoPoint":{"type":"object","properties":{"type":{"type":"string","enum":["Point"],"default":"Point"},"coordinates":{"$ref":"</xsl:text>
+      <xsl:value-of select="$reuse-schemas" />
+      <xsl:text>geoPosition"}},"required":["type","coordinates"]},</xsl:text>
+    </xsl:if>
+    <xsl:if test="//@Type[starts-with(.,'Edm.Geo')]">
+      <xsl:text>"geoPosition":{"type":"array","items":{"type":"number"},"minItems":2},</xsl:text>
+    </xsl:if>
     <xsl:text>"odata.error":{"type":"object","required":["error"],"properties":{"error":{"$ref":"</xsl:text>
     <xsl:value-of select="$reuse-schemas" />
     <xsl:text>odata.error.main"}}}</xsl:text>
@@ -1200,7 +1208,25 @@
           <xsl:text>,"example":"P4DT15H51M04.217S"</xsl:text>
         </xsl:if>
       </xsl:when>
+      <xsl:when test="$singleType='Edm.GeographyPoint' or $singleType='Edm.GeometryPoint'">
+        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue)">
+          <xsl:if test="not($nullable='false')">
+            <xsl:text>"nullable":true,</xsl:text>
+          </xsl:if>
+          <xsl:text>"anyOf":[{</xsl:text>
+        </xsl:if>
+        <xsl:text>"$ref":"</xsl:text>
+        <xsl:value-of select="$reuse-schemas" />
+        <xsl:text>geoPoint"</xsl:text>
+        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue)">
+          <xsl:text>}]</xsl:text>
+        </xsl:if>
+      </xsl:when>
       <xsl:when test="$qualifier='Edm'">
+        <xsl:message>
+          <xsl:text>TODO: inline </xsl:text>
+          <xsl:value-of select="$singleType" />
+        </xsl:message>
         <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue)">
           <xsl:if test="not($nullable='false')">
             <xsl:text>"nullable":true,</xsl:text>
@@ -1225,12 +1251,7 @@
         </xsl:if>
         <xsl:call-template name="ref">
           <xsl:with-param name="qualifier" select="$qualifier" />
-          <xsl:with-param name="name">
-            <xsl:call-template name="substring-after-last">
-              <xsl:with-param name="input" select="$singleType" />
-              <xsl:with-param name="marker" select="'.'" />
-            </xsl:call-template>
-          </xsl:with-param>
+          <xsl:with-param name="name" select="$simpleName" />
           <xsl:with-param name="suffix" select="$suffix" />
         </xsl:call-template>
         <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue or @MaxLength)">
