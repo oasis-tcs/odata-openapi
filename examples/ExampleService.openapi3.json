@@ -3,7 +3,7 @@
     "info": {
         "title": "OData Service for namespace OData.Demo",
         "version": "",
-        "description": "This OData service is located at [http://localhost/service-root/](http://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](http://yuml.me/diagram/class/[Customer{bg:orange}],[Customer]-*>[Order],[Customer]-*>[Sales],[Customer]-0..1>[Address],[Customer]-0..1>[PhoneNumber],[Supplier{bg:orange}],[Supplier]-*>[Product],[Supplier]-*>[Address],[Product{bg:orange}],[Product]-0..1>[Category],[Product]-0..1>[Supplier],[Product]-*>[OrderItem],[Product]-*>[Sales],[Order{bg:orange}],[Order]-*>[OrderItem],[Order]-0..1>[Customer],[Order]-0..1>[Address],[Customer]^[VipCustomer{bg:orange}],[Category{bg:orange}],[Category]-*>[Product],[OrderItem{bg:orange}],[OrderItem]-0..1>[Order],[OrderItem]-0..1>[Product],[OrderItem]-0..1>[Currency],[Sales{bg:orange}],[Sales]-0..1>[Time],[Sales]-0..1>[Currency],[Sales]-0..1>[Customer],[Sales]-0..1>[SalesOrganization],[Sales]-0..1>[Product],[Employee{bg:orange}],[Employee]-0..1>[Manager],[Employee]-*>[LeaveRequest],[LeaveRequest{bg:orange}],[LeaveRequest]-0..1>[Manager],[LeaveRequest]-0..1>[Employee],[Address],[Address]-0..1>[Country],[Address]-0..1>[City],[AddressWithLocation],[Country{bg:orange}],[Supplier]^[PreferredSupplier{bg:orange}],[PreferredSupplier]-0..1>[Employee],[Employee]^[Manager{bg:orange}],[Manager]-*>[Employee],[Manager]-*>[LeaveRequest],[Time{bg:orange}],[Time]-*>[Sales],[SalesOrganization{bg:orange}],[SalesOrganization]-*>[Sales],[SalesOrganization]-0..1>[SalesOrganization],[Currency{bg:orange}],[Currency]-*>[Sales],[City{bg:orange}],[PhoneNumber],[CellPhoneNumber])\n\n## References\n- [Org.OData.Core.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Core.V1.md)"
+        "description": "This OData service is located at [http://localhost/service-root/](http://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](http://yuml.me/diagram/class/[Customer{bg:orange}],[Customer]-*>[Order],[Customer]-*>[Sales],[Customer]-0..1>[Address],[Customer]-0..1>[PhoneNumber],[Supplier{bg:orange}],[Supplier]-*>[Product],[Supplier]-*>[Address],[Product{bg:orange}],[Product]-0..1>[Category],[Product]-0..1>[Supplier],[Product]-*>[OrderItem],[Product]-*>[Sales],[Order{bg:orange}],[Order]-*>[OrderItem],[Order]-0..1>[Customer],[Order]-0..1>[Address],[Customer]^[VipCustomer{bg:orange}],[Category{bg:orange}],[Category]-*>[Product],[OrderItem{bg:orange}],[OrderItem]-0..1>[Order],[OrderItem]-0..1>[Product],[OrderItem]-0..1>[Currency],[Sales{bg:orange}],[Sales]-0..1>[Time],[Sales]-0..1>[Currency],[Sales]-0..1>[Customer],[Sales]-0..1>[SalesOrganization],[Sales]-0..1>[Product],[Employee{bg:orange}],[Employee]-0..1>[Manager],[Employee]-*>[LeaveRequest],[LeaveRequest{bg:orange}],[LeaveRequest]-0..1>[Manager],[LeaveRequest]-0..1>[Employee],[Address],[Address]-0..1>[Country],[Address]-0..1>[City],[Address]^[AddressWithLocation],[Country{bg:orange}],[Supplier]^[PreferredSupplier{bg:orange}],[PreferredSupplier]-0..1>[Employee],[Employee]^[Manager{bg:orange}],[Manager]-*>[Employee],[Manager]-*>[LeaveRequest],[Time{bg:orange}],[Time]-*>[Sales],[SalesOrganization{bg:orange}],[SalesOrganization]-*>[Sales],[SalesOrganization]-0..1>[SalesOrganization],[Currency{bg:orange}],[Currency]-*>[Sales],[City{bg:orange}],[PhoneNumber],[PhoneNumber]^[CellPhoneNumber])\n\n## References\n- [Org.OData.Core.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Core.V1.md)"
     },
     "servers": [
         {
@@ -5259,30 +5259,51 @@
                 "title": "Address (for update)"
             },
             "OData.Demo.AddressWithLocation": {
-                "type": "object",
-                "properties": {
-                    "Location": {
-                        "$ref": "#/components/schemas/geoPoint"
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/OData.Demo.Address"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "Location": {
+                                "$ref": "#/components/schemas/geoPoint"
+                            }
+                        }
                     }
-                },
+                ],
                 "title": "AddressWithLocation"
             },
             "OData.Demo.AddressWithLocation-create": {
-                "type": "object",
-                "properties": {
-                    "Location": {
-                        "$ref": "#/components/schemas/geoPoint"
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/OData.Demo.Address-create"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "Location": {
+                                "$ref": "#/components/schemas/geoPoint"
+                            }
+                        }
                     }
-                },
+                ],
                 "title": "AddressWithLocation (for create)"
             },
             "OData.Demo.AddressWithLocation-update": {
-                "type": "object",
-                "properties": {
-                    "Location": {
-                        "$ref": "#/components/schemas/geoPoint"
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/OData.Demo.Address-update"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "Location": {
+                                "$ref": "#/components/schemas/geoPoint"
+                            }
+                        }
                     }
-                },
+                ],
                 "title": "AddressWithLocation (for update)"
             },
             "OData.Demo.Country": {
@@ -5750,30 +5771,51 @@
                 "title": "PhoneNumber (for update)"
             },
             "OData.Demo.CellPhoneNumber": {
-                "type": "object",
-                "properties": {
-                    "Carrier": {
-                        "type": "string"
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/OData.Demo.PhoneNumber"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "Carrier": {
+                                "type": "string"
+                            }
+                        }
                     }
-                },
+                ],
                 "title": "CellPhoneNumber"
             },
             "OData.Demo.CellPhoneNumber-create": {
-                "type": "object",
-                "properties": {
-                    "Carrier": {
-                        "type": "string"
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/OData.Demo.PhoneNumber-create"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "Carrier": {
+                                "type": "string"
+                            }
+                        }
                     }
-                },
+                ],
                 "title": "CellPhoneNumber (for create)"
             },
             "OData.Demo.CellPhoneNumber-update": {
-                "type": "object",
-                "properties": {
-                    "Carrier": {
-                        "type": "string"
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/OData.Demo.PhoneNumber-update"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "Carrier": {
+                                "type": "string"
+                            }
+                        }
                     }
-                },
+                ],
                 "title": "CellPhoneNumber (for update)"
             }
         },
