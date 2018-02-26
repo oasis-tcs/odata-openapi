@@ -40,16 +40,13 @@ The [`examples` folder](examples) contains OpenAPI/Swagger 2.0 and [OpenAPI 3.0.
 The entity-relationship diagrams visualizing the resource models of each service are generated on-the-fly with [yUML](http://yuml.me/).
 
 OpenAPI descriptions for live example OData services at [www.odata.org](http://www.odata.org/)
-
  - [TripPin (read/write)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/TripPin.openapi3.json)
  - [Simple read/write service](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/example.openapi3.json)
  - [Northwind (read)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/Northwind.openapi3.json)
 
-<!--stopped working with Swagger UI 3.10.0, works up to Swagger UI 3.9.3, see https://github.com/swagger-api/swagger-ui/issues/4214
 OpenAPI descriptions for OData services that reference each other (cross-service references)
  - [People](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/People.openapi3.json)
  - [Products](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/Products.openapi3.json)
--->
 
 <h3>Contact</h3>
 <p>Please send questions or comments about <a href="https://www.oasis-open.org/resources/tcadmin/github-repositories-for-oasis-tc-members-chartered-work">OASIS TC GitHub repositories</a> to <a href="mailto:robin@oasis-open.org">Robin Cover</a> and <a href="mailto:chet.ensign@oasis-open.org">Chet Ensign</a>.  For questions about content in this repository, please contact the TC Chair or Co-Chairs as listed on the the OData TC's <a href="https://www.oasis-open.org/committees/odata/">home page</a>.</p>
