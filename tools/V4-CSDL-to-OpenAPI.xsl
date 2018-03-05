@@ -214,7 +214,7 @@
   </xsl:template>
 
   <xsl:variable name="key-as-segment"
-    select="//edm:EntityContainer/edm:Annotation[(@Term='Org.OData.Core.V1.KeyAsSegment' or @Term=concat($coreAlias,'.KeyAsSegment')) and not(@Qualifier)]" />
+    select="//edm:EntityContainer/edm:Annotation[(@Term='Org.OData.Capabilities.V1.KeyAsSegmentSupported' or @Term=concat($capabilitiesAlias,'.KeyAsSegmentSupported')) and not(@Qualifier)]" />
 
   <xsl:template match="edmx:Edmx">
     <!--
