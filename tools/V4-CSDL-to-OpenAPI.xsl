@@ -440,12 +440,6 @@
           </xsl:call-template>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:text>},</xsl:text>
-      <xsl:text>"filter":{"name":"$filter","in":"query","description":"Filter items by property values</xsl:text>
-      <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",</xsl:text>
-      <xsl:call-template name="parameter-type">
-        <xsl:with-param name="type" select="'string'" />
-      </xsl:call-template>
       <xsl:text>}</xsl:text>
       <xsl:choose>
         <xsl:when test="$odata-version='4.0'">
