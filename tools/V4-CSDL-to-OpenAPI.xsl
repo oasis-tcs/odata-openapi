@@ -1762,20 +1762,6 @@
   <xsl:template name="capability-indexablebykey">
     <xsl:param name="term" select="'IndexableByKey'" />
     <xsl:param name="target" select="." />
-    <!-- TODO: check for Capabilities.IndexableByKey via external targeting
-      <xsl:message>
-      <xsl:value-of select="@Name" />
-      <xsl:text>:</xsl:text>
-      <xsl:value-of select="$indexable" />
-      </xsl:message>
-    -->
-    <!-- might be needed when folding into capability template
-      <xsl:choose>
-      <xsl:when test="local-name($target)='EntitySet'">
-      </xsl:when>
-      </xsl:choose>
-    -->
-
     <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
     <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
     <xsl:variable name="anno"
@@ -1789,7 +1775,8 @@
         <xsl:text>true</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>false</xsl:text>
+        <!-- true would be the correct default -->
+        <xsl:text>unspecified</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -1927,7 +1914,8 @@
     </xsl:variable>
     <xsl:variable name="resultContext"
       select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
-    <xsl:if test="not($addressable='false' and $indexable='false') and not($resultContext)">
+    <!-- indexable=true or indexable=default or -->
+    <xsl:if test="not($indexable='false') and not($addressable='false' and $indexable!='true') and not($resultContext)">
       <xsl:text>"get":{</xsl:text>
       <xsl:text>"summary":"Get entity from </xsl:text>
       <xsl:value-of select="@Name" />
@@ -1959,7 +1947,7 @@
         <xsl:with-param name="property" select="'Updatable'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="not($addressable='false' and $indexable='false') and not($resultContext) and not($updatable='false')">
+    <xsl:if test="not($indexable='false') and not($addressable='false' and $indexable!='true') and not($resultContext) and not($updatable='false')">
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:if test="not($updatable='false')">
@@ -2025,7 +2013,7 @@
         <xsl:with-param name="property" select="'Deletable'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="(not($addressable='false' and $indexable='false') or not($updatable='false')) and not($deletable='false')">
+    <xsl:if test="((not($indexable='false') and not($addressable='false' and $indexable!='true') and not($resultContext)) or not($updatable='false')) and not($deletable='false')">
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:if test="not($deletable='false')">
