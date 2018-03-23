@@ -239,7 +239,8 @@
       <xsl:if test="@Nullable != 'true'">
         <xsl:copy-of select="@Nullable" />
       </xsl:if>
-      <xsl:apply-templates select="@DefaultValue|@MaxLength|@Precision|@Scale|@Unicode|@SRID|@sap:*|node()" />
+      <xsl:apply-templates select="@DefaultValue|@MaxLength|@Precision|@Scale|@Unicode|@SRID" />
+      <xsl:apply-templates select="@sap:*|node()" />
     </Property>
   </xsl:template>
 
