@@ -8,7 +8,7 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - Expandable=false, Countable=false
+    - Countable=false
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -1687,9 +1687,14 @@
         <xsl:text>},</xsl:text>
       </xsl:if>
 
+      <!-- TODO: CountRestrictions/Countable -->
       <xsl:text>{"$ref":"</xsl:text>
       <xsl:value-of select="$reuse-parameters" />
       <xsl:text>count"}</xsl:text>
+
+      <xsl:apply-templates
+        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty[$odata-version='2.0']"
+        mode="select" />
 
       <xsl:variable name="sortable">
         <xsl:call-template name="capability">
@@ -1704,12 +1709,17 @@
           select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[not(@Name=$non-sortable)]" mode="orderby" />
       </xsl:if>
 
-      <xsl:apply-templates
-        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty[$odata-version='2.0']"
-        mode="select" />
-      <xsl:apply-templates
-        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
-        mode="expand" />
+      <xsl:variable name="expandable">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'ExpandRestrictions'" />
+          <xsl:with-param name="property" select="'Expandable'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="not($expandable='false')">
+        <xsl:apply-templates
+          select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
+          mode="expand" />
+      </xsl:if>
 
       <xsl:text>]</xsl:text>
 
@@ -1982,9 +1992,18 @@
       <xsl:apply-templates
         select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty[$odata-version='2.0']"
         mode="select" />
-      <xsl:apply-templates
-        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
-        mode="expand" />
+
+      <xsl:variable name="expandable">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'ExpandRestrictions'" />
+          <xsl:with-param name="property" select="'Expandable'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="not($expandable='false')">
+        <xsl:apply-templates
+          select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
+          mode="expand" />
+      </xsl:if>
       <xsl:text>]</xsl:text>
 
       <xsl:call-template name="responses">
