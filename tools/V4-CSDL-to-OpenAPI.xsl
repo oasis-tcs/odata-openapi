@@ -8,7 +8,6 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - Countable=false
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -1687,14 +1686,17 @@
         <xsl:text>},</xsl:text>
       </xsl:if>
 
-      <!-- TODO: CountRestrictions/Countable -->
-      <xsl:text>{"$ref":"</xsl:text>
-      <xsl:value-of select="$reuse-parameters" />
-      <xsl:text>count"}</xsl:text>
-
-      <xsl:apply-templates
-        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty[$odata-version='2.0']"
-        mode="select" />
+      <xsl:variable name="countable">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'CountRestrictions'" />
+          <xsl:with-param name="property" select="'Countable'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="not($countable='false')">
+        <xsl:text>{"$ref":"</xsl:text>
+        <xsl:value-of select="$reuse-parameters" />
+        <xsl:text>count"}</xsl:text>
+      </xsl:if>
 
       <xsl:variable name="sortable">
         <xsl:call-template name="capability">
@@ -1707,6 +1709,19 @@
           select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
         <xsl:apply-templates
           select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[not(@Name=$non-sortable)]" mode="orderby" />
+      </xsl:if>
+
+      <!-- TODO: no properties on declared type of entity set -->
+      <xsl:variable name="selectable">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'SelectRestrictions'" />
+          <xsl:with-param name="property" select="'Selectable'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="not($selectable='false')">
+        <xsl:apply-templates
+          select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty[$odata-version='2.0']"
+          mode="select" />
       </xsl:if>
 
       <xsl:variable name="expandable">
@@ -1989,9 +2004,18 @@
       <xsl:text>"]</xsl:text>
       <xsl:text>,"parameters":[</xsl:text>
       <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="parameter" />
-      <xsl:apply-templates
-        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty[$odata-version='2.0']"
-        mode="select" />
+
+      <xsl:variable name="selectable">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'SelectRestrictions'" />
+          <xsl:with-param name="property" select="'Selectable'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="not($selectable='false')">
+        <xsl:apply-templates
+          select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty[$odata-version='2.0']"
+          mode="select" />
+      </xsl:if>
 
       <xsl:variable name="expandable">
         <xsl:call-template name="capability">
