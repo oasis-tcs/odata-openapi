@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
-  xmlns:edm="http://docs.oasis-open.org/odata/ns/edm"
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edm="http://docs.oasis-open.org/odata/ns/edm"
 >
   <!--
     This style sheet transforms OData 4.0 CSDL XML documents into OpenAPI 2.0 or OpenAPI 3.0.0 JSON
@@ -8,6 +8,7 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
+    - Filterable=false, Sortable=false , CountRestrictions
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -54,12 +55,24 @@
   <xsl:param name="references" select="null" />
   <xsl:param name="top-example" select="50" />
 
-  <xsl:param name="odata-schema" select="'https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json'" />
+  <xsl:param name="odata-schema"
+    select="'https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json'" />
   <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui/'" />
   <xsl:param name="openapi-formatoption" select="''" />
   <xsl:param name="openapi-version" select="'2.0'" />
   <xsl:param name="openapi-root" select="''" />
 
+  <xsl:variable name="csdl-version" select="/edmx:Edmx/@Version" />
+  <xsl:variable name="option-prefix">
+    <xsl:choose>
+      <xsl:when test="/edmx:Edmx/@Version='4.0'">
+        <xsl:text>$</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
 
   <xsl:variable name="reuse-schemas">
     <xsl:choose>
@@ -84,7 +97,8 @@
   </xsl:variable>
 
   <xsl:variable name="coreNamespace" select="'Org.OData.Core.V1'" />
-  <xsl:variable name="coreAlias" select="//edmx:Include[@Namespace=$coreNamespace]/@Alias|//edm:Schema[@Namespace=$coreNamespace]/@Alias" />
+  <xsl:variable name="coreAlias"
+    select="//edmx:Include[@Namespace=$coreNamespace]/@Alias|//edm:Schema[@Namespace=$coreNamespace]/@Alias" />
   <xsl:variable name="coreDescription" select="concat($coreNamespace,'.Description')" />
   <xsl:variable name="coreDescriptionAliased">
     <xsl:choose>
@@ -116,7 +130,8 @@
     select="//edmx:Include[@Namespace=$validationNamespace]/@Alias|//edm:Schema[@Namespace=$validationNamespace]/@Alias" />
 
   <xsl:variable name="commonNamespace" select="'com.sap.vocabularies.Common.v1'" />
-  <xsl:variable name="commonAlias" select="//edmx:Include[@Namespace=$commonNamespace]/@Alias|//edm:Schema[@Namespace=$commonNamespace]/@Alias" />
+  <xsl:variable name="commonAlias"
+    select="//edmx:Include[@Namespace=$commonNamespace]/@Alias|//edm:Schema[@Namespace=$commonNamespace]/@Alias" />
   <xsl:variable name="commonLabel" select="concat($commonNamespace,'.Label')" />
   <xsl:variable name="commonLabelAliased" select="concat($commonAlias,'.Label')" />
   <xsl:variable name="commonQuickInfo" select="concat($commonNamespace,'.QuickInfo')" />
@@ -385,8 +400,8 @@
       <xsl:text>,"components":{</xsl:text>
     </xsl:if>
 
-    <xsl:apply-templates select="//edm:EntityType|//edm:ComplexType|//edm:TypeDefinition|//edm:EnumType|//edm:EntityContainer"
-      mode="hash"
+    <xsl:apply-templates
+      select="//edm:EntityType|//edm:ComplexType|//edm:TypeDefinition|//edm:EnumType|//edm:EntityContainer" mode="hash"
     >
       <xsl:with-param name="name">
         <xsl:choose>
@@ -403,7 +418,9 @@
 
     <xsl:if test="//edm:EntityContainer">
       <xsl:text>,"parameters":{</xsl:text>
-      <xsl:text>"top":{"name":"$top","in":"query","description":"Show only the first n items</xsl:text>
+      <xsl:text>"top":{"name":"</xsl:text>
+      <xsl:value-of select="$option-prefix" />
+      <xsl:text>top","in":"query","description":"Show only the first n items</xsl:text>
       <xsl:text>, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptiontop)",</xsl:text>
       <xsl:call-template name="parameter-type">
         <xsl:with-param name="type" select="'integer'" />
@@ -414,7 +431,9 @@
         <xsl:value-of select="$top-example" />
       </xsl:if>
       <xsl:text>},</xsl:text>
-      <xsl:text>"skip":{"name":"$skip","in":"query","description":"Skip the first n items</xsl:text>
+      <xsl:text>"skip":{"name":"</xsl:text>
+      <xsl:value-of select="$option-prefix" />
+      <xsl:text>skip","in":"query","description":"Skip the first n items</xsl:text>
       <xsl:text>, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionskip)",</xsl:text>
       <xsl:call-template name="parameter-type">
         <xsl:with-param name="type" select="'integer'" />
@@ -422,8 +441,10 @@
       </xsl:call-template>
       <xsl:text>},</xsl:text>
       <xsl:choose>
-        <xsl:when test="$odata-version='4.0'">
-          <xsl:text>"count":{"name":"$count","in":"query","description":"Include count of items</xsl:text>
+        <xsl:when test="substring($odata-version,1,3)='4.0'">
+          <xsl:text>"count":{"name":"</xsl:text>
+          <xsl:value-of select="$option-prefix" />
+          <xsl:text>count","in":"query","description":"Include count of items</xsl:text>
           <xsl:text>, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount)",</xsl:text>
           <xsl:call-template name="parameter-type">
             <xsl:with-param name="type" select="'boolean'" />
@@ -442,8 +463,10 @@
       </xsl:choose>
       <xsl:text>}</xsl:text>
       <xsl:choose>
-        <xsl:when test="$odata-version='4.0'">
-          <xsl:text>,"search":{"name":"$search","in":"query","description":"Search items by search phrases</xsl:text>
+        <xsl:when test="substring($odata-version,1,3)='4.0'">
+          <xsl:text>,"search":{"name":"</xsl:text>
+          <xsl:value-of select="$option-prefix" />
+          <xsl:text>search","in":"query","description":"Search items by search phrases</xsl:text>
           <xsl:text>, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionsearch)",</xsl:text>
           <xsl:call-template name="parameter-type">
             <xsl:with-param name="type" select="'string'" />
@@ -1226,6 +1249,11 @@
           <xsl:text>}]</xsl:text>
         </xsl:if>
       </xsl:when>
+      <xsl:when test="$singleType='Edm.Any'">
+        <xsl:if test="not($inParameter)">
+          <xsl:text>"example":{}</xsl:text>
+        </xsl:if>
+      </xsl:when>
       <xsl:when test="$qualifier='Edm'">
         <xsl:message>
           <xsl:text>TODO: inline </xsl:text>
@@ -1308,7 +1336,8 @@
     <xsl:param name="qualifier" />
     <xsl:param name="name" />
     <xsl:param name="suffix" select="null" />
-    <xsl:variable name="internalNamespace" select="//edm:Schema[@Alias=$qualifier]/@Namespace|//edm:Schema[@Namespace=$qualifier]/@Namespace" />
+    <xsl:variable name="internalNamespace"
+      select="//edm:Schema[@Alias=$qualifier]/@Namespace|//edm:Schema[@Namespace=$qualifier]/@Namespace" />
     <xsl:choose>
       <xsl:when test="$internalNamespace">
         <xsl:text>"$ref":"</xsl:text>
@@ -1326,7 +1355,8 @@
       <xsl:otherwise>
         <!-- TODO: use x-ref if https://github.com/swagger-api/swagger-ui/issues/4214 is not solved -->
         <xsl:text>"$ref":"</xsl:text>
-        <xsl:variable name="externalNamespace" select="//edmx:Include[@Alias=$qualifier]/@Namespace|//edmx:Include[@Namespace=$qualifier]/@Namespace" />
+        <xsl:variable name="externalNamespace"
+          select="//edmx:Include[@Alias=$qualifier]/@Namespace|//edmx:Include[@Namespace=$qualifier]/@Namespace" />
         <xsl:call-template name="json-url">
           <xsl:with-param name="url" select="//edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
         </xsl:call-template>
@@ -1633,7 +1663,9 @@
           <xsl:with-param name="property" select="'RequiresFilter'" />
         </xsl:call-template>
       </xsl:variable>
-      <xsl:text>{"name":"$filter","in":"query","description":"Filter items by property values</xsl:text>
+      <xsl:text>{"name":"</xsl:text>
+      <xsl:value-of select="$option-prefix" />
+      <xsl:text>filter","in":"query","description":"Filter items by property values</xsl:text>
       <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)</xsl:text>
       <xsl:apply-templates
         select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.FilterRestrictions') or @Term=concat($capabilitiesAlias,'.FilterRestrictions')]/edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath"
@@ -1653,8 +1685,8 @@
 
       <xsl:variable name="non-sortable"
         select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
-      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[not(@Name=$non-sortable)]"
-        mode="orderby" />
+      <xsl:apply-templates
+        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[not(@Name=$non-sortable)]" mode="orderby" />
 
       <xsl:apply-templates
         select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty[$odata-version='2.0']"
@@ -1766,7 +1798,7 @@
     <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
     <xsl:variable name="anno"
       select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased) and not(@Qualifier)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)) 
-      and not(@Qualifier)]" />
+      and not(@Qualifier)]|edm:Annotation[(@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)) and not(@Qualifier)]" />
     <xsl:choose>
       <xsl:when test="$anno/@Bool|$anno/edm:Bool">
         <xsl:value-of select="$anno/@Bool|$anno/edm:Bool" />
@@ -1787,7 +1819,9 @@
       <xsl:if test="$after">
         <xsl:text>,</xsl:text>
       </xsl:if>
-      <xsl:text>{"name":"$orderby","in":"query","description":"Order items by property values</xsl:text>
+      <xsl:text>{"name":"</xsl:text>
+      <xsl:value-of select="$option-prefix" />
+      <xsl:text>orderby","in":"query","description":"Order items by property values</xsl:text>
       <xsl:text>, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>"explode":false,"schema":{</xsl:text>
@@ -1816,7 +1850,9 @@
       <xsl:if test="$after">
         <xsl:text>,</xsl:text>
       </xsl:if>
-      <xsl:text>{"name":"$select","in":"query","description":"Select properties to be returned</xsl:text>
+      <xsl:text>{"name":"</xsl:text>
+      <xsl:value-of select="$option-prefix" />
+      <xsl:text>select","in":"query","description":"Select properties to be returned</xsl:text>
       <xsl:text>, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>"explode":false,"schema":{</xsl:text>
@@ -1912,6 +1948,7 @@
     <xsl:variable name="indexable">
       <xsl:call-template name="capability-indexablebykey" />
     </xsl:variable>
+
     <xsl:variable name="resultContext"
       select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
     <!-- indexable=true or indexable=default or -->
@@ -1947,7 +1984,9 @@
         <xsl:with-param name="property" select="'Updatable'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="not($indexable='false') and not($addressable='false' and $indexable!='true') and not($resultContext) and not($updatable='false')">
+    <xsl:if
+      test="not($indexable='false') and not($addressable='false' and $indexable!='true') and not($resultContext) and not($updatable='false')"
+    >
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:if test="not($updatable='false')">
@@ -2013,7 +2052,9 @@
         <xsl:with-param name="property" select="'Deletable'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="((not($indexable='false') and not($addressable='false' and $indexable!='true') and not($resultContext)) or not($updatable='false')) and not($deletable='false')">
+    <xsl:if
+      test="((not($indexable='false') and not($addressable='false' and $indexable!='true') and not($resultContext)) or not($updatable='false')) and not($deletable='false')"
+    >
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:if test="not($deletable='false')">
@@ -2042,7 +2083,8 @@
       <xsl:with-param name="type" select="$type" />
     </xsl:apply-templates>
     <xsl:apply-templates
-      select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]" mode="bound"
+      select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
+      mode="bound"
     >
       <xsl:with-param name="entitySet" select="@Name" />
       <xsl:with-param name="namespace" select="$namespace" />
@@ -2050,8 +2092,8 @@
     </xsl:apply-templates>
 
     <xsl:if test="$resultContext">
-      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
-        mode="resultContext"
+      <xsl:apply-templates
+        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty" mode="resultContext"
       >
         <xsl:with-param name="entitySet" select="@Name" />
         <xsl:with-param name="namespace" select="$namespace" />
@@ -2196,7 +2238,8 @@
       <xsl:with-param name="type" select="$type" />
     </xsl:apply-templates>
     <xsl:apply-templates
-      select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]" mode="bound"
+      select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
+      mode="bound"
     >
       <xsl:with-param name="singleton" select="@Name" />
       <xsl:with-param name="namespace" select="$namespace" />
@@ -2267,7 +2310,8 @@
           </xsl:call-template>
         </xsl:variable>
 
-        <xsl:apply-templates select="//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]" mode="key-in-path" />
+        <xsl:apply-templates select="//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]"
+          mode="key-in-path" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2357,7 +2401,8 @@
           </xsl:call-template>
         </xsl:variable>
 
-        <xsl:apply-templates select="//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]" mode="parameter" />
+        <xsl:apply-templates select="//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]"
+          mode="parameter" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2466,7 +2511,8 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>"]</xsl:text>
-    <xsl:variable name="parameters" select="//edm:Schema[@Namespace=$namespace]/edm:Action[@Name=$action and not(@IsBound='true')]/edm:Parameter" />
+    <xsl:variable name="parameters"
+      select="//edm:Schema[@Namespace=$namespace]/edm:Action[@Name=$action and not(@IsBound='true')]/edm:Parameter" />
     <xsl:if test="$parameters">
       <xsl:choose>
         <xsl:when test="$odata-version='2.0'">
@@ -2717,7 +2763,8 @@
     <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" mode="parameter" />
 
     <xsl:variable name="name" select="@Name" />
-    <xsl:variable name="targetEntitySetName" select="//edm:EntitySet[@Name=$entitySet]/edm:NavigationPropertyBinding[@Path=$name]/@Target" />
+    <xsl:variable name="targetEntitySetName"
+      select="//edm:EntitySet[@Name=$entitySet]/edm:NavigationPropertyBinding[@Path=$name]/@Target" />
     <xsl:variable name="targetSet" select="//edm:EntitySet[@Name=$targetEntitySetName]" />
 
     <xsl:variable name="filter-required">
@@ -2727,7 +2774,9 @@
         <xsl:with-param name="target" select="$targetSet" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:text>,{"name":"$filter","in":"query","description":"Filter items by property values</xsl:text>
+    <xsl:text>,{"name":"</xsl:text>
+    <xsl:value-of select="$option-prefix" />
+    <xsl:text>filter","in":"query","description":"Filter items by property values</xsl:text>
     <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)</xsl:text>
     <xsl:apply-templates
       select="$targetSet/edm:Annotation[@Term=concat($capabilitiesNamespace,'.FilterRestrictions') or @Term=concat($capabilitiesAlias,'.FilterRestrictions')]/edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath"
@@ -2785,7 +2834,8 @@
     <xsl:variable name="non-sortable"
       select="$targetSet/edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
     <xsl:apply-templates
-      select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property[not(@Name=$non-sortable)]" mode="orderby" />
+      select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property[not(@Name=$non-sortable)]"
+      mode="orderby" />
 
     <xsl:apply-templates
       select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property|//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:NavigationProperty[$odata-version='2.0']"
@@ -2946,8 +2996,8 @@
     <xsl:value-of select="$entitySet" />
     <xsl:value-of select="$singleton" />
     <xsl:text>"],"parameters":[</xsl:text>
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace and $entitySet]/edm:EntityType[@Name=$type]|edm:Parameter[position()>1]"
-      mode="parameter" />
+    <xsl:apply-templates
+      select="//edm:Schema[@Namespace=$namespace and $entitySet]/edm:EntityType[@Name=$type]|edm:Parameter[position()>1]" mode="parameter" />
     <xsl:text>]</xsl:text>
 
     <xsl:call-template name="responses">
