@@ -646,7 +646,11 @@
     <xsl:if test="$qualifier!='Edm' or local-name='NavigationProperty'">
       <xsl:text>,[</xsl:text>
       <xsl:value-of select="../@Name" />
-      <xsl:text>]-</xsl:text>
+      <xsl:text>]</xsl:text>
+      <xsl:if test="@ContainsTarget='true'">
+        <xsl:text>++</xsl:text>
+      </xsl:if>
+      <xsl:text>-</xsl:text>
       <xsl:choose>
         <xsl:when test="$collection">
           <xsl:text>*</xsl:text>
