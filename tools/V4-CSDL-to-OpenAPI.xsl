@@ -655,7 +655,7 @@
         <xsl:when test="$collection">
           <xsl:text>*</xsl:text>
         </xsl:when>
-        <xsl:when test="$nullable">
+        <xsl:when test="$nullable='true'">
           <xsl:text>0..1</xsl:text>
         </xsl:when>
       </xsl:choose>
