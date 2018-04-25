@@ -2296,52 +2296,62 @@
 
 
     <!-- PATCH -->
-    <xsl:text>,"patch":{</xsl:text>
-    <xsl:text>"summary":"Update </xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>","tags":["</xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>"],</xsl:text>
+    <xsl:variable name="updatable">
+      <xsl:call-template name="capability">
+        <xsl:with-param name="term" select="'UpdateRestrictions'" />
+        <xsl:with-param name="property" select="'Updatable'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="not($updatable='false')">
+      <xsl:text>,"patch":{</xsl:text>
+      <xsl:text>"summary":"Update </xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>","tags":["</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>"],</xsl:text>
 
-    <xsl:choose>
-      <xsl:when test="$openapi-version='2.0'">
-        <xsl:text>"parameters":[{"name":"</xsl:text>
-        <xsl:value-of select="$type" />
-        <xsl:text>","in":"body",</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>"requestBody":{"required":true,</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:call-template name="entityTypeDescription">
-      <xsl:with-param name="namespace" select="$namespace" />
-      <xsl:with-param name="type" select="$type" />
-      <xsl:with-param name="default" select="'New property values'" />
-    </xsl:call-template>
-    <xsl:if test="$openapi-version!='2.0'">
-      <xsl:text>"content":{"application/json":{</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$openapi-version='2.0'">
+          <xsl:text>"parameters":[{"name":"</xsl:text>
+          <xsl:value-of select="$type" />
+          <xsl:text>","in":"body",</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>"requestBody":{"required":true,</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:call-template name="entityTypeDescription">
+        <xsl:with-param name="namespace" select="$namespace" />
+        <xsl:with-param name="type" select="$type" />
+        <xsl:with-param name="default" select="'New property values'" />
+      </xsl:call-template>
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>"content":{"application/json":{</xsl:text>
+      </xsl:if>
+      <xsl:text>"schema":{</xsl:text>
+      <xsl:call-template name="schema-ref">
+        <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+        <xsl:with-param name="suffix" select="'-update'" />
+      </xsl:call-template>
+      <xsl:text>}</xsl:text>
+      <xsl:if test="$openapi-version!='2.0'">
+        <xsl:text>}}</xsl:text>
+      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="$openapi-version='2.0'">
+          <xsl:text>}]</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>}</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+
+      <xsl:call-template name="responses" />
+
+      <xsl:text>}</xsl:text>
     </xsl:if>
-    <xsl:text>"schema":{</xsl:text>
-    <xsl:call-template name="schema-ref">
-      <xsl:with-param name="qualifiedName" select="$qualifiedType" />
-      <xsl:with-param name="suffix" select="'-update'" />
-    </xsl:call-template>
+
     <xsl:text>}</xsl:text>
-    <xsl:if test="$openapi-version!='2.0'">
-      <xsl:text>}}</xsl:text>
-    </xsl:if>
-    <xsl:choose>
-      <xsl:when test="$openapi-version='2.0'">
-        <xsl:text>}]</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>}</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-
-    <xsl:call-template name="responses" />
-
-    <xsl:text>}}</xsl:text>
 
     <xsl:apply-templates
       select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
