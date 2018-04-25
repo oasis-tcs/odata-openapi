@@ -28,7 +28,17 @@ for /F "eol=# tokens=1,2,3,4,5" %%F in (%~n0.txt) do (
 	)
 )
 
-if %done%==false echo Don't know how to %~n0 %1
+if %done%==false (
+  if exist "%1" (
+    if /I [%2]==[V2] (
+		  call :process %1 http localhost /service-root V2
+    ) else (
+		  call :process %1 http localhost /service-root V4
+    )
+  ) else (
+    echo Don't know how to %~n0 %1
+  )
+) 
 
 endlocal
 exit /b
