@@ -8,7 +8,7 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - Filterable=false, Sortable=false , CountRestrictions
+    - Expandable=false, Countable=false
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -1657,36 +1657,52 @@
         <xsl:text>search"},</xsl:text>
       </xsl:if>
 
-      <xsl:variable name="filter-required">
+      <xsl:variable name="filterable">
         <xsl:call-template name="capability">
           <xsl:with-param name="term" select="'FilterRestrictions'" />
-          <xsl:with-param name="property" select="'RequiresFilter'" />
+          <xsl:with-param name="property" select="'Filterable'" />
         </xsl:call-template>
       </xsl:variable>
-      <xsl:text>{"name":"</xsl:text>
-      <xsl:value-of select="$option-prefix" />
-      <xsl:text>filter","in":"query","description":"Filter items by property values</xsl:text>
-      <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)</xsl:text>
-      <xsl:apply-templates
-        select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.FilterRestrictions') or @Term=concat($capabilitiesAlias,'.FilterRestrictions')]/edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath"
-        mode="filter-RequiredProperties" />
-      <xsl:text>",</xsl:text>
-      <xsl:call-template name="parameter-type">
-        <xsl:with-param name="type" select="'string'" />
-      </xsl:call-template>
-      <xsl:if test="$filter-required='true'">
-        <xsl:text>,"required":true</xsl:text>
+      <xsl:if test="not($filterable='false')">
+        <xsl:variable name="filter-required">
+          <xsl:call-template name="capability">
+            <xsl:with-param name="term" select="'FilterRestrictions'" />
+            <xsl:with-param name="property" select="'RequiresFilter'" />
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:text>{"name":"</xsl:text>
+        <xsl:value-of select="$option-prefix" />
+        <xsl:text>filter","in":"query","description":"Filter items by property values</xsl:text>
+        <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)</xsl:text>
+        <xsl:apply-templates
+          select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.FilterRestrictions') or @Term=concat($capabilitiesAlias,'.FilterRestrictions')]/edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath"
+          mode="filter-RequiredProperties" />
+        <xsl:text>",</xsl:text>
+        <xsl:call-template name="parameter-type">
+          <xsl:with-param name="type" select="'string'" />
+        </xsl:call-template>
+        <xsl:if test="$filter-required='true'">
+          <xsl:text>,"required":true</xsl:text>
+        </xsl:if>
+        <xsl:text>},</xsl:text>
       </xsl:if>
-      <xsl:text>},</xsl:text>
 
       <xsl:text>{"$ref":"</xsl:text>
       <xsl:value-of select="$reuse-parameters" />
       <xsl:text>count"}</xsl:text>
 
-      <xsl:variable name="non-sortable"
-        select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
-      <xsl:apply-templates
-        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[not(@Name=$non-sortable)]" mode="orderby" />
+      <xsl:variable name="sortable">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'SortRestrictions'" />
+          <xsl:with-param name="property" select="'Sortable'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="not($sortable='false')">
+        <xsl:variable name="non-sortable"
+          select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
+        <xsl:apply-templates
+          select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[not(@Name=$non-sortable)]" mode="orderby" />
+      </xsl:if>
 
       <xsl:apply-templates
         select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty[$odata-version='2.0']"
@@ -1879,7 +1895,9 @@
       <xsl:if test="$after">
         <xsl:text>,</xsl:text>
       </xsl:if>
-      <xsl:text>{"name":"$expand","in":"query","description":"Expand related entities</xsl:text>
+      <xsl:text>{"name":"</xsl:text>
+      <xsl:value-of select="$option-prefix" />
+      <xsl:text>expand","in":"query","description":"Expand related entities</xsl:text>
       <xsl:text>, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>"explode":false,"schema":{</xsl:text>
