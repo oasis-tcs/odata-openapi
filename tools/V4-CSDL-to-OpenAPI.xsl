@@ -8,6 +8,8 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
+    - https for yuml
+    - delta: headers Prefer and Preference-Applied, @deltaLink for entity sets
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -2256,6 +2258,16 @@
     <xsl:text>"]</xsl:text>
     <xsl:text>,"parameters":[</xsl:text>
 
+    <xsl:variable name="delta">
+      <xsl:call-template name="capability">
+        <xsl:with-param name="term" select="'ChangeTracking'" />
+        <xsl:with-param name="property" select="'Supported'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="$delta='true'">
+      <!-- TODO: Prefer, Preference-Applied -->
+    </xsl:if>
+
     <xsl:variable name="selectable">
       <xsl:call-template name="capability">
         <xsl:with-param name="term" select="'SelectRestrictions'" />
@@ -2266,6 +2278,7 @@
       select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty[$odata-version='2.0']" />
     <xsl:if test="not($selectable='false')">
       <xsl:apply-templates select="$selectable-properties" mode="select">
+        <!-- TODO: $delta='true' -->
         <xsl:with-param name="after" select="''" />
       </xsl:apply-templates>
     </xsl:if>
@@ -2281,6 +2294,7 @@
         select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
         mode="expand"
       >
+        <!-- TODO: $delta='true' and -->
         <xsl:with-param name="after" select="not($selectable='false') and $selectable-properties" />
       </xsl:apply-templates>
     </xsl:if>
@@ -2289,6 +2303,7 @@
 
     <xsl:call-template name="responses">
       <xsl:with-param name="type" select="$qualifiedType" />
+      <xsl:with-param name="delta" select="$delta" />
       <xsl:with-param name="description" select="'Retrieved entity'" />
       <xsl:with-param name="innerDescription" select="$type" />
     </xsl:call-template>
@@ -2759,6 +2774,7 @@
   <xsl:template name="responses">
     <xsl:param name="code" select="'200'" />
     <xsl:param name="type" select="null" />
+    <xsl:param name="delta" select="'false'" />
     <xsl:param name="description" select="'Success'" />
     <xsl:param name="innerDescription" select="'Result'" />
 
@@ -2802,10 +2818,28 @@
           </xsl:choose>
           <xsl:text>":{</xsl:text>
         </xsl:if>
+        <xsl:if test="$delta='true'">
+          <xsl:text>"allOf":[{</xsl:text>
+        </xsl:if>
         <xsl:call-template name="type">
           <xsl:with-param name="type" select="$type" />
           <xsl:with-param name="nullableFacet" select="'false'" />
         </xsl:call-template>
+        <xsl:if test="$delta='true'">
+          <xsl:text>},{"properties":{"@</xsl:text>
+          <!-- TODO: V2 only for collections: __delta next to results similar to __next, see http://services.odata.org/V2/Northwind/Northwind.svc/Customers -->
+          <xsl:if test="/edmx:Edmx/@Version='4.0'">
+            <xsl:text>odata.</xsl:text>
+          </xsl:if>
+          <xsl:text>deltaLink":{"type":"string","example":"</xsl:text>
+          <xsl:value-of select="$scheme" />
+          <xsl:text>://</xsl:text>
+          <xsl:value-of select="$host" />
+          <xsl:value-of select="$basePath" />
+          <xsl:text>/</xsl:text>
+          <xsl:value-of select="@Name" />
+          <xsl:text>?$deltatoken=opaque server-generated token for fetching the delta"}}}]</xsl:text>
+        </xsl:if>
         <xsl:if test="$collection or $odata-version='2.0'">
           <xsl:text>}}</xsl:text>
         </xsl:if>
