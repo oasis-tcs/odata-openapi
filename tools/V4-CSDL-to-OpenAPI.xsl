@@ -9,7 +9,7 @@
 
     TODO:
     - https for yuml
-    - delta: headers Prefer and Preference-Applied, @deltaLink for entity sets
+    - delta: headers Prefer and Preference-Applied
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -2856,7 +2856,7 @@
           <xsl:value-of select="@Name" />
           <xsl:text>?$deltatoken=opaque server-generated token for fetching the delta"</xsl:text>
           <xsl:if test="not($collection)">
-            <xsl:text>}]</xsl:text>
+            <xsl:text>}}}]</xsl:text>
           </xsl:if>
         </xsl:if>
         <xsl:if test="$collection or $odata-version='2.0'">
