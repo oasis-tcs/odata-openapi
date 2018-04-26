@@ -8,7 +8,6 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - https for yuml
     - delta: headers Prefer and Preference-Applied
     - operation descriptions for entity sets and singletons
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
@@ -567,7 +566,7 @@
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="description">
     <xsl:if test="position() = 1">
-      <xsl:text>\n\n## Entity Data Model\n![ER Diagram](http://yuml.me/diagram/class/</xsl:text>
+      <xsl:text>\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/</xsl:text>
     </xsl:if>
     <xsl:if test="position() > 1">
       <xsl:text>,</xsl:text>
