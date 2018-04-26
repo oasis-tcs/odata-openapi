@@ -1661,6 +1661,13 @@
         </xsl:call-template>
       </xsl:variable>
 
+      <xsl:variable name="delta">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'ChangeTracking'" />
+          <xsl:with-param name="property" select="'Supported'" />
+        </xsl:call-template>
+      </xsl:variable>
+
       <xsl:if test="not($top-supported='false')">
         <xsl:text>{"$ref":"</xsl:text>
         <xsl:value-of select="$reuse-parameters" />
@@ -1723,6 +1730,10 @@
         <xsl:text>count"}</xsl:text>
       </xsl:if>
 
+      <xsl:if test="$delta='true'">
+        <!-- TODO: Prefer, Preference-Applied -->
+      </xsl:if>
+
       <xsl:variable name="sortable">
         <xsl:call-template name="capability">
           <xsl:with-param name="term" select="'SortRestrictions'" />
@@ -1776,6 +1787,7 @@
       <xsl:call-template name="responses">
         <xsl:with-param name="code" select="'200'" />
         <xsl:with-param name="type" select="concat('Collection(',$qualifiedType,')')" />
+        <xsl:with-param name="delta" select="$delta" />
         <xsl:with-param name="description" select="'Retrieved entities'" />
         <xsl:with-param name="innerDescription" select="concat('Collection of ',$type)" />
       </xsl:call-template>
@@ -2818,7 +2830,7 @@
           </xsl:choose>
           <xsl:text>":{</xsl:text>
         </xsl:if>
-        <xsl:if test="$delta='true'">
+        <xsl:if test="$delta='true' and not($collection)">
           <xsl:text>"allOf":[{</xsl:text>
         </xsl:if>
         <xsl:call-template name="type">
@@ -2826,7 +2838,11 @@
           <xsl:with-param name="nullableFacet" select="'false'" />
         </xsl:call-template>
         <xsl:if test="$delta='true'">
-          <xsl:text>},{"properties":{"@</xsl:text>
+          <xsl:text>},</xsl:text>
+          <xsl:if test="not($collection)">
+            <xsl:text>{"properties":{</xsl:text>
+          </xsl:if>
+          <xsl:text>"@</xsl:text>
           <!-- TODO: V2 only for collections: __delta next to results similar to __next, see http://services.odata.org/V2/Northwind/Northwind.svc/Customers -->
           <xsl:if test="/edmx:Edmx/@Version='4.0'">
             <xsl:text>odata.</xsl:text>
@@ -2838,7 +2854,10 @@
           <xsl:value-of select="$basePath" />
           <xsl:text>/</xsl:text>
           <xsl:value-of select="@Name" />
-          <xsl:text>?$deltatoken=opaque server-generated token for fetching the delta"}}}]</xsl:text>
+          <xsl:text>?$deltatoken=opaque server-generated token for fetching the delta"</xsl:text>
+          <xsl:if test="not($collection)">
+            <xsl:text>}]</xsl:text>
+          </xsl:if>
         </xsl:if>
         <xsl:if test="$collection or $odata-version='2.0'">
           <xsl:text>}}</xsl:text>
