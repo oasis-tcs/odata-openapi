@@ -97,6 +97,8 @@ sudo apt-get install git
 sudo apt-get install libxalan2-java
 sudo apt-get install yajl-tools
 sudo apt-get install nodejs
+sudo apt-get install nodejs-legacy
+sudo apt-get install npm
 sudo npm install -g ajv-cli
 ```
 And finally clone https://github.com/OAI/OpenAPI-Specification next to this project:
@@ -109,9 +111,14 @@ git clone https://github.com/OAI/OpenAPI-Specification.git
 
 In the `tools` folder execute
 ```sh
-transform
+./transform
 ```
+to transform all files listed in `transform.txt`.
 
+To transform a single file not listed in `transform.txt` pass its path as a parameter
+```sh
+./transform path-to-csdl-file
+```
 
 
 ## `transform.cmd` for Windows Command
