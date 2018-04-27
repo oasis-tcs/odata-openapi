@@ -8,6 +8,8 @@
 # - Xalan 2.7.1    sudo apt-get install libxalan2-java
 # - json_reformat  sudo apt-get install yajl-tools
 # - Node.js        sudo apt-get install nodejs
+#                  sudo apt-get install nodejs-legacy
+# - npm            sudo apt-get install npm
 # - ajv-cli        sudo npm install -g ajv-cli
 # - https://github.com/OAI/OpenAPI-Specification is cloned next to this project
 
@@ -59,7 +61,13 @@ do
   then
     if [ -z "$1" ] || [ "$f" = "$1" ] || [ "$f" = "$1.xml" ]
     then
+      DONE="yes"
       process $f $g $h $i $j
     fi
   fi
 done < $0.txt
+
+if [ -z "$DONE" ] && [ -e $1 ]
+then
+  process $1 http localhost /service-root 
+fi
