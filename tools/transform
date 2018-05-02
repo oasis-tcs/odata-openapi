@@ -67,7 +67,15 @@ do
   fi
 done < $0.txt
 
-if [ -z "$DONE" ] && [ -e $1 ]
+if [ -z "$DONE" ]
 then
-  process $1 http localhost /service-root 
+  for file in $*
+  do
+    if [ -e $file  ]
+    then
+      process $file http localhost /service-root 
+    else
+      echo File not found: $file
+    fi
+  done
 fi

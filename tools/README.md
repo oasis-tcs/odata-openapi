@@ -115,9 +115,9 @@ In the `tools` folder execute
 ```
 to transform all files listed in `transform.txt`.
 
-To transform a single file not listed in `transform.txt` pass its path as a parameter
+To transform files not listed in `transform.txt` pass their names as parameters
 ```sh
-./transform path-to-csdl-file
+./transform path-to-csdl-file ...
 ```
 
 
