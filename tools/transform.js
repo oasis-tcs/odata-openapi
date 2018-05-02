@@ -15,6 +15,9 @@ var minimist = require('minimist');
 var path = require('path');
 var fs = require('fs');
 
+var xsltpath = path.dirname(require.main.filename) + path.sep;
+//xslt4node.addLibrary(xsltpath + 'xalan.jar');
+
 var unknown = false;
 
 var argv = minimist(process.argv.slice(2), {
@@ -50,8 +53,6 @@ var argv = minimist(process.argv.slice(2), {
 });
 if (argv.o == '2') argv.o = "2.0";
 if (argv.o == '3') argv.o = "3.0.0";
-
-var xsltpath = path.dirname(require.main.filename) + path.sep;
 
 if (unknown || argv._.length == 0 || argv.h) {
     console.log('Usage: ' + path.basename(process.argv[1]) + ` <options> <source files>
