@@ -1253,7 +1253,7 @@
           <xsl:text>}]</xsl:text>
         </xsl:if>
       </xsl:when>
-      <xsl:when test="$singleType='Edm.Any'">
+      <xsl:when test="$singleType='Edm.Untyped'">
         <xsl:if test="not($inParameter)">
           <xsl:text>"example":{}</xsl:text>
         </xsl:if>
