@@ -15,6 +15,8 @@ set CLASSPATH=%CLASSPATH%;%ECLIPSE_HOME%\plugins\org.apache.xml.serializer_2.7.1
 @rem  - Node.js is installed - download from https://nodejs.org/
 @rem  - ajv-cli is installed - npm install -g ajv-cli
 @rem  - https://github.com/OAI/OpenAPI-Specification is cloned next to this project
+set SCHEMA_THREE=openapi-3.0.0.schema.json
+set SCHEMA_TWO=..\..\OpenAPI-Specification\schemas\v2.0\schema.json
 
 set done=false
 
@@ -67,7 +69,7 @@ exit /b
     del %~n1.tmp3.json
     git.exe --no-pager diff ..\examples\%~n1.openapi3.json
 
-    call ajv validate --unknown-formats=uriref -s openapi-3.0.0.schema.json -d ..\examples\%~n1.openapi3.json > nul
+    if exist %SCHEMA_THREE% call ajv validate --unknown-formats=uriref -s %SCHEMA_THREE% -d ..\examples\%~n1.openapi3.json > nul
   )
 
   java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM swagger-ui "" -PARAM diagram YES -PARAM references YES -PARAM openapi-root "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/" -IN %INPUT% -OUT %~n1.tmp.json
@@ -79,7 +81,7 @@ exit /b
     if [%5]==[V3] del %~n1.V4.xml
     git.exe --no-pager diff ..\examples\%~n1.openapi.json
     
-    call ajv -s ..\..\OpenAPI-Specification\schemas\v2.0\schema.json -d ..\examples\%~n1.openapi.json > nul
+    if exist %SCHEMA_TWO% call ajv -s %SCHEMA_TWO% -d ..\examples\%~n1.openapi.json > nul
   )
 
 exit /b
