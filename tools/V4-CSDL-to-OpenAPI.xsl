@@ -1525,14 +1525,17 @@
         <xsl:value-of select="." />
         <xsl:text>"</xsl:text>
       </xsl:when>
+      <xsl:when test="$underlyingType='Edm.Boolean' and (.='true' or .='false' or .='null')">
+        <xsl:value-of select="." />
+      </xsl:when>
       <xsl:when
-        test="$underlyingType='Edm.Boolean' or $underlyingType='Edm.Decimal' or $underlyingType='Edm.Double' or $underlyingType='Edm.Single'
-              or $underlyingType='Edm.Byte' or $underlyingType='Edm.SByte' or $underlyingType='Edm.Int16' or $underlyingType='Edm.Int32' or $underlyingType='Edm.Int64'"
+        test="($underlyingType='Edm.Decimal' or $underlyingType='Edm.Double' or $underlyingType='Edm.Single'
+              or $underlyingType='Edm.Byte' or $underlyingType='Edm.SByte' or $underlyingType='Edm.Int16' or $underlyingType='Edm.Int32' or $underlyingType='Edm.Int64') and .=number(.)"
       >
         <xsl:value-of select="." />
       </xsl:when>
       <!-- FAKE: couldn't determine underlying primitive type, so guess from value -->
-      <xsl:when test="$underlyingQualifier!='Edm' and (.='true' or .='false' or .='null' or number(.))">
+      <xsl:when test="$underlyingQualifier!='Edm' and (.='true' or .='false' or .='null' or .=number(.))">
         <xsl:value-of select="." />
       </xsl:when>
       <xsl:otherwise>
@@ -2431,7 +2434,7 @@
           <xsl:text>)</xsl:text>
         </xsl:if>
       </xsl:when>
-      <xsl:otherwise>
+      <xsl:when test="@BaseType">
         <xsl:variable name="basetypeQualifier">
           <xsl:call-template name="substring-before-last">
             <xsl:with-param name="input" select="@BaseType" />
@@ -2457,6 +2460,16 @@
 
         <xsl:apply-templates select="//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]"
           mode="key-in-path" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:message>
+          <xsl:text>ERROR: Entity type without key and without base type: </xsl:text>
+          <xsl:value-of select="../@Namespace" />
+          <xsl:text>.</xsl:text>
+          <xsl:value-of select="@Name" />
+        </xsl:message>
+        <!-- produce valid json -->
+        <xsl:text> - ERROR: neither key nor base type</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2522,7 +2535,7 @@
       <xsl:when test="edm:Key">
         <xsl:apply-templates select="edm:Key/edm:PropertyRef" mode="parameter" />
       </xsl:when>
-      <xsl:otherwise>
+      <xsl:when test="@BaseType">
         <xsl:variable name="basetypeQualifier">
           <xsl:call-template name="substring-before-last">
             <xsl:with-param name="input" select="@BaseType" />
@@ -2548,6 +2561,9 @@
 
         <xsl:apply-templates select="//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]"
           mode="parameter" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>"ERROR: entity type with neither key nor base type"</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
