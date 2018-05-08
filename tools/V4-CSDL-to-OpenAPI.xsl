@@ -2639,12 +2639,13 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:variable name="action">
+    <xsl:variable name="actionName">
       <xsl:call-template name="substring-after-last">
         <xsl:with-param name="input" select="@Action" />
         <xsl:with-param name="marker" select="'.'" />
       </xsl:call-template>
     </xsl:variable>
+    <xsl:variable name="action" select="//edm:Schema[@Namespace=$namespace]/edm:Action[@Name=$actionName and not(@IsBound='true')]" />
 
     <xsl:text>"/</xsl:text>
     <xsl:value-of select="@Name" />
@@ -2672,13 +2673,11 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>"]</xsl:text>
-    <xsl:variable name="parameters"
-      select="//edm:Schema[@Namespace=$namespace]/edm:Action[@Name=$action and not(@IsBound='true')]/edm:Parameter" />
-    <xsl:if test="$parameters">
+    <xsl:if test="$action/edm:Parameter">
       <xsl:choose>
         <xsl:when test="$odata-version='2.0'">
           <xsl:text>,"parameters":[</xsl:text>
-          <xsl:apply-templates select="$parameters" mode="parameter" />
+          <xsl:apply-templates select="$action/edm:Parameter" mode="parameter" />
           <xsl:text>]</xsl:text>
         </xsl:when>
         <xsl:otherwise>
@@ -2695,7 +2694,7 @@
             <xsl:text>"content":{"application/json":{</xsl:text>
           </xsl:if>
           <xsl:text>"schema":{"type":"object"</xsl:text>
-          <xsl:apply-templates select="$parameters" mode="hash">
+          <xsl:apply-templates select="$action/edm:Parameter" mode="hash">
             <xsl:with-param name="name" select="'properties'" />
           </xsl:apply-templates>
           <xsl:choose>
@@ -2711,7 +2710,7 @@
     </xsl:if>
 
     <xsl:call-template name="responses">
-      <xsl:with-param name="type" select="//edm:Schema[@Namespace=$namespace]/edm:Action[@Name=$action]/edm:ReturnType/@Type" />
+      <xsl:with-param name="type" select="$action/edm:ReturnType/@Type" />
     </xsl:call-template>
     <xsl:text>}}</xsl:text>
   </xsl:template>
