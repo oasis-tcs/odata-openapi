@@ -79,7 +79,6 @@ function transform(source) {
     }
 
     xslt4node.transform(
-        // TODO: suppress stderr
         {
             xsltPath: xsltpath + 'OData-Version.xsl',
             sourcePath: source,
@@ -123,7 +122,7 @@ function transformV4(source, version, deleteSource) {
         {
             xsltPath: xsltpath + 'V4-CSDL-to-OpenAPI.xsl',
             sourcePath: source,
-            result: (argv.pretty ? String : target),
+            result: (argv.pretty ? Buffer : target),
             params: {
                 basePath: argv.basePath,
                 diagram: argv.diagram,
