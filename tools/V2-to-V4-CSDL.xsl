@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="edmx1 edm2 edm3 edm m annotation sap nodeinfo" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edmx1="http://schemas.microsoft.com/ado/2007/06/edmx"
-  xmlns:edm2="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:edm3="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
-  xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:sap="http://www.sap.com/Protocols/SAPData" xmlns="http://docs.oasis-open.org/odata/ns/edm"
+<xsl:stylesheet version="1.0" exclude-result-prefixes="edmx1 edm2 edm3 edm m annotation sap nodeinfo"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:edm="http://docs.oasis-open.org/odata/ns/edm"
+  xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edmx1="http://schemas.microsoft.com/ado/2007/06/edmx"
+  xmlns:edm2="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:edm3="http://schemas.microsoft.com/ado/2009/11/edm"
+  xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
+  xmlns:sap="http://www.sap.com/Protocols/SAPData" xmlns="http://docs.oasis-open.org/odata/ns/edm"
   xmlns:nodeinfo="xalan://org.apache.xalan.lib.NodeInfo"
 >
   <!--
@@ -219,8 +221,8 @@
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <xsl:copy-of select="@Namespace|@Alias" />
       <xsl:apply-templates />
-      <xsl:apply-templates select="*[local-name()='EntityContainer' and @m:IsDefaultEntityContainer='true']/*[local-name()='FunctionImport']"
-        mode="Schema" />
+      <xsl:apply-templates
+        select="*[local-name()='EntityContainer' and @m:IsDefaultEntityContainer='true']/*[local-name()='FunctionImport']" mode="Schema" />
     </Schema>
   </xsl:template>
 
@@ -337,8 +339,8 @@
     <EntitySet>
       <xsl:copy-of select="@Name|@EntityType" />
       <xsl:apply-templates select="@sap:*|node()" />
-      <xsl:apply-templates select="../edm2:AssociationSet/edm2:End[@EntitySet=$name]|../edm3:AssociationSet/edm3:End[@EntitySet=$name]"
-        mode="Binding"
+      <xsl:apply-templates
+        select="../edm2:AssociationSet/edm2:End[@EntitySet=$name]|../edm3:AssociationSet/edm3:End[@EntitySet=$name]" mode="Binding"
       >
         <xsl:with-param name="entitytype" select="@EntityType" />
       </xsl:apply-templates>
@@ -747,32 +749,7 @@
 
   <xsl:template match="edm2:Property/@sap:aggregation-role[.='totaled-properties-list']" />
 
-  <xsl:template match="edm2:Property/@sap:parameter[.='mandatory']">
-    <Annotation>
-      <xsl:attribute name="Term">
-        <xsl:value-of select="$Common" />
-        <xsl:text>.FieldControl</xsl:text>
-      </xsl:attribute>
-      <xsl:attribute name="EnumMember">
-        <xsl:value-of select="$Common" />
-        <xsl:text>.FieldControlType/Mandatory</xsl:text>
-      </xsl:attribute>
-    </Annotation>
-  </xsl:template>
-
-  <xsl:template match="edm2:Property/@sap:field-control">
-    <Annotation>
-      <xsl:attribute name="Term">
-        <xsl:value-of select="$Common" />
-        <xsl:text>.FieldControl</xsl:text>
-      </xsl:attribute>
-      <xsl:attribute name="Path">
-        <xsl:value-of select="." />
-      </xsl:attribute>
-    </Annotation>
-  </xsl:template>
-
-  <xsl:template match="edm2:Property/@sap:parameter[.='optional']" />
+  <xsl:template match="edm2:Property/@sap:parameter" />
 
   <xsl:template match="edm2:Property/@sap:super-ordinate">
     <Annotation>
@@ -785,12 +762,25 @@
       </Collection>
     </Annotation>
   </xsl:template>
+
   <xsl:template match="edm2:Property/@sap:super-ordinate" mode="propertypath">
     <xsl:variable name="path" select="." />
     <PropertyPath>
       <xsl:value-of select="$path" />
     </PropertyPath>
     <xsl:apply-templates select="../../edm2:Property[@Name=$path]/@sap:super-ordinate" mode="propertypath" />
+  </xsl:template>
+
+  <xsl:template match="edm2:Property/@sap:field-control">
+    <Annotation>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="$Common" />
+        <xsl:text>.FieldControl</xsl:text>
+      </xsl:attribute>
+      <xsl:attribute name="Path">
+        <xsl:value-of select="." />
+      </xsl:attribute>
+    </Annotation>
   </xsl:template>
 
   <xsl:template match="edm2:EntitySet/@sap:creatable">
@@ -930,7 +920,9 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="edm2:Property/@sap:filterable|edm2:Property/@sap:sortable|edm2:Property/@sap:required-in-filter" mode="restriction">
+  <xsl:template match="edm2:Property/@sap:filterable|edm2:Property/@sap:sortable|edm2:Property/@sap:required-in-filter"
+    mode="restriction"
+  >
     <xsl:element name="PropertyPath">
       <xsl:value-of select="../@Name" />
     </xsl:element>
