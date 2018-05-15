@@ -169,8 +169,8 @@
     <xsl:param name="term" />
     <xsl:call-template name="escape">
       <xsl:with-param name="string"
-        select="$node/edm:Annotation[(@Term=concat('Org.OData.Core.V1.',$term) or @Term=concat($coreAlias,'.',$term)) and not(@Qualifier)]/@String
-               |$node/edm:Annotation[(@Term=concat('Org.OData.Core.V1.',$term) or @Term=concat($coreAlias,'.',$term)) and not(@Qualifier)]/edm:String" />
+        select="$node/edm:Annotation[(@Term=concat($coreNamespace,'.',$term) or @Term=concat($coreAlias,'.',$term)) and not(@Qualifier)]/@String
+               |$node/edm:Annotation[(@Term=concat($coreNamespace,'.',$term) or @Term=concat($coreAlias,'.',$term)) and not(@Qualifier)]/edm:String" />
     </xsl:call-template>
   </xsl:template>
 
@@ -229,7 +229,7 @@
   </xsl:template>
 
   <xsl:variable name="key-as-segment"
-    select="//edm:EntityContainer/edm:Annotation[(@Term='Org.OData.Capabilities.V1.KeyAsSegmentSupported' or @Term=concat($capabilitiesAlias,'.KeyAsSegmentSupported')) and not(@Qualifier)]" />
+    select="//edm:EntityContainer/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.KeyAsSegmentSupported') or @Term=concat($capabilitiesAlias,'.KeyAsSegmentSupported')) and not(@Qualifier)]" />
 
   <xsl:template match="edmx:Edmx">
     <!--
@@ -804,9 +804,11 @@
       <xsl:with-param name="name" select="'properties'" />
       <xsl:with-param name="suffix" select="'-create'" />
     </xsl:apply-templates>
-    <!-- non-computed key properties are required -->
+    <!-- non-computed key properties are required, as are properties marked with Common.FieldControl=Mandatory -->
+    <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
     <xsl:apply-templates
-      select="edm:Property[@Name=../edm:Key/edm:PropertyRef/@Name and not(edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')])]"
+      select="edm:Property[(@Name=../edm:Key/edm:PropertyRef/@Name and not(edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')])) 
+              or concat(../../@Namespace,'.',../@Name,'/',@Name)=//edm:Annotations[edm:Annotation[@Term=concat($commonAlias,'.FieldControl') and @EnumMember=concat($commonAlias,'.FieldControlType/Mandatory')]]/@Target]"
       mode="required" />
 
     <xsl:if test="@BaseType">
@@ -2645,7 +2647,8 @@
         <xsl:with-param name="marker" select="'.'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:variable name="action" select="//edm:Schema[@Namespace=$namespace]/edm:Action[@Name=$actionName and not(@IsBound='true')]" />
+    <xsl:variable name="action"
+      select="//edm:Schema[@Namespace=$namespace]/edm:Action[@Name=$actionName and not(@IsBound='true')]" />
 
     <xsl:text>"/</xsl:text>
     <xsl:value-of select="@Name" />
@@ -3067,7 +3070,7 @@
     <xsl:text>/</xsl:text>
     <xsl:choose>
       <xsl:when
-        test="../edm:Annotation[(@Term='Org.OData.Core.V1.DefaultNamespace' or @Term=concat($coreAlias,'.DefaultNamespace')) and not(@Qualifier)]" />
+        test="../edm:Annotation[(@Term=concat($coreNamespace,'.DefaultNamespace') or @Term=concat($coreAlias,'.DefaultNamespace')) and not(@Qualifier)]" />
       <xsl:when test="../@Alias">
         <xsl:value-of select="../@Alias" />
         <xsl:text>.</xsl:text>
@@ -3155,7 +3158,7 @@
     <xsl:text>/</xsl:text>
     <xsl:choose>
       <xsl:when
-        test="../edm:Annotation[(@Term='Org.OData.Core.V1.DefaultNamespace' or @Term=concat($coreAlias,'.DefaultNamespace')) and not(@Qualifier)]" />
+        test="../edm:Annotation[(@Term=concat($coreNamespace,'.DefaultNamespace') or @Term=concat($coreAlias,'.DefaultNamespace')) and not(@Qualifier)]" />
       <xsl:when test="../@Alias">
         <xsl:value-of select="../@Alias" />
         <xsl:text>.</xsl:text>

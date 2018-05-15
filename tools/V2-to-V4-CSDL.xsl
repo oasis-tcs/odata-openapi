@@ -748,7 +748,7 @@
   </xsl:template>
 
   <xsl:template match="edm2:Property/@sap:aggregation-role[.='totaled-properties-list']" />
-
+  <xsl:template match="edm2:Property/@sap:attribute-for" />
   <xsl:template match="edm2:Property/@sap:parameter" />
 
   <xsl:template match="edm2:Property/@sap:super-ordinate">
