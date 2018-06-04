@@ -42,7 +42,7 @@
   <xsl:param name="scheme" select="'http'" />
   <xsl:param name="host" select="'localhost'" />
   <xsl:param name="basePath" select="'/service-root'" />
-  <xsl:param name="basePathInPathTemplate" select="false()" />
+  <xsl:param name="pathTemplateBase" select="$basePath" />
 
   <xsl:param name="info-title" select="null" />
   <xsl:param name="info-description" select="null" />
@@ -1621,8 +1621,8 @@
     <xsl:variable name="entityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" />
 
     <xsl:text>"</xsl:text>
-    <xsl:if test="$basePathInPathTemplate">
-      <xsl:value-of select="$basePath" />
+    <xsl:if test="not($pathTemplateBase=$basePath)">
+      <xsl:value-of select="$pathTemplateBase" />
     </xsl:if>
     <xsl:text>/</xsl:text>
     <xsl:if test="$childtype=@Name">
@@ -2075,8 +2075,8 @@
 
     <!-- entity path template -->
     <xsl:text>,"</xsl:text>
-    <xsl:if test="$basePathInPathTemplate">
-      <xsl:value-of select="$basePath" />
+    <xsl:if test="not($pathTemplateBase=$basePath)">
+      <xsl:value-of select="$pathTemplateBase" />
     </xsl:if>
     <xsl:text>/</xsl:text>
     <xsl:if test="$childtype=@Name">
