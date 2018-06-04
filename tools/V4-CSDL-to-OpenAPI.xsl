@@ -34,6 +34,10 @@
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
   <xsl:strip-space elements="*" />
 
+  <xsl:param name="patchtype" select="null" />
+  <xsl:param name="parenttype" select="null" />
+  <xsl:param name="parenttypekey" select="null" />
+  <xsl:param name="childtype" select="null" />
 
   <xsl:param name="scheme" select="'http'" />
   <xsl:param name="host" select="'localhost'" />
@@ -1155,7 +1159,7 @@
         </xsl:call-template>
         <xsl:text>,"format":"double"</xsl:text>
         <xsl:if test="not($inParameter)">
-          <xsl:text>,"example":3.14</xsl:text>
+          <xsl:text>,"example":"3.14"</xsl:text>
         </xsl:if>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Single'">
@@ -1425,12 +1429,12 @@
     <xsl:choose>
       <xsl:when test="$openapi-version='2.0'">
         <xsl:text>"type":</xsl:text>
-        <xsl:if test="not($noArray) and (not($nullable='false') or contains($type,','))">
+        <!-- <xsl:if test="not($noArray) and (not($nullable='false') or contains($type,','))">
           <xsl:text>[</xsl:text>
-        </xsl:if>
+        </xsl:if> -->
         <xsl:text>"</xsl:text>
         <xsl:choose>
-          <xsl:when test="$noArray and contains($type,',')">
+          <xsl:when test="contains($type,',')">
             <xsl:value-of select="substring-before($type,',')" />
           </xsl:when>
           <xsl:otherwise>
@@ -1442,12 +1446,12 @@
           </xsl:otherwise>
         </xsl:choose>
         <xsl:text>"</xsl:text>
-        <xsl:if test="not($noArray) and not($nullable='false')">
+        <!-- <xsl:if test="not($noArray) and not($nullable='false')">
           <xsl:text>,"null"</xsl:text>
         </xsl:if>
         <xsl:if test="not($noArray) and (not($nullable='false') or contains($type,','))">
           <xsl:text>]</xsl:text>
-        </xsl:if>
+        </xsl:if> -->
       </xsl:when>
       <xsl:otherwise>
         <xsl:choose>
@@ -1615,7 +1619,15 @@
     </xsl:variable>
     <xsl:variable name="entityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" />
 
-    <xsl:text>"/</xsl:text>
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="$basePath" />
+    <xsl:text>/</xsl:text>
+    <xsl:if test="$childtype=@Name">
+      <xsl:value-of select="$parenttype" />
+      <xsl:text>({</xsl:text>
+      <xsl:value-of select="$parenttypekey" />
+      <xsl:text>})/</xsl:text>
+    </xsl:if>
     <xsl:value-of select="@Name" />
     <xsl:text>":{</xsl:text>
 
@@ -1631,7 +1643,17 @@
       <xsl:value-of select="@Name" />
       <xsl:text>"]</xsl:text>
 
+      <xsl:text>,"operationId":"</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>s_Get"</xsl:text>
+
       <xsl:text>,"parameters":[</xsl:text>
+
+      <xsl:if test="$childtype=@Name">
+        <xsl:variable name="parentEntityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$parenttype]/edm:Key" />
+        <xsl:apply-templates select="$parentEntityType" mode="parameter" />
+        <xsl:text>,</xsl:text>
+      </xsl:if>
 
       <xsl:variable name="top-supported">
         <xsl:call-template name="capability">
@@ -1821,7 +1843,10 @@
 
       <xsl:choose>
         <xsl:when test="$openapi-version='2.0'">
-          <xsl:text>"parameters":[{"name":"</xsl:text>
+          <xsl:text>"operationId":"</xsl:text>
+          <xsl:value-of select="@Name" />
+          <xsl:text>_Create"</xsl:text>
+          <xsl:text>,"parameters":[{"name":"</xsl:text>
           <xsl:value-of select="$type" />
           <xsl:text>","in":"body",</xsl:text>
         </xsl:when>
@@ -1847,10 +1872,22 @@
       </xsl:if>
       <xsl:choose>
         <xsl:when test="$openapi-version='2.0'">
-          <xsl:text>}]</xsl:text>
+          <xsl:text>}</xsl:text>
+          <xsl:if test="$childtype=@Name">
+            <xsl:text>,</xsl:text>
+            <xsl:variable name="parentEntityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$parenttype]/edm:Key" />
+            <xsl:apply-templates select="$parentEntityType" mode="parameter" />
+          </xsl:if>
+          <xsl:text>]</xsl:text>
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>}</xsl:text>
+          <xsl:if test="$childtype=@Name">
+            <xsl:text>,"parameters":[</xsl:text>
+            <xsl:variable name="parentEntityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$parenttype]/edm:Key" />
+            <xsl:apply-templates select="$parentEntityType" mode="parameter" />
+            <xsl:text>]</xsl:text>
+          </xsl:if>
         </xsl:otherwise>
       </xsl:choose>
 
@@ -2034,7 +2071,15 @@
     <xsl:variable name="entityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" />
 
     <!-- entity path template -->
-    <xsl:text>,"/</xsl:text>
+    <xsl:text>,"</xsl:text>
+    <xsl:value-of select="$basePath" />
+    <xsl:text>/</xsl:text>
+    <xsl:if test="$childtype=@Name">
+      <xsl:value-of select="$parenttype" />
+      <xsl:text>({</xsl:text>
+      <xsl:value-of select="$parenttypekey" />
+      <xsl:text>})/</xsl:text>
+    </xsl:if>
     <xsl:value-of select="@Name" />
     <xsl:apply-templates select="$entityType" mode="key-in-path" />
     <xsl:text>":{</xsl:text>
@@ -2055,7 +2100,17 @@
       <xsl:text> by key","tags":["</xsl:text>
       <xsl:value-of select="@Name" />
       <xsl:text>"]</xsl:text>
+
+      <xsl:text>,"operationId":"</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>_GetById"</xsl:text>
+
       <xsl:text>,"parameters":[</xsl:text>
+      <xsl:if test="$childtype=@Name">
+        <xsl:variable name="parentEntityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$parenttype]/edm:Key" />
+        <xsl:apply-templates select="$parentEntityType" mode="parameter" />
+        <xsl:text>,</xsl:text>
+      </xsl:if>
       <xsl:apply-templates select="$entityType" mode="parameter" />
 
       <xsl:variable name="selectable">
@@ -2090,7 +2145,7 @@
       <xsl:text>}</xsl:text>
     </xsl:if>
 
-    <!-- PATCH -->
+    <!-- PUT or PATCH -->
     <xsl:variable name="updatable">
       <xsl:call-template name="capability">
         <xsl:with-param name="term" select="'UpdateRestrictions'" />
@@ -2103,14 +2158,30 @@
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:if test="not($updatable='false')">
-      <xsl:text>"patch":{</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$patchtype = @Name">
+          <xsl:text>"patch":{</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>"put":{</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:text>"summary":"Update entity in </xsl:text>
       <xsl:value-of select="@Name" />
       <xsl:text>","tags":["</xsl:text>
       <xsl:value-of select="@Name" />
       <xsl:text>"],</xsl:text>
 
-      <xsl:text>"parameters":[</xsl:text>
+      <xsl:text>"operationId":"</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>_Update"</xsl:text>
+
+      <xsl:text>,"parameters":[</xsl:text>
+      <xsl:if test="$childtype=@Name">
+        <xsl:variable name="parentEntityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$parenttype]/edm:Key" />
+        <xsl:apply-templates select="$parentEntityType" mode="parameter" />
+        <xsl:text>,</xsl:text>
+      </xsl:if>
       <xsl:apply-templates select="$entityType" mode="parameter" />
 
       <xsl:choose>
@@ -2176,7 +2247,17 @@
       <xsl:text>","tags":["</xsl:text>
       <xsl:value-of select="@Name" />
       <xsl:text>"]</xsl:text>
+
+      <xsl:text>,"operationId":"</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>_Delete"</xsl:text>
+
       <xsl:text>,"parameters":[</xsl:text>
+      <xsl:if test="$childtype=@Name">
+        <xsl:variable name="parentEntityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$parenttype]/edm:Key" />
+        <xsl:apply-templates select="$parentEntityType" mode="parameter" />
+        <xsl:text>,</xsl:text>
+      </xsl:if>
       <xsl:apply-templates select="$entityType" mode="parameter" />
       <xsl:call-template name="if-match" />
       <xsl:text>]</xsl:text>
