@@ -43,18 +43,18 @@ npm install -g
 
 Assuming you installed the script globally and your metadata file is `MyMetadata.xml`, then
 ```sh
-odata2openapi -drp MyMetadata.xml
+odata-openapi -drp MyMetadata.xml
 ```
 will transform it into `MyMetadata.openapi.json` with a nice [yUML](https://yuml.me/) diagram, references to included services / vocabularies, and pretty-printed JSON. 
 
 
 Just type
 ```sh
-odata2openapi -h
+odata-openapi -h
 ```
 to get usage hints
 ```
-Usage: odata2openapi <options> <source files>
+Usage: odata-openapi <options> <source files>
 Options:
  --basePath              base path (default: /service-root)
  -d, --diagram           include YUML diagram
@@ -64,7 +64,6 @@ Options:
  -p, --pretty            pretty-print JSON result
  -r, --references        include references to other files
  --scheme                scheme (default: http)
- -u, --swagger-ui        URL of Swagger UI for cross-service references
 ```
 
 If you installed the script locally, start it via

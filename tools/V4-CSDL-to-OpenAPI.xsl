@@ -57,7 +57,6 @@
 
   <xsl:param name="odata-schema"
     select="'https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json'" />
-  <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui/'" />
   <xsl:param name="openapi-formatoption" select="''" />
   <xsl:param name="openapi-version" select="'2.0'" />
   <xsl:param name="openapi-root" select="''" />
@@ -692,7 +691,6 @@
         <xsl:value-of select="substring(@Namespace,22,string-length(@Namespace)-24)" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$swagger-ui" />
         <xsl:text>?url=</xsl:text>
         <xsl:call-template name="replace-all">
           <xsl:with-param name="string">
@@ -1175,7 +1173,14 @@
           <xsl:with-param name="nullable" select="$nullable" />
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
-        <xsl:text>,"format":"uuid"</xsl:text>
+        <xsl:choose>
+          <xsl:when test="$inParameter and $odata-version='2.0'">
+            <xsl:text>,"pattern":"^guid'[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}'$"</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>,"format":"uuid"</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:if test="not($inParameter)">
           <xsl:text>,"example":"01234567-89ab-cdef-0123-456789abcdef"</xsl:text>
         </xsl:if>
@@ -1359,7 +1364,6 @@
         </xsl:if>
       </xsl:when>
       <xsl:otherwise>
-        <!-- TODO: use x-ref if https://github.com/swagger-api/swagger-ui/issues/4214 is not solved -->
         <xsl:text>"$ref":"</xsl:text>
         <xsl:variable name="externalNamespace"
           select="//edmx:Include[@Alias=$qualifier]/@Namespace|//edmx:Include[@Namespace=$qualifier]/@Namespace" />

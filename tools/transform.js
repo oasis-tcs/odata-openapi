@@ -21,7 +21,7 @@ var xsltpath = path.dirname(require.main.filename) + path.sep;
 var unknown = false;
 
 var argv = minimist(process.argv.slice(2), {
-    string: ["o", "openapi-version", "u", "swagger-ui", "v", "odata-version", "scheme", "host", "basePath"],
+    string: ["o", "openapi-version", "v", "odata-version", "scheme", "host", "basePath"],
     boolean: ["d", "diagram", "h", "help", "p", "pretty", "r", "references"],
     alias: {
         d: "diagram",
@@ -29,7 +29,6 @@ var argv = minimist(process.argv.slice(2), {
         o: "openapi-version",
         p: "pretty",
         r: "references",
-        u: "swagger-ui",
         v: "odata-version"
     },
     default: {
@@ -40,8 +39,7 @@ var argv = minimist(process.argv.slice(2), {
         "openapi-version": "3.0.0",
         pretty: false,
         references: false,
-        scheme: "http",
-        "swagger-ui": "http://petstore.swagger.io"
+        scheme: "http"
     },
     unknown: (arg) => {
         if (arg.substring(0, 1) == '-') {
@@ -55,7 +53,7 @@ if (argv.o == '2') argv.o = "2.0";
 if (argv.o == '3') argv.o = "3.0.0";
 
 if (unknown || argv._.length == 0 || argv.h) {
-    console.log('Usage: ' + path.basename(process.argv[1]) + ` <options> <source files>
+    console.log(`Usage: odata-openapi <options> <source files>
 Options:
  --basePath              base path (default: /service-root)
  -d, --diagram           include YUML diagram
@@ -64,8 +62,7 @@ Options:
  -o, --openapi-version   3.0.0 or 2.0 (default: 3.0.0)
  -p, --pretty            pretty-print JSON result
  -r, --references        include references to other files
- --scheme                scheme (default: http)
- -u, --swagger-ui        URL of Swagger UI for cross-service references`);
+ --scheme                scheme (default: http)`);
 } else {
     for (var i = 0; i < argv._.length; i++) {
         transform(argv._[i]);
@@ -130,8 +127,7 @@ function transformV4(source, version, deleteSource) {
                 "odata-version": version,
                 "openapi-version": argv.o,
                 references: argv.references,
-                scheme: argv.scheme,
-                "swagger-ui": argv.u
+                scheme: argv.scheme
             }
         },
         (err, result) => {
