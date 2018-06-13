@@ -540,7 +540,7 @@
     <xsl:text>odata.error.main"}}}</xsl:text>
     <xsl:text>,"odata.error.main":{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":</xsl:text>
     <xsl:choose>
-      <xsl:when test="$odata-version='4.0'">
+      <xsl:when test="substring($odata-version,1,3)='4.0'">
         <xsl:text>{"type":"string"},"target":{"type":"string"},"details":</xsl:text>
         <xsl:text>{"type":"array","items":{"$ref":"</xsl:text>
         <xsl:value-of select="$reuse-schemas" />
@@ -554,7 +554,7 @@
     </xsl:choose>
     <xsl:text>,"innererror":{"type":"object","description":"The structure of this object is service-specific"}}}</xsl:text>
     <xsl:choose>
-      <xsl:when test="$odata-version='4.0'">
+      <xsl:when test="substring($odata-version,1,3)='4.0'">
         <xsl:text>,"odata.error.detail":{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"}}}</xsl:text>
       </xsl:when>
       <xsl:otherwise>
