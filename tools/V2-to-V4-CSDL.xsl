@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="edmx1 edm2 edm3 edm m annotation sap nodeinfo"
+<xsl:stylesheet version="1.0" exclude-result-prefixes="edmx1 edm2 edm3 edm m annotation sap"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:edm="http://docs.oasis-open.org/odata/ns/edm"
   xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edmx1="http://schemas.microsoft.com/ado/2007/06/edmx"
   xmlns:edm2="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:edm3="http://schemas.microsoft.com/ado/2009/11/edm"
   xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
   xmlns:sap="http://www.sap.com/Protocols/SAPData" xmlns="http://docs.oasis-open.org/odata/ns/edm"
-  xmlns:nodeinfo="xalan://org.apache.xalan.lib.NodeInfo"
 >
   <!--
     This style sheet transforms OData 2.0 or 3.0 $metadata documents into OData 4.0 CSDL documents.
@@ -1019,14 +1018,12 @@
 
   <xsl:template match="@sap:*">
     <xsl:message>
+      <xsl:value-of select="name(..)" />
+      <xsl:text>/</xsl:text>
       <xsl:value-of select="name()" />
       <xsl:text>="</xsl:text>
       <xsl:value-of select="." />
       <xsl:text>"</xsl:text>
-      <!--
-        <xsl:text> in line </xsl:text>
-        <xsl:value-of select="nodeinfo:lineNumber()" />
-      -->
     </xsl:message>
     <Annotation>
       <xsl:attribute name="Term">
