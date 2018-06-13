@@ -728,6 +728,141 @@
                 }
             }
         },
+        "/People('{UserName}')/Trips": {
+            "get": {
+                "summary": "Get Trips",
+                "tags": [
+                    "People"
+                ],
+                "parameters": [
+                    {
+                        "name": "UserName",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: UserName",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/top"
+                    },
+                    {
+                        "$ref": "#/components/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/components/parameters/search"
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "TripId",
+                                    "TripId desc",
+                                    "ShareId",
+                                    "ShareId desc",
+                                    "Description",
+                                    "Description desc",
+                                    "Name",
+                                    "Name desc",
+                                    "Budget",
+                                    "Budget desc",
+                                    "StartsAt",
+                                    "StartsAt desc",
+                                    "EndsAt",
+                                    "EndsAt desc",
+                                    "Tags",
+                                    "Tags desc"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "TripId",
+                                    "ShareId",
+                                    "Description",
+                                    "Name",
+                                    "Budget",
+                                    "StartsAt",
+                                    "EndsAt",
+                                    "Tags"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "*",
+                                    "Photos",
+                                    "PlanItems"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of Trip",
+                                    "type": "object",
+                                    "properties": {
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
         "/Airlines": {
             "get": {
                 "summary": "Get entities from Airlines",

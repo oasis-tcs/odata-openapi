@@ -2205,12 +2205,12 @@
       <xsl:with-param name="entityType" select="$entityType" />
     </xsl:apply-templates>
 
-    <xsl:if test="$resultContext">
-      <xsl:apply-templates select="$entityType/edm:NavigationProperty" mode="resultContext">
-        <xsl:with-param name="entitySet" select="@Name" />
-        <xsl:with-param name="entityType" select="$entityType" />
-      </xsl:apply-templates>
-    </xsl:if>
+    <xsl:apply-templates select="$entityType/edm:NavigationProperty[@ContainsTarget='true' or $resultContext]"
+      mode="resultContext"
+    >
+      <xsl:with-param name="entitySet" select="@Name" />
+      <xsl:with-param name="entityType" select="$entityType" />
+    </xsl:apply-templates>
   </xsl:template>
 
   <xsl:template name="if-match">
