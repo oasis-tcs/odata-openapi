@@ -1,4 +1,4 @@
-# odata-openapi Tools
+# Tools
 
 Tools for transforming [OData](http://www.odata.org) CSDL (`$metadata`) XML documents into [OpenAPI](https://github.com/OAI/OpenAPI-Specification) documents.
 
