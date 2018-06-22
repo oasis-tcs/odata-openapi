@@ -8,44 +8,39 @@ OData CSDL XML documents conforming to one of the predecessor OData versions 2.0
 
 The three files [`transform`](transform), [`transform.cmd`](transform.cmd), and [`transform.js`](transform.js) are wrapper scripts for Unix Bash, Windows Command, and Node.js.
 
-
-
 ## `transform.js` for Node.js
 
-This script transforms one or more OData CSDL (`$metadata`) XML documents into OpenAPI JSON documents.
+This script transforms one or more OData CSDL (`$metadata`) XML documents into OpenAPI JSON documents. 
+
+It uses [`xslt4node`](https://www.npmjs.com/package/xslt4node), which in turn needs [`node-gyp`](https://www.npmjs.com/package/node-gyp) and a [Java SE JDK](http://jdk.java.net).
 
 ### Installation
 
-The script uses [`xslt4node`](https://www.npmjs.com/package/xslt4node), which itself depends on [`node-gyp`](https://www.npmjs.com/package/node-gyp). Please install `node-gyp` globally first and follow the [platform-specific installation instructions for `node-gyp`](https://github.com/nodejs/node-gyp/blob/master/README.md#installation).
+Install a [Java SE JDK](http://jdk.java.net)  and make sure it is in the `PATH`
+
+```sh
+javac -version
+```
+
+ Install `node-gyp` globally, following the [platform-specific installation instructions for `node-gyp`](https://github.com/nodejs/node-gyp/blob/master/README.md#installation).
 
 
-Then go to the `tools` folder and type
+Clone or download this repository, go to the `tools` folder and type
 ```sh
 npm install
 ```
-In some cases this leads to an error message
-```sh
-npm ERR! enoent ENOENT: no such file or directory, rename '/mnt/c/Temp/xslt2/node_modules/lodash' -> '/mnt/c/Temp/xslt2/node_modules/.lodash.DELETE'
-```
-If that happens, just run
-```sh
-npm install
-```
-a second time. This has always worked for me. Hints on avoiding this are welcome!
 
 To install globally type
 ```sh
 npm install -g
 ```
-
-
 ### Usage
 
 Assuming you installed the script globally and your metadata file is `MyMetadata.xml`, then
 ```sh
-odata-openapi -drp MyMetadata.xml
+odata-openapi -dp MyMetadata.xml
 ```
-will transform it into `MyMetadata.openapi.json` with a nice [yUML](https://yuml.me/) diagram, references to included services / vocabularies, and pretty-printed JSON. 
+will transform it into `MyMetadata.openapi.json` with a nice [yUML](https://yuml.me/) diagram and pretty-printed JSON. 
 
 
 Just type
@@ -71,7 +66,6 @@ If you installed the script locally, start it via
 node path_to_tools/transform.js ...
 ```
 (replace `path_to_tools` with your local installation path).
-
 
 
 ## `transform` for Unix Bash
@@ -104,8 +98,6 @@ And finally clone https://github.com/OAI/OpenAPI-Specification next to this proj
 ```sh
 git clone https://github.com/OAI/OpenAPI-Specification.git
 ```
-
-
 ### Usage
 
 In the `tools` folder execute
@@ -137,7 +129,6 @@ The prerequisites are listed within [`transform.cmd`](transform.cmd). It's quite
 - https://github.com/OAI/OpenAPI-Specification is cloned next to this project
 
 ### Usage
-
 
 In the `tools` folder execute
 ```sh
