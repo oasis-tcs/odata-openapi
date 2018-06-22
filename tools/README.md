@@ -16,7 +16,7 @@ It uses [`xslt4node`](https://www.npmjs.com/package/xslt4node), which in turn ne
 
 ### Installation
 
-Install a [Java SE JDK](http://jdk.java.net)  and make sure it is in the `PATH`
+Install a [Java SE JDK](http://jdk.java.net) and make sure it is in the `PATH`
 
 ```sh
 javac -version
