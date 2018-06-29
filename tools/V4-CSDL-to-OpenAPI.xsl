@@ -26,7 +26,6 @@
     - system query options for actions/functions/imports depending on "Collection("
     - 200 response for PATCH if $odata-version!='2.0'
     - ETag for GET / If-Match for PATCH and DELETE depending on @Core.OptimisticConcurrency
-    - allow external targeting for @Core.Description similar to @Common.Label
     - reduce duplicated code in /paths production
     - header sap-message for V2 services from SAP in 20x responses
   -->
@@ -55,8 +54,7 @@
   <xsl:param name="references" select="null" />
   <xsl:param name="top-example" select="50" />
 
-  <xsl:param name="odata-schema"
-    select="'https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/odata-definitions.json'" />
+  <xsl:param name="odata-schema" select="'https://oasis-tcs.github.io/odata-openapi/examples/odata-definitions.json'" />
   <xsl:param name="openapi-formatoption" select="''" />
   <xsl:param name="openapi-version" select="'2.0'" />
   <xsl:param name="openapi-root" select="''" />
@@ -149,9 +147,29 @@
     <xsl:variable name="description"
       select="$node/edm:Annotation[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/@String
              |$node/edm:Annotation[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/edm:String" />
-    <xsl:call-template name="escape">
-      <xsl:with-param name="string" select="normalize-space($description)" />
-    </xsl:call-template>
+    <xsl:choose>
+      <xsl:when test="$description">
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="normalize-space($description)" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="target">
+          <xsl:choose>
+            <xsl:when test="local-name($node)='Property'">
+              <xsl:value-of select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+            </xsl:when>
+            <xsl:when test="local-name($node)='EntityType' or local-name($node)='ComplexType'">
+              <xsl:value-of select="concat(../@Alias,'.',@Name)" />
+            </xsl:when>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string"
+            select="//edm:Annotations[@Target=$target and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/@String" />
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template name="Core.LongDescription">
@@ -176,16 +194,8 @@
   <xsl:template name="Common.Label">
     <xsl:param name="node" />
     <xsl:variable name="label"
-      select="normalize-space($node/edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/@String|$node/edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/edm:String)" />
-    <xsl:variable name="explaceLabel">
-      <xsl:choose>
-        <xsl:when test="local-name($node)='Property'">
-          <xsl:variable name="target" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
-          <xsl:value-of
-            select="//edm:Annotations[@Target=$target and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/@String" />
-        </xsl:when>
-      </xsl:choose>
-    </xsl:variable>
+      select="normalize-space($node/edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/@String
+                             |$node/edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/edm:String)" />
     <xsl:choose>
       <xsl:when test="$label">
         <xsl:call-template name="escape">
@@ -193,8 +203,19 @@
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
+        <xsl:variable name="target">
+          <xsl:choose>
+            <xsl:when test="local-name($node)='Property'">
+              <xsl:value-of select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+            </xsl:when>
+            <xsl:when test="local-name($node)='EntityType' or local-name($node)='ComplexType'">
+              <xsl:value-of select="concat(../@Alias,'.',@Name)" />
+            </xsl:when>
+          </xsl:choose>
+        </xsl:variable>
         <xsl:call-template name="escape">
-          <xsl:with-param name="string" select="$explaceLabel" />
+          <xsl:with-param name="string"
+            select="//edm:Annotations[@Target=$target and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/@String" />
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
