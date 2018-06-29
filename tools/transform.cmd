@@ -7,10 +7,8 @@ setlocal
 @rem  Prerequisites
 @rem  - Java SE is installed and in the PATH - download from http://www.oracle.com/technetwork/java/javase/downloads/index.html 
 @rem  - git is installed and in the PATH - download from https://git-for-windows.github.io/
-@rem  - Eclipse is installed with Xalan (contained in Eclipse Web Tools Platform), and ECLIPSE_HOME environment variable is set
-set CLASSPATH=%CLASSPATH%;%ECLIPSE_HOME%\plugins\org.apache.xml.serializer_2.7.1.v201005080400.jar;%ECLIPSE_HOME%\plugins\org.apache.xalan_2.7.1.v201005080400.jar
-@rem    Alternative: Xalan is installed and CLASSPATH contains xalan.jar and serializer.jar - download from http://xalan.apache.org/xalan-j/downloads.html
-@rem set CLASSPATH=<path to Xalan>/xalan.jar;<path to Xalan>/serializer.jar
+@rem    Xalan is installed and CLASSPATH contains xalan.jar and serializer.jar - download from http://xalan.apache.org/xalan-j/downloads.html
+set CLASSPATH=%XALAN_HOME%/xalan.jar;%XALAN_HOME%/serializer.jar
 @rem  - YAJL's json_reformat from https://github.com/lloyd/yajl has been compiled and is in the PATH
 @rem  - Node.js is installed - download from https://nodejs.org/
 @rem  - ajv-cli is installed - npm install -g ajv-cli
