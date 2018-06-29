@@ -1895,16 +1895,19 @@
     <xsl:param name="term" />
     <xsl:param name="property" select="false()" />
     <xsl:param name="target" select="." />
+    <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="anno"
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]
+                                                                               |$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]" />
     <xsl:choose>
       <xsl:when test="$property">
         <xsl:value-of
-          select="$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/@Bool
-                 |$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/edm:Bool" />
+          select="$anno/edm:Record/edm:PropertyValue[@Property=$property]/@Bool
+                 |$anno/edm:Record/edm:PropertyValue[@Property=$property]/edm:Bool" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of
-          select="$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/@Bool
-                 |$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Bool" />
+        <xsl:value-of select="$anno/@Bool|$anno/edm:Bool" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -1915,8 +1918,8 @@
     <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
     <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
     <xsl:variable name="anno"
-      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased) and not(@Qualifier)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)) 
-      and not(@Qualifier)]|edm:Annotation[(@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)) and not(@Qualifier)]" />
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term))] 
+                                                                               |$target/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term))]" />
     <xsl:choose>
       <xsl:when test="$anno/@Bool|$anno/edm:Bool">
         <xsl:value-of select="$anno/@Bool|$anno/edm:Bool" />
