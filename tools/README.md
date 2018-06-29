@@ -121,8 +121,7 @@ The main purpose of this script is to refresh all example OpenAPI files in folde
 The prerequisites are listed within [`transform.cmd`](transform.cmd). It's quite a lot:
 - [Java SE 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) is installed and in the `PATH`
 - [git](https://git-for-windows.github.io/) is installed and in the `PATH`
-- [Eclipse](https://www.eclipse.org/) is installed with Xalan (contained in Eclipse Web Tools Platform or the [Eclipse IDE for JavaScript and Web Developers](http://www.eclipse.org/downloads/packages/eclipse-ide-javascript-and-web-developers/oxygen1a) package), and `ECLIPSE_HOME` environment variable is set  
-  Alternative: [Xalan](http://xalan.apache.org/xalan-j/downloads.html) is installed and `CLASSPATH` contains `xalan.jar` and `serializer.jar`
+- [Xalan](http://xalan.apache.org/xalan-j/downloads.html) is installed and `CLASSPATH` contains `xalan.jar` and `serializer.jar`
 - [YAJL](https://github.com/lloyd/yajl)'s `json_reformat` has been compiled and is in the `PATH`
 - [Node.js](https://nodejs.org/) is installed
 - [ajv-cli](https://www.npmjs.com/package/ajv-cli) is installed
