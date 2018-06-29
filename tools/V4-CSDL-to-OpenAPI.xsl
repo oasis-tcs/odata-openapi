@@ -28,6 +28,7 @@
     - ETag for GET / If-Match for PATCH and DELETE depending on @Core.OptimisticConcurrency
     - reduce duplicated code in /paths production
     - header sap-message for V2 services from SAP in 20x responses
+    - external targeting for Capabilities: RequiredProperties, NonSortableProperties, KeyAsSegmentSupported, SearchRestrictions
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -94,7 +95,16 @@
   </xsl:variable>
 
   <xsl:variable name="coreNamespace" select="'Org.OData.Core.V1'" />
-  <xsl:variable name="coreAlias" select="//edmx:Include[@Namespace=$coreNamespace]/@Alias" />
+  <xsl:variable name="coreAlias">
+    <xsl:choose>
+      <xsl:when test="//edmx:Include[@Namespace=$coreNamespace]/@Alias">
+        <xsl:value-of select="//edmx:Include[@Namespace=$coreNamespace]/@Alias" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Core</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
   <xsl:variable name="coreDescription" select="concat($coreNamespace,'.Description')" />
   <xsl:variable name="coreDescriptionAliased" select="concat($coreAlias,'.Description')" />
   <xsl:variable name="coreLongDescription" select="concat($coreNamespace,'.LongDescription')" />
@@ -120,6 +130,52 @@
     </xsl:if>
     <xsl:text>responses/error"}</xsl:text>
   </xsl:variable>
+
+  <xsl:variable name="key-as-segment"
+    select="//edm:EntityContainer/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.KeyAsSegmentSupported') or @Term=concat($capabilitiesAlias,'.KeyAsSegmentSupported')) and not(@Qualifier)]" />
+
+  <xsl:template name="capability">
+    <xsl:param name="term" />
+    <xsl:param name="property" select="false()" />
+    <xsl:param name="target" select="." />
+    <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="anno"
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]
+                                                                               |$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]" />
+    <xsl:choose>
+      <xsl:when test="$property">
+        <xsl:value-of
+          select="$anno/edm:Record/edm:PropertyValue[@Property=$property]/@Bool
+                 |$anno/edm:Record/edm:PropertyValue[@Property=$property]/edm:Bool" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$anno/@Bool|$anno/edm:Bool" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="capability-indexablebykey">
+    <xsl:param name="term" select="'IndexableByKey'" />
+    <xsl:param name="target" select="." />
+    <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="anno"
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term))] 
+                                                                               |$target/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term))]" />
+    <xsl:choose>
+      <xsl:when test="$anno/@Bool|$anno/edm:Bool">
+        <xsl:value-of select="$anno/@Bool|$anno/edm:Bool" />
+      </xsl:when>
+      <xsl:when test="$anno">
+        <xsl:text>true</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- true would be the correct default -->
+        <xsl:text>unspecified</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
   <xsl:template name="annotation-string">
     <xsl:param name="node" />
@@ -174,75 +230,23 @@
     </xsl:call-template>
   </xsl:template>
 
-  <xsl:template name="Core-Annotation">
-    <xsl:param name="node" />
-    <xsl:param name="term" />
-    <xsl:call-template name="escape">
-      <xsl:with-param name="string"
-        select="$node/edm:Annotation[(@Term=concat($coreNamespace,'.',$term) or @Term=concat($coreAlias,'.',$term)) and not(@Qualifier)]/@String
-               |$node/edm:Annotation[(@Term=concat($coreNamespace,'.',$term) or @Term=concat($coreAlias,'.',$term)) and not(@Qualifier)]/edm:String" />
-    </xsl:call-template>
-  </xsl:template>
-
   <xsl:template name="Common.Label">
     <xsl:param name="node" />
-    <xsl:variable name="label"
-      select="normalize-space($node/edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/@String
-                             |$node/edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/edm:String)" />
-    <xsl:choose>
-      <xsl:when test="$label">
-        <xsl:call-template name="escape">
-          <xsl:with-param name="string" select="$label" />
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:variable name="target">
-          <xsl:choose>
-            <xsl:when test="local-name($node)='Property'">
-              <xsl:value-of select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
-            </xsl:when>
-            <xsl:when test="local-name($node)='EntityType' or local-name($node)='ComplexType'">
-              <xsl:value-of select="concat(../@Alias,'.',@Name)" />
-            </xsl:when>
-          </xsl:choose>
-        </xsl:variable>
-        <xsl:call-template name="escape">
-          <xsl:with-param name="string"
-            select="//edm:Annotations[@Target=$target and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/@String" />
-        </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="annotation-string">
+      <xsl:with-param name="node" select="$node" />
+      <xsl:with-param name="term" select="$commonLabel" />
+      <xsl:with-param name="termAliased" select="$commonLabelAliased" />
+    </xsl:call-template>
   </xsl:template>
 
   <xsl:template name="Common.QuickInfo">
     <xsl:param name="node" />
-    <xsl:variable name="label"
-      select="normalize-space($node/edm:Annotation[(@Term=$commonQuickInfo or @Term=$commonQuickInfoAliased) and not(@Qualifier)]/@String|$node/edm:Annotation[(@Term=$commonQuickInfo or @Term=$commonQuickInfoAliased) and not(@Qualifier)]/edm:String)" />
-    <xsl:variable name="explaceLabel">
-      <xsl:choose>
-        <xsl:when test="local-name($node)='Property'">
-          <xsl:variable name="target" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
-          <xsl:value-of
-            select="//edm:Annotations[@Target=$target and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$commonQuickInfo or @Term=$commonQuickInfoAliased) and not(@Qualifier)]/@String" />
-        </xsl:when>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:choose>
-      <xsl:when test="$label">
-        <xsl:call-template name="escape">
-          <xsl:with-param name="string" select="$label" />
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="escape">
-          <xsl:with-param name="string" select="$explaceLabel" />
-        </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="annotation-string">
+      <xsl:with-param name="node" select="$node" />
+      <xsl:with-param name="term" select="$commonQuickInfo" />
+      <xsl:with-param name="termAliased" select="$commonQuickInfoAliased" />
+    </xsl:call-template>
   </xsl:template>
-
-  <xsl:variable name="key-as-segment"
-    select="//edm:EntityContainer/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.KeyAsSegmentSupported') or @Term=concat($capabilitiesAlias,'.KeyAsSegmentSupported')) and not(@Qualifier)]" />
 
   <xsl:template match="edmx:Edmx">
     <!--
@@ -296,24 +300,23 @@
         <xsl:value-of select="$info-version" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:call-template name="Core-Annotation">
+        <xsl:call-template name="annotation-string">
           <xsl:with-param name="node" select="//edm:Schema" />
-          <xsl:with-param name="term" select="'SchemaVersion'" />
+          <xsl:with-param name="term" select="concat($coreNamespace,'.SchemaVersion')" />
+          <xsl:with-param name="termAliased" select="concat($coreAlias,'.SchemaVersion')" />
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
 
     <xsl:text>","description":"</xsl:text>
     <xsl:variable name="schemaLongDescription">
-      <xsl:call-template name="Core-Annotation">
+      <xsl:call-template name="Core.LongDescription">
         <xsl:with-param name="node" select="//edm:Schema" />
-        <xsl:with-param name="term" select="'LongDescription'" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="containerLongDescription">
-      <xsl:call-template name="Core-Annotation">
+      <xsl:call-template name="Core.LongDescription">
         <xsl:with-param name="node" select="//edm:EntityContainer" />
-        <xsl:with-param name="term" select="'LongDescription'" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:choose>
@@ -1882,49 +1885,6 @@
     </xsl:if>
 
     <xsl:text>}</xsl:text>
-  </xsl:template>
-
-  <xsl:template name="capability">
-    <xsl:param name="term" />
-    <xsl:param name="property" select="false()" />
-    <xsl:param name="target" select="." />
-    <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
-    <xsl:variable name="anno"
-      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]
-                                                                               |$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]" />
-    <xsl:choose>
-      <xsl:when test="$property">
-        <xsl:value-of
-          select="$anno/edm:Record/edm:PropertyValue[@Property=$property]/@Bool
-                 |$anno/edm:Record/edm:PropertyValue[@Property=$property]/edm:Bool" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$anno/@Bool|$anno/edm:Bool" />
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <xsl:template name="capability-indexablebykey">
-    <xsl:param name="term" select="'IndexableByKey'" />
-    <xsl:param name="target" select="." />
-    <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
-    <xsl:variable name="anno"
-      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term))] 
-                                                                               |$target/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term))]" />
-    <xsl:choose>
-      <xsl:when test="$anno/@Bool|$anno/edm:Bool">
-        <xsl:value-of select="$anno/@Bool|$anno/edm:Bool" />
-      </xsl:when>
-      <xsl:when test="$anno">
-        <xsl:text>true</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <!-- true would be the correct default -->
-        <xsl:text>unspecified</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="edm:Property" mode="orderby">
