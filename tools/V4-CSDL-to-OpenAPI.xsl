@@ -94,41 +94,20 @@
   </xsl:variable>
 
   <xsl:variable name="coreNamespace" select="'Org.OData.Core.V1'" />
-  <xsl:variable name="coreAlias"
-    select="//edmx:Include[@Namespace=$coreNamespace]/@Alias|//edm:Schema[@Namespace=$coreNamespace]/@Alias" />
+  <xsl:variable name="coreAlias" select="//edmx:Include[@Namespace=$coreNamespace]/@Alias" />
   <xsl:variable name="coreDescription" select="concat($coreNamespace,'.Description')" />
-  <xsl:variable name="coreDescriptionAliased">
-    <xsl:choose>
-      <xsl:when test="$coreAlias">
-        <xsl:value-of select="concat($coreAlias,'.Description')" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="'Core.Description'" />
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
+  <xsl:variable name="coreDescriptionAliased" select="concat($coreAlias,'.Description')" />
   <xsl:variable name="coreLongDescription" select="concat($coreNamespace,'.LongDescription')" />
-  <xsl:variable name="coreLongDescriptionAliased">
-    <xsl:choose>
-      <xsl:when test="$coreAlias">
-        <xsl:value-of select="concat($coreAlias,'.LongDescription')" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="'Core.LongDescription'" />
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
+  <xsl:variable name="coreLongDescriptionAliased" select="concat($coreAlias,'.LongDescription')" />
 
   <xsl:variable name="capabilitiesNamespace" select="'Org.OData.Capabilities.V1'" />
-  <xsl:variable name="capabilitiesAlias"
-    select="//edmx:Include[@Namespace=$capabilitiesNamespace]/@Alias|//edm:Schema[@Namespace=$capabilitiesNamespace]/@Alias" />
+  <xsl:variable name="capabilitiesAlias" select="//edmx:Include[@Namespace=$capabilitiesNamespace]/@Alias" />
+
   <xsl:variable name="validationNamespace" select="'Org.OData.Validation.V1'" />
-  <xsl:variable name="validationAlias"
-    select="//edmx:Include[@Namespace=$validationNamespace]/@Alias|//edm:Schema[@Namespace=$validationNamespace]/@Alias" />
+  <xsl:variable name="validationAlias" select="//edmx:Include[@Namespace=$validationNamespace]/@Alias" />
 
   <xsl:variable name="commonNamespace" select="'com.sap.vocabularies.Common.v1'" />
-  <xsl:variable name="commonAlias"
-    select="//edmx:Include[@Namespace=$commonNamespace]/@Alias|//edm:Schema[@Namespace=$commonNamespace]/@Alias" />
+  <xsl:variable name="commonAlias" select="//edmx:Include[@Namespace=$commonNamespace]/@Alias" />
   <xsl:variable name="commonLabel" select="concat($commonNamespace,'.Label')" />
   <xsl:variable name="commonLabelAliased" select="concat($commonAlias,'.Label')" />
   <xsl:variable name="commonQuickInfo" select="concat($commonNamespace,'.QuickInfo')" />
@@ -142,21 +121,26 @@
     <xsl:text>responses/error"}</xsl:text>
   </xsl:variable>
 
-  <xsl:template name="Core.Description">
+  <xsl:template name="annotation-string">
     <xsl:param name="node" />
+    <xsl:param name="term" />
+    <xsl:param name="termAliased" />
     <xsl:variable name="description"
-      select="$node/edm:Annotation[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/@String
-             |$node/edm:Annotation[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/edm:String" />
+      select="$node/edm:Annotation[(@Term=$term or @Term=$termAliased) and not(@Qualifier)]/@String
+             |$node/edm:Annotation[(@Term=$term or @Term=$termAliased) and not(@Qualifier)]/edm:String" />
     <xsl:choose>
       <xsl:when test="$description">
         <xsl:call-template name="escape">
-          <xsl:with-param name="string" select="normalize-space($description)" />
+          <xsl:with-param name="string" select="$description" />
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
         <xsl:variable name="target">
           <xsl:choose>
-            <xsl:when test="local-name($node)='Property'">
+            <xsl:when
+              test="local-name($node)='Property' or local-name($node)='EntitySet' or local-name($node)='Singleton' 
+                 or local-name($node)='ActionImport' or local-name($node)='FunctionImport'"
+            >
               <xsl:value-of select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
             </xsl:when>
             <xsl:when test="local-name($node)='EntityType' or local-name($node)='ComplexType'">
@@ -166,18 +150,27 @@
         </xsl:variable>
         <xsl:call-template name="escape">
           <xsl:with-param name="string"
-            select="//edm:Annotations[@Target=$target and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/@String" />
+            select="//edm:Annotations[@Target=$target and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$term or @Term=$termAliased) and not(@Qualifier)]/@String" />
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="Core.Description">
+    <xsl:param name="node" />
+    <xsl:call-template name="annotation-string">
+      <xsl:with-param name="node" select="$node" />
+      <xsl:with-param name="term" select="$coreDescription" />
+      <xsl:with-param name="termAliased" select="$coreDescriptionAliased" />
+    </xsl:call-template>
+  </xsl:template>
+
   <xsl:template name="Core.LongDescription">
     <xsl:param name="node" />
-    <xsl:variable name="description"
-      select="$node/edm:Annotation[(@Term=$coreLongDescription or @Term=$coreLongDescriptionAliased) and not(@Qualifier)]/@String|$node/edm:Annotation[(@Term=$coreLongDescription or @Term=$coreLongDescriptionAliased) and not(@Qualifier)]/edm:String" />
-    <xsl:call-template name="escape">
-      <xsl:with-param name="string" select="$description" />
+    <xsl:call-template name="annotation-string">
+      <xsl:with-param name="node" select="$node" />
+      <xsl:with-param name="term" select="$coreLongDescription" />
+      <xsl:with-param name="termAliased" select="$coreLongDescriptionAliased" />
     </xsl:call-template>
   </xsl:template>
 
@@ -2681,13 +2674,14 @@
     <xsl:text>"/</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{"post":{"summary":"</xsl:text>
-    <xsl:variable name="summary"
-      select="edm:Annotation[@Term=$commonLabel or @Term=$commonLabelAliased]/@String|//edm:Schema/edm:Annotation[@Term=$commonLabel or @Term=$commonLabelAliased]/edm:String" />
+    <xsl:variable name="summary">
+      <xsl:call-template name="Common.Label">
+        <xsl:with-param name="node" select="." />
+      </xsl:call-template>
+    </xsl:variable>
     <xsl:choose>
-      <xsl:when test="$summary">
-        <xsl:call-template name="escape">
-          <xsl:with-param name="string" select="$summary" />
-        </xsl:call-template>
+      <xsl:when test="$summary!=''">
+        <xsl:value-of select="$summary" />
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>Invoke action </xsl:text>
@@ -2789,13 +2783,14 @@
       <xsl:text>)</xsl:text>
     </xsl:if>
     <xsl:text>":{"get":{"summary":"</xsl:text>
-    <xsl:variable name="summary"
-      select="edm:Annotation[@Term=$commonLabel or @Term=$commonLabelAliased]/@String|//edm:Schema/edm:Annotation[@Term=$commonLabel or @Term=$commonLabelAliased]/edm:String" />
+    <xsl:variable name="summary">
+      <xsl:call-template name="Common.Label">
+        <xsl:with-param name="node" select="." />
+      </xsl:call-template>
+    </xsl:variable>
     <xsl:choose>
-      <xsl:when test="$summary">
-        <xsl:call-template name="escape">
-          <xsl:with-param name="string" select="$summary" />
-        </xsl:call-template>
+      <xsl:when test="$summary!=''">
+        <xsl:value-of select="$summary" />
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>Invoke function </xsl:text>
