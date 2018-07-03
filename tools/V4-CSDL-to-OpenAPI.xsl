@@ -28,7 +28,7 @@
     - ETag for GET / If-Match for PATCH and DELETE depending on @Core.OptimisticConcurrency
     - reduce duplicated code in /paths production
     - header sap-message for V2 services from SAP in 20x responses
-    - external targeting for Capabilities: RequiredProperties, NonSortableProperties, KeyAsSegmentSupported, SearchRestrictions
+    - external targeting for Capabilities: NonSortableProperties, KeyAsSegmentSupported, SearchRestrictions
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -138,8 +138,8 @@
     <xsl:param name="term" />
     <xsl:param name="property" select="false()" />
     <xsl:param name="target" select="." />
-    <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',../@Name,'/',@Name)" />
     <xsl:variable name="anno"
       select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]
                                                                                |$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]" />
@@ -1732,9 +1732,7 @@
         <xsl:value-of select="$option-prefix" />
         <xsl:text>filter","in":"query","description":"Filter items by property values</xsl:text>
         <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)</xsl:text>
-        <xsl:apply-templates
-          select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.FilterRestrictions') or @Term=concat($capabilitiesAlias,'.FilterRestrictions')]/edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath"
-          mode="filter-RequiredProperties" />
+        <xsl:call-template name="filter-RequiredProperties" />
         <xsl:text>",</xsl:text>
         <xsl:call-template name="parameter-type">
           <xsl:with-param name="type" select="'string'" />
@@ -1885,6 +1883,26 @@
     </xsl:if>
 
     <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template name="filter-RequiredProperties">
+    <xsl:param name="target" select="." />
+    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="target-node" select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]|$target" />
+    <xsl:variable name="filter-restrictions"
+      select="$target-node/edm:Annotation[@Term=concat($capabilitiesNamespace,'.FilterRestrictions') or @Term=concat($capabilitiesAlias,'.FilterRestrictions')]" />
+    <xsl:variable name="required-properties"
+      select="$filter-restrictions/edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath" />
+    <xsl:apply-templates select="$required-properties" mode="filter-RequiredProperties" />
+  </xsl:template>
+
+  <xsl:template match="edm:PropertyPath" mode="filter-RequiredProperties">
+    <xsl:if test="position()=1">
+      <xsl:text>\n\nRequired filter properties:</xsl:text>
+    </xsl:if>
+    <xsl:text>\n- </xsl:text>
+    <xsl:value-of select="." />
   </xsl:template>
 
   <xsl:template match="edm:Property" mode="orderby">
@@ -2949,9 +2967,9 @@
     <xsl:value-of select="$option-prefix" />
     <xsl:text>filter","in":"query","description":"Filter items by property values</xsl:text>
     <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)</xsl:text>
-    <xsl:apply-templates
-      select="$targetSet/edm:Annotation[@Term=concat($capabilitiesNamespace,'.FilterRestrictions') or @Term=concat($capabilitiesAlias,'.FilterRestrictions')]/edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath"
-      mode="filter-RequiredProperties" />
+    <xsl:call-template name="filter-RequiredProperties">
+      <xsl:with-param name="target" select="$targetSet" />
+    </xsl:call-template>
     <xsl:text>",</xsl:text>
     <xsl:call-template name="parameter-type">
       <xsl:with-param name="type" select="'string'" />
@@ -3025,14 +3043,6 @@
     </xsl:call-template>
 
     <xsl:text>}}</xsl:text>
-  </xsl:template>
-
-  <xsl:template match="edm:PropertyPath" mode="filter-RequiredProperties">
-    <xsl:if test="position()=1">
-      <xsl:text>\n\nRequired filter properties:</xsl:text>
-    </xsl:if>
-    <xsl:text>\n- </xsl:text>
-    <xsl:value-of select="." />
   </xsl:template>
 
   <xsl:template match="edm:Action" mode="bound">
