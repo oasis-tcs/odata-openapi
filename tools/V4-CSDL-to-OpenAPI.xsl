@@ -29,6 +29,7 @@
     - reduce duplicated code in /paths production
     - header sap-message for V2 services from SAP in 20x responses
     - external targeting for Capabilities: NonSortableProperties, KeyAsSegmentSupported, SearchRestrictions
+    - external targeting for Core.Immutable and Core.Computed
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -2200,8 +2201,8 @@
       <xsl:with-param name="entityType" select="$entityType" />
     </xsl:apply-templates>
 
-    <xsl:apply-templates select="$entityType/edm:NavigationProperty[@ContainsTarget='true' or $resultContext]"
-      mode="resultContext"
+    <xsl:apply-templates select="$entityType/edm:NavigationProperty[substring(@Type,1,11)='Collection(' or $resultContext]"
+      mode="pathItem"
     >
       <xsl:with-param name="entitySet" select="@Name" />
       <xsl:with-param name="entityType" select="$entityType" />
@@ -2886,7 +2887,7 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:NavigationProperty" mode="resultContext">
+  <xsl:template match="edm:NavigationProperty" mode="pathItem">
     <xsl:param name="entitySet" />
     <xsl:param name="entityType" />
 
