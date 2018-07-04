@@ -33,7 +33,7 @@
 
 <h3>Further Description of this Repository</h3>
 
-The OData TC is currently working on the [OData to OpenAPI Mapping Version 1.0](https://www.oasis-open.org/committees/download.php/59500/odata-openapi-v1.0-wd01-2016-11-28.docx), a recommendation on how to create OpenAPI descriptions for OData services, as well as a proof-of-concept implementation of that mapping using XSLT.
+The OData TC has published the [OData to OpenAPI Mapping Version 1.0](http://docs.oasis-open.org/odata/odata-openapi/v1.0/odata-openapi-v1.0.html), a recommendation on how to create OpenAPI descriptions for OData services. This project is a proof-of-concept implementation of that mapping using XSLT.
 
 The [`examples` folder](examples) contains OpenAPI/Swagger 2.0 and [OpenAPI 3.0.0](https://github.com/OAI/OpenAPI-Specification) descriptions that have been created from the XML `$metadata` documents of live and example OData services with the [V4-CSDL-to-OpenAPI.xsl](tools/V4-CSDL-to-OpenAPI.xsl) transformation in the [`tools` folder](tools). 
 
