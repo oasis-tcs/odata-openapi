@@ -766,11 +766,16 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="hashpair">
+    <xsl:variable name="typeName" select="concat(../@Namespace,'.',@Name)"/>
+<!-- TODO: also external annotations - testcase - run-time -->
+    <xsl:variable name="computed"
+      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')]]/@Name" />
+    <xsl:variable name="immutable"
+      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable')]]/@Name" />
+    
     <!-- full structure -->
     <xsl:text>"</xsl:text>
-    <xsl:value-of select="../@Namespace" />
-    <xsl:text>.</xsl:text>
-    <xsl:value-of select="@Name" />
+    <xsl:value-of select="$typeName" />
     <xsl:text>":{</xsl:text>
 
     <xsl:if test="@BaseType">
@@ -797,9 +802,7 @@
 
     <!-- create structure -->
     <xsl:text>,"</xsl:text>
-    <xsl:value-of select="../@Namespace" />
-    <xsl:text>.</xsl:text>
-    <xsl:value-of select="@Name" />
+    <xsl:value-of select="$typeName" />
     <xsl:text>-create":{</xsl:text>
 
     <xsl:if test="@BaseType">
@@ -813,18 +816,18 @@
 
     <xsl:text>"type":"object"</xsl:text>
     <!-- everything except computed properties -->
-    <xsl:apply-templates
-      select="edm:Property[not(edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')])]|edm:NavigationProperty"
-      mode="hash"
-    >
+    <xsl:apply-templates select="edm:Property[not(@Name=$computed)]|edm:NavigationProperty" mode="hash">
       <xsl:with-param name="name" select="'properties'" />
       <xsl:with-param name="suffix" select="'-create'" />
     </xsl:apply-templates>
     <!-- non-computed key properties are required, as are properties marked with Common.FieldControl=Mandatory -->
     <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
+<!-- TODO: mandatory -->
+    <xsl:variable name="mandatory"
+      select="substring-after(//edm:Annotations[edm:Annotation[@Term=concat($commonAlias,'.FieldControl') and @EnumMember=concat($commonAlias,'.FieldControlType/Mandatory')]]/@Target,'/')" />
     <xsl:apply-templates
-      select="edm:Property[(@Name=../edm:Key/edm:PropertyRef/@Name and not(edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')])) 
-              or concat(../../@Namespace,'.',../@Name,'/',@Name)=//edm:Annotations[edm:Annotation[@Term=concat($commonAlias,'.FieldControl') and @EnumMember=concat($commonAlias,'.FieldControlType/Mandatory')]]/@Target]"
+      select="edm:Property[(@Name=../edm:Key/edm:PropertyRef/@Name and not(@Name=$computed)) 
+              or @Name=$mandatory]"
       mode="required" />
 
     <xsl:if test="@BaseType">
@@ -839,9 +842,7 @@
 
     <!-- update structure -->
     <xsl:text>,"</xsl:text>
-    <xsl:value-of select="../@Namespace" />
-    <xsl:text>.</xsl:text>
-    <xsl:value-of select="@Name" />
+    <xsl:value-of select="$typeName" />
     <xsl:text>-update":{</xsl:text>
 
     <xsl:if test="@BaseType">
@@ -856,8 +857,7 @@
     <xsl:text>"type":"object"</xsl:text>
     <!-- only updatable non-key properties -->
     <xsl:apply-templates
-      select="edm:Property[not(edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable') or @Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')] or @Name=../edm:Key/edm:PropertyRef/@Name)]"
-      mode="hash"
+      select="edm:Property[not(@Name=$immutable or @Name=$computed or @Name=../edm:Key/edm:PropertyRef/@Name)]" mode="hash"
     >
       <xsl:with-param name="name" select="'properties'" />
     </xsl:apply-templates>
