@@ -2201,11 +2201,12 @@
       <xsl:with-param name="entityType" select="$entityType" />
     </xsl:apply-templates>
 
-    <xsl:apply-templates select="$entityType/edm:NavigationProperty[substring(@Type,1,11)='Collection(' or $resultContext]"
-      mode="pathItem"
+    <xsl:apply-templates
+      select="$entityType/edm:NavigationProperty[substring(@Type,1,11)='Collection(' or $resultContext]" mode="pathItem"
     >
-      <xsl:with-param name="entitySet" select="@Name" />
+      <xsl:with-param name="entitySet" select="." />
       <xsl:with-param name="entityType" select="$entityType" />
+      <xsl:with-param name="tagWithTarget" select="not($resultContext)" />
     </xsl:apply-templates>
   </xsl:template>
 
@@ -2890,6 +2891,7 @@
   <xsl:template match="edm:NavigationProperty" mode="pathItem">
     <xsl:param name="entitySet" />
     <xsl:param name="entityType" />
+    <xsl:param name="tagWithTarget" />
 
     <xsl:variable name="nullable">
       <xsl:call-template name="nullableFacetValue">
@@ -2936,26 +2938,36 @@
       <xsl:value-of select="$simpleName" />
     </xsl:variable>
 
+    <xsl:variable name="name" select="@Name" />
+    <xsl:variable name="targetEntitySetName" select="$entitySet/edm:NavigationPropertyBinding[@Path=$name]/@Target" />
+    <xsl:variable name="targetSet" select="//edm:EntitySet[@Name=$targetEntitySetName]" />
+
     <xsl:text>,"/</xsl:text>
-    <xsl:value-of select="$entitySet" />
+    <xsl:value-of select="$entitySet/@Name" />
     <xsl:apply-templates select="$entityType" mode="key-in-path" />
     <xsl:text>/</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{"get":{</xsl:text>
     <!-- TODO: better summary / description -->
-    <xsl:text>"summary":"Get </xsl:text>
-    <xsl:value-of select="@Name" />
+    <xsl:text>"summary":"Get related </xsl:text>
+    <xsl:choose>
+      <xsl:when test="$targetSet">
+        <xsl:value-of select="$targetSet/@Name" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="@Name" />
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>","tags":["</xsl:text>
-    <xsl:value-of select="$entitySet" />
+    <xsl:value-of select="$entitySet/@Name" />
+    <xsl:if test="$tagWithTarget and $targetSet and $targetSet/@Name!=$entitySet/@Name">
+      <xsl:text>","</xsl:text>
+      <xsl:value-of select="$targetSet/@Name" />
+    </xsl:if>
     <xsl:text>"]</xsl:text>
 
     <xsl:text>,"parameters":[</xsl:text>
     <xsl:apply-templates select="$entityType" mode="parameter" />
-
-    <xsl:variable name="name" select="@Name" />
-    <xsl:variable name="targetEntitySetName"
-      select="//edm:EntitySet[@Name=$entitySet]/edm:NavigationPropertyBinding[@Path=$name]/@Target" />
-    <xsl:variable name="targetSet" select="//edm:EntitySet[@Name=$targetEntitySetName]" />
 
     <xsl:variable name="filter-required">
       <xsl:call-template name="capability">
