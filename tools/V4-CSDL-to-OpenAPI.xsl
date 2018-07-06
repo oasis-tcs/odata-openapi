@@ -766,13 +766,16 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="hashpair">
-    <xsl:variable name="typeName" select="concat(../@Namespace,'.',@Name)"/>
-<!-- TODO: also external annotations - testcase - run-time -->
+    <xsl:variable name="typeName" select="concat(../@Namespace,'.',@Name)" />
+    <!-- TODO: also external annotations - testcase - run-time -->
     <xsl:variable name="computed"
       select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')]]/@Name" />
     <xsl:variable name="immutable"
       select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable')]]/@Name" />
-    
+    <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
+    <xsl:variable name="mandatory"
+      select="//edm:Annotations[edm:Annotation[@Term=concat($commonAlias,'.FieldControl') and @EnumMember=concat($commonAlias,'.FieldControlType/Mandatory')] and $typeName=substring-before(@Target,'/')]/@Target" />
+
     <!-- full structure -->
     <xsl:text>"</xsl:text>
     <xsl:value-of select="$typeName" />
@@ -821,14 +824,8 @@
       <xsl:with-param name="suffix" select="'-create'" />
     </xsl:apply-templates>
     <!-- non-computed key properties are required, as are properties marked with Common.FieldControl=Mandatory -->
-    <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
-<!-- TODO: mandatory -->
-    <xsl:variable name="mandatory"
-      select="substring-after(//edm:Annotations[edm:Annotation[@Term=concat($commonAlias,'.FieldControl') and @EnumMember=concat($commonAlias,'.FieldControlType/Mandatory')]]/@Target,'/')" />
     <xsl:apply-templates
-      select="edm:Property[(@Name=../edm:Key/edm:PropertyRef/@Name and not(@Name=$computed)) 
-              or @Name=$mandatory]"
-      mode="required" />
+      select="edm:Property[(@Name=../edm:Key/edm:PropertyRef/@Name and not(@Name=$computed)) or concat($typeName,'/',@Name)=$mandatory]" mode="required" />
 
     <xsl:if test="@BaseType">
       <xsl:text>}]</xsl:text>
@@ -3457,7 +3454,7 @@
         <xsl:call-template name="replace">
           <xsl:with-param name="string" select="$string" />
           <xsl:with-param name="old" select="'&#x0D;'" />
-          <xsl:with-param name="new" select="'\r'" />
+          <xsl:with-param name="new" select="''" />
         </xsl:call-template>
       </xsl:when>
       <xsl:when test="contains($string,'&#x09;')">
