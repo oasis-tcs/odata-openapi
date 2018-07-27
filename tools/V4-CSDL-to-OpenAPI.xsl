@@ -30,6 +30,7 @@
     - header sap-message for V2 services from SAP in 20x responses
     - external targeting for Capabilities: NonSortableProperties, KeyAsSegmentSupported, SearchRestrictions
     - external targeting for Core.Immutable and Core.Computed
+    - external targeting for annotations on schema level? Not allowed by CSDL specification
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
