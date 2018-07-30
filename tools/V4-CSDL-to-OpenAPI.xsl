@@ -196,19 +196,34 @@
         <xsl:variable name="target">
           <xsl:choose>
             <xsl:when
-              test="local-name($node)='Property' or local-name($node)='EntitySet' or local-name($node)='Singleton' 
+              test="local-name($node)='Property' or local-name($node)='NavigationProperty'
+                 or local-name($node)='EntitySet' or local-name($node)='Singleton' 
                  or local-name($node)='ActionImport' or local-name($node)='FunctionImport'"
             >
-              <xsl:value-of select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+              <xsl:value-of select="concat($node/../../@Namespace,'.',$node/../@Name,'/',@Name)" />
             </xsl:when>
             <xsl:when test="local-name($node)='EntityType' or local-name($node)='ComplexType'">
-              <xsl:value-of select="concat(../@Alias,'.',@Name)" />
+              <xsl:value-of select="concat($node/../@Namespace,'.',@Name)" />
+            </xsl:when>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="targetAliased">
+          <xsl:choose>
+            <xsl:when
+              test="local-name($node)='Property' or local-name($node)='NavigationProperty' 
+                 or local-name($node)='EntitySet' or local-name($node)='Singleton' 
+                 or local-name($node)='ActionImport' or local-name($node)='FunctionImport'"
+            >
+              <xsl:value-of select="concat($node/../../@Alias,'.',$node/../@Name,'/',@Name)" />
+            </xsl:when>
+            <xsl:when test="local-name($node)='EntityType' or local-name($node)='ComplexType'">
+              <xsl:value-of select="concat($node/../@Alias,'.',@Name)" />
             </xsl:when>
           </xsl:choose>
         </xsl:variable>
         <xsl:call-template name="escape">
           <xsl:with-param name="string"
-            select="//edm:Annotations[@Target=$target and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$term or @Term=$termAliased) and not(@Qualifier)]/@String" />
+            select="//edm:Annotations[(@Target=$target or @Target=$targetAliased) and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$term or @Term=$termAliased) and not(@Qualifier)]/@String" />
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
@@ -251,10 +266,6 @@
   </xsl:template>
 
   <xsl:template match="edmx:Edmx">
-    <!--
-      <xsl:message><xsl:value-of select="$commonAlias"/></xsl:message>
-      <xsl:message><xsl:value-of select="$commonNamespace"/></xsl:message>
-    -->
     <xsl:text>{</xsl:text>
     <xsl:choose>
       <xsl:when test="$openapi-version='2.0'">
@@ -826,7 +837,8 @@
     </xsl:apply-templates>
     <!-- non-computed key properties are required, as are properties marked with Common.FieldControl=Mandatory -->
     <xsl:apply-templates
-      select="edm:Property[(@Name=../edm:Key/edm:PropertyRef/@Name and not(@Name=$computed)) or concat($typeName,'/',@Name)=$mandatory]" mode="required" />
+      select="edm:Property[(@Name=../edm:Key/edm:PropertyRef/@Name and not(@Name=$computed)) or concat($typeName,'/',@Name)=$mandatory]"
+      mode="required" />
 
     <xsl:if test="@BaseType">
       <xsl:text>}]</xsl:text>
