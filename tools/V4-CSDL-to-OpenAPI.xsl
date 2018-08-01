@@ -1405,6 +1405,8 @@
           <xsl:message>
             <xsl:text>Unknown qualifier: </xsl:text>
             <xsl:value-of select="$qualifier" />
+            <xsl:text>Node: </xsl:text>
+            <xsl:value-of select="local-name()" />
           </xsl:message>
         </xsl:if>
       </xsl:otherwise>
@@ -2651,6 +2653,15 @@
     <xsl:text>",</xsl:text>
 
     <xsl:choose>
+      <xsl:when test="not($type)">
+        <xsl:text>"x-error":"key property not found"</xsl:text>
+        <xsl:message>
+          <xsl:text>Key property </xsl:text>
+          <xsl:value-of select="$name" />
+          <xsl:text> not found for entity type </xsl:text>
+          <xsl:value-of select="../../@Name" />
+        </xsl:message>
+      </xsl:when>
       <xsl:when test="$openapi-version='2.0'">
         <xsl:text>"type":</xsl:text>
         <xsl:choose>
