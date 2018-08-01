@@ -200,11 +200,11 @@
                  or local-name($node)='EntitySet' or local-name($node)='Singleton' 
                  or local-name($node)='ActionImport' or local-name($node)='FunctionImport'"
             >
-              <xsl:value-of select="concat($node/../../@Namespace,'.',$node/../@Name,'/',@Name)" />
+              <xsl:value-of select="concat($node/../../@Namespace,'.',$node/../@Name,'/',$node/@Name)" />
             </xsl:when>
-            <xsl:when test="local-name($node)='EntityType' or local-name($node)='ComplexType'">
-              <xsl:value-of select="concat($node/../@Namespace,'.',@Name)" />
-            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="concat($node/../@Namespace,'.',$node/@Name)" />
+            </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
         <xsl:variable name="targetAliased">
@@ -214,16 +214,17 @@
                  or local-name($node)='EntitySet' or local-name($node)='Singleton' 
                  or local-name($node)='ActionImport' or local-name($node)='FunctionImport'"
             >
-              <xsl:value-of select="concat($node/../../@Alias,'.',$node/../@Name,'/',@Name)" />
+              <xsl:value-of select="concat($node/../../@Alias,'.',$node/../@Name,'/',$node/@Name)" />
             </xsl:when>
-            <xsl:when test="local-name($node)='EntityType' or local-name($node)='ComplexType'">
-              <xsl:value-of select="concat($node/../@Alias,'.',@Name)" />
-            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="concat($node/../@Alias,'.',$node/@Name)" />
+            </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
         <xsl:call-template name="escape">
           <xsl:with-param name="string"
-            select="//edm:Annotations[(@Target=$target or @Target=$targetAliased) and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$term or @Term=$termAliased) and not(@Qualifier)]/@String" />
+            select="//edm:Annotations[(@Target=$target or @Target=$targetAliased) and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$term or @Term=$termAliased) and not(@Qualifier)]/@String
+                   |//edm:Annotations[(@Target=$target or @Target=$targetAliased) and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$term or @Term=$termAliased) and not(@Qualifier)]/edm:String" />
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
