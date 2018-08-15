@@ -871,6 +871,7 @@
       select="edm:Property[not(@Name=$immutable or @Name=$computed or @Name=../edm:Key/edm:PropertyRef/@Name)]" mode="hash"
     >
       <xsl:with-param name="name" select="'properties'" />
+      <xsl:with-param name="suffix" select="'-update'" />
     </xsl:apply-templates>
 
     <xsl:if test="@BaseType">
