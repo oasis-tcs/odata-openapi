@@ -995,7 +995,7 @@
             <xsl:call-template name="Validation.Pattern" />
           </xsl:otherwise>
         </xsl:choose>
-        <xsl:if test="not($inParameter) and not($nullable='false')">
+        <xsl:if test="not($inParameter) and not($nullable='false') and $openapi-version='2.0'">
           <xsl:text>,"example":"string"</xsl:text>
         </xsl:if>
       </xsl:when>
