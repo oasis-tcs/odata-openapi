@@ -1263,7 +1263,7 @@
         </xsl:call-template>
         <xsl:text>,"format":"duration"</xsl:text>
         <xsl:if test="not($inParameter)">
-          <xsl:text>,"example":"P4DT15H51M04.217S"</xsl:text>
+          <xsl:text>,"example":"P4DT15H51M04S"</xsl:text>
         </xsl:if>
       </xsl:when>
       <xsl:when test="$singleType='Edm.PrimitiveType'">
