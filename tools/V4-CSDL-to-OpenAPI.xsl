@@ -633,7 +633,7 @@
         <xsl:value-of select="$type" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="@Type" />
+        <xsl:value-of select="." />
         <xsl:text>{bg:whitesmoke}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
