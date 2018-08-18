@@ -938,6 +938,7 @@
   <xsl:template name="type">
     <xsl:param name="type" />
     <xsl:param name="nullableFacet" />
+    <xsl:param name="target" select="." />
     <xsl:param name="inParameter" select="false()" />
     <xsl:param name="suffix" select="null" />
     <xsl:variable name="noArray" select="$inParameter" />
@@ -985,7 +986,7 @@
           <xsl:with-param name="nullable" select="$nullable" />
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
-        <xsl:apply-templates select="@MaxLength" />
+        <xsl:apply-templates select="$target/@MaxLength" />
         <xsl:call-template name="Validation.AllowedValues" />
         <xsl:choose>
           <xsl:when test="$inParameter and $odata-version='2.0'">
@@ -1021,7 +1022,7 @@
             <xsl:text>,"format":"base64url"</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
-        <xsl:apply-templates select="@MaxLength" />
+        <xsl:apply-templates select="$target/@MaxLength" />
       </xsl:when>
       <xsl:when test="$singleType='Edm.Boolean'">
         <xsl:call-template name="nullableType">
@@ -1050,32 +1051,32 @@
           <xsl:text>,"pattern":"^[-]?[0-9]+(\\.[0-9]+[mM])?$"</xsl:text>
         </xsl:if>
         <xsl:choose>
-          <xsl:when test="not(@Scale) or @Scale='0'">
+          <xsl:when test="not($target/@Scale) or $target/@Scale='0'">
             <xsl:text>,"multipleOf":1</xsl:text>
           </xsl:when>
-          <xsl:when test="@Scale!='variable'">
+          <xsl:when test="$target/@Scale!='variable'">
             <xsl:text>,"multipleOf":1.0e-</xsl:text>
-            <xsl:value-of select="@Scale" />
+            <xsl:value-of select="$target/@Scale" />
           </xsl:when>
         </xsl:choose>
-        <xsl:if test="@Precision">
+        <xsl:if test="$target/@Precision">
           <xsl:variable name="scale">
             <xsl:choose>
-              <xsl:when test="not(@Scale)">
+              <xsl:when test="not($target/@Scale)">
                 <xsl:value-of select="0" />
               </xsl:when>
-              <xsl:when test="@Scale='variable'">
+              <xsl:when test="$target/@Scale='variable'">
                 <xsl:value-of select="0" />
               </xsl:when>
               <xsl:otherwise>
-                <xsl:value-of select="@Scale" />
+                <xsl:value-of select="$target/@Scale" />
               </xsl:otherwise>
             </xsl:choose>
           </xsl:variable>
           <xsl:variable name="limit">
             <xsl:call-template name="repeat">
               <xsl:with-param name="string" select="'9'" />
-              <xsl:with-param name="count" select="@Precision - $scale" />
+              <xsl:with-param name="count" select="$target/@Precision - $scale" />
             </xsl:call-template>
             <xsl:if test="$scale > 0">
               <xsl:text>.</xsl:text>
@@ -1085,7 +1086,7 @@
               </xsl:call-template>
             </xsl:if>
           </xsl:variable>
-          <xsl:if test="@Precision &lt; 16">
+          <xsl:if test="$target/@Precision &lt; 16">
             <xsl:text>,"minimum":-</xsl:text>
             <xsl:value-of select="$limit" />
             <xsl:text>,"maximum":</xsl:text>
@@ -1277,7 +1278,7 @@
         <xsl:text>"type":"object","properties":{"@odata.propertyPath":{"type":"string"}},"required":["@odata.propertyPath"]</xsl:text>
       </xsl:when>
       <xsl:when test="$singleType='Edm.GeographyPoint' or $singleType='Edm.GeometryPoint'">
-        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue)">
+        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or $target/@DefaultValue)">
           <xsl:if test="not($nullable='false')">
             <xsl:text>"nullable":true,</xsl:text>
           </xsl:if>
@@ -1286,7 +1287,7 @@
         <xsl:text>"$ref":"</xsl:text>
         <xsl:value-of select="$reuse-schemas" />
         <xsl:text>geoPoint"</xsl:text>
-        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue)">
+        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or $target/@DefaultValue)">
           <xsl:text>}]</xsl:text>
         </xsl:if>
       </xsl:when>
@@ -1300,7 +1301,7 @@
           <xsl:text>TODO: inline </xsl:text>
           <xsl:value-of select="$singleType" />
         </xsl:message>
-        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue)">
+        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or $target/@DefaultValue)">
           <xsl:if test="not($nullable='false')">
             <xsl:text>"nullable":true,</xsl:text>
           </xsl:if>
@@ -1311,12 +1312,12 @@
         <xsl:text>#/definitions/</xsl:text>
         <xsl:value-of select="$singleType" />
         <xsl:text>"</xsl:text>
-        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue)">
+        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or $target/@DefaultValue)">
           <xsl:text>}]</xsl:text>
         </xsl:if>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue or @MaxLength)">
+        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or $target/@DefaultValue or $target/@MaxLength)">
           <xsl:if test="not($nullable='false')">
             <xsl:text>"nullable":true,</xsl:text>
           </xsl:if>
@@ -1327,13 +1328,13 @@
           <xsl:with-param name="name" select="$simpleName" />
           <xsl:with-param name="suffix" select="$suffix" />
         </xsl:call-template>
-        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue or @MaxLength)">
+        <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or @DefaultValue or $target/@MaxLength)">
           <xsl:text>}]</xsl:text>
         </xsl:if>
-        <xsl:apply-templates select="@MaxLength" />
+        <xsl:apply-templates select="$target/@MaxLength" />
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates select="@DefaultValue">
+    <xsl:apply-templates select="$target/@DefaultValue">
       <xsl:with-param name="type" select="$singleType" />
     </xsl:apply-templates>
     <xsl:if test="$collection">
@@ -2630,7 +2631,8 @@
 
   <xsl:template match="edm:PropertyRef" mode="parameter">
     <xsl:variable name="name" select="@Name" />
-    <xsl:variable name="type" select="../../edm:Property[@Name=$name]/@Type" />
+    <xsl:variable name="property" select="../../edm:Property[@Name=$name]" />
+    <xsl:variable name="type" select="$property/@Type" />
     <xsl:if test="position()>1">
       <xsl:text>,</xsl:text>
     </xsl:if>
@@ -2639,7 +2641,7 @@
     <xsl:text>","in":"path","required":true,"description":"</xsl:text>
     <xsl:variable name="description">
       <xsl:call-template name="description">
-        <xsl:with-param name="node" select="../../edm:Property[@Name=$name]" />
+        <xsl:with-param name="node" select="$property" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:choose>
@@ -2683,6 +2685,7 @@
         <xsl:call-template name="type">
           <xsl:with-param name="type" select="$type" />
           <xsl:with-param name="nullableFacet" select="'false'" />
+          <xsl:with-param name="target" select="$property" />
         </xsl:call-template>
         <xsl:text>}</xsl:text>
       </xsl:otherwise>
