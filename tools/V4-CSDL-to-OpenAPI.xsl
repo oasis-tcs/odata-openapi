@@ -2720,22 +2720,14 @@
 
     <xsl:text>"/</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>":{"post":{"summary":"</xsl:text>
-    <xsl:variable name="summary">
-      <xsl:call-template name="Common.Label">
-        <xsl:with-param name="node" select="." />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:choose>
-      <xsl:when test="$summary!=''">
-        <xsl:value-of select="$summary" />
-      </xsl:when>
-      <xsl:otherwise>
+    <xsl:text>":{"post":{</xsl:text>
+    <xsl:call-template name="summary-description">
+      <xsl:with-param name="fallback-summary">
         <xsl:text>Invoke action </xsl:text>
         <xsl:value-of select="@Name" />
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>","tags":["</xsl:text>
+      </xsl:with-param>
+    </xsl:call-template>
+    <xsl:text>,"tags":["</xsl:text>
     <xsl:choose>
       <xsl:when test="@EntitySet">
         <xsl:value-of select="@EntitySet" />
@@ -2829,23 +2821,14 @@
       <xsl:apply-templates select="edm:Parameter" mode="path" />
       <xsl:text>)</xsl:text>
     </xsl:if>
-    <xsl:text>":{"get":{"summary":"</xsl:text>
-    <xsl:variable name="summary">
-      <xsl:call-template name="Common.Label">
-        <xsl:with-param name="node" select="." />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:choose>
-      <xsl:when test="$summary!=''">
-        <xsl:value-of select="$summary" />
-      </xsl:when>
-      <xsl:otherwise>
+    <xsl:text>":{"get":{</xsl:text>
+    <xsl:call-template name="summary-description">
+      <xsl:with-param name="fallback-summary">
         <xsl:text>Invoke function </xsl:text>
         <xsl:value-of select="@Name" />
-      </xsl:otherwise>
-    </xsl:choose>
-
-    <xsl:text>","tags":["</xsl:text>
+      </xsl:with-param>
+    </xsl:call-template>
+    <xsl:text>,"tags":["</xsl:text>
     <xsl:choose>
       <xsl:when test="$entitySet">
         <xsl:value-of select="$entitySet" />
@@ -3315,9 +3298,12 @@
           <xsl:when test="@Type='Edm.Guid'">
             <xsl:text>Value needs to be enclosed in single quotes and prefixed with `guid`, e.g. `guid'01234567-0123-0123-0123-0123456789ab'`</xsl:text>
           </xsl:when>
+          <xsl:when test="@Type='Edm.SByte'" />
           <xsl:when test="@Type='Edm.Int16'" />
           <xsl:when test="@Type='Edm.Int32'" />
-          <xsl:when test="@Type='Edm.SByte'" />
+          <xsl:when test="@Type='Edm.Int64'">
+            <xsl:text>Value needs to be suffixed with `L`</xsl:text>
+          </xsl:when>
           <xsl:when test="@Type='Edm.String'">
             <xsl:text>Value needs to be enclosed in single quotes</xsl:text>
           </xsl:when>
