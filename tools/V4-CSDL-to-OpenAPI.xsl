@@ -1832,8 +1832,7 @@
 
       <xsl:variable name="selectable">
         <xsl:call-template name="capability">
-          <xsl:with-param name="term" select="'SelectRestrictions'" />
-          <xsl:with-param name="property" select="'Selectable'" />
+          <xsl:with-param name="term" select="'SelectSupported'" />
         </xsl:call-template>
       </xsl:variable>
       <xsl:variable name="selectable-properties"
@@ -2116,8 +2115,7 @@
 
       <xsl:variable name="selectable">
         <xsl:call-template name="capability">
-          <xsl:with-param name="term" select="'SelectRestrictions'" />
-          <xsl:with-param name="property" select="'Selectable'" />
+          <xsl:with-param name="term" select="'SelectSupported'" />
         </xsl:call-template>
       </xsl:variable>
       <xsl:if test="not($selectable='false')">
@@ -2339,8 +2337,7 @@
 
     <xsl:variable name="selectable">
       <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'SelectRestrictions'" />
-        <xsl:with-param name="property" select="'Selectable'" />
+        <xsl:with-param name="term" select="'SelectSupported'" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="selectable-properties"
