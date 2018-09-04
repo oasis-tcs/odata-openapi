@@ -3289,6 +3289,9 @@
           <xsl:when test="@Type='Edm.DateTimeOffset'">
             <xsl:text>Value needs to be enclosed in single quotes and prefixed with `datetimeoffset`, e.g. `datetimeoffset'2017-12-31T00:00:00Z'`</xsl:text>
           </xsl:when>
+          <xsl:when test="@Type='Edm.TimeOfDay'">
+            <xsl:text>Value needs to be in duration format, enclosed in single quotes, and prefixed with `time`, e.g. `time'PT23H59M59.999S'`</xsl:text>
+          </xsl:when>
           <xsl:when test="@Type='Edm.Decimal' and @Scale>0">
             <xsl:text>Value needs to be suffixed with `M`</xsl:text>
           </xsl:when>

@@ -3,8 +3,9 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:edm="http://docs.oasis-open.org/odata/ns/edm"
   xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edmx1="http://schemas.microsoft.com/ado/2007/06/edmx"
   xmlns:edm2="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:edm3="http://schemas.microsoft.com/ado/2009/11/edm"
-  xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
-  xmlns:sap="http://www.sap.com/Protocols/SAPData" xmlns="http://docs.oasis-open.org/odata/ns/edm"
+  xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+  xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:sap="http://www.sap.com/Protocols/SAPData"
+  xmlns="http://docs.oasis-open.org/odata/ns/edm"
 >
   <!--
     This style sheet transforms OData 2.0 or 3.0 $metadata documents into OData 4.0 CSDL documents.
@@ -75,7 +76,8 @@
   <xsl:template match="edmx1:Edmx">
     <edmx:Edmx Version="4.0">
       <xsl:call-template name="add-reference">
-        <xsl:with-param name="condition" select="//edm2:Summary|//edm2:LongDescription|//edm3:Summary|//edm3:LongDescription|//@sap:*" />
+        <xsl:with-param name="condition"
+          select="//edm2:Summary|//edm2:LongDescription|//edm3:Summary|//edm3:LongDescription|//@sap:*" />
         <xsl:with-param name="schema" select="'Org.OData.Core.V1'" />
       </xsl:call-template>
       <xsl:call-template name="add-reference">
@@ -216,9 +218,20 @@
     </edmx:DataServices>
   </xsl:template>
 
-  <xsl:template match="edm2:Schema|edm3:Schema">
+  <xsl:template match="edm2:Schema">
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <xsl:copy-of select="@Namespace|@Alias" />
+      <Annotation Term="com.sap.vocabularies.Common.v1.OriginalProtocolVersion" String="2.0" />
+      <xsl:apply-templates />
+      <xsl:apply-templates
+        select="*[local-name()='EntityContainer' and @m:IsDefaultEntityContainer='true']/*[local-name()='FunctionImport']" mode="Schema" />
+    </Schema>
+  </xsl:template>
+
+  <xsl:template match="edm3:Schema">
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <xsl:copy-of select="@Namespace|@Alias" />
+      <Annotation Term="com.sap.vocabularies.Common.v1.OriginalProtocolVersion" String="3.0" />
       <xsl:apply-templates />
       <xsl:apply-templates
         select="*[local-name()='EntityContainer' and @m:IsDefaultEntityContainer='true']/*[local-name()='FunctionImport']" mode="Schema" />
@@ -302,7 +315,8 @@
     <xsl:variable name="index" select="position()" />
     <ReferentialConstraint>
       <xsl:attribute name="Property">
-        <xsl:value-of select="../../edm2:Dependent/edm2:PropertyRef[$index]/@Name|../../edm3:Dependent/edm2:PropertyRef[$index]/@Name" />
+        <xsl:value-of
+        select="../../edm2:Dependent/edm2:PropertyRef[$index]/@Name|../../edm3:Dependent/edm2:PropertyRef[$index]/@Name" />
       </xsl:attribute>
       <xsl:attribute name="ReferencedProperty">
         <xsl:value-of select="@Name" />
@@ -413,8 +427,8 @@
           <FunctionImport>
             <xsl:copy-of select="@Name|@EntitySet" />
             <xsl:attribute name="Function">
-            <xsl:value-of select="../../@Namespace" />.<xsl:value-of select="@Name" />
-          </xsl:attribute>
+              <xsl:value-of select="../../@Namespace" />.<xsl:value-of select="@Name" />
+            </xsl:attribute>
             <xsl:if test="not(*[local-name()='Parameter'])">
               <xsl:attribute name="IncludeInServiceDocument">true</xsl:attribute>
             </xsl:if>
@@ -424,8 +438,8 @@
           <ActionImport>
             <xsl:copy-of select="@Name|@EntitySet" />
             <xsl:attribute name="Action">
-            <xsl:value-of select="../../@Namespace" />.<xsl:value-of select="@Name" />
-          </xsl:attribute>
+              <xsl:value-of select="../../@Namespace" />.<xsl:value-of select="@Name" />
+            </xsl:attribute>
             <xsl:apply-templates select="@sap:*" />
           </ActionImport>
         </xsl:otherwise>
@@ -465,6 +479,17 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+  <xsl:template match="edm2:Parameter|edm3:Parameter">
+    <xsl:element name="{local-name()}">
+      <xsl:if test="not(@Nullable)">
+        <xsl:attribute name="Nullable">false</xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates select="@*|node()" />
+    </xsl:element>
+  </xsl:template>
+
+
 
   <xsl:template match="edm2:Function|edm3:Function">
     <Function>
