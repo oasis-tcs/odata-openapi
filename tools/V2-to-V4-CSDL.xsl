@@ -459,6 +459,7 @@
           <xsl:if test="@ReturnType">
             <ReturnType>
               <xsl:attribute name="Type"><xsl:value-of select="@ReturnType" /></xsl:attribute>
+              <xsl:attribute name="Nullable">false</xsl:attribute>
             </ReturnType>
           </xsl:if>
         </Function>
@@ -488,8 +489,6 @@
       <xsl:apply-templates select="@*|node()" />
     </xsl:element>
   </xsl:template>
-
-
 
   <xsl:template match="edm2:Function|edm3:Function">
     <Function>
