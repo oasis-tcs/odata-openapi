@@ -1870,7 +1870,6 @@
         <xsl:with-param name="type" select="concat('Collection(',$qualifiedType,')')" />
         <xsl:with-param name="delta" select="$delta" />
         <xsl:with-param name="description" select="'Retrieved entities'" />
-        <xsl:with-param name="innerDescription" select="concat('Collection of ',$type)" />
       </xsl:call-template>
 
       <xsl:text>}</xsl:text>
@@ -1933,7 +1932,6 @@
         <xsl:with-param name="code" select="'201'" />
         <xsl:with-param name="type" select="$qualifiedType" />
         <xsl:with-param name="description" select="'Created entity'" />
-        <xsl:with-param name="innerDescription" select="concat('Created ',$type)" />
       </xsl:call-template>
       <xsl:text>}</xsl:text>
     </xsl:if>
@@ -2139,7 +2137,6 @@
       <xsl:call-template name="responses">
         <xsl:with-param name="type" select="$qualifiedType" />
         <xsl:with-param name="description" select="'Retrieved entity'" />
-        <xsl:with-param name="innerDescription" select="$type" />
       </xsl:call-template>
       <xsl:text>}</xsl:text>
     </xsl:if>
@@ -2374,7 +2371,6 @@
       <xsl:with-param name="type" select="$qualifiedType" />
       <xsl:with-param name="delta" select="$delta" />
       <xsl:with-param name="description" select="'Retrieved entity'" />
-      <xsl:with-param name="innerDescription" select="$type" />
     </xsl:call-template>
     <xsl:text>}</xsl:text>
 
@@ -2719,6 +2715,7 @@
     <xsl:value-of select="@Name" />
     <xsl:text>":{"post":{</xsl:text>
     <xsl:call-template name="summary-description">
+      <xsl:with-param name="node" select="$action" />
       <xsl:with-param name="fallback-summary">
         <xsl:text>Invoke action </xsl:text>
         <xsl:value-of select="@Name" />
@@ -2850,7 +2847,6 @@
     <xsl:param name="type" select="null" />
     <xsl:param name="delta" select="'false'" />
     <xsl:param name="description" select="'Success'" />
-    <xsl:param name="innerDescription" select="'Result'" />
 
     <xsl:variable name="collection" select="starts-with($type,'Collection(')" />
 
@@ -2877,8 +2873,18 @@
             <xsl:when test="$collection and $odata-version='2.0'">
               <xsl:text>Wrapper</xsl:text>
             </xsl:when>
+            <xsl:when test="$collection">
+              <xsl:text>Collection of </xsl:text>
+              <xsl:call-template name="substring-after-last">
+                <xsl:with-param name="input" select="substring-before(substring-after($type,'('),')')" />
+                <xsl:with-param name="marker" select="'.'" />
+              </xsl:call-template>
+            </xsl:when>
             <xsl:otherwise>
-              <xsl:value-of select="$innerDescription" />
+              <xsl:call-template name="substring-after-last">
+                <xsl:with-param name="input" select="$type" />
+                <xsl:with-param name="marker" select="'.'" />
+              </xsl:call-template>
             </xsl:otherwise>
           </xsl:choose>
           <xsl:text>","type":"object","properties":{"</xsl:text>
@@ -3099,7 +3105,6 @@
       <xsl:with-param name="code" select="'200'" />
       <xsl:with-param name="type" select="concat('Collection(',$targetType,')')" />
       <xsl:with-param name="description" select="'Retrieved entities'" />
-      <xsl:with-param name="innerDescription" select="concat('Collection of ',$simpleName)" />
     </xsl:call-template>
 
     <xsl:text>}}</xsl:text>
@@ -3413,11 +3418,12 @@
   </xsl:template>
 
   <xsl:template name="summary-description">
+    <xsl:param name="node" select="." />
     <xsl:param name="fallback-summary" />
 
     <xsl:variable name="summary">
       <xsl:call-template name="Common.Label">
-        <xsl:with-param name="node" select="." />
+        <xsl:with-param name="node" select="$node" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:text>"summary":"</xsl:text>
@@ -3433,7 +3439,7 @@
 
     <xsl:variable name="description">
       <xsl:call-template name="description">
-        <xsl:with-param name="node" select="." />
+        <xsl:with-param name="node" select="$node" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:if test="$description!=''">
