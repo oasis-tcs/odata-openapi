@@ -474,6 +474,7 @@
           <xsl:if test="@ReturnType">
             <ReturnType>
               <xsl:attribute name="Type"><xsl:value-of select="@ReturnType" /></xsl:attribute>
+              <xsl:attribute name="Nullable">false</xsl:attribute>
             </ReturnType>
           </xsl:if>
         </Action>
