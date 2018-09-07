@@ -1044,15 +1044,19 @@
           <xsl:with-param name="nullable" select="$nullable" />
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
-        <xsl:text>,"format":"decimal"</xsl:text>
-        <xsl:if test="$inParameter and $odata-version='2.0'">
-          <xsl:text>,"pattern":"^[-]?[0-9]+(\\.[0-9]+[mM])?$"</xsl:text>
-        </xsl:if>
+        <xsl:choose>
+          <xsl:when test="$inParameter and $odata-version='2.0'">
+            <xsl:text>,"pattern":"^[-]?[0-9]+(\\.[0-9]+)?[mM]$"</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>,"format":"decimal"</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:choose>
           <xsl:when test="not($target/@Scale) or $target/@Scale='0'">
             <xsl:text>,"multipleOf":1</xsl:text>
           </xsl:when>
-          <xsl:when test="$target/@Scale!='variable'">
+          <xsl:when test="number($target/@Scale)=$target/@Scale">
             <xsl:text>,"multipleOf":1.0e-</xsl:text>
             <xsl:value-of select="$target/@Scale" />
           </xsl:when>
@@ -1060,22 +1064,26 @@
         <xsl:if test="$target/@Precision">
           <xsl:variable name="scale">
             <xsl:choose>
-              <xsl:when test="not($target/@Scale)">
-                <xsl:value-of select="0" />
-              </xsl:when>
-              <xsl:when test="$target/@Scale='variable'">
-                <xsl:value-of select="0" />
+              <xsl:when test="number($target/@Scale)=$target/@Scale">
+                <xsl:value-of select="$target/@Scale" />
               </xsl:when>
               <xsl:otherwise>
-                <xsl:value-of select="$target/@Scale" />
+                <xsl:value-of select="0" />
               </xsl:otherwise>
             </xsl:choose>
           </xsl:variable>
           <xsl:variable name="limit">
-            <xsl:call-template name="repeat">
-              <xsl:with-param name="string" select="'9'" />
-              <xsl:with-param name="count" select="$target/@Precision - $scale" />
-            </xsl:call-template>
+            <xsl:choose>
+              <xsl:when test="$target/@Precision > $scale">
+                <xsl:call-template name="repeat">
+                  <xsl:with-param name="string" select="'9'" />
+                  <xsl:with-param name="count" select="$target/@Precision - $scale" />
+                </xsl:call-template>
+              </xsl:when>
+              <xsl:when test="$target/@Precision = $scale">
+                <xsl:text>0</xsl:text>
+              </xsl:when>
+            </xsl:choose>
             <xsl:if test="$scale > 0">
               <xsl:text>.</xsl:text>
               <xsl:call-template name="repeat">
@@ -1149,7 +1157,14 @@
           <xsl:with-param name="nullable" select="$nullable" />
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
-        <xsl:text>,"format":"int64"</xsl:text>
+        <xsl:choose>
+          <xsl:when test="$inParameter and $odata-version='2.0'">
+            <xsl:text>,"pattern":"^[-]?[0-9]+[lL]$"</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>,"format":"int64"</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:if test="not($inParameter)">
           <xsl:text>,"example":"42"</xsl:text>
         </xsl:if>
@@ -1161,10 +1176,11 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:choose>
+          <xsl:when test="$inParameter and $odata-version='2.0'">
+            <xsl:text>,"pattern":"^datetime'[0-9]{4}-[0-9]{2}-[0-9]{2}T00:00'$"</xsl:text>
+          </xsl:when>
           <xsl:when test="$odata-version='2.0'">
-            <xsl:if test="not($inParameter)">
-              <xsl:text>,"example":"/Date(1492041600000)/"</xsl:text>
-            </xsl:if>
+            <xsl:text>,"example":"/Date(1492041600000)/"</xsl:text>
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>,"format":"date"</xsl:text>
@@ -1221,10 +1237,11 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:choose>
+          <xsl:when test="$inParameter and $odata-version='2.0'">
+            <xsl:text>,"pattern":"^datetime'[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9](\\.[0-9]+)?)?'$"</xsl:text>
+          </xsl:when>
           <xsl:when test="$odata-version='2.0'">
-            <xsl:if test="not($inParameter)">
-              <xsl:text>,"example":"/Date(1492098664000)/"</xsl:text>
-            </xsl:if>
+            <xsl:text>,"example":"/Date(1492098664000)/"</xsl:text>
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>,"format":"date-time"</xsl:text>
@@ -1241,10 +1258,11 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:choose>
+          <xsl:when test="$inParameter and $odata-version='2.0'">
+            <xsl:text>,"pattern":"^time'PT(([01]?[0-9]|2[0-3])H)?([0-5]?[0-9]M)?([0-5]?[0-9](\\.[0-9]+)?S)?'$"</xsl:text>
+          </xsl:when>
           <xsl:when test="$odata-version='2.0'">
-            <xsl:if test="not($inParameter)">
-              <xsl:text>,"example":"PT15H51M04S"</xsl:text>
-            </xsl:if>
+            <xsl:text>,"example":"PT15H51M04S"</xsl:text>
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>,"format":"time"</xsl:text>
@@ -1444,7 +1462,9 @@
   <xsl:template name="repeat">
     <xsl:param name="string" />
     <xsl:param name="count" />
-    <xsl:value-of select="$string" />
+    <xsl:if test="$count > 0">
+      <xsl:value-of select="$string" />
+    </xsl:if>
     <xsl:if test="$count > 1">
       <xsl:call-template name="repeat">
         <xsl:with-param name="string" select="$string" />
@@ -2715,7 +2735,8 @@
     <xsl:value-of select="@Name" />
     <xsl:text>":{"post":{</xsl:text>
     <xsl:call-template name="summary-description">
-      <xsl:with-param name="node" select="$action" />
+      <xsl:with-param name="node" select="." />
+      <xsl:with-param name="node2" select="$action" />
       <xsl:with-param name="fallback-summary">
         <xsl:text>Invoke action </xsl:text>
         <xsl:value-of select="@Name" />
@@ -2799,14 +2820,12 @@
 
     <!-- need to apply templates for all function overloads that match the function name -->
     <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:Function[@Name=$function]" mode="import">
-      <xsl:with-param name="functionImport" select="@Name" />
-      <xsl:with-param name="entitySet" select="@EntitySet" />
+      <xsl:with-param name="functionImport" select="." />
     </xsl:apply-templates>
   </xsl:template>
 
   <xsl:template match="edm:Function" mode="import">
     <xsl:param name="functionImport" />
-    <xsl:param name="entitySet" />
 
     <xsl:text>"/</xsl:text>
     <xsl:value-of select="@Name" />
@@ -2817,6 +2836,8 @@
     </xsl:if>
     <xsl:text>":{"get":{</xsl:text>
     <xsl:call-template name="summary-description">
+      <xsl:with-param name="node" select="$functionImport" />
+      <xsl:with-param name="node2" select="." />
       <xsl:with-param name="fallback-summary">
         <xsl:text>Invoke function </xsl:text>
         <xsl:value-of select="@Name" />
@@ -2824,8 +2845,8 @@
     </xsl:call-template>
     <xsl:text>,"tags":["</xsl:text>
     <xsl:choose>
-      <xsl:when test="$entitySet">
-        <xsl:value-of select="$entitySet" />
+      <xsl:when test="$functionImport/@EntitySet">
+        <xsl:value-of select="$functionImport/@EntitySet" />
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>Service Operations</xsl:text>
@@ -3292,7 +3313,7 @@
             <xsl:text>Value needs to be enclosed in single quotes and prefixed with `datetime`, e.g. `datetime'2017-12-31T00:00'`</xsl:text>
           </xsl:when>
           <xsl:when test="@Type='Edm.DateTimeOffset'">
-            <xsl:text>Value needs to be enclosed in single quotes and prefixed with `datetimeoffset`, e.g. `datetimeoffset'2017-12-31T00:00:00Z'`</xsl:text>
+            <xsl:text>Value needs to be enclosed in single quotes and prefixed with `datetimeoffset`, e.g. `datetimeoffset'2017-12-31T23:59:59Z'`</xsl:text>
           </xsl:when>
           <xsl:when test="@Type='Edm.TimeOfDay'">
             <xsl:text>Value needs to be in duration format, enclosed in single quotes, and prefixed with `time`, e.g. `time'PT23H59M59.999S'`</xsl:text>
@@ -3419,6 +3440,7 @@
 
   <xsl:template name="summary-description">
     <xsl:param name="node" select="." />
+    <xsl:param name="node2" select="." />
     <xsl:param name="fallback-summary" />
 
     <xsl:variable name="summary">
@@ -3432,7 +3454,19 @@
         <xsl:value-of select="$summary" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$fallback-summary" />
+        <xsl:variable name="summary2">
+          <xsl:call-template name="Common.Label">
+            <xsl:with-param name="node" select="$node2" />
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:choose>
+          <xsl:when test="$summary2!=''">
+            <xsl:value-of select="$summary2" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$fallback-summary" />
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>"</xsl:text>
@@ -3440,6 +3474,7 @@
     <xsl:variable name="description">
       <xsl:call-template name="description">
         <xsl:with-param name="node" select="$node" />
+        <xsl:with-param name="node2" select="$node2" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:if test="$description!=''">
@@ -3451,23 +3486,52 @@
 
   <xsl:template name="description">
     <xsl:param name="node" />
+    <xsl:param name="node2" select="false()" />
+
     <xsl:variable name="quickinfo">
-      <xsl:call-template name="Common.QuickInfo">
-        <xsl:with-param name="node" select="$node" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="description">
-      <xsl:call-template name="Core.Description">
-        <xsl:with-param name="node" select="$node" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="longdescription">
-      <xsl:if test="$property-longDescription">
-        <xsl:call-template name="Core.LongDescription">
+      <xsl:variable name="first">
+        <xsl:call-template name="Common.QuickInfo">
           <xsl:with-param name="node" select="$node" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:value-of select="$first" />
+      <xsl:if test="$first='' and $node2">
+        <xsl:call-template name="Common.QuickInfo">
+          <xsl:with-param name="node" select="$node2" />
         </xsl:call-template>
       </xsl:if>
     </xsl:variable>
+
+    <xsl:variable name="description">
+      <xsl:variable name="first">
+        <xsl:call-template name="Core.Description">
+          <xsl:with-param name="node" select="$node" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:value-of select="$first" />
+      <xsl:if test="$first='' and $node2">
+        <xsl:call-template name="Core.Description">
+          <xsl:with-param name="node" select="$node2" />
+        </xsl:call-template>
+      </xsl:if>
+    </xsl:variable>
+
+    <xsl:variable name="longdescription">
+      <xsl:if test="$property-longDescription">
+        <xsl:variable name="first">
+          <xsl:call-template name="Core.LongDescription">
+            <xsl:with-param name="node" select="$node" />
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:value-of select="$first" />
+        <xsl:if test="$first='' and $node2">
+          <xsl:call-template name="Core.LongDescription">
+            <xsl:with-param name="node" select="$node2" />
+          </xsl:call-template>
+        </xsl:if>
+      </xsl:if>
+    </xsl:variable>
+
     <xsl:choose>
       <xsl:when test="$quickinfo!='' or $description!='' or $longdescription!=''">
         <xsl:value-of select="$quickinfo" />
@@ -3480,6 +3544,7 @@
         </xsl:if>
         <xsl:value-of select="$longdescription" />
       </xsl:when>
+      <!-- TODO: this is fishy, already used in summary -->
       <xsl:otherwise>
         <xsl:call-template name="Common.Label">
           <xsl:with-param name="node" select="$node" />
