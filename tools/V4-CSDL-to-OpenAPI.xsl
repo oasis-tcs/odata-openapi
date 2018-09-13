@@ -193,8 +193,13 @@
       <xsl:otherwise>
         <xsl:variable name="target">
           <xsl:choose>
+            <xsl:when test="local-name($node)='Parameter' and $odata-version='2.0'">
+              <xsl:value-of
+                select="concat($node/../../@Namespace,'.',$node/../../edm:EntityContainer/@Name,'/',../@Name,'/',$node/@Name)" />
+            </xsl:when>
             <xsl:when
               test="local-name($node)='Property' or local-name($node)='NavigationProperty'
+                 or local-name($node)='Parameter'
                  or local-name($node)='EntitySet' or local-name($node)='Singleton' 
                  or local-name($node)='ActionImport' or local-name($node)='FunctionImport'"
             >
@@ -207,8 +212,13 @@
         </xsl:variable>
         <xsl:variable name="targetAliased">
           <xsl:choose>
+            <xsl:when test="local-name($node)='Parameter' and $odata-version='2.0'">
+              <xsl:value-of
+                select="concat($node/../../@Alias,'.',$node/../../edm:EntityContainer/@Name,'/',../@Name,'/',$node/@Name)" />
+            </xsl:when>
             <xsl:when
               test="local-name($node)='Property' or local-name($node)='NavigationProperty' 
+                 or local-name($node)='Parameter'
                  or local-name($node)='EntitySet' or local-name($node)='Singleton' 
                  or local-name($node)='ActionImport' or local-name($node)='FunctionImport'"
             >
