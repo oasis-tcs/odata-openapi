@@ -948,6 +948,7 @@
     <xsl:param name="nullableFacet" />
     <xsl:param name="target" select="." />
     <xsl:param name="inParameter" select="false()" />
+    <xsl:param name="inResponse" select="false()" />
     <xsl:param name="suffix" select="null" />
     <xsl:variable name="noArray" select="$inParameter" />
     <xsl:variable name="nullable">
@@ -981,9 +982,12 @@
     </xsl:variable>
     <xsl:if test="$collection">
       <xsl:if test="$odata-version='2.0'">
-        <xsl:text>"title":"Collection of </xsl:text>
-        <xsl:value-of select="$simpleName" />
-        <xsl:text>","type":"object","properties":{"results":{</xsl:text>
+        <xsl:if test="$inResponse">
+          <xsl:text>"title":"Collection of </xsl:text>
+          <xsl:value-of select="$simpleName" />
+          <xsl:text>",</xsl:text>
+        </xsl:if>
+        <xsl:text>"type":"object","properties":{"results":{</xsl:text>
       </xsl:if>
       <xsl:text>"type":"array","items":{</xsl:text>
     </xsl:if>
@@ -2935,6 +2939,7 @@
         <xsl:call-template name="type">
           <xsl:with-param name="type" select="$type" />
           <xsl:with-param name="nullableFacet" select="'false'" />
+          <xsl:with-param name="inResponse" select="true()" />
         </xsl:call-template>
         <xsl:if test="$delta='true'">
           <xsl:text>},</xsl:text>
