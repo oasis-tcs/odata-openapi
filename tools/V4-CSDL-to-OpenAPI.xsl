@@ -1111,16 +1111,16 @@
             <xsl:value-of select="$limit" />
             <xsl:text>,"maximum":</xsl:text>
             <xsl:value-of select="$limit" />
-            <xsl:if test="not($inParameter)">
-              <xsl:text>,"example":</xsl:text>
-              <xsl:if test="$odata-version='2.0'">
-                <xsl:text>"</xsl:text>
-              </xsl:if>
-              <xsl:value-of select="$limit" />
-              <xsl:if test="$odata-version='2.0'">
-                <xsl:text>"</xsl:text>
-              </xsl:if>
-            </xsl:if>
+          </xsl:if>
+        </xsl:if>
+        <xsl:if test="not($inParameter)">
+          <xsl:text>,"example":</xsl:text>
+          <xsl:if test="$odata-version='2.0'">
+            <xsl:text>"</xsl:text>
+          </xsl:if>
+          <xsl:text>0</xsl:text>
+          <xsl:if test="$odata-version='2.0'">
+            <xsl:text>"</xsl:text>
           </xsl:if>
         </xsl:if>
       </xsl:when>
