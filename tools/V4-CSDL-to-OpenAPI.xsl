@@ -29,6 +29,7 @@
     - reduce duplicated code in /paths production
     - external targeting for Capabilities: NonSortableProperties, KeyAsSegmentSupported, SearchRestrictions
     - external targeting for Core.Immutable and Core.Computed
+    - actions/functions bound to Collection(...)
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -205,6 +206,8 @@
             >
               <xsl:value-of select="concat($node/../../@Namespace,'.',$node/../@Name,'/',$node/@Name)" />
             </xsl:when>
+            <!-- TODO: action/function overload -->
+            <!-- TODO: parameter of action/function overload - remove 'Parameter' above -->
             <xsl:otherwise>
               <xsl:value-of select="concat($node/../@Namespace,'.',$node/@Name)" />
             </xsl:otherwise>
@@ -224,6 +227,8 @@
             >
               <xsl:value-of select="concat($node/../../@Alias,'.',$node/../@Name,'/',$node/@Name)" />
             </xsl:when>
+            <!-- TODO: action/function overload -->
+            <!-- TODO: parameter of action/function overload - remove 'Parameter' above -->
             <xsl:otherwise>
               <xsl:value-of select="concat($node/../@Alias,'.',$node/@Name)" />
             </xsl:otherwise>
@@ -2986,7 +2991,7 @@
     <xsl:variable name="targetSet" select="//edm:EntitySet[@Name=$targetEntitySetName]" />
     <xsl:variable name="targetAddressable" select="$targetSet/edm:Annotation[@Term='TODO.Addressable']/@Bool" />
 
-    <xsl:if test="$resultContext or ($collection and not($targetAddressable='false'))">
+    <xsl:if test="$resultContext or @ContainsTarget='true' or ($collection and not($targetAddressable='false'))">
 
       <xsl:variable name="nullable">
         <xsl:call-template name="nullableFacetValue">
