@@ -16,7 +16,7 @@ var path = require('path');
 var fs = require('fs');
 
 var xsltpath = path.dirname(require.main.filename) + path.sep;
-//xslt4node.addLibrary(xsltpath + 'xalan.jar');
+xslt4node.addLibrary(xsltpath + 'xalan/xalan.jar');
 
 var unknown = false;
 
