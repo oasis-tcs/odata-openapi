@@ -1976,6 +1976,17 @@
     </xsl:if>
 
     <xsl:text>}</xsl:text>
+
+    <xsl:variable name="qualifiedCollection" select="concat('Collection(',$qualifiedType,')')" />
+    <xsl:variable name="aliasQualifiedCollection" select="concat('Collection(',$qualifiedType,')')" />
+    <xsl:apply-templates
+      select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedCollection or edm:Parameter[1]/@Type=$aliasQualifiedCollection)]"
+      mode="bound"
+    >
+      <!-- bound to entity set works as bound to singleton -->
+      <xsl:with-param name="singleton" select="@Name" />
+      <xsl:with-param name="entityType" select="$entityType" />
+    </xsl:apply-templates>
   </xsl:template>
 
   <xsl:template name="filter-RequiredProperties">

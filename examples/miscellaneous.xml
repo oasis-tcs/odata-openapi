@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm"
-  Version="4.0"
->
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.0">
   <edmx:Reference Uri="/vocabularies/Org.OData.Core.V1.xml">
     <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1" />
   </edmx:Reference>
@@ -9,7 +7,9 @@
     <edmx:Include Alias="Measures" Namespace="Org.OData.Measures.V1" />
     <Annotation Term="Some.Term" />
   </edmx:Reference>
-  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/vocabularies/Org.OData.Validation.V1.xml">
+  <edmx:Reference
+    Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/vocabularies/Org.OData.Validation.V1.xml"
+  >
     <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1" />
   </edmx:Reference>
   <edmx:Reference Uri="http://somewhere/Vocabulary/V1">
@@ -38,14 +38,12 @@
     <!-- Example 5 -->
     <Schema Namespace="org.example" Alias="Self">
       <Annotation Term="Core.Description" String="Examples from Part 3: CSDL" />
-
       <!-- 6 Structural Property -->
       <!-- Example 6 -->
       <ComplexType Name="Measurement">
         <Property Name="Dimension" Type="Edm.String" Nullable="false" MaxLength="50" DefaultValue="Unspecified" />
         <Property Name="Length" Type="Edm.Decimal" Nullable="false" Precision="18" Scale="2" />
       </ComplexType>
-
       <!-- Example 6-11 -->
       <ComplexType Name="Example7to11">
         <Property Name="Units" Type="Collection(Edm.String)" />
@@ -54,7 +52,6 @@
         <!-- Example 10 shows an invalid property definition and is omitted -->
         <Property Name="Amount11" Type="Edm.Decimal" Precision="3" Scale="variable" />
       </ComplexType>
-
       <!-- 7 Navigation Property -->
       <!-- Example 12-14 -->
       <EntityType Name="Product">
@@ -73,28 +70,24 @@
         </NavigationProperty>
         <NavigationProperty Name="Supplier" Type="Self.Supplier" />
       </EntityType>
-
       <EntityType Name="Supplier" OpenType="false">
         <Key>
           <PropertyRef Name="ID" />
         </Key>
         <Property Type="Edm.String" Name="ID" Nullable="false" Unicode="true" />
       </EntityType>
-
       <EntityType Name="Customer">
         <Key>
           <PropertyRef Name="ID" />
         </Key>
         <Property Type="Edm.String" Name="ID" Nullable="false" />
       </EntityType>
-
       <EntityType Name="Order">
         <Key>
           <PropertyRef Name="ID" />
         </Key>
         <Property Type="Edm.Int64" Name="ID" Nullable="false" />
       </EntityType>
-
       <EntityType Name="Category" HasStream="false">
         <Key>
           <PropertyRef Name="ID" />
@@ -106,7 +99,6 @@
           </OnDelete>
         </NavigationProperty>
       </EntityType>
-
       <!-- 8 Entity Type -->
       <!-- Example 15: a simple entity type -->
       <EntityType Name="Employee" HasStream="true">
@@ -118,13 +110,11 @@
         <Property Name="LastName" Type="Edm.String" Nullable="false" />
         <NavigationProperty Name="Manager" Type="org.example.Manager" />
       </EntityType>
-
       <!-- Example 16: a derived entity type based on the previous example -->
       <EntityType Name="Manager" BaseType="Self.Employee">
         <Property Name="AnnualBudget" Type="Edm.Decimal" />
         <NavigationProperty Name="Employees" Type="Collection(Self.Employee)" />
       </EntityType>
-
       <!-- Example 17: entity type with a simple key -->
       <EntityType Name="Category17">
         <Key>
@@ -135,7 +125,6 @@
           <Annotation Term="Core.IsLanguageDependent" />
         </Property>
       </EntityType>
-
       <!-- Example 18: entity type with a simple key referencing a property of a complex type -->
       <EntityType Name="Category18">
         <Key>
@@ -144,12 +133,10 @@
         <Property Name="Info" Type="Self.EntityInfo" Nullable="false" />
         <Property Name="Name" Type="Edm.String" />
       </EntityType>
-
       <ComplexType Name="EntityInfo">
         <Property Name="ID" Type="Edm.Int32" Nullable="false" />
         <Property Name="Created" Type="Edm.DateTimeOffset" />
       </ComplexType>
-
       <!-- Example 19: entity type with a composite key -->
       <EntityType Name="OrderLine">
         <Key>
@@ -159,9 +146,7 @@
         <Property Name="OrderID" Type="Edm.Int32" Nullable="false" />
         <Property Name="LineNumber" Type="Edm.Int32" Nullable="false" />
       </EntityType>
-
       <!-- Example 20-21: URLs, not relevant here -->
-
       <!-- 9 Complex Type -->
       <!-- Example 22: a complex type used by two entity types -->
       <ComplexType Name="Dimensions">
@@ -169,7 +154,6 @@
         <Property Name="Weight" Nullable="false" Type="Edm.Decimal" />
         <Property Name="Length" Nullable="false" Type="Edm.Decimal" />
       </ComplexType>
-
       <EntityType Name="Product22">
         <Key>
           <PropertyRef Name="ID" />
@@ -178,7 +162,6 @@
         <Property Name="ProductDimensions" Type="Self.Dimensions" />
         <Property Name="ShippingDimensions" Type="Self.Dimensions" />
       </EntityType>
-
       <EntityType Name="ShipmentBox">
         <Key>
           <PropertyRef Name="ID" />
@@ -186,7 +169,6 @@
         <Property Name="ID" Type="Edm.String" Nullable="false" />
         <Property Name="Dimensions" Type="Self.Dimensions" />
       </EntityType>
-
       <!-- Example 23: a simple flags-enabled enumeration -->
       <EnumType Name="FileAccess" UnderlyingType="Edm.Int32" IsFlags="true">
         <Member Name="Read" Value="1">
@@ -196,7 +178,6 @@
         <Member Name="Create" Value="4" />
         <Member Name="Delete" Value="8" />
       </EnumType>
-
       <!-- 10 Enumeration Type -->
       <!--
         Example 24: an enumeration type with three discrete members
@@ -213,7 +194,6 @@
           <Annotation Term="Core.Description" String="Shipped overnight" />
         </Member>
       </EnumType>
-
       <!-- Example 26: pattern values can be combined, and some combined values have explicit names -->
       <EnumType Name="Pattern" UnderlyingType="Edm.Int32" IsFlags="true">
         <Member Name="Plain" Value="0" />
@@ -229,22 +209,18 @@
         <Member Name="RedYellowStriped" Value="21" />
         <Member Name="BlueYellowStriped" Value="22" />
       </EnumType>
-
       <!-- 11 Type Definition -->
       <!-- Example 27 -->
       <TypeDefinition Name="Length" UnderlyingType="Edm.Int32">
         <Annotation Term="Org.OData.Measures.V1.Unit" String="Centimeters" />
       </TypeDefinition>
-
       <TypeDefinition Name="Weight" UnderlyingType="Edm.Int32">
         <Annotation Term="Org.OData.Measures.V1.Unit" String="Kilograms" />
       </TypeDefinition>
-
       <ComplexType Name="Size">
         <Property Name="Height" Type="Self.Length" />
         <Property Name="Weight" Type="Self.Weight" />
       </ComplexType>
-
       <!-- 12 Action and Function -->
       <!-- Example 28: a function returning the top-selling products for a given year. In this case the year must be specified
         as a parameter of the function with the edm:Parameter element. -->
@@ -252,14 +228,11 @@
         <Parameter Name="Year" Type="Edm.Decimal" Precision="4" Scale="0" />
         <ReturnType Type="Collection(Self.Product)" />
       </Function>
-
       <Action Name="Approval" IsBound="false" />
-
       <Function Name="ProductsByRating" IsBound="false" IsComposable="false">
         <Parameter Name="Rating" Type="Edm.Decimal" Precision="4" Scale="0" />
         <ReturnType Type="Collection(Self.Product)" />
       </Function>
-
       <!-- 13 Entity Container -->
       <EntityContainer Name="DemoService">
         <!-- Example 29: one entity set per entity type - covered by example 32 -->
@@ -271,11 +244,9 @@
           <NavigationPropertyBinding Path="Orders" Target="Orders" />
         </EntitySet>
         <EntitySet Name="Orders" EntityType="Self.Order" />
-
         <!-- Example 31: function import returning the top ten revenue-generating products for a given fiscal year -->
         <FunctionImport Name="TopSellingProducts" Function="Model1.TopSellingProducts" EntitySet="Products"
           IncludeInServiceDocument="false" />
-
         <!-- Example 32: An entity container aggregates entity sets, singletons, action imports, and function imports. -->
         <EntitySet Name="Products" EntityType="Self.Product">
           <Annotation Term="org.example.display.DisplayName" String="Product Catalog" />
@@ -294,21 +265,16 @@
         <Singleton Name="MainSupplier" Type="Self.Supplier" />
         <ActionImport Name="LeaveRequestApproval" Action="Self.Approval" />
         <FunctionImport Name="ProductsByRating" Function="Self.ProductsByRating" EntitySet="Products" />
-
         <!-- Example 33: see miscellaneous2.xml -->
-
         <!-- Example 34: for an entity set in the same container as the enclosing entity set -->
         <EntitySet Name="Categories34" EntityType="org.example.Category">
           <NavigationPropertyBinding Path="Products" Target="SomeSet" />
         </EntitySet>
-
         <!-- Example 35: for an entity set in any container in scope -->
         <EntitySet Name="Categories35" EntityType="org.example.Category">
           <NavigationPropertyBinding Path="Products" Target="SomeModel.SomeContainer/SomeSet" />
         </EntitySet>
       </EntityContainer>
-
-
       <!-- 14 Vocabulary and Annotation -->
       <!--
         Example 36: the Product entity type is extended with a DisplayName by a metadata annotation that binds the term
@@ -338,7 +304,6 @@
           </Record>
         </Annotation>
       </EntityType>
-
       <!--
         Example 37: the IsURL term can be applied to properties and terms that are of type Edm.String (the Core.Tag type
         and the two Core terms are defined in [OData-VocCore])
@@ -349,7 +314,6 @@
         </Annotation>
         <Annotation Term="Core.RequiresType" String="Edm.String" />
       </Term>
-
       <!-- Example 39: annotations should only be applied to tablet devices -->
       <Annotations Target="Self.Person" Qualifier="Tablet">
         <!--Example 40: annotation should only be applied to tablet devices -->
@@ -357,85 +321,72 @@
       </Annotations>
       <Annotations Target="Self.Person">
         <!-- Example 41: folded into example 32 -->
-
         <!-- Example 42: base64url-encoded binary value (OData) -->
         <Annotation Term="org.example.display.Thumbnail" Binary="T0RhdGE" />
         <Annotation Term="org.example.display.Thumbnail" Qualifier="element">
           <Binary>T0RhdGE</Binary>
         </Annotation>
-
         <!-- Example 43 -->
         <Annotation Term="org.example.display.ReadOnly" Bool="true" />
         <Annotation Term="org.example.display.ReadOnly" Qualifier="element">
           <Bool>true</Bool>
         </Annotation>
-
         <!-- Example 44 -->
         <Annotation Term="org.example.vCard.birthDay" Date="2000-01-01" />
         <Annotation Term="org.example.vCard.birthDay" Qualifier="element">
           <Date>2000-01-01</Date>
         </Annotation>
-
         <!-- Example 45 -->
         <Annotation Term="org.example.display.LastUpdated" DateTimeOffset="2000-01-01T16:00:00.000Z" />
         <Annotation Term="org.example.display.LastUpdated" Qualifier="element">
           <DateTimeOffset>2000-01-01T16:00:00.000-09:00</DateTimeOffset>
         </Annotation>
-
         <!-- Example 46 -->
         <Annotation Term="org.example.display.Width" Decimal="3.14" />
         <Annotation Term="org.example.display.Width" Qualifier="element">
           <Decimal>3.14</Decimal>
         </Annotation>
-
         <!-- Example 47 -->
         <Annotation Term="org.example.task.duration" Duration="P7D" />
         <Annotation Term="org.example.task.duration" Qualifier="element">
           <Duration>P11DT23H59M59.999999999999S</Duration>
         </Annotation>
-
         <!-- Example 48: single value -->
         <Annotation Term="org.example.HasPattern" EnumMember="org.example.Pattern/Red" />
         <Annotation Term="org.example.HasPattern" Qualifier="element">
           <EnumMember>org.example.Pattern/Red</EnumMember>
         </Annotation>
-
         <!-- Example 49: combined value for IsFlags enumeration type -->
-        <Annotation Term="org.example.HasPattern" Qualifier="list" EnumMember="org.example.Pattern/Red org.example.Pattern/Striped" />
+        <Annotation Term="org.example.HasPattern" Qualifier="list"
+          EnumMember="org.example.Pattern/Red org.example.Pattern/Striped" />
         <Annotation Term="org.example.HasPattern" Qualifier="listelement">
           <EnumMember>org.example.Pattern/Red org.example.Pattern/Striped</EnumMember>
         </Annotation>
-
         <!-- Example 50 -->
         <Annotation Term="org.example.display.FloatWidth" Float="3.14" />
         <Annotation Term="org.example.display.FloatWidth" Qualifier="element">
           <Float>3.14</Float>
         </Annotation>
-
         <!-- Example 51 -->
         <Annotation Term="org.example.display.Id" Guid="21EC2020-3AEA-1069-A2DD-08002B30309D" />
         <Annotation Term="org.example.display.Id" Qualifier="element">
           <Guid>21EC2020-3AEA-1069-A2DD-08002B30309D</Guid>
         </Annotation>
-
         <!-- Example 52 -->
         <Annotation Term="org.example.display.IntWidth" Int="42" />
         <Annotation Term="org.example.display.IntWidth" Qualifier="element">
           <Int>42</Int>
         </Annotation>
-
         <!-- Example 53 -->
         <Annotation Term="org.example.display.DisplayName" String="Product Catalog" />
         <Annotation Term="org.example.display.DisplayName" Qualifier="element">
           <String>Product Catalog</String>
         </Annotation>
-
         <!-- Example 54 -->
         <Annotation Term="org.example.display.EndTime" TimeOfDay="21:45:00" />
         <Annotation Term="org.example.display.EndTime" Qualifier="element">
           <TimeOfDay>21:45:00</TimeOfDay>
         </Annotation>
-
         <!-- Comparison and Logical Operators -->
         <Annotation Term="Comparison.And.Logical.Operators">
           <Collection>
@@ -476,7 +427,6 @@
             </Le>
           </Collection>
         </Annotation>
-
         <!-- Example 55 -->
         <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier/@UI.LineItem" />
         <Annotation Term="UI.CollectionFacet" Qualifier="Contacts">
@@ -485,7 +435,6 @@
             <AnnotationPath>Customer/@Communication.Contact</AnnotationPath>
           </Collection>
         </Annotation>
-
         <!-- Example 56 -->
         <Annotation Term="org.example.display.DisplayName" Qualifier="apply">
           <Apply Function="odata.concat">
@@ -493,12 +442,11 @@
             <Path>ProductName</Path>
             <String> (</String>
             <Path>Available/Quantity</Path>
-            <String> </String>
+            <String></String>
             <Path>Available/Unit</Path>
             <String> available)</String>
           </Apply>
         </Annotation>
-
         <!-- Example 57: assuming there are no special characters in values of the NameOfMovieGenre property -->
         <Annotation Term="Some.Term" Qualifier="Example57">
           <Apply Function="odata.fillUriTemplate">
@@ -506,7 +454,6 @@
             <LabeledElement Name="actorName" Path="Actor/Name" />
           </Apply>
         </Annotation>
-
         <!-- Example 58 -->
         <Annotation Term="Some.Term" Qualifier="Example58">
           <Apply Function="odata.fillUriTemplate">
@@ -518,14 +465,12 @@
             </LabeledElement>
           </Apply>
         </Annotation>
-
         <!-- Example 59 -->
         <Annotation Term="org.example.display.Threshold">
           <Cast Type="Edm.Decimal">
             <Path>Average</Path>
           </Cast>
         </Annotation>
-
         <!-- Example 60 -->
         <Annotation Term="org.example.seo.SeoTerms">
           <Collection>
@@ -534,7 +479,6 @@
             <String>Customer</String>
           </Collection>
         </Annotation>
-
         <!-- Example 61 -->
         <Annotation Term="org.example.person.Gender">
           <If>
@@ -543,14 +487,12 @@
             <String>Male</String>
           </If>
         </Annotation>
-
         <!-- Example 62 -->
         <Annotation Term="Self.IsPreferredCustomer">
           <IsOf Type="Self.PreferredCustomer">
             <Path>Customer</Path>
           </IsOf>
         </Annotation>
-
         <!-- Example 63 -->
         <Annotation Term="org.example.display.DisplayName" Qualifier="l">
           <LabeledElement Name="CustomerFirstName" Path="FirstName" />
@@ -560,23 +502,19 @@
             <Path>FirstName</Path>
           </LabeledElement>
         </Annotation>
-
         <!-- Example 64 -->
         <Annotation Term="org.example.display.DisplayName" Qualifier="ref">
           <LabeledElementReference>Model.CustomerFirstName</LabeledElementReference>
         </Annotation>
-
         <!-- Example 65 -->
         <Annotation Term="org.example.display.DisplayName" Qualifier="null">
           <Null />
         </Annotation>
         <Annotation Term="org.example.display.DisplayName" Qualifier="nullWithAnnotation">
           <Null>
-            <Annotation Term="org.example.Reason" String="Private">
-            </Annotation>
+            <Annotation Term="org.example.Reason" String="Private"></Annotation>
           </Null>
         </Annotation>
-
         <!-- Example 66 -->
         <Annotation Term="UI.HyperLink" NavigationPropertyPath="Supplier" />
         <Annotation Term="Capabilities.UpdateRestrictions" Qualifier="element">
@@ -589,13 +527,11 @@
             </PropertyValue>
           </Record>
         </Annotation>
-
         <!-- Example 67 -->
         <Annotation Term="org.example.display.DisplayName" Path="FirstName" Qualifier="path" />
         <Annotation Term="org.example.display.DisplayName" Qualifier="pathelement">
           <Path>@vCard.Address#work/FullName</Path>
         </Annotation>
-
         <!-- Example 68 -->
         <Annotation Term="UI.RefreshOnChangeOf" PropertyPath="ChangedAt" />
         <Annotation Term="Capabilities.UpdateRestrictions" Qualifier="element2">
@@ -608,7 +544,6 @@
             </PropertyValue>
           </Record>
         </Annotation>
-
         <!-- Example 69: record with two structural and two navigation properties -->
         <Annotation Term="org.example.person.Employee">
           <Record>
@@ -625,7 +560,6 @@
             </PropertyValue>
           </Record>
         </Annotation>
-
         <!-- Example 70 -->
         <Annotation Term="Vocab.Supplier">
           <UrlRef>
@@ -647,7 +581,6 @@
         <Annotation Term="Core.LongDescription" UrlRef="http://host/wiki/HowToUse" />
       </Annotations>
     </Schema>
-
     <Schema Namespace="Model1" Alias="M1">
       <ComplexType Name="NullablePrimitiveTypes">
         <Property Name="NullValue" Type="Edm.Boolean" DefaultValue="null" />
@@ -671,7 +604,6 @@
         <Property Name="TypeDefValue" Type="M1.IntegerDecimal" Precision="20" DefaultValue="42" />
         <Property Name="PrimitiveValue" Type="Edm.PrimitiveType" />
       </ComplexType>
-
       <ComplexType Name="NonNullablePrimitiveTypes">
         <Property Name="NullValue" Type="Edm.Boolean" DefaultValue="null" Nullable="false" />
         <Property Name="TrueValue" Type="Edm.Boolean" DefaultValue="true" Nullable="false" />
@@ -696,7 +628,6 @@
         <Property Name="TextValue" Type="M1.Text" MaxLength="60" DefaultValue="42" Nullable="false" />
         <Property Name="PrimitiveValue" Type="Edm.PrimitiveType" Nullable="false" />
       </ComplexType>
-
       <Function Name="CreatedEntities">
         <Parameter Name="before" Type="Edm.DateTimeOffset" Nullable="true" />
         <Parameter Name="after" Type="Edm.DateTimeOffset" Nullable="true" />
@@ -712,27 +643,33 @@
           <Annotation Term="A.B" String="Works" />
         </ReturnType>
       </Function>
+      <Function Name="BestSelling" IsBound="true">
+        <Annotation Term="Core.Description" String="Return the best-selling product in the given collection" />
+        <Parameter Name="in" Type="Collection(org.example.Product)" />
+        <ReturnType Type="org.example.Product" />
+      </Function>
+      <Action Name="New" IsBound="true">
+        <Annotation Term="Core.Description" String="Create a new product in the given collection" />
+        <Parameter Name="in" Type="Collection(org.example.Product)" />
+        <ReturnType Type="org.example.Product" />
+      </Action>
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="@UI.LineItem" />
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier/@UI.LineItem" Qualifier="OnNavPropTarget" />
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier/@UI.LineItem" Qualifier="OnNavProp" />
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier/@UI.LineItem#Tablet" Qualifier="OnNavPropQualified" />
       <Annotation Term="UI.ReferenceFacet" UrlRef="http://LineItem" Qualifier="ViaUrl" />
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="@X.Supplier#X/Contacts/@Y.ViewVariants" Qualifier="complicated" />
-
       <Annotation Term="UI.HyperLink" NavigationPropertyPath="Supplier" />
-
       <Annotation Term="Is.Null">
         <Annotation Term="Next.to.Null" />
         <Null>
           <Annotation Term="Within.Null" />
         </Null>
       </Annotation>
-
       <Annotation Term="Vocabulary1.SubTitle">
         <Annotation Term="For.Constant" />
         <Int>1234</Int>
       </Annotation>
-
       <Annotation Term="A.Bool" Bool="true">
         <Annotation Term="Annotate.A.Bool" />
       </Annotation>
@@ -751,14 +688,11 @@
       <Annotation Term="A.String" Qualifier="ToBeEscaped">
         <String>A/"good"&#x0D;&#x0A;story\for&#x09;kids</String>
       </Annotation>
-
       <Annotation Term="A.Guid" Guid="86a96539-871b-45cf-b96b-93dbc235105e" />
       <Annotation Term="A.Guid" Qualifier="Element">
         <Guid>86a96539-871b-45cf-b96b-93dbc235105e</Guid>
       </Annotation>
-
       <Annotation Term="A.Date" Date="2013-10-09" />
-
       <Annotation Term="Capabilities.UpdateRestrictions">
         <Record>
           <PropertyValue Property="Updatable" Bool="true" />
@@ -770,7 +704,6 @@
           </PropertyValue>
         </Record>
       </Annotation>
-
       <Annotation Term="SearchVocabulary.SearchResult">
         <Record>
           <PropertyValue Property="Title" Path="Name" />
@@ -785,7 +718,6 @@
           </PropertyValue>
         </Record>
       </Annotation>
-
       <Annotation Term="org.example.display.DisplayName" Qualifier="if">
         <If>
           <Annotation Term="In.If" />
@@ -794,7 +726,6 @@
           <String>Male</String>
         </If>
       </Annotation>
-
       <Annotation Term="UI.CollectionFacet" Qualifier="Contacts">
         <Collection>
           <AnnotationPath>Supplier/@Communication.Contact</AnnotationPath>
@@ -844,7 +775,6 @@
           <Path>Else</Path>
         </If>
       </Annotation>
-
       <EnumType Name="Size" IsFlags="false">
         <Annotation Term="Core.Description" String="T-Shirt Size" />
         <Annotation Term="Core.Description" String="Size (S, M, L)" Qualifier="alt" />
@@ -855,13 +785,10 @@
         <Member Name="M">
           <Annotation Term="Core.Description" String="Medium" />
         </Member>
-
         <Member Name="L">
           <Annotation Term="Core.Description" String="Large" />
         </Member>
-
       </EnumType>
-
       <EnumType Name="Color" UnderlyingType="Edm.Int64" IsFlags="true">
         <Member Name="Yellow" Value="1">
           <Annotation Term="Does.Work" />
@@ -875,7 +802,6 @@
           <Annotation Term="Core.Description" String="nicely striped" />
         </Member>
       </EnumType>
-
       <EntityType Name="Weird">
         <Key>
           <PropertyRef Name="TheKey" />
@@ -959,7 +885,6 @@
           <Binary>HugoHase-_ab</Binary>
         </Annotation>
       </EntityType>
-
       <ComplexType Name="Address" OpenType="true">
         <Property Name="Street" Type="Edm.String" />
         <NavigationProperty Name="City" Type="M1.City" />
@@ -968,27 +893,16 @@
         <Property Name="MapLocation" Type="Edm.GeographyPoint" SRID="variable" />
         <Property Name="Numbers" Type="Collection(Edm.Int16)" />
       </ComplexType>
-
-      <EntityType Name="City">
-      </EntityType>
-
-      <EntityType Name="Region">
-      </EntityType>
-
-      <EntityType Name="Country">
-      </EntityType>
-
-      <EntityType Name="Planet">
-      </EntityType>
-
+      <EntityType Name="City"></EntityType>
+      <EntityType Name="Region"></EntityType>
+      <EntityType Name="Country"></EntityType>
+      <EntityType Name="Planet"></EntityType>
       <ComplexType Name="NavigationOnly">
         <NavigationProperty Name="Planet" Type="M1.Planet" />
       </ComplexType>
-
       <ComplexType Name="AnnotationOnly" Abstract="false">
         <Annotation Term="Some.Tag" />
       </ComplexType>
-
       <EntityType Name="Order" Abstract="true">
         <Property Name="Quantity" Type="Edm.Decimal">
           <Annotation Term="Measures.Unit" Path="ShippingUnit" />
@@ -997,35 +911,25 @@
           <Annotation Term="Core.Description" String="Contains the unit for property Quantity" />
         </Property>
       </EntityType>
-
       <TypeDefinition Name="SpecialByte" UnderlyingType="Edm.Byte" />
-
       <TypeDefinition Name="Text50" MaxLength="50" UnderlyingType="Edm.String" />
-
       <TypeDefinition Name="Text" UnderlyingType="Edm.String" />
-
       <TypeDefinition Name="LanguageDependentText" UnderlyingType="Edm.String">
         <Annotation Term="Core.IsLanguageDependent">
           <Annotation Term="Core.DefaultLanguage" String="en-US" />
         </Annotation>
       </TypeDefinition>
-
       <TypeDefinition Name="IntegerDecimal" UnderlyingType="Edm.Decimal" Scale="0">
         <Annotation Term="Core.Description" String="A decimal without fractional part" />
       </TypeDefinition>
-
       <TypeDefinition Name="IntegerDecimal10" UnderlyingType="Edm.Decimal" Precision="10">
         <Annotation Term="Core.Description" String="A ten-digit integer" />
       </TypeDefinition>
-
       <TypeDefinition Name="VariableDecimal" UnderlyingType="Edm.Decimal" Scale="variable">
         <Annotation Term="Core.Description" String="A floating decimal" />
       </TypeDefinition>
-
       <TypeDefinition Name="ExactTimestamp" UnderlyingType="Edm.DateTimeOffset" Precision="12" />
-
     </Schema>
-
     <!-- Examples for ODATA-535 -->
     <Schema Namespace="X">
       <Term Name="Person" Type="X.PersonType" />
@@ -1049,7 +953,6 @@
       <ComplexType Name="DeveloperType" BaseType="X.PersonType">
         <!-- additional properties -->
       </ComplexType>
-
       <Annotations Target="Some.EntityType">
         <Annotation Term="X.Person">
           <Record>
@@ -1065,7 +968,6 @@
         <Annotation Term="Org.OData.Core.V1.Description" String="Alternative description" Qualifier="alt" />
         <Annotation Term="Core.Description" Qualifier="WithPath" Path="SomeProperty" />
       </Annotations>
-
       <Term Name="DevelopmentTeam" Type="Collection(Y.DeveloperType)">
         <Annotation Term="custom.ItemIsA" String="Y.Developer" />
         <Annotation Term="custom.IsA" String="X.Team" />
@@ -1074,14 +976,12 @@
           both a DevelopmentTeam and a Team annotation and then correlate the records
         -->
       </Term>
-
       <Annotations Target="Some.EntityType">
         <Annotation Term="Y.DevelopmentTeam">
           <Annotation Term="custom.IsA" String="X.Team" />
           <Path>SomeCollectionNavProp/@Y.Developer</Path>
         </Annotation>
       </Annotations>
-
       <Term Name="ScrumTeam" BaseTerm="Y.DevelopmentTeam" Type="Y.ScrumTeamType" />
       <ComplexType Name="ScrumTeamType">
         <Property Name="ScrumMaster" Type="Y.DeveloperType">
@@ -1104,22 +1004,17 @@
           </Record>
         </Annotation>
       </Annotations>
-
       <Term Name="Movies" Type="Collection(X.MovieType)" />
       <Annotations Target="Some.EntityType">
         <Annotation Term="Y.Movies">
           <Path>AllMyMovies</Path>
         </Annotation>
       </Annotations>
-
-
       <Annotations Target="MySchema.MyEntityContainer/MyEntitySet/MySchema.MyEntityType/MyProperty">
         <Annotation Term="Y.Movies">
           <Path>AllMyMovies</Path>
         </Annotation>
       </Annotations>
-
-
       <Term Name="ArchivedMovies" Type="Collection(Y.ArchivedMovieType)">
         <Annotation Term="custom.ItemIsA" String="X.Movie" />
       </Term>
@@ -1133,7 +1028,6 @@
           <Path>MoviesInStorage</Path>
         </Annotation>
       </Annotations>
-
       <Term Name="SomeThing" Type="Y.SomeThingType" />
       <ComplexType Name="SomeThingType">
         <Property Name="SomeProperty" Type="Edm.String" />
@@ -1166,9 +1060,8 @@
           </Record>
         </Annotation>
       </Annotations>
-
-      <Term Name="AdvancedChangeTracking" BaseTerm="Capabilities.ChangeTracking" Type="Y.ChangeTrackingType" AppliesTo="EntityContainer EntitySet"
-        Nullable="false"
+      <Term Name="AdvancedChangeTracking" BaseTerm="Capabilities.ChangeTracking" Type="Y.ChangeTrackingType"
+        AppliesTo="EntityContainer EntitySet" Nullable="false"
       >
         <Annotation Term="Core.Description" String="Advanced change tracking capabilities of this service or entity set" />
       </Term>
@@ -1178,6 +1071,5 @@
         </Property>
       </ComplexType>
     </Schema>
-
   </edmx:DataServices>
 </edmx:Edmx>
