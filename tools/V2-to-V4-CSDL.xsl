@@ -821,6 +821,7 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template match="edm2:EntitySet/@sap:updatable-path" />
   <xsl:template match="edm2:EntitySet/@sap:updatable">
     <xsl:if test=". = 'false'">
       <Annotation>
