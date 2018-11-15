@@ -3060,7 +3060,7 @@
     <xsl:variable name="targetSet" select="//edm:EntitySet[@Name=$targetEntitySetName]" />
     <xsl:variable name="targetAddressable" select="$targetSet/edm:Annotation[@Term='TODO.Addressable']/@Bool" />
 
-    <xsl:if test="$resultContext or @ContainsTarget='true' or ($collection and not($targetAddressable='false'))">
+    <xsl:if test="$resultContext or @ContainsTarget='true' or not($targetAddressable='false')">
 
       <xsl:variable name="nullable">
         <xsl:call-template name="nullableFacetValue">

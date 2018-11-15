@@ -656,6 +656,136 @@
                 }
             }
         },
+        "/People({ID})/PersonDetail": {
+            "get": {
+                "summary": "Get related PersonDetails",
+                "tags": [
+                    "People",
+                    "PersonDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/top"
+                    },
+                    {
+                        "$ref": "#/components/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/components/parameters/search"
+                    },
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "PersonID",
+                                    "PersonID desc",
+                                    "Age",
+                                    "Age desc",
+                                    "Gender",
+                                    "Gender desc",
+                                    "Phone",
+                                    "Phone desc",
+                                    "Address",
+                                    "Address desc",
+                                    "Photo",
+                                    "Photo desc"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "PersonID",
+                                    "Age",
+                                    "Gender",
+                                    "Phone",
+                                    "Address",
+                                    "Photo"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "*",
+                                    "Person"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of PersonDetail",
+                                    "type": "object",
+                                    "properties": {
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/PeopleService.PersonDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
         "/PersonDetails": {
             "get": {
                 "summary": "Get entities from PersonDetails",
@@ -944,6 +1074,123 @@
                 "responses": {
                     "204": {
                         "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/PersonDetails({PersonID})/Person": {
+            "get": {
+                "summary": "Get related Person",
+                "tags": [
+                    "PersonDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "PersonID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: PersonID",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/top"
+                    },
+                    {
+                        "$ref": "#/components/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/components/parameters/search"
+                    },
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "ID",
+                                    "ID desc",
+                                    "Name",
+                                    "Name desc"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "ID",
+                                    "Name"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "*",
+                                    "PersonDetail"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of Person",
+                                    "type": "object",
+                                    "properties": {
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/PeopleService.Person"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
                     "default": {
                         "$ref": "#/components/responses/error"
