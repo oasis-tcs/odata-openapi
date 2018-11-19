@@ -3028,9 +3028,6 @@
             <xsl:text>odata.</xsl:text>
           </xsl:if>
           <xsl:text>deltaLink":{"type":"string","example":"</xsl:text>
-          <xsl:value-of select="$scheme" />
-          <xsl:text>://</xsl:text>
-          <xsl:value-of select="$host" />
           <xsl:value-of select="$basePath" />
           <xsl:text>/</xsl:text>
           <xsl:value-of select="@Name" />
