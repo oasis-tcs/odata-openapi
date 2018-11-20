@@ -29,6 +29,7 @@
     - reduce duplicated code in /paths production
     - external targeting for Capabilities: NonSortableProperties, KeyAsSegmentSupported, SearchRestrictions
     - external targeting for Core.Immutable and Core.Computed
+    - key property aliases
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -181,9 +182,10 @@
     <xsl:param name="node" />
     <xsl:param name="term" />
     <xsl:param name="termAliased" />
-    <xsl:variable name="description"
-      select="$node/edm:Annotation[(@Term=$term or @Term=$termAliased) and not(@Qualifier)]/@String
-             |$node/edm:Annotation[(@Term=$term or @Term=$termAliased) and not(@Qualifier)]/edm:String" />
+    <xsl:param name="qualifier" select="null" />
+    <xsl:variable name="annotation"
+      select="$node/edm:Annotation[(@Term=$term or @Term=$termAliased) and ((not($qualifier) and not(@Qualifier)) or $qualifier=@Qualifier)]" />
+    <xsl:variable name="description" select="$annotation/@String|$annotation/edm:String" />
     <xsl:choose>
       <xsl:when test="$description">
         <xsl:call-template name="escape">
@@ -279,15 +281,10 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
-        <xsl:if test="local-name($node)='weg Parameter'">
-          <xsl:message>
-            <xsl:value-of select="$target" />
-          </xsl:message>
-        </xsl:if>
+        <xsl:variable name="annotationExt"
+          select="//edm:Annotations[(@Target=$target or @Target=$targetAliased) and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$term or @Term=$termAliased) and ((not($qualifier) and not(@Qualifier)) or $qualifier=@Qualifier)]" />
         <xsl:call-template name="escape">
-          <xsl:with-param name="string"
-            select="//edm:Annotations[(@Target=$target or @Target=$targetAliased) and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$term or @Term=$termAliased) and not(@Qualifier)]/@String
-                   |//edm:Annotations[(@Target=$target or @Target=$targetAliased) and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$term or @Term=$termAliased) and not(@Qualifier)]/edm:String" />
+          <xsl:with-param name="string" select="$annotationExt/@String|$annotationExt/edm:String" />
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
@@ -295,19 +292,23 @@
 
   <xsl:template name="Core.Description">
     <xsl:param name="node" />
+    <xsl:param name="qualifier" select="null" />
     <xsl:call-template name="annotation-string">
       <xsl:with-param name="node" select="$node" />
       <xsl:with-param name="term" select="$coreDescription" />
       <xsl:with-param name="termAliased" select="$coreDescriptionAliased" />
+      <xsl:with-param name="qualifier" select="$qualifier" />
     </xsl:call-template>
   </xsl:template>
 
   <xsl:template name="Core.LongDescription">
     <xsl:param name="node" />
+    <xsl:param name="qualifier" select="null" />
     <xsl:call-template name="annotation-string">
       <xsl:with-param name="node" select="$node" />
       <xsl:with-param name="term" select="$coreLongDescription" />
       <xsl:with-param name="termAliased" select="$coreLongDescriptionAliased" />
+      <xsl:with-param name="qualifier" select="$qualifier" />
     </xsl:call-template>
   </xsl:template>
 
@@ -1792,9 +1793,17 @@
       select="$entityType/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
     <xsl:if test="not($addressable='false') and not($resultContext)">
       <xsl:text>"get":{</xsl:text>
-      <xsl:text>"summary":"Get entities from </xsl:text>
-      <xsl:value-of select="@Name" />
-      <xsl:text>","tags":["</xsl:text>
+
+      <xsl:call-template name="summary-description-qualified">
+        <xsl:with-param name="node" select="." />
+        <xsl:with-param name="qualifier" select="'Query'" />
+        <xsl:with-param name="fallback-summary">
+          <xsl:text>Get entities from </xsl:text>
+          <xsl:value-of select="@Name" />
+        </xsl:with-param>
+      </xsl:call-template>
+
+      <xsl:text>,"tags":["</xsl:text>
       <xsl:value-of select="@Name" />
       <xsl:text>"]</xsl:text>
 
@@ -1976,9 +1985,17 @@
     </xsl:if>
     <xsl:if test="not($insertable='false')">
       <xsl:text>"post":{</xsl:text>
-      <xsl:text>"summary":"Add new entity to </xsl:text>
-      <xsl:value-of select="@Name" />
-      <xsl:text>","tags":["</xsl:text>
+
+      <xsl:call-template name="summary-description-qualified">
+        <xsl:with-param name="node" select="." />
+        <xsl:with-param name="qualifier" select="'Create'" />
+        <xsl:with-param name="fallback-summary">
+          <xsl:text>Add new entity to </xsl:text>
+          <xsl:value-of select="@Name" />
+        </xsl:with-param>
+      </xsl:call-template>
+
+      <xsl:text>,"tags":["</xsl:text>
       <xsl:value-of select="@Name" />
       <xsl:text>"],</xsl:text>
 
@@ -2213,9 +2230,18 @@
       <!-- indexable=true or indexable=default or -->
       <xsl:if test="not($addressable='false' and $indexable!='true') and not($resultContext)">
         <xsl:text>"get":{</xsl:text>
-        <xsl:text>"summary":"Get entity from </xsl:text>
-        <xsl:value-of select="@Name" />
-        <xsl:text> by key","tags":["</xsl:text>
+
+        <xsl:call-template name="summary-description-qualified">
+          <xsl:with-param name="node" select="." />
+          <xsl:with-param name="qualifier" select="'Read'" />
+          <xsl:with-param name="fallback-summary">
+            <xsl:text>Get entity from </xsl:text>
+            <xsl:value-of select="@Name" />
+            <xsl:text> by key</xsl:text>
+          </xsl:with-param>
+        </xsl:call-template>
+
+        <xsl:text>,"tags":["</xsl:text>
         <xsl:value-of select="@Name" />
         <xsl:text>"]</xsl:text>
         <xsl:text>,"parameters":[</xsl:text>
@@ -2258,16 +2284,22 @@
           <xsl:with-param name="property" select="'Updatable'" />
         </xsl:call-template>
       </xsl:variable>
-      <xsl:if
-        test="not($addressable='false' and $indexable!='true') and not($resultContext) and not($updatable='false')"
-      >
+      <xsl:if test="not($addressable='false' and $indexable!='true') and not($resultContext) and not($updatable='false')">
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:if test="not($updatable='false')">
         <xsl:text>"patch":{</xsl:text>
-        <xsl:text>"summary":"Update entity in </xsl:text>
-        <xsl:value-of select="@Name" />
-        <xsl:text>","tags":["</xsl:text>
+
+        <xsl:call-template name="summary-description-qualified">
+          <xsl:with-param name="node" select="." />
+          <xsl:with-param name="qualifier" select="'Update'" />
+          <xsl:with-param name="fallback-summary">
+            <xsl:text>Update entity in </xsl:text>
+            <xsl:value-of select="@Name" />
+          </xsl:with-param>
+        </xsl:call-template>
+
+        <xsl:text>,"tags":["</xsl:text>
         <xsl:value-of select="@Name" />
         <xsl:text>"],</xsl:text>
 
@@ -2332,9 +2364,17 @@
       </xsl:if>
       <xsl:if test="not($deletable='false')">
         <xsl:text>"delete":{</xsl:text>
-        <xsl:text>"summary":"Delete entity from </xsl:text>
-        <xsl:value-of select="@Name" />
-        <xsl:text>","tags":["</xsl:text>
+
+        <xsl:call-template name="summary-description-qualified">
+          <xsl:with-param name="node" select="." />
+          <xsl:with-param name="qualifier" select="'Delete'" />
+          <xsl:with-param name="fallback-summary">
+            <xsl:text>Delete entity from </xsl:text>
+            <xsl:value-of select="@Name" />
+          </xsl:with-param>
+        </xsl:call-template>
+
+        <xsl:text>,"tags":["</xsl:text>
         <xsl:value-of select="@Name" />
         <xsl:text>"]</xsl:text>
         <xsl:text>,"parameters":[</xsl:text>
@@ -2425,9 +2465,17 @@
 
     <!-- GET -->
     <xsl:text>"get":{</xsl:text>
-    <xsl:text>"summary":"Get </xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>","tags":["</xsl:text>
+
+    <xsl:call-template name="summary-description-qualified">
+      <xsl:with-param name="node" select="." />
+      <xsl:with-param name="qualifier" select="'Read'" />
+      <xsl:with-param name="fallback-summary">
+        <xsl:text>Get </xsl:text>
+        <xsl:value-of select="@Name" />
+      </xsl:with-param>
+    </xsl:call-template>
+
+    <xsl:text>,"tags":["</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>"]</xsl:text>
     <xsl:text>,"parameters":[</xsl:text>
@@ -2494,9 +2542,17 @@
     </xsl:variable>
     <xsl:if test="not($updatable='false')">
       <xsl:text>,"patch":{</xsl:text>
-      <xsl:text>"summary":"Update </xsl:text>
-      <xsl:value-of select="@Name" />
-      <xsl:text>","tags":["</xsl:text>
+
+      <xsl:call-template name="summary-description-qualified">
+        <xsl:with-param name="node" select="." />
+        <xsl:with-param name="qualifier" select="'Update'" />
+        <xsl:with-param name="fallback-summary">
+          <xsl:text>Update </xsl:text>
+          <xsl:value-of select="@Name" />
+        </xsl:with-param>
+      </xsl:call-template>
+
+      <xsl:text>,"tags":["</xsl:text>
       <xsl:value-of select="@Name" />
       <xsl:text>"],</xsl:text>
 
@@ -3522,6 +3578,41 @@
     <xsl:variable name="description">
       <xsl:call-template name="description">
         <xsl:with-param name="node" select="." />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="$description!=''">
+      <xsl:text>,"description":"</xsl:text>
+      <xsl:value-of select="$description" />
+      <xsl:text>"</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="summary-description-qualified">
+    <xsl:param name="node" />
+    <xsl:param name="qualifier" />
+    <xsl:param name="fallback-summary" />
+
+    <xsl:variable name="summary">
+      <xsl:call-template name="Core.Description">
+        <xsl:with-param name="node" select="$node" />
+        <xsl:with-param name="qualifier" select="$qualifier" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:text>"summary":"</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$summary!=''">
+        <xsl:value-of select="$summary" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$fallback-summary" />
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>"</xsl:text>
+
+    <xsl:variable name="description">
+      <xsl:call-template name="Core.LongDescription">
+        <xsl:with-param name="node" select="$node" />
+        <xsl:with-param name="qualifier" select="$qualifier" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:if test="$description!=''">
