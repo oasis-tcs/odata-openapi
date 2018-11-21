@@ -4001,24 +4001,26 @@
       </xsl:choose>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="substring($jsonUrl,1,1) = '/'">
+      <!--
+        <xsl:when test="substring($jsonUrl,1,1) = '/'">
         <xsl:value-of select="$scheme" />
         <xsl:text>://</xsl:text>
         <xsl:value-of select="$host" />
         <xsl:value-of select="$jsonUrl" />
-      </xsl:when>
-      <xsl:when test="substring($jsonUrl,1,3) = '../'">
+        </xsl:when>
+        <xsl:when test="substring($jsonUrl,1,3) = '../'">
         <xsl:value-of select="$scheme" />
         <xsl:text>://</xsl:text>
         <xsl:value-of select="$host" />
         <xsl:value-of select="$basePath" />
         <xsl:text>/</xsl:text>
         <xsl:value-of select="$jsonUrl" />
-      </xsl:when>
+        </xsl:when>
+      -->
       <xsl:when test="substring($jsonUrl,1,2) = './' and $root!=''">
         <xsl:value-of select="$root" />
         <xsl:value-of select="substring($jsonUrl,3)" />
-      </xsl:when>      <!-- TODO: more rules for recognizing relative URLs and doing the needful -->
+      </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$jsonUrl" />
       </xsl:otherwise>
