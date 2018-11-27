@@ -805,9 +805,32 @@
         <Key>
           <PropertyRef Name="TheKey" />
         </Key>
-        <Property Name="TheKey" Type="Edm.String" Nullable="false" />
+        <Property Name="TheKey" Type="Edm.String" Nullable="false">
+          <Annotation Term="Validation.Pattern" String=".+" />
+        </Property>
         <Property Name="TheValue" Type="Edm.String" MaxLength="max" Nullable="true" />
-        <Property Name="TheString" Type="Edm.String" MaxLength="20" />
+        <Property Name="TheString" Type="Edm.String" MaxLength="20">
+          <Annotation Term="Validation.AllowedValues">
+            <Collection>
+              <Record>
+                <PropertyValue Property="Value" String="success" />
+                <Annotation Term="Core.Description" String="Positive feedback - no action required" />
+              </Record>
+              <Record>
+                <PropertyValue Property="Value" String="info" />
+                <Annotation Term="Core.Description" String="Additional information - no action required" />
+              </Record>
+              <Record>
+                <PropertyValue Property="Value" String="warning" />
+                <Annotation Term="Core.Description" String="Warning - action may be required" />
+              </Record>
+              <Record>
+                <PropertyValue Property="Value" String="error" />
+                <Annotation Term="Core.Description" String="Error - action is required" />
+              </Record>
+            </Collection>
+          </Annotation>
+        </Property>
         <Property Name="Tags" Type="Collection(Edm.String)" Nullable="true" />
         <Property Name="Dates" Type="Collection(Edm.Date)" Nullable="true" />
         <Property Type="Edm.Decimal" Name="Price" Precision="15" Scale="3" />
