@@ -133,3 +133,64 @@ In the `tools` folder execute
 ```sh
 transform
 ```
+
+
+# Supported Annotations
+
+The [`V4-CSDL-to-OpenAPI.xsl`](V4-CSDL-to-OpenAPI.xsl) transformation can be fine-tuned via annotations in the CSDL (`$metadata`) XML documents.
+
+## [Core](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Core.V1.md)
+
+Term | Annotation Target | OpenAPI field
+-----|-------------------|--------------
+`Computed` | Property | omit from Create and Update structures
+`Description` | Action, ActionImport, Function, FunctionImport | `description` of Operation Object
+`Description` | EntitySet, Singleton | `description` of Tag Object
+`Description` | EntityType | `description` of Request Body Object
+`Description` | ComplexType, EntityType, EnumerationType, Parameter, Property, TypeDefinition | `description` of Schema Object
+`Description` | Schema, EntityContainer | `info.title`
+`Immutable` | Property | omit from Update structure
+`LongDescription` | Action, ActionImport, Function, FunctionImport | `description` of Operation Object
+`LongDescription` | ComplexType, EntityType, EnumerationType, Parameter, Property, TypeDefinition | `description` of Schema Object
+`LongDescription` | Schema, EntityContainer | `info.description`
+`SchemaVersion` | Schema | `info.version`
+
+
+## [Capabilities](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Capabilities.V1.md)
+
+Term | Annotation Target | OpenAPI field
+-----|-------------------|--------------
+`CountRestrictions/Countable` | EntitySet | `$count` system query option for `GET` operation
+`DeleteRestrictions/Deletable` | EntitySet | `DELETE` operation for deleting an existing entity
+`ExpandRestrictions/Expandable` | EntitySet, Singleton | `$expand` system query option for `GET` operations
+`FilterRestrictions/Filterable` | EntitySet | `$filter` system query option for `GET` operation
+`FilterRestrictions/RequiredProperties` | EntitySet | required properties in `$filter` system query option for `GET` operation (parameter description only)
+`FilterRestrictions/RequiresFilter` | EntitySet | `$filter` system query option for `GET` operation is `required`
+`IndexableByKey` | EntitySet | `GET` operation for single entity
+`InsertRestrictions/Insertable` | EntitySet | `POST` operation for inserting a new entity
+`KeyAsSegmentSupported` | EntityContainer | `paths` URL templates use key-as-segment style instead of parenthesis style
+`UpdateRestrictions/Updatable` | EntitySet, Singleton | `PATCH` operation for modifying an existing entity
+`SearchRestrictions/Searchable` | EntitySet | `$search` system query option for `GET` operation
+`SortRestrictions/NonSortableProperties` | EntitySet | properties not listed in `$orderby` system query option for `GET` operation
+`SortRestrictions/Sortable` | EntitySet | `$orderby` system query option for `GET` operation
+`SkipSupported` | EntitySet | `$skip` system query option for `GET` operation
+`TopSupported` | EntitySet | `$top` system query option for `GET` operation
+
+
+## [Common](https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common)
+
+Term | Annotation Target | OpenAPI field
+-----|-------------------|--------------
+`FieldControl: Mandatory` | Property | require in Create structure
+`Label` | Action, ActionImport, Function, FunctionImport | `title` of Operation Object
+`Label` | ComplexType, EntityType, EnumerationType, Property, TypeDefinition | `title` of Schema Object
+`QuickInfo` | Action, ActionImport, Function, FunctionImport | `description` of Operation Object
+`QuickInfo` | ComplexType, EntityType, EnumerationType, Parameter, Property, TypeDefinition | `description` of Schema Object
+
+
+## [Validation](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Validation.V1.md)
+
+Term | Annotation Target | OpenAPI field
+-----|-------------------|--------------
+`AllowedValues` | Property | `enum` of Schema Object - list of allowed (string) values
+`Pattern` | Property | `pattern` of Schema Object
