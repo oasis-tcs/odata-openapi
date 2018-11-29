@@ -546,6 +546,57 @@
                         "$ref": "#/components/responses/error"
                     }
                 }
+            },
+            "post": {
+                "summary": "Add related Product",
+                "tags": [
+                    "Categories",
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "CategoryID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: CategoryID",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NorthwindModel.Product-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Product",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/NorthwindModel.Product"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
             }
         },
         "/CustomerDemographics": {
@@ -986,6 +1037,57 @@
                                                     }
                                                 }
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add related Customer",
+                "tags": [
+                    "CustomerDemographics",
+                    "Customers"
+                ],
+                "parameters": [
+                    {
+                        "name": "CustomerTypeID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: CustomerTypeID",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 10
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NorthwindModel.Customer-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Customer",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/NorthwindModel.Customer"
                                         }
                                     }
                                 }
@@ -1499,6 +1601,57 @@
                         "$ref": "#/components/responses/error"
                     }
                 }
+            },
+            "post": {
+                "summary": "Add related Order",
+                "tags": [
+                    "Customers",
+                    "Orders"
+                ],
+                "parameters": [
+                    {
+                        "name": "CustomerID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: CustomerID",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 5
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NorthwindModel.Order-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Order",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/NorthwindModel.Order"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
             }
         },
         "/Customers('{CustomerID}')/CustomerDemographics": {
@@ -1610,6 +1763,57 @@
                                                     }
                                                 }
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add related CustomerDemographic",
+                "tags": [
+                    "Customers",
+                    "CustomerDemographics"
+                ],
+                "parameters": [
+                    {
+                        "name": "CustomerID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: CustomerID",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 5
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NorthwindModel.CustomerDemographic-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "CustomerDemographic",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/NorthwindModel.CustomerDemographic"
                                         }
                                     }
                                 }
@@ -2170,6 +2374,56 @@
                         "$ref": "#/components/responses/error"
                     }
                 }
+            },
+            "post": {
+                "summary": "Add related Employee",
+                "tags": [
+                    "Employees"
+                ],
+                "parameters": [
+                    {
+                        "name": "EmployeeID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: EmployeeID",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NorthwindModel.Employee-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Employee",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/NorthwindModel.Employee"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
             }
         },
         "/Employees({EmployeeID})/Employee1": {
@@ -2439,6 +2693,57 @@
                         "$ref": "#/components/responses/error"
                     }
                 }
+            },
+            "post": {
+                "summary": "Add related Order",
+                "tags": [
+                    "Employees",
+                    "Orders"
+                ],
+                "parameters": [
+                    {
+                        "name": "EmployeeID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: EmployeeID",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NorthwindModel.Order-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Order",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/NorthwindModel.Order"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
             }
         },
         "/Employees({EmployeeID})/Territories": {
@@ -2555,6 +2860,57 @@
                                                     }
                                                 }
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add related Territory",
+                "tags": [
+                    "Employees",
+                    "Territories"
+                ],
+                "parameters": [
+                    {
+                        "name": "EmployeeID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: EmployeeID",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NorthwindModel.Territory-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Territory",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/NorthwindModel.Territory"
                                         }
                                     }
                                 }
@@ -3826,6 +4182,57 @@
                         "$ref": "#/components/responses/error"
                     }
                 }
+            },
+            "post": {
+                "summary": "Add related Order_Detail",
+                "tags": [
+                    "Orders",
+                    "Order_Details"
+                ],
+                "parameters": [
+                    {
+                        "name": "OrderID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: OrderID",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NorthwindModel.Order_Detail-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Order_Detail",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/NorthwindModel.Order_Detail"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
             }
         },
         "/Orders({OrderID})/Shipper": {
@@ -4471,6 +4878,57 @@
                         "$ref": "#/components/responses/error"
                     }
                 }
+            },
+            "post": {
+                "summary": "Add related Order_Detail",
+                "tags": [
+                    "Products",
+                    "Order_Details"
+                ],
+                "parameters": [
+                    {
+                        "name": "ProductID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ProductID",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NorthwindModel.Order_Detail-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Order_Detail",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/NorthwindModel.Order_Detail"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
             }
         },
         "/Products({ProductID})/Supplier": {
@@ -4992,6 +5450,57 @@
                         "$ref": "#/components/responses/error"
                     }
                 }
+            },
+            "post": {
+                "summary": "Add related Territory",
+                "tags": [
+                    "Regions",
+                    "Territories"
+                ],
+                "parameters": [
+                    {
+                        "name": "RegionID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: RegionID",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NorthwindModel.Territory-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Territory",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/NorthwindModel.Territory"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
             }
         },
         "/Shippers": {
@@ -5449,6 +5958,57 @@
                                                     }
                                                 }
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add related Order",
+                "tags": [
+                    "Shippers",
+                    "Orders"
+                ],
+                "parameters": [
+                    {
+                        "name": "ShipperID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ShipperID",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NorthwindModel.Order-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Order",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/NorthwindModel.Order"
                                         }
                                     }
                                 }
@@ -5938,6 +6498,57 @@
                                                     }
                                                 }
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add related Product",
+                "tags": [
+                    "Suppliers",
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "SupplierID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: SupplierID",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NorthwindModel.Product-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Product",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/NorthwindModel.Product"
                                         }
                                     }
                                 }
@@ -6506,6 +7117,57 @@
                                                     }
                                                 }
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add related Employee",
+                "tags": [
+                    "Territories",
+                    "Employees"
+                ],
+                "parameters": [
+                    {
+                        "name": "TerritoryID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: TerritoryID",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 20
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NorthwindModel.Employee-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Employee",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/NorthwindModel.Employee"
                                         }
                                     }
                                 }

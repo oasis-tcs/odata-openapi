@@ -3162,13 +3162,19 @@
         <xsl:text>.</xsl:text>
         <xsl:value-of select="$simpleName" />
       </xsl:variable>
+      <xsl:variable name="targetEntityType"
+        select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]" />
 
       <xsl:text>,"/</xsl:text>
       <xsl:value-of select="$entitySet/@Name" />
       <xsl:apply-templates select="$entityType" mode="key-in-path" />
       <xsl:text>/</xsl:text>
       <xsl:value-of select="@Name" />
-      <xsl:text>":{"get":{</xsl:text>
+      <xsl:text>":{</xsl:text>
+
+      <!-- GET -->
+      <xsl:text>"get":{</xsl:text>
+
       <!-- TODO: better summary / description -->
       <xsl:text>"summary":"Get related </xsl:text>
       <xsl:choose>
@@ -3277,8 +3283,97 @@
         <xsl:with-param name="description" select="'Retrieved entities'" />
       </xsl:call-template>
 
-      <xsl:text>}}</xsl:text>
+      <xsl:text>}</xsl:text>
 
+      <!-- POST -->
+      <xsl:if test="$collection">
+        <xsl:variable name="insertable">
+          <xsl:call-template name="capability">
+            <xsl:with-param name="term" select="'InsertRestrictions'" />
+            <xsl:with-param name="property" select="'Insertable'" />
+            <xsl:with-param name="target" select="$targetSet" />
+          </xsl:call-template>
+        </xsl:variable>
+
+        <!-- NavigationRestrictions on source entity set for this navigation property -->
+        <xsl:variable name="target-path"
+          select="concat($entitySet/../../@Namespace,'.',$entitySet/../@Name,'/',$entitySet/@Name)" />
+        <xsl:variable name="target-path-aliased"
+          select="concat($entitySet/../../@Alias,'.',$entitySet/../@Name,'/',$entitySet/@Name)" />
+        <xsl:variable name="navigationRestrictions"
+          select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.NavigationRestrictions') or @Term=concat($capabilitiesAlias,'.NavigationRestrictions'))] 
+                                                                                |$entitySet/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.NavigationRestrictions') or @Term=concat($capabilitiesAlias,'.NavigationRestrictions'))]" />
+        <xsl:variable name="restrictedProperties"
+          select="$navigationRestrictions/edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection" />
+        <xsl:variable name="navPropName" select="@Name" />
+        <xsl:variable name="insertRestrictions"
+          select="$restrictedProperties/edm:Record[edm:PropertyValue[@Property='NavigationProperty']/@PropertyPath=$navPropName]/edm:PropertyValue[@Property='InsertRestrictions']" />
+        <xsl:variable name="navigation-insertable"
+          select="$insertRestrictions/edm:Record/edm:PropertyValue[@Property='Insertable']/@Bool" />
+
+        <xsl:if test="not($insertable='false') or $navigation-insertable='true'">
+          <xsl:text>,"post":{</xsl:text>
+
+          <!-- TODO: better summary / description -->
+          <xsl:text>"summary":"Add related </xsl:text>
+          <xsl:value-of select="$simpleName" />
+          <xsl:text>","tags":["</xsl:text>
+          <xsl:value-of select="$entitySet/@Name" />
+          <xsl:if test="not($resultContext) and $targetSet and $targetSet/@Name!=$entitySet/@Name">
+            <xsl:text>","</xsl:text>
+            <xsl:value-of select="$targetSet/@Name" />
+          </xsl:if>
+          <xsl:text>"]</xsl:text>
+
+          <xsl:text>,"parameters":[</xsl:text>
+          <xsl:apply-templates select="$entityType" mode="parameter" />
+
+          <xsl:choose>
+            <xsl:when test="$openapi-version='2.0'">
+              <xsl:text>,{"name":"</xsl:text>
+              <xsl:value-of select="$simpleName" />
+              <xsl:text>","in":"body",</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>],"requestBody":{"required":true,</xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
+          <xsl:call-template name="entityTypeDescription">
+            <xsl:with-param name="entityType" select="$targetEntityType" />
+            <xsl:with-param name="default" select="'New entity'" />
+          </xsl:call-template>
+          <xsl:if test="$openapi-version!='2.0'">
+            <xsl:text>"content":{"application/json":{</xsl:text>
+          </xsl:if>
+          <xsl:text>"schema":{</xsl:text>
+          <xsl:call-template name="schema-ref">
+            <xsl:with-param name="qualifiedName" select="$targetType" />
+            <xsl:with-param name="suffix" select="'-create'" />
+          </xsl:call-template>
+          <xsl:text>}</xsl:text>
+          <xsl:if test="$openapi-version!='2.0'">
+            <xsl:text>}}</xsl:text>
+          </xsl:if>
+          <xsl:choose>
+            <xsl:when test="$openapi-version='2.0'">
+              <xsl:text>}]</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>}</xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
+
+          <xsl:call-template name="responses">
+            <xsl:with-param name="code" select="'201'" />
+            <xsl:with-param name="type" select="$targetType" />
+            <xsl:with-param name="description" select="'Created entity'" />
+          </xsl:call-template>
+
+          <xsl:text>}</xsl:text>
+        </xsl:if>
+      </xsl:if>
+
+      <xsl:text>}</xsl:text>
     </xsl:if>
   </xsl:template>
 
