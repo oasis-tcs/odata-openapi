@@ -144,6 +144,7 @@ The [`V4-CSDL-to-OpenAPI.xsl`](V4-CSDL-to-OpenAPI.xsl) transformation can be fin
 Term | Annotation Target | OpenAPI field
 -----|-------------------|--------------
 `Computed` | Property | omit from Create and Update structures
+`DefaultNamespace` | Schema | path templates for actions and functions without namespace prefix
 `Description` | Action, ActionImport, Function, FunctionImport | `description` of Operation Object
 `Description` | EntitySet, Singleton | `description` of Tag Object
 `Description` | EntityType | `description` of Request Body Object
@@ -166,6 +167,7 @@ Term | Annotation Target | OpenAPI field
 `FilterRestrictions/Filterable` | EntitySet | `$filter` system query option for `GET` operation
 `FilterRestrictions/RequiredProperties` | EntitySet | required properties in `$filter` system query option for `GET` operation (parameter description only)
 `FilterRestrictions/RequiresFilter` | EntitySet | `$filter` system query option for `GET` operation is `required`
+`KeyAsSegmentSupported` | EntityContainer | path templates with key-as-segment convention
 `IndexableByKey` | EntitySet | `GET` operation for single entity
 `InsertRestrictions/Insertable` | EntitySet | `POST` operation for inserting a new entity
 `KeyAsSegmentSupported` | EntityContainer | `paths` URL templates use key-as-segment style instead of parenthesis style
