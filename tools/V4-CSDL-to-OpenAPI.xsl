@@ -2612,6 +2612,11 @@
       <xsl:with-param name="singleton" select="@Name" />
       <xsl:with-param name="entityType" select="$entityType" />
     </xsl:apply-templates>
+
+    <xsl:apply-templates select="$entityType/edm:NavigationProperty" mode="pathItem">
+      <xsl:with-param name="entitySet" select="." />
+      <xsl:with-param name="entityType" select="$entityType" />
+    </xsl:apply-templates>
   </xsl:template>
 
   <xsl:template name="entityTypeDescription">
@@ -3109,7 +3114,7 @@
   <xsl:template match="edm:NavigationProperty" mode="pathItem">
     <xsl:param name="entitySet" />
     <xsl:param name="entityType" />
-    <xsl:param name="resultContext" />
+    <xsl:param name="resultContext" select="'false'" />
 
     <xsl:variable name="collection" select="starts-with(@Type,'Collection(')" />
     <xsl:variable name="name" select="@Name" />
