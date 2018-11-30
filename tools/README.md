@@ -169,6 +169,7 @@ Term | Annotation Target | OpenAPI field
 `IndexableByKey` | EntitySet | `GET` operation for single entity
 `InsertRestrictions/Insertable` | EntitySet | `POST` operation for inserting a new entity
 `KeyAsSegmentSupported` | EntityContainer | `paths` URL templates use key-as-segment style instead of parenthesis style
+`NavigationRestrictions/RestrictedProperties/InsertRestrictions/Insertable` | EntitySet | `POST` operation for inserting a new entity
 `UpdateRestrictions/Updatable` | EntitySet, Singleton | `PATCH` operation for modifying an existing entity
 `SearchRestrictions/Searchable` | EntitySet | `$search` system query option for `GET` operation
 `SortRestrictions/NonSortableProperties` | EntitySet | properties not listed in `$orderby` system query option for `GET` operation
