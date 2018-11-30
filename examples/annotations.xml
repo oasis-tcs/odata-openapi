@@ -6,13 +6,13 @@
     </edmx:Include>
   </edmx:Reference>
   <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
-    <edmx:Include Namespace="Org.OData.Capabilities.V1" />
+    <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
   </edmx:Reference>
   <edmx:Reference Uri="https://wiki.scn.sap.com/wiki/download/attachments/448470974/Common.xml?api=v2">
-    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1" />
+    <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common" />
   </edmx:Reference>
   <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
-    <edmx:Include Namespace="Org.OData.Validation.V1" />
+    <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation" />
   </edmx:Reference>
   <edmx:DataServices>
     <Schema Namespace="Supported.Annotations" Alias="self">
@@ -21,9 +21,10 @@
           <PropertyRef Name="ID" />
         </Key>
         <Property Name="ID" Type="Edm.String" Nullable="false" />
-        <Property Name="Pattern" Type="Edm.String" Nullable="false">
+        <Property Name="Pattern" Type="Edm.String">
           <Annotation Term="Validation.Pattern" String="^.+$" />
         </Property>
+        <Property Name="PatternExt" Type="Edm.String" />
       </EntityType>
       <EntityContainer Name="DemoService">
         <EntitySet Name="SinglePartKeySet" EntityType="self.SinglePartKey">
@@ -36,6 +37,10 @@
           <NavigationPropertyBinding Path="Products" Target="Products" />
         </Singleton>
       </EntityContainer>
+
+      <Annotations Target="self.SinglePartKey/PatternExt">
+        <Annotation Term="Validation.Pattern" String="^.+$" />
+      </Annotations>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>
