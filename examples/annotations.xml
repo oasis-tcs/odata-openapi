@@ -42,6 +42,16 @@
         </Property>
         <Property Name="AllowedValuesExt" Type="Edm.String" />
       </EntityType>
+      
+      <EntityType Name="MultiPartKey">
+        <Key>
+          <PropertyRef Name="One" />
+          <PropertyRef Name="Two" />
+        </Key>
+        <Property Name="One" Type="Edm.String" Nullable="false" />
+        <Property Name="Two" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      
       <EntityContainer Name="DemoService">
         <EntitySet Name="SinglePartKeySet" EntityType="self.SinglePartKey">
         </EntitySet>
@@ -58,19 +68,20 @@
         <Annotation Term="Validation.Pattern" String="^.+$" />
       </Annotations>
       <Annotations Target="self.SinglePartKey/AllowedValuesExt">
-          <Annotation Term="Validation.AllowedValues">
-            <Collection>
-              <Record>
-                <PropertyValue Property="Value" String="red" />
-              </Record>
-              <Record>
-                <PropertyValue Property="Value" String="green" />
-              </Record>
-              <Record>
-                <PropertyValue Property="Value" String="blue" />
-              </Record>
-            </Collection>
-          </Annotation>
+        <!-- TODO: this is not yet supported -->
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record>
+              <PropertyValue Property="Value" String="red" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="green" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="blue" />
+            </Record>
+          </Collection>
+        </Annotation>
       </Annotations>
     </Schema>
   </edmx:DataServices>
