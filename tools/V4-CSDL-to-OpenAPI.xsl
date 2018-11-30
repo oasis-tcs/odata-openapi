@@ -1432,8 +1432,13 @@
   </xsl:template>
 
   <xsl:template name="Validation.Pattern">
-    <xsl:variable name="pattern"
-      select="edm:Annotation[@Term=concat($validationNamespace,'.Pattern') or @Term=concat($validationAlias,'.Pattern')]/@String|edm:Annotation[@Term=concat($validationNamespace,'.Pattern') or @Term=concat($validationAlias,'.Pattern')]/edm:String" />
+    <xsl:variable name="pattern">
+      <xsl:call-template name="annotation-string">
+        <xsl:with-param name="node" select="." />
+        <xsl:with-param name="term" select="concat($validationNamespace,'.Pattern')" />
+        <xsl:with-param name="termAliased" select="concat($validationAlias,'.Pattern')" />
+      </xsl:call-template>
+    </xsl:variable>
     <xsl:if test="$pattern!=''">
       <xsl:text>,"pattern":"</xsl:text>
       <xsl:value-of select="$pattern" />
