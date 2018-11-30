@@ -25,6 +25,22 @@
           <Annotation Term="Validation.Pattern" String="^.+$" />
         </Property>
         <Property Name="PatternExt" Type="Edm.String" />
+        <Property Name="AllowedValues" Type="Edm.String">
+          <Annotation Term="Validation.AllowedValues">
+            <Collection>
+              <Record>
+                <PropertyValue Property="Value" String="red" />
+              </Record>
+              <Record>
+                <PropertyValue Property="Value" String="green" />
+              </Record>
+              <Record>
+                <PropertyValue Property="Value" String="blue" />
+              </Record>
+            </Collection>
+          </Annotation>
+        </Property>
+        <Property Name="AllowedValuesExt" Type="Edm.String" />
       </EntityType>
       <EntityContainer Name="DemoService">
         <EntitySet Name="SinglePartKeySet" EntityType="self.SinglePartKey">
@@ -40,6 +56,21 @@
 
       <Annotations Target="self.SinglePartKey/PatternExt">
         <Annotation Term="Validation.Pattern" String="^.+$" />
+      </Annotations>
+      <Annotations Target="self.SinglePartKey/AllowedValuesExt">
+          <Annotation Term="Validation.AllowedValues">
+            <Collection>
+              <Record>
+                <PropertyValue Property="Value" String="red" />
+              </Record>
+              <Record>
+                <PropertyValue Property="Value" String="green" />
+              </Record>
+              <Record>
+                <PropertyValue Property="Value" String="blue" />
+              </Record>
+            </Collection>
+          </Annotation>
       </Annotations>
     </Schema>
   </edmx:DataServices>
