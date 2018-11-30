@@ -41,8 +41,10 @@
           </Annotation>
         </Property>
         <Property Name="AllowedValuesExt" Type="Edm.String" />
+        <NavigationProperty Name="One" Type="self.TwoPartKey" />
+        <NavigationProperty Name="Many" Type="Collection(self.TwoPartKey)" />
       </EntityType>
-      
+
       <EntityType Name="TwoPartKey">
         <Key>
           <PropertyRef Name="One" />
@@ -51,16 +53,14 @@
         <Property Name="One" Type="Edm.Int32" Nullable="false" />
         <Property Name="Two" Type="Edm.Int32" Nullable="false" />
       </EntityType>
-      
+
       <EntityContainer Name="DemoService">
         <EntitySet Name="SinglePartKeySet" EntityType="self.SinglePartKey">
         </EntitySet>
         <Singleton Name="SingletonOne" Type="self.SinglePartKey">
           <Annotation Term="Core.Description" String="First Singleton" />
-          <NavigationPropertyBinding Path="Products" Target="Products" />
         </Singleton>
         <Singleton Name="SingletonTwo" Type="self.SinglePartKey">
-          <NavigationPropertyBinding Path="Products" Target="Products" />
         </Singleton>
         <EntitySet Name="TwoPartKeySet" EntityType="self.TwoPartKey">
         </EntitySet>
