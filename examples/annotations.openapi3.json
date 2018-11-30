@@ -3,7 +3,7 @@
     "info": {
         "title": "OData Service for namespace Supported.Annotations",
         "version": "",
-        "description": "This OData service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[SinglePartKey{bg:orange}],[MultiPartKey{bg:orange}])\n\n## References\n- [Org.OData.Core.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Core.V1.md)\n- [Org.OData.Capabilities.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Capabilities.V1.md)\n- [com.sap.vocabularies.Common.v1](https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common)\n- [Org.OData.Validation.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Validation.V1.md)"
+        "description": "This OData service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[SinglePartKey{bg:orange}],[TwoPartKey{bg:orange}])\n\n## References\n- [Org.OData.Core.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Core.V1.md)\n- [Org.OData.Capabilities.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Capabilities.V1.md)\n- [com.sap.vocabularies.Common.v1](https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common)\n- [Org.OData.Validation.V1](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Validation.V1.md)"
     },
     "servers": [
         {
@@ -20,6 +20,9 @@
         },
         {
             "name": "SingletonTwo"
+        },
+        {
+            "name": "TwoPartKeySet"
         }
     ],
     "paths": {
@@ -416,6 +419,275 @@
                     }
                 }
             }
+        },
+        "/TwoPartKeySet": {
+            "get": {
+                "summary": "Get entities from TwoPartKeySet",
+                "tags": [
+                    "TwoPartKeySet"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/top"
+                    },
+                    {
+                        "$ref": "#/components/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/components/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "One",
+                                    "One desc",
+                                    "Two",
+                                    "Two desc"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "One",
+                                    "Two"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of TwoPartKey",
+                                    "type": "object",
+                                    "properties": {
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to TwoPartKeySet",
+                "tags": [
+                    "TwoPartKeySet"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/TwoPartKeySet(One='{One}',Two='{Two}')": {
+            "get": {
+                "summary": "Get entity from TwoPartKeySet by key",
+                "tags": [
+                    "TwoPartKeySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "One",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: One",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Two",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Two",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "One",
+                                    "Two"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in TwoPartKeySet",
+                "tags": [
+                    "TwoPartKeySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "One",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: One",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Two",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Two",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New property values",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from TwoPartKeySet",
+                "tags": [
+                    "TwoPartKeySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "One",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: One",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Two",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Two",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -516,7 +788,7 @@
                 },
                 "title": "SinglePartKey (for update)"
             },
-            "Supported.Annotations.MultiPartKey": {
+            "Supported.Annotations.TwoPartKey": {
                 "type": "object",
                 "properties": {
                     "One": {
@@ -526,9 +798,9 @@
                         "type": "string"
                     }
                 },
-                "title": "MultiPartKey"
+                "title": "TwoPartKey"
             },
-            "Supported.Annotations.MultiPartKey-create": {
+            "Supported.Annotations.TwoPartKey-create": {
                 "type": "object",
                 "properties": {
                     "One": {
@@ -542,11 +814,11 @@
                     "One",
                     "Two"
                 ],
-                "title": "MultiPartKey (for create)"
+                "title": "TwoPartKey (for create)"
             },
-            "Supported.Annotations.MultiPartKey-update": {
+            "Supported.Annotations.TwoPartKey-update": {
                 "type": "object",
-                "title": "MultiPartKey (for update)"
+                "title": "TwoPartKey (for update)"
             },
             "odata.error": {
                 "type": "object",
