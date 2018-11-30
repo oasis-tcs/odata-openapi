@@ -41,8 +41,10 @@
           </Annotation>
         </Property>
         <Property Name="AllowedValuesExt" Type="Edm.String" />
-        <NavigationProperty Name="One" Type="self.TwoPartKey" />
-        <NavigationProperty Name="Many" Type="Collection(self.TwoPartKey)" />
+        <NavigationProperty Name="AllOne" Type="self.TwoPartKey" />
+        <NavigationProperty Name="AllMany" Type="Collection(self.TwoPartKey)" />
+        <NavigationProperty Name="NothingOne" Type="self.TwoPartKey" />
+        <NavigationProperty Name="NothingMany" Type="Collection(self.TwoPartKey)" />
       </EntityType>
 
       <EntityType Name="TwoPartKey">
@@ -55,20 +57,26 @@
       </EntityType>
 
       <EntityContainer Name="DemoService">
-        <EntitySet Name="SinglePartKeySet" EntityType="self.SinglePartKey">
-          <NavigationPropertyBinding Path="One" Target="TwoPartKeySet" />
-          <NavigationPropertyBinding Path="Two" Target="TwoPartKeySet" />
+        <EntitySet Name="AllSet" EntityType="self.SinglePartKey">
+          <NavigationPropertyBinding Path="One" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="Two" Target="TwoAllSet" />
         </EntitySet>
-        <Singleton Name="SingletonOne" Type="self.SinglePartKey">
+        <EntitySet Name="NothingSet" EntityType="self.SinglePartKey">
+          <NavigationPropertyBinding Path="One" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="Two" Target="TwoAllSet" />
+        </EntitySet>
+        <Singleton Name="AllSingleton" Type="self.SinglePartKey">
           <Annotation Term="Core.Description" String="First Singleton" />
-          <NavigationPropertyBinding Path="One" Target="TwoPartKeySet" />
-          <NavigationPropertyBinding Path="Two" Target="TwoPartKeySet" />
+          <NavigationPropertyBinding Path="One" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="Two" Target="TwoAllSet" />
         </Singleton>
-        <Singleton Name="SingletonTwo" Type="self.SinglePartKey">
-          <NavigationPropertyBinding Path="One" Target="TwoPartKeySet" />
-          <NavigationPropertyBinding Path="Two" Target="TwoPartKeySet" />
+        <Singleton Name="NothingSingleton" Type="self.SinglePartKey">
+          <NavigationPropertyBinding Path="One" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="Two" Target="TwoAllSet" />
         </Singleton>
-        <EntitySet Name="TwoPartKeySet" EntityType="self.TwoPartKey">
+        <EntitySet Name="TwoAllSet" EntityType="self.TwoPartKey">
+        </EntitySet>
+        <EntitySet Name="TwoNothingSet" EntityType="self.TwoPartKey">
         </EntitySet>
       </EntityContainer>
 
