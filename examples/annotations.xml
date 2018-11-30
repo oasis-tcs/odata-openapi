@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.01">
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core">
+      <Annotation Term="Core.DefaultNamespace" />
+    </edmx:Include>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Namespace="Org.OData.Capabilities.V1" />
+  </edmx:Reference>
+  <edmx:Reference Uri="https://wiki.scn.sap.com/wiki/download/attachments/448470974/Common.xml?api=v2">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1" />
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+    <edmx:Include Namespace="Org.OData.Validation.V1" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="Supported.Annotations" Alias="self">
+      <EntityType Name="SinglePartKey">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+        <Property Name="Pattern" Type="Edm.String" Nullable="false">
+          <Annotation Term="Validation.Pattern" String="^.+$" />
+        </Property>
+      </EntityType>
+      <EntityContainer Name="DemoService">
+        <EntitySet Name="SinglePartKeySet" EntityType="self.SinglePartKey">
+        </EntitySet>
+        <Singleton Name="SingletonOne" Type="self.SinglePartKey">
+          <Annotation Term="Core.Description" String="First Singleton" />
+          <NavigationPropertyBinding Path="Products" Target="Products" />
+        </Singleton>
+        <Singleton Name="SingletonTwo" Type="self.SinglePartKey">
+          <NavigationPropertyBinding Path="Products" Target="Products" />
+        </Singleton>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
