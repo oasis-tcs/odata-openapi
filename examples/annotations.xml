@@ -56,7 +56,7 @@
         <Property Name="Two" Type="Edm.Int32" Nullable="false" />
       </EntityType>
 
-      <EntityContainer Name="DemoService">
+      <EntityContainer Name="Container">
         <EntitySet Name="AllSet" EntityType="self.SinglePartKey">
           <NavigationPropertyBinding Path="AllOne" Target="TwoAllSet" />
           <NavigationPropertyBinding Path="AllMany" Target="TwoAllSet" />
@@ -99,28 +99,13 @@
         </Singleton>
         <EntitySet Name="TwoAllSet" EntityType="self.TwoPartKey">
         </EntitySet>
-        <EntitySet Name="TwoNothingSet" EntityType="self.TwoPartKey">
-          <Annotation Term="Capabilities.InsertRestrictions">
-            <Record>
-              <PropertyValue Bool="false" Property="Insertable" />
-            </Record>
-          </Annotation>
-          <Annotation Term="Capabilities.UpdateRestrictions">
-            <Record>
-              <PropertyValue Bool="false" Property="Updatable" />
-            </Record>
-          </Annotation>
-          <Annotation Term="Capabilities.DeleteRestrictions">
-            <Record>
-              <PropertyValue Bool="false" Property="Deletable" />
-            </Record>
-          </Annotation>
-        </EntitySet>
+        <EntitySet Name="TwoNothingSet" EntityType="self.TwoPartKey" />
       </EntityContainer>
 
       <Annotations Target="self.SinglePartKey/PatternExt">
         <Annotation Term="Validation.Pattern" String="^.+$" />
       </Annotations>
+
       <Annotations Target="self.SinglePartKey/AllowedValuesExt">
         <!-- TODO: this is not yet supported -->
         <Annotation Term="Validation.AllowedValues">
@@ -137,6 +122,25 @@
           </Collection>
         </Annotation>
       </Annotations>
+
+      <Annotations Target="self.Container/TwoNothingSet">
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Insertable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Updatable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Deletable" />
+          </Record>
+        </Annotation>
+      </Annotations>
+
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>

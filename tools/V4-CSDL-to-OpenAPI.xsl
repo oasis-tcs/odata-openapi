@@ -139,8 +139,8 @@
     <xsl:param name="term" />
     <xsl:param name="property" select="false()" />
     <xsl:param name="target" select="." />
-    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',../@Name,'/',@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',$target/@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',$target/@Name)" />
     <xsl:variable name="anno"
       select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]
                                                                                |$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]" />
