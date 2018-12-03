@@ -100,6 +100,7 @@
         </Singleton>
         <EntitySet Name="TwoAllSet" EntityType="self.TwoPartKey">
         </EntitySet>
+        <EntitySet Name="TwoReadOnlySet" EntityType="self.TwoPartKey" />
         <EntitySet Name="TwoNothingSet" EntityType="self.TwoPartKey" />
       </EntityContainer>
 
@@ -124,13 +125,12 @@
         </Annotation>
       </Annotations>
 
-      <Annotations Target="self.Container/TwoNothingSet">
+      <Annotations Target="self.Container/TwoReadOnlySet">
         <Annotation Term="Capabilities.InsertRestrictions">
           <Record>
             <PropertyValue Bool="false" Property="Insertable" />
           </Record>
         </Annotation>
-        <Annotation Term="Capabilities.IndexableByKey" Bool="false" />
         <Annotation Term="Capabilities.UpdateRestrictions">
           <Record>
             <PropertyValue Bool="false" Property="Updatable" />
@@ -141,6 +141,17 @@
             <PropertyValue Bool="false" Property="Deletable" />
           </Record>
         </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.Container/TwoNothingSet">
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Insertable" />
+          </Record>
+        </Annotation>
+        <!-- Note: "get-list" can't be switched off with standard annotations yet -->
+        <Annotation Term="Capabilities.IndexableByKey" Bool="false" />
+        <!-- Note: "not indexable by key" implies "no update, no delete" -->
       </Annotations>
 
     </Schema>

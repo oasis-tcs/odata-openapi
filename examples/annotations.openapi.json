@@ -34,6 +34,9 @@
             "name": "TwoAllSet"
         },
         {
+            "name": "TwoReadOnlySet"
+        },
+        {
             "name": "TwoNothingSet"
         }
     ],
@@ -1657,6 +1660,135 @@
                 "responses": {
                     "204": {
                         "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TwoReadOnlySet": {
+            "get": {
+                "summary": "Get entities from TwoReadOnlySet",
+                "tags": [
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "One desc",
+                                "Two",
+                                "Two desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of TwoPartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TwoReadOnlySet(One={One},Two={Two})": {
+            "get": {
+                "summary": "Get entity from TwoReadOnlySet by key",
+                "tags": [
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "One",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: One",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Two",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Two",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
                     },
                     "default": {
                         "$ref": "#/responses/error"
