@@ -3244,6 +3244,14 @@
         </xsl:call-template>
       </xsl:variable>
 
+      <xsl:variable name="sortable">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'SortRestrictions'" />
+          <xsl:with-param name="property" select="'Sortable'" />
+          <xsl:with-param name="target" select="$targetSet" />
+        </xsl:call-template>
+      </xsl:variable>
+
       <xsl:if test="$collection">
         <xsl:if test="not($top-supported='false')">
           <xsl:if test="local-name($source)='EntitySet'">
@@ -3313,11 +3321,18 @@
           <xsl:text>count"}</xsl:text>
         </xsl:if>
 
-        <xsl:variable name="non-sortable"
-          select="$targetSet/edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
-        <xsl:apply-templates
-          select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property[not(@Name=$non-sortable)]"
-          mode="orderby" />
+        <xsl:if test="not($sortable='false')">
+          <xsl:variable name="non-sortable"
+            select="$targetSet/edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
+          <xsl:apply-templates
+            select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property[not(@Name=$non-sortable)]"
+            mode="orderby"
+          >
+            <xsl:with-param name="after"
+              select="local-name($source)='EntitySet' or not($top-supported='false') or not($skip-supported='false') or not($searchable='false') or not($filterable='false') or not($countable='false')" />
+          </xsl:apply-templates>
+        </xsl:if>
+
       </xsl:if>
 
       <xsl:apply-templates
@@ -3325,14 +3340,14 @@
         mode="select"
       >
         <xsl:with-param name="after"
-          select="local-name($source)='EntitySet' or ($collection and (not($top-supported='false') or not($skip-supported='false') or not($searchable='false') or not($filterable='false') or not($countable='false')))" />
+          select="local-name($source)='EntitySet' or ($collection and (not($top-supported='false') or not($skip-supported='false') or not($searchable='false') or not($filterable='false') or not($countable='false') or not($sortable='false')))" />
       </xsl:apply-templates>
       <xsl:apply-templates
         select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:NavigationProperty|//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
         mode="expand"
       >
         <xsl:with-param name="after"
-          select="local-name($source)='EntitySet' or ($collection and (not($top-supported='false') or not($skip-supported='false') or not($searchable='false') or not($filterable='false') or not($countable='false')))" />
+          select="local-name($source)='EntitySet' or ($collection and (not($top-supported='false') or not($skip-supported='false') or not($searchable='false') or not($filterable='false') or not($countable='false') or not($sortable='false')))" />
       </xsl:apply-templates>
 
       <xsl:text>]</xsl:text>
