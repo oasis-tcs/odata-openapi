@@ -27,7 +27,7 @@
     - 200 response for PATCH if $odata-version!='2.0'
     - ETag for GET / If-Match for PATCH and DELETE depending on @Core.OptimisticConcurrency
     - reduce duplicated code in /paths production
-    - external targeting for Capabilities: NonSortableProperties, KeyAsSegmentSupported, SearchRestrictions
+    - external targeting for Capabilities: NonSortableProperties, KeyAsSegmentSupported
     - external targeting for Core.Immutable and Core.Computed
     - key property aliases
   -->
@@ -1447,8 +1447,11 @@
   </xsl:template>
 
   <xsl:template name="Validation.AllowedValues">
+    <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
     <xsl:variable name="allowedValues"
-      select="edm:Annotation[(@Term=concat($validationNamespace,'.AllowedValues') or @Term=concat($validationAlias,'.AllowedValues')) and not(@Qualifier)]" />
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($validationNamespace,'.AllowedValues') or @Term=concat($validationAlias,'.AllowedValues')) and not(@Qualifier)]
+                                                                                       |edm:Annotation[(@Term=concat($validationNamespace,'.AllowedValues') or @Term=concat($validationAlias,'.AllowedValues')) and not(@Qualifier)]" />
     <xsl:if test="$allowedValues">
       <xsl:text>,"enum":[</xsl:text>
       <xsl:apply-templates select="$allowedValues/edm:Collection/edm:Record" mode="Validation.AllowedValues" />
@@ -3346,6 +3349,7 @@
         select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:NavigationProperty|//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
         mode="expand"
       >
+        <!-- TODO: or not($retrievable='false') -->
         <xsl:with-param name="after"
           select="local-name($source)='EntitySet' or ($collection and (not($top-supported='false') or not($skip-supported='false') or not($searchable='false') or not($filterable='false') or not($countable='false') or not($sortable='false')))" />
       </xsl:apply-templates>
