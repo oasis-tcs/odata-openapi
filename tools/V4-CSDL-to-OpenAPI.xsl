@@ -3299,11 +3299,14 @@
           <xsl:text>"]</xsl:text>
 
           <xsl:text>,"parameters":[</xsl:text>
-          <xsl:apply-templates select="$entityType" mode="parameter" />
+          <xsl:apply-templates select="$entityType[local-name($source)='EntitySet']" mode="parameter" />
 
           <xsl:choose>
             <xsl:when test="$openapi-version='2.0'">
-              <xsl:text>,{"name":"</xsl:text>
+              <xsl:if test="local-name($source)='EntitySet'">
+                <xsl:text>,</xsl:text>
+              </xsl:if>
+              <xsl:text>{"name":"</xsl:text>
               <xsl:value-of select="$simpleName" />
               <xsl:text>","in":"body",</xsl:text>
             </xsl:when>
