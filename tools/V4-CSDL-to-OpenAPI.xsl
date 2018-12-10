@@ -694,11 +694,13 @@
     </xsl:variable>
     <xsl:text>[</xsl:text>
     <xsl:choose>
-      <xsl:when test="$qualifier=../../@Namespace or $qualifier=../../@Alias">
+      <xsl:when test="$qualifier=//edm:Schema/@Namespace or $qualifier=//edm:Schema/@Alias">
         <xsl:value-of select="$type" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="." />
+        <xsl:call-template name="normalizedQualifiedName">
+          <xsl:with-param name="qualifiedName" select="." />
+        </xsl:call-template>
         <xsl:text>{bg:whitesmoke}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
@@ -757,11 +759,13 @@
       </xsl:choose>
       <xsl:text>>[</xsl:text>
       <xsl:choose>
-        <xsl:when test="$qualifier=../../@Namespace or $qualifier=../../@Alias">
+        <xsl:when test="$qualifier=//edm:Schema/@Namespace or $qualifier=//edm:Schema/@Alias">
           <xsl:value-of select="$type" />
         </xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select="$singleType" />
+          <xsl:call-template name="normalizedQualifiedName">
+            <xsl:with-param name="qualifiedName" select="$singleType" />
+          </xsl:call-template>
           <xsl:text>{bg:whitesmoke}</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
@@ -4132,6 +4136,32 @@
         <xsl:value-of select="$jsonUrl" />
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="normalizedQualifiedName">
+    <xsl:param name="qualifiedName" />
+    <xsl:variable name="qualifier">
+      <xsl:call-template name="substring-before-last">
+        <xsl:with-param name="input" select="$qualifiedName" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="//edm:Schema[@Namespace=$qualifier and @Alias]">
+        <xsl:value-of select="//edm:Schema[@Namespace=$qualifier]/@Alias" />
+      </xsl:when>
+      <xsl:when test="//edmx:Include[@Namespace=$qualifier and @Alias]">
+        <xsl:value-of select="//edmx:Include[@Namespace=$qualifier]/@Alias" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$qualifier" />
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>.</xsl:text>
+    <xsl:call-template name="substring-after-last">
+      <xsl:with-param name="input" select="$qualifiedName" />
+      <xsl:with-param name="marker" select="'.'" />
+    </xsl:call-template>
   </xsl:template>
 
 </xsl:stylesheet>
