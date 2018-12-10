@@ -3287,7 +3287,7 @@
       <xsl:text>}</xsl:text>
 
       <!-- POST -->
-      <xsl:if test="$collection">
+      <xsl:if test="$collection and ($targetSet or @ContainsTarget='true')">
         <xsl:variable name="insertable">
           <xsl:call-template name="capability">
             <xsl:with-param name="term" select="'InsertRestrictions'" />
