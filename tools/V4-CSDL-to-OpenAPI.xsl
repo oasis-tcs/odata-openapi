@@ -1174,7 +1174,7 @@
             <xsl:value-of select="$limit" />
           </xsl:if>
         </xsl:if>
-        <xsl:if test="not($inParameter)">
+        <xsl:if test="not($inParameter and $openapi-version='2.0')">
           <xsl:text>,"example":</xsl:text>
           <xsl:if test="$odata-version='2.0'">
             <xsl:text>"</xsl:text>
@@ -1240,7 +1240,7 @@
             <xsl:text>,"format":"int64"</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
-        <xsl:if test="not($inParameter)">
+        <xsl:if test="not($inParameter and $openapi-version='2.0')">
           <xsl:text>,"example":"42"</xsl:text>
         </xsl:if>
       </xsl:when>
@@ -1259,7 +1259,7 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>,"format":"date"</xsl:text>
-            <xsl:if test="not($inParameter)">
+            <xsl:if test="not($inParameter and $openapi-version='2.0')">
               <xsl:text>,"example":"2017-04-13"</xsl:text>
             </xsl:if>
           </xsl:otherwise>
@@ -1272,7 +1272,7 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"double"</xsl:text>
-        <xsl:if test="not($inParameter)">
+        <xsl:if test="not($inParameter and $openapi-version='2.0')">
           <xsl:text>,"example":3.14</xsl:text>
         </xsl:if>
       </xsl:when>
@@ -1283,7 +1283,7 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"float"</xsl:text>
-        <xsl:if test="not($inParameter)">
+        <xsl:if test="not($inParameter and $openapi-version='2.0')">
           <xsl:text>,"example":3.14</xsl:text>
         </xsl:if>
       </xsl:when>
@@ -1301,7 +1301,7 @@
             <xsl:text>,"format":"uuid"</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
-        <xsl:if test="not($inParameter)">
+        <xsl:if test="not($inParameter and $openapi-version='2.0')">
           <xsl:text>,"example":"01234567-89ab-cdef-0123-456789abcdef"</xsl:text>
         </xsl:if>
       </xsl:when>
@@ -1320,7 +1320,7 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>,"format":"date-time"</xsl:text>
-            <xsl:if test="not($inParameter)">
+            <xsl:if test="not($inParameter and $openapi-version='2.0')">
               <xsl:text>,"example":"2017-04-13T15:51:04Z"</xsl:text>
             </xsl:if>
           </xsl:otherwise>
@@ -1341,7 +1341,7 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>,"format":"time"</xsl:text>
-            <xsl:if test="not($inParameter)">
+            <xsl:if test="not($inParameter and $openapi-version='2.0')">
               <xsl:text>,"example":"15:51:04"</xsl:text>
             </xsl:if>
           </xsl:otherwise>
@@ -1383,7 +1383,7 @@
         </xsl:if>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Untyped'">
-        <xsl:if test="not($inParameter)">
+        <xsl:if test="not($inParameter and $openapi-version='2.0')">
           <xsl:text>"example":{}</xsl:text>
         </xsl:if>
       </xsl:when>
