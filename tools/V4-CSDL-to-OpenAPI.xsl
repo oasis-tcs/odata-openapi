@@ -901,7 +901,9 @@
 
     <xsl:text>"type":"object"</xsl:text>
     <!-- everything except computed and read-only properties -->
-    <xsl:apply-templates select="edm:Property[not(@Name=$computed or @Name=$read-only)]|edm:NavigationProperty" mode="hash">
+    <xsl:apply-templates select="edm:Property[not(@Name=$computed or @Name=$read-only)]|edm:NavigationProperty"
+      mode="hash"
+    >
       <xsl:with-param name="name" select="'properties'" />
       <xsl:with-param name="suffix" select="'-create'" />
     </xsl:apply-templates>
@@ -937,7 +939,8 @@
     <xsl:text>"type":"object"</xsl:text>
     <!-- only updatable non-key properties -->
     <xsl:apply-templates
-      select="edm:Property[not(@Name=$immutable or @Name=$computed or @Name=$read-only or @Name=../edm:Key/edm:PropertyRef/@Name)]" mode="hash"
+      select="edm:Property[not(@Name=$immutable or @Name=$computed or @Name=$read-only or @Name=../edm:Key/edm:PropertyRef/@Name)]"
+      mode="hash"
     >
       <xsl:with-param name="name" select="'properties'" />
       <xsl:with-param name="suffix" select="'-update'" />
@@ -2767,7 +2770,7 @@
       <xsl:with-param name="node2" select="$action" />
       <xsl:with-param name="fallback-summary">
         <xsl:text>Invoke action </xsl:text>
-        <xsl:value-of select="@Name" />
+        <xsl:value-of select="$action/@Name" />
       </xsl:with-param>
     </xsl:call-template>
     <xsl:text>,"tags":["</xsl:text>
@@ -3409,32 +3412,34 @@
 
     <xsl:choose>
       <xsl:when test="$openapi-version='2.0'">
-        <xsl:if test="$entitySet">
-          <xsl:text>,</xsl:text>
+        <xsl:if test="edm:Parameter[position()>1]">
+          <xsl:if test="$entitySet">
+            <xsl:text>,</xsl:text>
+          </xsl:if>
+          <xsl:text>{"name":"body","in":"body",</xsl:text>
+          <xsl:text>"description":"Action parameters",</xsl:text>
+          <xsl:text>"schema":{"type":"object"</xsl:text>
+          <xsl:apply-templates select="edm:Parameter[position()>1]" mode="hash">
+            <xsl:with-param name="name" select="'properties'" />
+          </xsl:apply-templates>
+          <xsl:text>}}</xsl:text>
         </xsl:if>
-        <xsl:text>{"name":"body","in":"body",</xsl:text>
+        <xsl:text>]</xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="$entitySet">
           <xsl:text>]</xsl:text>
         </xsl:if>
-        <xsl:text>,"requestBody":{</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>"description":"Action parameters",</xsl:text>
-    <xsl:if test="$openapi-version!='2.0'">
-      <xsl:text>"content":{"application/json":{</xsl:text>
-    </xsl:if>
-    <xsl:text>"schema":{"type":"object"</xsl:text>
-    <xsl:apply-templates select="edm:Parameter[position()>1]" mode="hash">
-      <xsl:with-param name="name" select="'properties'" />
-    </xsl:apply-templates>
-    <xsl:choose>
-      <xsl:when test="$openapi-version='2.0'">
-        <xsl:text>}}]</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>}}}}</xsl:text>
+        <xsl:if test="edm:Parameter[position()>1]">
+          <xsl:text>,"requestBody":{</xsl:text>
+          <xsl:text>"description":"Action parameters",</xsl:text>
+          <xsl:text>"content":{"application/json":{</xsl:text>
+          <xsl:text>"schema":{"type":"object"</xsl:text>
+          <xsl:apply-templates select="edm:Parameter[position()>1]" mode="hash">
+            <xsl:with-param name="name" select="'properties'" />
+          </xsl:apply-templates>
+          <xsl:text>}}}}</xsl:text>
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
 
