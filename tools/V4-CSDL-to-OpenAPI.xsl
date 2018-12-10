@@ -30,7 +30,6 @@
     - external targeting for Capabilities: NonSortableProperties, KeyAsSegmentSupported
     - external targeting for Core.Immutable and Core.Computed
     - key property aliases
-    - parameters are nullable if not stated otherwise
     - external targeting for Core.Permission/Read
   -->
 
@@ -1304,7 +1303,7 @@
             <xsl:text>,"format":"uuid"</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
-        <xsl:if test="not($inParameter and $openapi-version='2.0')">
+        <xsl:if test="not($inParameter)">
           <xsl:text>,"example":"01234567-89ab-cdef-0123-456789abcdef"</xsl:text>
         </xsl:if>
       </xsl:when>
@@ -1323,7 +1322,7 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>,"format":"date-time"</xsl:text>
-            <xsl:if test="not($inParameter and $openapi-version='2.0')">
+            <xsl:if test="not($inParameter)">
               <xsl:text>,"example":"2017-04-13T15:51:04Z"</xsl:text>
             </xsl:if>
           </xsl:otherwise>
@@ -1344,7 +1343,7 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>,"format":"time"</xsl:text>
-            <xsl:if test="not($inParameter and $openapi-version='2.0')">
+            <xsl:if test="not($inParameter)">
               <xsl:text>,"example":"15:51:04"</xsl:text>
             </xsl:if>
           </xsl:otherwise>
@@ -3599,7 +3598,7 @@
     </xsl:if>
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
-      <xsl:with-param name="nullableFacet" select="'false'" />
+      <xsl:with-param name="nullableFacet" select="@Nullable" />
       <xsl:with-param name="inParameter" select="true()" />
     </xsl:call-template>
     <xsl:if test="$openapi-version!='2.0'">
