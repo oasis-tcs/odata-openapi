@@ -3394,7 +3394,11 @@
     <xsl:text>,"tags":["</xsl:text>
     <xsl:value-of select="$entitySet" />
     <xsl:value-of select="$singleton" />
-    <xsl:text>"],"parameters":[</xsl:text>
+    <xsl:text>"]</xsl:text>
+
+    <xsl:if test="$entitySet or $openapi-version='2.0'">
+      <xsl:text>,"parameters":[</xsl:text>
+    </xsl:if>
     <xsl:if test="$entitySet">
       <xsl:apply-templates select="$entityType" mode="parameter" />
     </xsl:if>
@@ -3407,7 +3411,10 @@
         <xsl:text>{"name":"body","in":"body",</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>],"requestBody":{</xsl:text>
+        <xsl:if test="$entitySet">
+          <xsl:text>]</xsl:text>
+        </xsl:if>
+        <xsl:text>,"requestBody":{</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>"description":"Action parameters",</xsl:text>
