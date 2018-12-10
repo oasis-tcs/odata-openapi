@@ -30,6 +30,7 @@
     - external targeting for Capabilities: NonSortableProperties, KeyAsSegmentSupported
     - external targeting for Core.Immutable and Core.Computed
     - key property aliases
+    - parameters are nullable if not stated otherwise
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -3222,9 +3223,11 @@
       <!-- GET -->
       <xsl:text>"get":{</xsl:text>
 
-      <!-- TODO: better summary / description -->
       <xsl:text>"summary":"Get related </xsl:text>
       <xsl:choose>
+        <xsl:when test="not($collection)">
+          <xsl:value-of select="$simpleName" />
+        </xsl:when>
         <xsl:when test="$targetSet">
           <xsl:value-of select="$targetSet/@Name" />
         </xsl:when>
@@ -3287,7 +3290,6 @@
         <xsl:if test="not($insertable='false') or $navigation-insertable='true'">
           <xsl:text>,"post":{</xsl:text>
 
-          <!-- TODO: better summary / description -->
           <xsl:text>"summary":"Add related </xsl:text>
           <xsl:value-of select="$simpleName" />
           <xsl:text>","tags":["</xsl:text>

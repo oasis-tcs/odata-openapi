@@ -18,13 +18,13 @@ set SCHEMA_TWO=..\..\OpenAPI-Specification\schemas\v2.0\schema.json
 
 set done=false
 
-for /F "eol=# tokens=1,2,3,4,5" %%F in (%~n0.txt) do (
+for /F "eol=# tokens=1,2,3,4,5,6" %%F in (%~n0.txt) do (
 	if /I [%~n1]==[%%~nF] (
 	  set done=true
-		call :process %%F %%G %%H %%I %%J
+		call :process %%F %%G %%H %%I %%J %%K
 	) else if [%1]==[] (
 	  set done=true
-		call :process %%F %%G %%H %%I %%J
+		call :process %%F %%G %%H %%I %%J %%K
 	)
 )
 
@@ -60,7 +60,7 @@ exit /b
     set INPUT=..\examples\%1
   )
 
-  java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-OpenAPI.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM diagram YES -PARAM references YES -PARAM openapi-root "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/" -PARAM openapi-version 3.0.0 -IN %INPUT% -OUT %~n1.tmp3.json
+  java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-OpenAPI.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM diagram YES -PARAM references "%6" -PARAM openapi-root "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/" -PARAM openapi-version 3.0.0 -IN %INPUT% -OUT %~n1.tmp3.json
 
   json_reformat.exe < %~n1.tmp3.json > ..\examples\%~n1.openapi3.json
   if not errorlevel 1 (
@@ -70,7 +70,7 @@ exit /b
     if exist %SCHEMA_THREE% call ajv validate --unknown-formats=uriref -s %SCHEMA_THREE% -d ..\examples\%~n1.openapi3.json > nul
   )
 
-  java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM diagram YES -PARAM references YES -PARAM openapi-root "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/" -IN %INPUT% -OUT %~n1.tmp.json
+  java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM diagram YES -PARAM references "%6" -PARAM openapi-root "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/" -IN %INPUT% -OUT %~n1.tmp.json
 
   json_reformat.exe < %~n1.tmp.json > ..\examples\%~n1.openapi.json
   if not errorlevel 1 (
