@@ -3167,7 +3167,24 @@
 
     <xsl:variable name="collection" select="starts-with(@Type,'Collection(')" />
     <xsl:variable name="name" select="@Name" />
-    <xsl:variable name="targetEntitySetName" select="$source/edm:NavigationPropertyBinding[@Path=$name]/@Target" />
+    <xsl:variable name="bindingTarget" select="$source/edm:NavigationPropertyBinding[@Path=$name]/@Target" />
+    <xsl:variable name="targetEntitySetName">
+      <xsl:choose>
+        <xsl:when
+          test="contains($bindingTarget,'/') and substring-before($bindingTarget,'/') = concat($source/../../@Namespace,'.',$source/../@Name)"
+        >
+          <xsl:value-of select="substring-after($bindingTarget,'/')" />
+        </xsl:when>
+        <xsl:when
+          test="contains($bindingTarget,'/') and substring-before($bindingTarget,'/') = concat($source/../../@Alias,'.',$source/../@Name)"
+        >
+          <xsl:value-of select="substring-after($bindingTarget,'/')" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$bindingTarget" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="targetSet" select="//edm:EntitySet[@Name=$targetEntitySetName]" />
     <xsl:variable name="targetAddressable" select="$targetSet/edm:Annotation[@Term='TODO.Addressable']/@Bool" />
 
