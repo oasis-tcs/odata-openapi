@@ -1066,13 +1066,17 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:apply-templates select="$target/@MaxLength" />
-        <xsl:call-template name="Validation.AllowedValues" />
+        <xsl:call-template name="Validation.AllowedValues">
+          <xsl:with-param name="target" select="$target" />
+        </xsl:call-template>
         <xsl:choose>
           <xsl:when test="$inParameter and $odata-version='2.0'">
             <xsl:text>,"pattern":"^'[^']*(''[^']*)*'$"</xsl:text>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:call-template name="Validation.Pattern" />
+            <xsl:call-template name="Validation.Pattern">
+              <xsl:with-param name="target" select="$target" />
+            </xsl:call-template>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="not($inParameter) and not($nullable='false') and $openapi-version='2.0'">
@@ -1443,9 +1447,10 @@
   </xsl:template>
 
   <xsl:template name="Validation.Pattern">
+    <xsl:param name="target" />
     <xsl:variable name="pattern">
       <xsl:call-template name="annotation-string">
-        <xsl:with-param name="node" select="." />
+        <xsl:with-param name="node" select="$target" />
         <xsl:with-param name="term" select="concat($validationNamespace,'.Pattern')" />
         <xsl:with-param name="termAliased" select="concat($validationAlias,'.Pattern')" />
       </xsl:call-template>
@@ -1458,8 +1463,9 @@
   </xsl:template>
 
   <xsl:template name="Validation.AllowedValues">
-    <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+    <xsl:param name="target" />
+    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',@Name)" />
     <xsl:variable name="allowedValues"
       select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($validationNamespace,'.AllowedValues') or @Term=concat($validationAlias,'.AllowedValues')) and not(@Qualifier)]
                                                                                        |edm:Annotation[(@Term=concat($validationNamespace,'.AllowedValues') or @Term=concat($validationAlias,'.AllowedValues')) and not(@Qualifier)]" />
