@@ -196,5 +196,8 @@ Term | Annotation Target | OpenAPI field
 Term | Annotation Target | OpenAPI field
 -----|-------------------|--------------
 `AllowedValues` | Property | `enum` of Schema Object - list of allowed (string) values
+`Exclusive` | Property | `exclusiveMinimum`/`exclusiveMaximum` of Schema Object
+`Maximum` | Property | `maximum` of Schema Object
+`Minimum` | Property | `minimum` of Schema Object
 `Pattern` | Property | `pattern` of Schema Object
 

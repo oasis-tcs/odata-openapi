@@ -16,9 +16,6 @@
     - securityDefinitions script parameter with default
     "securityDefinitions":{"basic_auth":{"type":"basic","description": "Basic
     Authentication"}}
-    - Validation annotations -> minimum, maximum, exclusiveM??imum,
-    see https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Validation.V1.md,
-    inline and explace style
     - complex or collection-valued function parameters need special treatment in /paths,
     use parameter aliases with alias option of type string
     - @Extends for entity container: include /paths from referenced container
@@ -28,9 +25,8 @@
     - ETag for GET / If-Match for PATCH and DELETE depending on @Core.OptimisticConcurrency
     - reduce duplicated code in /paths production
     - external targeting for Capabilities: NonSortableProperties, KeyAsSegmentSupported
-    - external targeting for Core.Immutable and Core.Computed
+    - external targeting for Core: Immutable, Computed, Permission/Read
     - key property aliases
-    - external targeting for Core.Permission/Read
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -1177,12 +1173,34 @@
               </xsl:call-template>
             </xsl:if>
           </xsl:variable>
-          <xsl:if test="$target/@Precision &lt; 16">
-            <xsl:text>,"minimum":-</xsl:text>
-            <xsl:value-of select="$limit" />
-            <xsl:text>,"maximum":</xsl:text>
-            <xsl:value-of select="$limit" />
-          </xsl:if>
+          <xsl:variable name="minimum">
+            <xsl:call-template name="Validation.Minimum">
+              <xsl:with-param name="target" select="$target" />
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:variable name="maximum">
+            <xsl:call-template name="Validation.Maximum">
+              <xsl:with-param name="target" select="$target" />
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:choose>
+            <xsl:when test="$minimum!=''">
+              <xsl:value-of select="$minimum" />
+            </xsl:when>
+            <xsl:when test="$target/@Precision &lt; 16">
+              <xsl:text>,"minimum":-</xsl:text>
+              <xsl:value-of select="$limit" />
+            </xsl:when>
+          </xsl:choose>
+          <xsl:choose>
+            <xsl:when test="$maximum!=''">
+              <xsl:value-of select="$maximum" />
+            </xsl:when>
+            <xsl:when test="$target/@Precision &lt; 16">
+              <xsl:text>,"maximum":</xsl:text>
+              <xsl:value-of select="$limit" />
+            </xsl:when>
+          </xsl:choose>
         </xsl:if>
         <xsl:if test="not($inParameter and $openapi-version='2.0')">
           <xsl:text>,"example":</xsl:text>
@@ -1202,6 +1220,12 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"uint8"</xsl:text>
+        <xsl:call-template name="Validation.Minimum">
+          <xsl:with-param name="target" select="$target" />
+        </xsl:call-template>
+        <xsl:call-template name="Validation.Maximum">
+          <xsl:with-param name="target" select="$target" />
+        </xsl:call-template>
       </xsl:when>
       <xsl:when test="$singleType='Edm.SByte'">
         <xsl:call-template name="nullableType">
@@ -1210,6 +1234,12 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"int8"</xsl:text>
+        <xsl:call-template name="Validation.Minimum">
+          <xsl:with-param name="target" select="$target" />
+        </xsl:call-template>
+        <xsl:call-template name="Validation.Maximum">
+          <xsl:with-param name="target" select="$target" />
+        </xsl:call-template>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Int16'">
         <xsl:call-template name="nullableType">
@@ -1218,6 +1248,12 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"int16"</xsl:text>
+        <xsl:call-template name="Validation.Minimum">
+          <xsl:with-param name="target" select="$target" />
+        </xsl:call-template>
+        <xsl:call-template name="Validation.Maximum">
+          <xsl:with-param name="target" select="$target" />
+        </xsl:call-template>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Int32'">
         <xsl:call-template name="nullableType">
@@ -1226,6 +1262,12 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"int32"</xsl:text>
+        <xsl:call-template name="Validation.Minimum">
+          <xsl:with-param name="target" select="$target" />
+        </xsl:call-template>
+        <xsl:call-template name="Validation.Maximum">
+          <xsl:with-param name="target" select="$target" />
+        </xsl:call-template>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Int64'">
         <xsl:call-template name="nullableType">
@@ -1282,6 +1324,12 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"double"</xsl:text>
+        <xsl:call-template name="Validation.Minimum">
+          <xsl:with-param name="target" select="$target" />
+        </xsl:call-template>
+        <xsl:call-template name="Validation.Maximum">
+          <xsl:with-param name="target" select="$target" />
+        </xsl:call-template>
         <xsl:if test="not($inParameter and $openapi-version='2.0')">
           <xsl:text>,"example":3.14</xsl:text>
         </xsl:if>
@@ -1293,6 +1341,12 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"float"</xsl:text>
+        <xsl:call-template name="Validation.Minimum">
+          <xsl:with-param name="target" select="$target" />
+        </xsl:call-template>
+        <xsl:call-template name="Validation.Maximum">
+          <xsl:with-param name="target" select="$target" />
+        </xsl:call-template>
         <xsl:if test="not($inParameter and $openapi-version='2.0')">
           <xsl:text>,"example":3.14</xsl:text>
         </xsl:if>
@@ -1433,6 +1487,12 @@
           <xsl:text>}]</xsl:text>
         </xsl:if>
         <xsl:apply-templates select="$target/@MaxLength" />
+        <xsl:call-template name="Validation.Minimum">
+          <xsl:with-param name="target" select="$target" />
+        </xsl:call-template>
+        <xsl:call-template name="Validation.Maximum">
+          <xsl:with-param name="target" select="$target" />
+        </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:apply-templates select="$target/@DefaultValue">
@@ -1443,6 +1503,56 @@
         <xsl:text>}}</xsl:text>
       </xsl:if>
       <xsl:text>}</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="Validation.AllowedValues">
+    <xsl:param name="target" />
+    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',@Name)" />
+    <xsl:variable name="allowedValues"
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($validationNamespace,'.AllowedValues') or @Term=concat($validationAlias,'.AllowedValues')) and not(@Qualifier)]
+                                                                                       |edm:Annotation[(@Term=concat($validationNamespace,'.AllowedValues') or @Term=concat($validationAlias,'.AllowedValues')) and not(@Qualifier)]" />
+    <xsl:if test="$allowedValues">
+      <xsl:text>,"enum":[</xsl:text>
+      <xsl:apply-templates select="$allowedValues/edm:Collection/edm:Record" mode="Validation.AllowedValues" />
+      <xsl:text>]</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="Validation.Minimum">
+    <xsl:param name="target" />
+    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',@Name)" />
+    <xsl:variable name="minimum"
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($validationNamespace,'.Minimum') or @Term=concat($validationAlias,'.Minimum')) and not(@Qualifier)]
+                                                                                       |edm:Annotation[(@Term=concat($validationNamespace,'.Minimum') or @Term=concat($validationAlias,'.Minimum')) and not(@Qualifier)]" />
+    <xsl:if test="$minimum">
+      <xsl:text>,"minimum":</xsl:text>
+      <xsl:value-of select="$minimum/@Decimal|$minimum/edm:Decimal" />
+      <xsl:variable name="exclusive"
+        select="$minimum/edm:Annotation[(@Term=concat($validationNamespace,'.Exclusive') or @Term=concat($validationAlias,'.Exclusive')) and not(@Qualifier)]" />
+      <xsl:if test="$exclusive/@Bool = 'true' or $exclusive/edm:Bool='true'">
+        <xsl:text>,"exclusiveMinimum":true</xsl:text>
+      </xsl:if>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="Validation.Maximum">
+    <xsl:param name="target" />
+    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',@Name)" />
+    <xsl:variable name="maximum"
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($validationNamespace,'.Maximum') or @Term=concat($validationAlias,'.Maximum')) and not(@Qualifier)]
+                                                                                       |edm:Annotation[(@Term=concat($validationNamespace,'.Maximum') or @Term=concat($validationAlias,'.Maximum')) and not(@Qualifier)]" />
+    <xsl:if test="$maximum">
+      <xsl:text>,"maximum":</xsl:text>
+      <xsl:value-of select="$maximum/@Decimal|$maximum/edm:Decimal" />
+    </xsl:if>
+    <xsl:variable name="exclusive"
+      select="$maximum/edm:Annotation[(@Term=concat($validationNamespace,'.Exclusive') or @Term=concat($validationAlias,'.Exclusive')) and not(@Qualifier)]" />
+    <xsl:if test="$exclusive/@Bool = 'true' or $exclusive/edm:Bool='true'">
+      <xsl:text>,"exclusiveMaximum":true</xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -1459,20 +1569,6 @@
       <xsl:text>,"pattern":"</xsl:text>
       <xsl:value-of select="$pattern" />
       <xsl:text>"</xsl:text>
-    </xsl:if>
-  </xsl:template>
-
-  <xsl:template name="Validation.AllowedValues">
-    <xsl:param name="target" />
-    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',@Name)" />
-    <xsl:variable name="allowedValues"
-      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($validationNamespace,'.AllowedValues') or @Term=concat($validationAlias,'.AllowedValues')) and not(@Qualifier)]
-                                                                                       |edm:Annotation[(@Term=concat($validationNamespace,'.AllowedValues') or @Term=concat($validationAlias,'.AllowedValues')) and not(@Qualifier)]" />
-    <xsl:if test="$allowedValues">
-      <xsl:text>,"enum":[</xsl:text>
-      <xsl:apply-templates select="$allowedValues/edm:Collection/edm:Record" mode="Validation.AllowedValues" />
-      <xsl:text>]</xsl:text>
     </xsl:if>
   </xsl:template>
 
