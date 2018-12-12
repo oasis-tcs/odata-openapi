@@ -833,7 +833,24 @@
         </Property>
         <Property Name="Tags" Type="Collection(Edm.String)" Nullable="true" />
         <Property Name="Dates" Type="Collection(Edm.Date)" Nullable="true" />
-        <Property Type="Edm.Decimal" Name="Price" Precision="15" Scale="3" />
+        <Property Name="Price" Type="Edm.Decimal" Precision="15" Scale="3">
+          <Annotation Term="Validation.Minimum" Decimal="0" />
+        </Property>
+        <Property Name="Quantity" Type="Edm.Decimal" Precision="15" Scale="3">
+          <Annotation Term="Validation.Minimum" Decimal="0">
+            <Annotation Term="Validation.Exclusive" Bool="true" />
+          </Annotation>
+        </Property>
+        <Property Name="PercentComplete" Type="Edm.Decimal" Precision="3" Scale="0">
+          <Annotation Term="Validation.Minimum" Decimal="0" />
+          <Annotation Term="Validation.Maximum" Decimal="100" />
+        </Property>
+        <Property Name="PercentOfLightSpeed" Type="Edm.Decimal" Precision="34" Scale="variable">
+          <Annotation Term="Validation.Minimum" Decimal="0" />
+          <Annotation Term="Validation.Maximum" Decimal="100">
+            <Annotation Term="Validation.Exclusive" Bool="true" />
+          </Annotation>
+        </Property>
         <Property Name="Permission" Type="Org.OData.Core.V1.Permission" Nullable="false" />
         <Property Name="AliasPermission" Type="Core.Permission" />
         <Annotation Term="Collection.Of.Strings">
