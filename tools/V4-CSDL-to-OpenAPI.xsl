@@ -3327,7 +3327,7 @@
         <xsl:variable name="navigation-insertable"
           select="$insertRestrictions/edm:Record/edm:PropertyValue[@Property='Insertable']/@Bool" />
 
-        <xsl:if test="not($insertable='false') or $navigation-insertable='true'">
+        <xsl:if test="($insertable='' and not($navigation-insertable)) or $insertable='true' or $navigation-insertable='true'">
           <xsl:text>,"post":{</xsl:text>
 
           <xsl:text>"summary":"Add related </xsl:text>
