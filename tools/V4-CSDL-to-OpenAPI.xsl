@@ -3407,7 +3407,7 @@
           select="$navigationRestrictions/edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection" />
         <xsl:variable name="navPropName" select="@Name" />
         <xsl:variable name="insertRestrictions"
-          select="$restrictedProperties/edm:Record[edm:PropertyValue[@Property='NavigationProperty']/@PropertyPath=$navPropName]/edm:PropertyValue[@Property='InsertRestrictions']" />
+          select="$restrictedProperties/edm:Record[edm:PropertyValue[@Property='NavigationProperty']/@NavigationPropertyPath=$navPropName]/edm:PropertyValue[@Property='InsertRestrictions']" />
         <xsl:variable name="navigation-insertable"
           select="$insertRestrictions/edm:Record/edm:PropertyValue[@Property='Insertable']/@Bool" />
 
