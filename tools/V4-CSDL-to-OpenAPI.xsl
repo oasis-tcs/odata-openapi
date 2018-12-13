@@ -27,6 +27,7 @@
     - external targeting for Capabilities: NonSortableProperties, KeyAsSegmentSupported
     - external targeting for Core: Immutable, Computed, Permission/Read
     - key property aliases
+    - example values via Core.Example
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -156,8 +157,8 @@
   <xsl:template name="capability-indexablebykey">
     <xsl:param name="term" select="'IndexableByKey'" />
     <xsl:param name="target" select="." />
-    <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',$target/@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',$target/@Name)" />
     <xsl:variable name="anno"
       select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term))] 
                                                                                |$target/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term))]" />
@@ -191,98 +192,65 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:variable name="target">
-          <xsl:choose>
-            <xsl:when test="local-name($node)='Parameter' and $odata-version='2.0'">
-              <xsl:value-of
-                select="concat($node/../../@Namespace,'.',$node/../../edm:EntityContainer/@Name,'/',../@Name,'/',$node/@Name)" />
-            </xsl:when>
-            <xsl:when
-              test="local-name($node)='Property' or local-name($node)='NavigationProperty'
-                 or local-name($node)='EntitySet' or local-name($node)='Singleton' 
-                 or local-name($node)='ActionImport' or local-name($node)='FunctionImport'"
-            >
-              <xsl:value-of select="concat($node/../../@Namespace,'.',$node/../@Name,'/',$node/@Name)" />
-            </xsl:when>
-            <xsl:when test="local-name($node)='Parameter'">
-              <xsl:value-of select="concat($node/../../@Namespace,'.',$node/../@Name)" />
-              <xsl:text>(</xsl:text>
-              <xsl:for-each
-                select="$node/../edm:Parameter[local-name($node/..)='Function' or ($node/../@IsBound='true' and position()=1)]"
-              >
-                <xsl:if test="position()>1">
-                  <xsl:text>,</xsl:text>
-                </xsl:if>
-                <xsl:value-of select="@Type" />
-              </xsl:for-each>
-              <xsl:text>)</xsl:text>
-              <xsl:value-of select="concat('/',$node/@Name)" />
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="concat($node/../@Namespace,'.',$node/@Name)" />
-              <xsl:if test="local-name($node)='Action' or local-name($node)='Function'">
-                <xsl:text>(</xsl:text>
-                <xsl:for-each
-                  select="$node/edm:Parameter[local-name($node)='Function' or ($node/@IsBound='true' and position()=1)]"
-                >
-                  <xsl:if test="position()>1">
-                    <xsl:text>,</xsl:text>
-                  </xsl:if>
-                  <xsl:value-of select="@Type" />
-                </xsl:for-each>
-                <xsl:text>)</xsl:text>
-              </xsl:if>
-            </xsl:otherwise>
-          </xsl:choose>
+          <xsl:call-template name="annotation-target">
+            <xsl:with-param name="node" select="$node" />
+          </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="targetAliased">
-          <xsl:choose>
-            <xsl:when test="local-name($node)='Parameter' and $odata-version='2.0'">
-              <xsl:value-of
-                select="concat($node/../../@Alias,'.',$node/../../edm:EntityContainer/@Name,'/',../@Name,'/',$node/@Name)" />
-            </xsl:when>
-            <xsl:when
-              test="local-name($node)='Property' or local-name($node)='NavigationProperty' 
-                 or local-name($node)='EntitySet' or local-name($node)='Singleton' 
-                 or local-name($node)='ActionImport' or local-name($node)='FunctionImport'"
-            >
-              <xsl:value-of select="concat($node/../../@Alias,'.',$node/../@Name,'/',$node/@Name)" />
-            </xsl:when>
-            <xsl:when test="local-name($node)='Parameter'">
-              <xsl:value-of select="concat($node/../../@Alias,'.',$node/../@Name)" />
-              <xsl:text>(</xsl:text>
-              <xsl:for-each
-                select="$node/../edm:Parameter[local-name($node/..)='Function' or ($node/../@IsBound='true' and position()=1)]"
-              >
-                <xsl:if test="position()>1">
-                  <xsl:text>,</xsl:text>
-                </xsl:if>
-                <xsl:value-of select="@Type" />
-              </xsl:for-each>
-              <xsl:text>)</xsl:text>
-              <xsl:value-of select="concat('/',$node/@Name)" />
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="concat($node/../@Alias,'.',$node/@Name)" />
-              <xsl:if test="local-name($node)='Action' or local-name($node)='Function'">
-                <xsl:text>(</xsl:text>
-                <xsl:for-each
-                  select="$node/edm:Parameter[local-name($node)='Function' or ($node/@IsBound='true' and position()=1)]"
-                >
-                  <xsl:if test="position()>1">
-                    <xsl:text>,</xsl:text>
-                  </xsl:if>
-                  <xsl:value-of select="@Type" />
-                </xsl:for-each>
-                <xsl:text>)</xsl:text>
-              </xsl:if>
-            </xsl:otherwise>
-          </xsl:choose>
+          <xsl:call-template name="annotation-target">
+            <xsl:with-param name="node" select="$node" />
+            <xsl:with-param name="qualifier" select="$node/ancestor::edm:Schema/@Alias" />
+          </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="annotationExt"
           select="//edm:Annotations[(@Target=$target or @Target=$targetAliased) and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$term or @Term=$termAliased) and ((not($qualifier) and not(@Qualifier)) or $qualifier=@Qualifier)]" />
         <xsl:call-template name="escape">
           <xsl:with-param name="string" select="$annotationExt/@String|$annotationExt/edm:String" />
         </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="annotation-target">
+    <xsl:param name="node" />
+    <xsl:param name="qualifier" select="$node/ancestor::edm:Schema/@Namespace" />
+    <xsl:choose>
+      <xsl:when test="local-name($node)='Parameter' and $odata-version='2.0'">
+        <xsl:value-of select="concat($qualifier,'.',$node/../../edm:EntityContainer/@Name,'/',$node/../@Name,'/',$node/@Name)" />
+      </xsl:when>
+      <xsl:when
+        test="local-name($node)='Property' or local-name($node)='NavigationProperty'
+              or local-name($node)='EntitySet' or local-name($node)='Singleton' 
+              or local-name($node)='ActionImport' or local-name($node)='FunctionImport'"
+      >
+        <xsl:value-of select="concat($qualifier,'.',$node/../@Name,'/',$node/@Name)" />
+      </xsl:when>
+      <xsl:when test="local-name($node)='Parameter'">
+        <xsl:value-of select="concat($qualifier,'.',$node/../@Name)" />
+        <xsl:text>(</xsl:text>
+        <xsl:for-each
+          select="$node/../edm:Parameter[local-name($node/..)='Function' or ($node/../@IsBound='true' and position()=1)]"
+        >
+          <xsl:if test="position()>1">
+            <xsl:text>,</xsl:text>
+          </xsl:if>
+          <xsl:value-of select="@Type" />
+        </xsl:for-each>
+        <xsl:text>)</xsl:text>
+        <xsl:value-of select="concat('/',$node/@Name)" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="concat($qualifier,'.',$node/@Name)" />
+        <xsl:if test="local-name($node)='Action' or local-name($node)='Function'">
+          <xsl:text>(</xsl:text>
+          <xsl:for-each select="$node/edm:Parameter[local-name($node)='Function' or ($node/@IsBound='true' and position()=1)]">
+            <xsl:if test="position()>1">
+              <xsl:text>,</xsl:text>
+            </xsl:if>
+            <xsl:value-of select="@Type" />
+          </xsl:for-each>
+          <xsl:text>)</xsl:text>
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -1508,8 +1476,17 @@
 
   <xsl:template name="Validation.AllowedValues">
     <xsl:param name="target" />
-    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',@Name)" />
+    <xsl:variable name="target-path">
+      <xsl:call-template name="annotation-target">
+        <xsl:with-param name="node" select="$target" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="target-path-aliased">
+      <xsl:call-template name="annotation-target">
+        <xsl:with-param name="node" select="$target" />
+        <xsl:with-param name="qualifier" select="$target/ancestor::edm:Schema/@Alias" />
+      </xsl:call-template>
+    </xsl:variable>
     <xsl:variable name="allowedValues"
       select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($validationNamespace,'.AllowedValues') or @Term=concat($validationAlias,'.AllowedValues')) and not(@Qualifier)]
                                                                                        |edm:Annotation[(@Term=concat($validationNamespace,'.AllowedValues') or @Term=concat($validationAlias,'.AllowedValues')) and not(@Qualifier)]" />
@@ -1522,8 +1499,17 @@
 
   <xsl:template name="Validation.Minimum">
     <xsl:param name="target" />
-    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',@Name)" />
+    <xsl:variable name="target-path">
+      <xsl:call-template name="annotation-target">
+        <xsl:with-param name="node" select="$target" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="target-path-aliased">
+      <xsl:call-template name="annotation-target">
+        <xsl:with-param name="node" select="$target" />
+        <xsl:with-param name="qualifier" select="$target/ancestor::edm:Schema/@Alias" />
+      </xsl:call-template>
+    </xsl:variable>
     <xsl:variable name="minimum"
       select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($validationNamespace,'.Minimum') or @Term=concat($validationAlias,'.Minimum')) and not(@Qualifier)]
                                                                                        |edm:Annotation[(@Term=concat($validationNamespace,'.Minimum') or @Term=concat($validationAlias,'.Minimum')) and not(@Qualifier)]" />
@@ -1540,8 +1526,17 @@
 
   <xsl:template name="Validation.Maximum">
     <xsl:param name="target" />
-    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',@Name)" />
+    <xsl:variable name="target-path">
+      <xsl:call-template name="annotation-target">
+        <xsl:with-param name="node" select="$target" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="target-path-aliased">
+      <xsl:call-template name="annotation-target">
+        <xsl:with-param name="node" select="$target" />
+        <xsl:with-param name="qualifier" select="$target/ancestor::edm:Schema/@Alias" />
+      </xsl:call-template>
+    </xsl:variable>
     <xsl:variable name="maximum"
       select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($validationNamespace,'.Maximum') or @Term=concat($validationAlias,'.Maximum')) and not(@Qualifier)]
                                                                                        |edm:Annotation[(@Term=concat($validationNamespace,'.Maximum') or @Term=concat($validationAlias,'.Maximum')) and not(@Qualifier)]" />
@@ -2049,8 +2044,8 @@
 
   <xsl:template name="filter-RequiredProperties">
     <xsl:param name="target" select="." />
-    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',../@Name,'/',@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',$target/@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',$target/@Name)" />
     <xsl:variable name="target-node" select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]|$target" />
     <xsl:variable name="filter-restrictions"
       select="$target-node/edm:Annotation[@Term=concat($capabilitiesNamespace,'.FilterRestrictions') or @Term=concat($capabilitiesAlias,'.FilterRestrictions')]" />
