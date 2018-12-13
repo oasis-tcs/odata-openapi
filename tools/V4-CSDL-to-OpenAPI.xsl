@@ -3257,8 +3257,8 @@
       <xsl:text>"get":{</xsl:text>
 	  <!-- Dynamic Description of Navigation endpoints -->
 	  <xsl:call-template name="summary-description-qualified">
-        <xsl:with-param name="node" select="$source/edm:NavigationPropertyBinding[@Path=$name]" />
-        <xsl:with-param name="qualifier" select="'Query'" />
+        <xsl:with-param name="node" select="." />
+        <xsl:with-param name="qualifier" select="null" />
         <xsl:with-param name="fallback-summary">
           <xsl:text>Get related </xsl:text>
 		  <xsl:choose>
