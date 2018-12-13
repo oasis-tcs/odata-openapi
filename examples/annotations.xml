@@ -147,6 +147,14 @@
               <PropertyValue Property="RestrictedProperties">
                 <Collection>
                   <Record>
+                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="AllMany" />
+                    <PropertyValue Property="InsertRestrictions">
+                      <Record>
+                        <PropertyValue Property="Insertable" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                  </Record>
+                  <Record>
                     <PropertyValue Property="NavigationProperty" NavigationPropertyPath="NothingMany" />
                     <PropertyValue Property="InsertRestrictions">
                       <Record>
@@ -160,6 +168,12 @@
           </Annotation>
         </Singleton>
         <EntitySet Name="TwoAllSet" EntityType="self.TwoPartKey">
+          <!-- redundant, just to test the conditional logic -->
+          <Annotation Term="Capabilities.InsertRestrictions">
+            <Record>
+              <PropertyValue Bool="true" Property="Insertable" />
+            </Record>
+          </Annotation>
         </EntitySet>
         <EntitySet Name="TwoReadOnlySet" EntityType="self.TwoPartKey" />
         <EntitySet Name="TwoNothingSet" EntityType="self.TwoPartKey" />
