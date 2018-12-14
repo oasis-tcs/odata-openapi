@@ -49,8 +49,14 @@
           </Annotation>
         </Property>
         <Property Name="AllowedValuesExt" Type="Edm.String" />
+        <Property Name="Maximum" Type="Edm.Decimal" Precision="5" Scale="variable">
+          <Annotation Term="Validation.Maximum" Decimal="0">
+            <Annotation Term="Validation.Exclusive" Bool="true" />
+          </Annotation>
+        </Property>
+        <Property Name="MaximumExt" Type="Edm.Decimal" Scale="variable" />
         <Property Name="Minimum" Type="Edm.Decimal" Precision="5" Scale="2">
-          <Annotation Term="Validation.Minimum" Decimal="0" />
+          <Annotation Term="Validation.Minimum" Decimal="1" />
         </Property>
         <Property Name="MinimumExt" Type="Edm.Decimal" Scale="5" Nullable="false" />
         <Property Name="Example" Type="Edm.String">
@@ -209,6 +215,10 @@
             </Record>
           </Collection>
         </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.SinglePartKey/MaximumExt">
+        <Annotation Term="Validation.Maximum" Decimal="-1" />
       </Annotations>
 
       <Annotations Target="self.SinglePartKey/MinimumExt">
