@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.01">
+  <!-- TODO:
+    minimum, maximum, exclusive, example, and multipleOf interact
+    - inclusive maximum: take as example
+    - inclusive minimum: take as example
+    - exclusive maximum and no minimum: subtract 1 for example
+    - exclusive minimum and no maximum: add 1 for example
+    - both exclusive minimum and maximum: take average, round to multipleOf if present
+  -->
   <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Core.V1.xml">
     <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core">
       <Annotation Term="Core.DefaultNamespace" />
@@ -41,6 +49,10 @@
           </Annotation>
         </Property>
         <Property Name="AllowedValuesExt" Type="Edm.String" />
+        <Property Name="Minimum" Type="Edm.Decimal" Precision="5" Scale="2">
+          <Annotation Term="Validation.Minimum" Decimal="0" />
+        </Property>
+        <Property Name="MinimumExt" Type="Edm.Decimal" Precision="10" Scale="5" Nullable="false" />
         <Property Name="Example" Type="Edm.String">
           <Annotation Term="Core.Example">
             <Record Type="Core.PrimitiveExampleValue">
@@ -196,6 +208,12 @@
               <PropertyValue Property="Value" String="blue" />
             </Record>
           </Collection>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.SinglePartKey/MinimumExt">
+        <Annotation Term="Validation.Minimum" Decimal="0">
+          <Annotation Term="Validation.Exclusive" Bool="true" />
         </Annotation>
       </Annotations>
 

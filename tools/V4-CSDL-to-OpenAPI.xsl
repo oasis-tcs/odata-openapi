@@ -1260,6 +1260,7 @@
             <xsl:text>,"format":"int64"</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
+        <!-- TODO: make example depend on min-max -->
         <xsl:if test="not($inParameter and $openapi-version='2.0')">
           <xsl:text>,"example":"42"</xsl:text>
         </xsl:if>
