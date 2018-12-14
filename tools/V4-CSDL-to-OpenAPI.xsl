@@ -3255,26 +3255,26 @@
 
       <!-- GET -->
       <xsl:text>"get":{</xsl:text>
-	  <!-- Dynamic Description of Navigation endpoints -->
-	  <xsl:call-template name="summary-description-qualified">
+      <!-- Dynamic Description of Navigation endpoints -->
+      <xsl:call-template name="summary-description-qualified">
         <xsl:with-param name="node" select="." />
-        <xsl:with-param name="qualifier" select="null" />
+        <xsl:with-param name="qualifier" select="'Query'" />
         <xsl:with-param name="fallback-summary">
           <xsl:text>Get related </xsl:text>
-		  <xsl:choose>
-			<xsl:when test="not($collection)">
-			  <xsl:value-of select="$simpleName" />
-			</xsl:when>
-			<xsl:when test="$targetSet">
-			  <xsl:value-of select="$targetSet/@Name" />
-			</xsl:when>
-			<xsl:otherwise>
-			  <xsl:value-of select="@Name" />
-			</xsl:otherwise>
-		  </xsl:choose>
-		</xsl:with-param>
+          <xsl:choose>
+            <xsl:when test="not($collection)">
+              <xsl:value-of select="$simpleName" />
+            </xsl:when>
+            <xsl:when test="$targetSet">
+              <xsl:value-of select="$targetSet/@Name" />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="@Name" />
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:with-param>
       </xsl:call-template>
-	  
+      
       <xsl:text>,"tags":["</xsl:text>
       <xsl:value-of select="$source/@Name" />
       <xsl:if test="not($resultContext) and $targetSet and $targetSet/@Name!=$source/@Name">
@@ -3329,10 +3329,17 @@
 
         <xsl:if test="not($insertable='false') or $navigation-insertable='true'">
           <xsl:text>,"post":{</xsl:text>
-
-          <xsl:text>"summary":"Add related </xsl:text>
-          <xsl:value-of select="$simpleName" />
-          <xsl:text>","tags":["</xsl:text>
+          <!-- Dynamic Description of Navigation endpoints -->
+          <xsl:call-template name="summary-description-qualified">
+            <xsl:with-param name="node" select="." />
+            <xsl:with-param name="qualifier" select="'Create'" />
+            <xsl:with-param name="fallback-summary">
+              <xsl:text>Add related </xsl:text>
+              <xsl:value-of select="$simpleName" />
+            </xsl:with-param>
+          </xsl:call-template>
+          
+          <xsl:text>,"tags":["</xsl:text>
           <xsl:value-of select="$source/@Name" />
           <xsl:if test="not($resultContext) and $targetSet and $targetSet/@Name!=$source/@Name">
             <xsl:text>","</xsl:text>
