@@ -1110,66 +1110,64 @@
             <xsl:value-of select="$target/@Scale" />
           </xsl:when>
         </xsl:choose>
-        <xsl:if test="$target/@Precision">
-          <xsl:variable name="scale">
-            <xsl:choose>
-              <xsl:when test="number($target/@Scale)=$target/@Scale">
-                <xsl:value-of select="$target/@Scale" />
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="0" />
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:variable>
-          <xsl:variable name="limit">
-            <xsl:choose>
-              <xsl:when test="$target/@Precision > $scale">
-                <xsl:call-template name="repeat">
-                  <xsl:with-param name="string" select="'9'" />
-                  <xsl:with-param name="count" select="$target/@Precision - $scale" />
-                </xsl:call-template>
-              </xsl:when>
-              <xsl:when test="$target/@Precision = $scale">
-                <xsl:text>0</xsl:text>
-              </xsl:when>
-            </xsl:choose>
-            <xsl:if test="$scale > 0">
-              <xsl:text>.</xsl:text>
+        <xsl:variable name="scale">
+          <xsl:choose>
+            <xsl:when test="number($target/@Scale)=$target/@Scale">
+              <xsl:value-of select="$target/@Scale" />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="0" />
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="limit">
+          <xsl:choose>
+            <xsl:when test="$target/@Precision > $scale">
               <xsl:call-template name="repeat">
                 <xsl:with-param name="string" select="'9'" />
-                <xsl:with-param name="count" select="$scale" />
+                <xsl:with-param name="count" select="$target/@Precision - $scale" />
               </xsl:call-template>
-            </xsl:if>
-          </xsl:variable>
-          <xsl:variable name="minimum">
-            <xsl:call-template name="Validation.Minimum">
-              <xsl:with-param name="target" select="$target" />
-            </xsl:call-template>
-          </xsl:variable>
-          <xsl:variable name="maximum">
-            <xsl:call-template name="Validation.Maximum">
-              <xsl:with-param name="target" select="$target" />
-            </xsl:call-template>
-          </xsl:variable>
-          <xsl:choose>
-            <xsl:when test="$minimum!=''">
-              <xsl:value-of select="$minimum" />
             </xsl:when>
-            <xsl:when test="$target/@Precision &lt; 16">
-              <xsl:text>,"minimum":-</xsl:text>
-              <xsl:value-of select="$limit" />
+            <xsl:when test="$target/@Precision = $scale">
+              <xsl:text>0</xsl:text>
             </xsl:when>
           </xsl:choose>
-          <xsl:choose>
-            <xsl:when test="$maximum!=''">
-              <xsl:value-of select="$maximum" />
-            </xsl:when>
-            <xsl:when test="$target/@Precision &lt; 16">
-              <xsl:text>,"maximum":</xsl:text>
-              <xsl:value-of select="$limit" />
-            </xsl:when>
-          </xsl:choose>
-        </xsl:if>
+          <xsl:if test="$scale > 0">
+            <xsl:text>.</xsl:text>
+            <xsl:call-template name="repeat">
+              <xsl:with-param name="string" select="'9'" />
+              <xsl:with-param name="count" select="$scale" />
+            </xsl:call-template>
+          </xsl:if>
+        </xsl:variable>
+        <xsl:variable name="minimum">
+          <xsl:call-template name="Validation.Minimum">
+            <xsl:with-param name="target" select="$target" />
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="maximum">
+          <xsl:call-template name="Validation.Maximum">
+            <xsl:with-param name="target" select="$target" />
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:choose>
+          <xsl:when test="$minimum!=''">
+            <xsl:value-of select="$minimum" />
+          </xsl:when>
+          <xsl:when test="$target/@Precision &lt; 16">
+            <xsl:text>,"minimum":-</xsl:text>
+            <xsl:value-of select="$limit" />
+          </xsl:when>
+        </xsl:choose>
+        <xsl:choose>
+          <xsl:when test="$maximum!=''">
+            <xsl:value-of select="$maximum" />
+          </xsl:when>
+          <xsl:when test="$target/@Precision &lt; 16">
+            <xsl:text>,"maximum":</xsl:text>
+            <xsl:value-of select="$limit" />
+          </xsl:when>
+        </xsl:choose>
         <xsl:if test="not($inParameter and $openapi-version='2.0')">
           <xsl:text>,"example":</xsl:text>
           <xsl:if test="$odata-version='2.0'">
