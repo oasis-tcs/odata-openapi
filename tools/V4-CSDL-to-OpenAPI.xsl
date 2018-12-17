@@ -3197,8 +3197,20 @@
     </xsl:variable>
     <xsl:variable name="targetSet" select="//edm:EntitySet[@Name=$targetEntitySetName]" />
     <xsl:variable name="targetAddressable" select="$targetSet/edm:Annotation[@Term='TODO.Addressable']/@Bool" />
+	<xsl:variable name="target-path" select="concat($source/../../@Namespace,'.',$source/../@Name,'/',$source/@Name)" />
+	<xsl:variable name="target-path-aliased" select="concat($source/../../@Alias,'.',$source/../@Name,'/',$source/@Name)" />
+	<xsl:variable name="navigationRestrictions"
+	  select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.NavigationRestrictions') or @Term=concat($capabilitiesAlias,'.NavigationRestrictions'))] 
+																			   |$source/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.NavigationRestrictions') or @Term=concat($capabilitiesAlias,'.NavigationRestrictions'))]" />
+	<xsl:variable name="restrictedProperties"
+	  select="$navigationRestrictions/edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection" />
+	<xsl:variable name="navPropName" select="@Name" />
+	<xsl:variable name="navigability"
+	  select="$restrictedProperties/edm:Record[edm:PropertyValue[@Property='NavigationProperty']/@NavigationPropertyPath=$navPropName]/edm:PropertyValue[@Property='Navigability']" />
+	<xsl:variable name="not-navigable"
+	  select="$navigability/edm:EnumMember='Org.OData.Capabilities.V1.NavigationType/None'" />
 
-    <xsl:if test="$resultContext or @ContainsTarget='true' or not($targetAddressable='false')">
+    <xsl:if test="$resultContext or (@ContainsTarget='true' and not($not-navigable)) or (not($not-navigable) and not($targetAddressable='false'))">
 
       <xsl:variable name="nullable">
         <xsl:call-template name="nullableFacetValue">
@@ -3255,26 +3267,26 @@
 
       <!-- GET -->
       <xsl:text>"get":{</xsl:text>
-	  <!-- Dynamic Description of Navigation endpoints -->
-	  <xsl:call-template name="summary-description-qualified">
-        <xsl:with-param name="node" select="$source/edm:NavigationPropertyBinding[@Path=$name]" />
+      <!-- Dynamic Description of Navigation endpoints -->
+      <xsl:call-template name="summary-description-qualified">
+        <xsl:with-param name="node" select="." />
         <xsl:with-param name="qualifier" select="'Query'" />
         <xsl:with-param name="fallback-summary">
           <xsl:text>Get related </xsl:text>
-		  <xsl:choose>
-			<xsl:when test="not($collection)">
-			  <xsl:value-of select="$simpleName" />
-			</xsl:when>
-			<xsl:when test="$targetSet">
-			  <xsl:value-of select="$targetSet/@Name" />
-			</xsl:when>
-			<xsl:otherwise>
-			  <xsl:value-of select="@Name" />
-			</xsl:otherwise>
-		  </xsl:choose>
-		</xsl:with-param>
+          <xsl:choose>
+            <xsl:when test="not($collection)">
+              <xsl:value-of select="$simpleName" />
+            </xsl:when>
+            <xsl:when test="$targetSet">
+              <xsl:value-of select="$targetSet/@Name" />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="@Name" />
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:with-param>
       </xsl:call-template>
-	  
+      
       <xsl:text>,"tags":["</xsl:text>
       <xsl:value-of select="$source/@Name" />
       <xsl:if test="not($resultContext) and $targetSet and $targetSet/@Name!=$source/@Name">
@@ -3323,16 +3335,24 @@
           select="$navigationRestrictions/edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection" />
         <xsl:variable name="navPropName" select="@Name" />
         <xsl:variable name="insertRestrictions"
-          select="$restrictedProperties/edm:Record[edm:PropertyValue[@Property='NavigationProperty']/@PropertyPath=$navPropName]/edm:PropertyValue[@Property='InsertRestrictions']" />
+          select="$restrictedProperties/edm:Record[edm:PropertyValue[@Property='NavigationProperty']/@NavigationPropertyPath=$navPropName]/edm:PropertyValue[@Property='InsertRestrictions']" />
         <xsl:variable name="navigation-insertable"
           select="$insertRestrictions/edm:Record/edm:PropertyValue[@Property='Insertable']/@Bool" />
 
-        <xsl:if test="not($insertable='false') or $navigation-insertable='true'">
+        <xsl:if test="$navigation-insertable='true' or (not($navigation-insertable) and not($insertable='false'))">
           <xsl:text>,"post":{</xsl:text>
+          
+          <!-- Dynamic Description of Navigation endpoints -->
+          <xsl:call-template name="summary-description-qualified">
+            <xsl:with-param name="node" select="." />
+            <xsl:with-param name="qualifier" select="'Create'" />
+            <xsl:with-param name="fallback-summary">
+              <xsl:text>Add related </xsl:text>
+              <xsl:value-of select="$simpleName" />
+            </xsl:with-param>
+          </xsl:call-template>
 
-          <xsl:text>"summary":"Add related </xsl:text>
-          <xsl:value-of select="$simpleName" />
-          <xsl:text>","tags":["</xsl:text>
+          <xsl:text>,"tags":["</xsl:text>
           <xsl:value-of select="$source/@Name" />
           <xsl:if test="not($resultContext) and $targetSet and $targetSet/@Name!=$source/@Name">
             <xsl:text>","</xsl:text>
