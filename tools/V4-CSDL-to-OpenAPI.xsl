@@ -3288,7 +3288,18 @@
     <xsl:variable name="targetSet" select="//edm:EntitySet[@Name=$targetEntitySetName]" />
     <xsl:variable name="targetAddressable" select="$targetSet/edm:Annotation[@Term='TODO.Addressable']/@Bool" />
 
-    <xsl:if test="$resultContext or @ContainsTarget='true' or not($targetAddressable='false')">
+    <!-- NavigationRestrictions on source -->
+    <xsl:variable name="target-path" select="concat($source/../../@Namespace,'.',$source/../@Name,'/',$source/@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($source/../../@Alias,'.',$source/../@Name,'/',$source/@Name)" />
+    <xsl:variable name="navigationRestrictions"
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.NavigationRestrictions') or @Term=concat($capabilitiesAlias,'.NavigationRestrictions'))] 
+                                                                               |$source/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.NavigationRestrictions') or @Term=concat($capabilitiesAlias,'.NavigationRestrictions'))]" />
+    <xsl:variable name="navigability-pv"
+      select="$navigationRestrictions/edm:Record/edm:PropertyValue[@Property='Navigability']" />
+    <xsl:variable name="navigability"
+      select="substring-after($navigability-pv/edm:EnumMember|$navigability-pv/@EnumMember,'/')" />
+
+    <xsl:if test="$resultContext or @ContainsTarget='true' or not($targetAddressable='false' or $navigability='None')">
 
       <xsl:variable name="nullable">
         <xsl:call-template name="nullableFacetValue">
@@ -3396,15 +3407,11 @@
           </xsl:call-template>
         </xsl:variable>
 
-        <!-- NavigationRestrictions on source entity set for this navigation property -->
-        <xsl:variable name="target-path" select="concat($source/../../@Namespace,'.',$source/../@Name,'/',$source/@Name)" />
-        <xsl:variable name="target-path-aliased" select="concat($source/../../@Alias,'.',$source/../@Name,'/',$source/@Name)" />
-        <xsl:variable name="navigationRestrictions"
-          select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.NavigationRestrictions') or @Term=concat($capabilitiesAlias,'.NavigationRestrictions'))] 
-                                                                                   |$source/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.NavigationRestrictions') or @Term=concat($capabilitiesAlias,'.NavigationRestrictions'))]" />
+        <!-- NavigationRestrictions on source for this navigation property -->
         <xsl:variable name="restrictedProperties"
           select="$navigationRestrictions/edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection" />
         <xsl:variable name="navPropName" select="@Name" />
+        <!-- InsertRestrictions on source for this navigation property -->
         <xsl:variable name="insertRestrictions"
           select="$restrictedProperties/edm:Record[edm:PropertyValue[@Property='NavigationProperty']/@NavigationPropertyPath=$navPropName]/edm:PropertyValue[@Property='InsertRestrictions']" />
         <xsl:variable name="navigation-insertable"

@@ -21,6 +21,9 @@
             "name": "AllSet"
         },
         {
+            "name": "NoNavigationSet"
+        },
+        {
             "name": "NothingSet"
         },
         {
@@ -560,6 +563,283 @@
                                 }
                             }
                         }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/NoNavigationSet": {
+            "get": {
+                "summary": "Get entities from NoNavigationSet",
+                "tags": [
+                    "NoNavigationSet"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "ID desc",
+                                "Pattern",
+                                "Pattern desc",
+                                "PatternExt",
+                                "PatternExt desc",
+                                "AllowedValues",
+                                "AllowedValues desc",
+                                "AllowedValuesExt",
+                                "AllowedValuesExt desc",
+                                "Maximum",
+                                "Maximum desc",
+                                "MaximumExt",
+                                "MaximumExt desc",
+                                "Minimum",
+                                "Minimum desc",
+                                "MinimumExt",
+                                "MinimumExt desc",
+                                "Example",
+                                "Example desc",
+                                "ExampleExt",
+                                "ExampleExt desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "Pattern",
+                                "PatternExt",
+                                "AllowedValues",
+                                "AllowedValuesExt",
+                                "Maximum",
+                                "MaximumExt",
+                                "Minimum",
+                                "MinimumExt",
+                                "Example",
+                                "ExampleExt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "AllOne",
+                                "AllMany",
+                                "NothingOne",
+                                "NothingMany"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of SinglePartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to NoNavigationSet",
+                "tags": [
+                    "NoNavigationSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "SinglePartKey",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/NoNavigationSet('{ID}')": {
+            "get": {
+                "summary": "Get entity from NoNavigationSet by key",
+                "tags": [
+                    "NoNavigationSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "Pattern",
+                                "PatternExt",
+                                "AllowedValues",
+                                "AllowedValuesExt",
+                                "Maximum",
+                                "MaximumExt",
+                                "Minimum",
+                                "MinimumExt",
+                                "Example",
+                                "ExampleExt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "AllOne",
+                                "AllMany",
+                                "NothingOne",
+                                "NothingMany"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in NoNavigationSet",
+                "tags": [
+                    "NoNavigationSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "SinglePartKey",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from NoNavigationSet",
+                "tags": [
+                    "NoNavigationSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
                     },
                     "default": {
                         "$ref": "#/responses/error"
