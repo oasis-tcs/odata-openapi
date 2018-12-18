@@ -22,7 +22,7 @@ var unknown = false;
 
 var argv = minimist(process.argv.slice(2), {
     string: ["o", "openapi-version", "v", "odata-version", "scheme", "host", "basePath"],
-    boolean: ["d", "diagram", "h", "help", "p", "pretty", "r", "references"],
+    boolean: ["d", "diagram", "h", "help", "p", "pretty", "r", "references", "verbose"],
     alias: {
         d: "diagram",
         h: "help",
@@ -39,7 +39,8 @@ var argv = minimist(process.argv.slice(2), {
         "openapi-version": "3.0.0",
         pretty: false,
         references: false,
-        scheme: "http"
+        scheme: "http",
+        verbose: false
     },
     unknown: (arg) => {
         if (arg.substring(0, 1) == '-') {
@@ -62,7 +63,8 @@ Options:
  -o, --openapi-version   3.0.0 or 2.0 (default: 3.0.0)
  -p, --pretty            pretty-print JSON result
  -r, --references        include references to other files
- --scheme                scheme (default: http)`);
+ --scheme                scheme (default: http)
+ --verbose               output additional progress information`);
 } else {
     for (var i = 0; i < argv._.length; i++) {
         transform(argv._[i]);
@@ -74,6 +76,8 @@ function transform(source) {
         console.error('Source file not found: ' + source);
         return;
     }
+
+    if(argv.verbose) console.log('Checking OData version used in source file: ' + source);
 
     xslt4node.transform(
         {
@@ -97,6 +101,9 @@ function transform(source) {
 
 function transformV2V3(source, version) {
     var target = source.substring(0, source.lastIndexOf('.') + 1) + 'tmp';
+
+    if(argv.verbose) console.log('Transforming ' + source + ' to OData V4, target file: ' + target);
+
     xslt4node.transform(
         {
             xsltPath: xsltpath + 'V2-to-V4-CSDL.xsl',
@@ -115,6 +122,9 @@ function transformV2V3(source, version) {
 
 function transformV4(source, version, deleteSource) {
     var target = source.substring(0, source.lastIndexOf('.') + 1) + 'openapi.json';
+    
+    if(argv.verbose) console.log('Transforming ' + source + ' to OpenAPI ' + argv.o + ', target file: ' + target);
+
     xslt4node.transform(
         {
             xsltPath: xsltpath + 'V4-CSDL-to-OpenAPI.xsl',
@@ -136,8 +146,10 @@ function transformV4(source, version, deleteSource) {
             } else {
                 if (argv.pretty)
                     fs.writeFileSync(target, JSON.stringify(JSON.parse(result), null, 4));
-                if (deleteSource)
+                if (deleteSource){
+                    if(argv.verbose) console.log('Removing intermediate file: ' + source);
                     fs.unlink(source, (err) => { if (err) console.error(err); });
+                }
             }
         }
     );
