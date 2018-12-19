@@ -1,14 +1,20 @@
 {
-    "openapi": "3.0.0",
+    "swagger": "2.0",
     "info": {
         "title": "$batch example",
         "version": "",
         "description": "This is a sketch for $batch"
     },
-    "servers": [
-        {
-            "url": "https://services.odata.org/V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW"
-        }
+    "schemes": [
+        "https"
+    ],
+    "host": "services.odata.org",
+    "basePath": "/V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
     ],
     "tags": [
         {
@@ -19,32 +25,33 @@
         "/$batch": {
             "post": {
                 "summary": "Send a group of requests",
-                "description": "Group multiple requests into a single request payload, see [OData Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).\n\n\n*Please note that \"Try it out\" is not supported for this request.*",
+                "description": "Group multiple requests into a single request payload, see [OData Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).",
                 "tags": [
                     "Batch Requests"
                 ],
-                "requestBody": {
-                    "required": true,
-                    "description": "Batch request",
-                    "content": {
-                        "multipart/mixed;boundary=request-separator": {
-                            "schema": {
-                                "type": "string"
-                            },
-                            "example": "--request-separator\nContent-Type: application/http\n\nGET People HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
+                "consumes": [
+                    "multipart/mixed;boundary=request-separator"
+                ],
+                "produces": [
+                    "multipart/mixed"
+                ],
+                "parameters": [
+                    {
+                        "name": "requestBody",
+                        "in": "body",
+                        "description": "Batch request",
+                        "schema": {
+                            "type": "string",
+                            "example": "--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET http://services.odata.org/V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW/People HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
                         }
                     }
-                },
+                ],
                 "responses": {
                     "202": {
                         "description": "Batch response",
-                        "content": {
-                            "multipart/mixed;boundary=response-separator": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{\"value\":[...]}\n--response-separator--"
-                            }
+                        "schema": {
+                            "type": "string",
+                            "example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{\"value\":[...]}\n--response-separator--"
                         }
                     },
                     "default": {
