@@ -1808,17 +1808,46 @@
     <xsl:if test="edm:EntitySet|edm:Singleton|edm:FunctionImport|edm:ActionImport">
       <xsl:text>,</xsl:text>
     </xsl:if>
-    <xsl:text>"/batch":{"post":{"summary": "Send a group of requests","description": "Group multiple requests into a single request payload</xsl:text>
+    <xsl:text>"/$batch":{"post":{"summary": "Send a group of requests","description": "Group multiple requests into a single request payload</xsl:text>
     <xsl:text>, see [OData Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).</xsl:text>
     <xsl:if test="$openapi-version!='2.0'">
       <xsl:text>\n\n*Please note that \"Try it out\" is not supported for this request.*</xsl:text>
     </xsl:if>
-    <xsl:text>","tags":["Batch Requests"]</xsl:text>
+    <xsl:text>","tags":["Batch Requests"],</xsl:text>
     <xsl:if test="$openapi-version='2.0'">
-      <xsl:text>,"consumes":["multipart/mixed;boundary=request-separator"],"produces":["multipart/mixed"]</xsl:text>
+      <xsl:text>"consumes":["multipart/mixed;boundary=request-separator"],"produces":["multipart/mixed"],</xsl:text>
     </xsl:if>
 
-    <!-- TODO: request body -->
+    <xsl:choose>
+      <xsl:when test="$openapi-version='2.0'">
+        <xsl:text>"parameters":[{"name":"requestBody","in":"body",</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>"requestBody":{"required":true,</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>"description":"Batch request",</xsl:text>
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>"content":{"multipart/mixed;boundary=request-separator":{</xsl:text>
+    </xsl:if>
+    <xsl:text>"schema":{"type":"string"</xsl:text>
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>}</xsl:text>
+    </xsl:if>
+    <xsl:text>,"example":"--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET </xsl:text>
+    <xsl:value-of select="//edm:EntitySet[1]/@Name" />
+    <xsl:text> HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"}</xsl:text>
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>}</xsl:text>
+    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="$openapi-version='2.0'">
+        <xsl:text>}]</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>}</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <xsl:text>,"responses":{"202":{"description":"Batch response",</xsl:text>
     <xsl:if test="$openapi-version!='2.0'">
@@ -1828,7 +1857,7 @@
     <xsl:if test="$openapi-version!='2.0'">
       <xsl:text>}</xsl:text>
     </xsl:if>
-    <xsl:text>,"example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{\"value\":[...]}\n--response-separator--"}</xsl:text>
+    <xsl:text>,"example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{...}\n--response-separator--"}</xsl:text>
     <xsl:if test="$openapi-version!='2.0'">
       <xsl:text>}</xsl:text>
     </xsl:if>

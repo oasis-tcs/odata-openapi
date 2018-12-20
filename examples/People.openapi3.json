@@ -1111,6 +1111,43 @@
                     }
                 }
             }
+        },
+        "/batch": {
+            "post": {
+                "summary": "Send a group of requests",
+                "description": "Group multiple requests into a single request payload, see [OData Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).\n\n*Please note that \"Try it out\" is not supported for this request.*",
+                "tags": [
+                    "Batch Requests"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Batch request",
+                    "content": {
+                        "multipart/mixed;boundary=request-separator": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "example": "--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET Suppliers HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Batch response",
+                        "content": {
+                            "multipart/mixed": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{\"value\":[...]}\n--response-separator--"
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
         }
     },
     "components": {
