@@ -1666,6 +1666,33 @@
                     }
                 }
             }
+        },
+        "/batch": {
+            "post": {
+                "summary": "Send a group of requests",
+                "description": "Group multiple requests into a single request payload, see [OData Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).",
+                "tags": [
+                    "Batch Requests"
+                ],
+                "consumes": [
+                    "multipart/mixed;boundary=request-separator"
+                ],
+                "produces": [
+                    "multipart/mixed"
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Batch response",
+                        "schema": {
+                            "type": "string",
+                            "example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{\"value\":[...]}\n--response-separator--"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
         }
     },
     "definitions": {
