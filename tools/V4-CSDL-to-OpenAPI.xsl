@@ -3230,7 +3230,7 @@
         mode="expand"
       >
         <xsl:with-param name="after"
-          select="$after-keys or ($collection and (not($top-supported='false') or not($skip-supported='false') or not($searchable='false') or not($filterable='false') or not($countable='false') or not($sortable='false') or (not($selectable='false') and $selectable-properties)))" />
+          select="$after-keys or ($collection and (not($top-supported='false') or not($skip-supported='false') or not($searchable='false') or not($filterable='false') or not($countable='false') or not($sortable='false'))) or (not($selectable='false') and $selectable-properties)" />
       </xsl:apply-templates>
     </xsl:if>
   </xsl:template>
