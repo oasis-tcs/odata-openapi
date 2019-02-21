@@ -21,7 +21,7 @@ xslt4node.addLibrary(xsltpath + 'xalan/xalan.jar');
 var unknown = false;
 
 var argv = minimist(process.argv.slice(2), {
-    string: ["o", "openapi-version", "v", "odata-version", "scheme", "host", "basePath"],
+    string: ["o", "openapi-version", "t", "target", "scheme", "host", "basePath"],
     boolean: ["d", "diagram", "h", "help", "p", "pretty", "r", "references", "verbose"],
     alias: {
         d: "diagram",
@@ -52,6 +52,7 @@ var argv = minimist(process.argv.slice(2), {
 });
 if (argv.o == '2') argv.o = "2.0";
 if (argv.o == '3') argv.o = "3.0.0";
+if (argv.t === undefined) argv.t = source.substring(0, source.lastIndexOf('.') + 1) + 'openapi.json';
 
 if (unknown || argv._.length == 0 || argv.h) {
     console.log(`Usage: odata-openapi <options> <source files>
@@ -64,6 +65,7 @@ Options:
  -p, --pretty            pretty-print JSON result
  -r, --references        include references to other files
  --scheme                scheme (default: http)
+ -t, --target            target file (only useful with a single source file)
  --verbose               output additional progress information`);
 } else {
     for (var i = 0; i < argv._.length; i++) {
@@ -121,7 +123,7 @@ function transformV2V3(source, version) {
 }
 
 function transformV4(source, version, deleteSource) {
-    var target = source.substring(0, source.lastIndexOf('.') + 1) + 'openapi.json';
+    var target = argv.t;
     
     if(argv.verbose) console.log('Transforming ' + source + ' to OpenAPI ' + argv.o + ', target file: ' + target);
 
