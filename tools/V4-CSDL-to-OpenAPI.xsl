@@ -3358,7 +3358,6 @@
       </xsl:choose>
     </xsl:variable>
     <xsl:variable name="targetSet" select="//edm:EntitySet[@Name=$targetEntitySetName]" />
-    <xsl:variable name="targetAddressable" select="$targetSet/edm:Annotation[@Term='TODO.Addressable']/@Bool" />
 
     <!-- NavigationRestrictions on source -->
     <xsl:variable name="target-path" select="concat($source/../../@Namespace,'.',$source/../@Name,'/',$source/@Name)" />
@@ -3385,8 +3384,7 @@
       select="$propertyNavigability='Recursive' or $propertyNavigability='Single' 
               or (string-length($propertyNavigability)=0 and not($sourceNavigability='None'))" />
 
-    <xsl:if test="$resultContext or @ContainsTarget='true' or ($navigable and not($targetAddressable='false'))">
-
+    <xsl:if test="@ContainsTarget='true' or $navigable">
       <xsl:variable name="nullable">
         <xsl:call-template name="nullableFacetValue">
           <xsl:with-param name="type" select="@Type" />
