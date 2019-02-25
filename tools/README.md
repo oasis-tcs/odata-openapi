@@ -167,17 +167,16 @@ Term | Annotation Target | OpenAPI field
 `FilterRestrictions/Filterable` | EntitySet | `$filter` system query option for `GET` operation
 `FilterRestrictions/RequiredProperties` | EntitySet | required properties in `$filter` system query option for `GET` operation (parameter description only)
 `FilterRestrictions/RequiresFilter` | EntitySet | `$filter` system query option for `GET` operation is `required`
-`KeyAsSegmentSupported` | EntityContainer | path templates with key-as-segment convention
 `IndexableByKey` | EntitySet | `GET` operation for single entity
 `InsertRestrictions/Insertable` | EntitySet | `POST` operation for inserting a new entity
 `KeyAsSegmentSupported` | EntityContainer | `paths` URL templates use key-as-segment style instead of parenthesis style
 `NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/InsertRestrictions/Insertable` | EntitySet, Singleton | `POST` operation for inserting a new entity
-`UpdateRestrictions/Updatable` | EntitySet, Singleton | `PATCH` operation for modifying an existing entity
 `SearchRestrictions/Searchable` | EntitySet | `$search` system query option for `GET` operation
 `SortRestrictions/NonSortableProperties` | EntitySet | properties not listed in `$orderby` system query option for `GET` operation
 `SortRestrictions/Sortable` | EntitySet | `$orderby` system query option for `GET` operation
 `SkipSupported` | EntitySet | `$skip` system query option for `GET` operation
 `TopSupported` | EntitySet | `$top` system query option for `GET` operation
+`UpdateRestrictions/Updatable` | EntitySet, Singleton | `PATCH` operation for modifying an existing entity
 
 
 ## [Common](https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common)
