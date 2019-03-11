@@ -598,7 +598,9 @@
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:text>"</xsl:text>
-    <xsl:value-of select="edm:PropertyValue[@Property='Name']/@String|edm:PropertyValue[@Property='Name']/edm:String" />
+    <xsl:value-of
+      select="edm:PropertyValue[@Property='Name']/@String
+             |edm:PropertyValue[@Property='Name']/edm:String" />
     <xsl:text>":{</xsl:text>
     <xsl:variable name="type">
       <xsl:call-template name="substring-after-last">
@@ -610,10 +612,13 @@
       <xsl:when test="$type='ApiKey'">
         <xsl:text>"type":"apiKey"</xsl:text>
         <xsl:text>,"name":"</xsl:text>
-        <xsl:value-of select="edm:PropertyValue[@Property='KeyName']/@String|edm:PropertyValue[@Property='KeyName']/edm:String" />
+        <xsl:value-of
+          select="edm:PropertyValue[@Property='KeyName']/@String
+                 |edm:PropertyValue[@Property='KeyName']/edm:String" />
         <xsl:text>","in":"</xsl:text>
         <xsl:variable name="location"
-          select="substring-after(edm:PropertyValue[@Property='Location']/@EnumMember|edm:PropertyValue[@Property='Location']/edm:EnumMember,'/')" />
+          select="substring-after(edm:PropertyValue[@Property='Location']/@EnumMember
+                                 |edm:PropertyValue[@Property='Location']/edm:EnumMember,'/')" />
         <xsl:choose>
           <xsl:when test="$location='Header'">
             <xsl:text>header</xsl:text>
@@ -629,7 +634,36 @@
       </xsl:when>
       <xsl:when test="$type='OAuth2Implicit'">
         <xsl:text>"type":"oauth2"</xsl:text>
+        <xsl:choose>
+          <xsl:when test="$openapi-version!='2.0'">
+            <xsl:text>,"flows":{"implicit":{"authorizationUrl":"</xsl:text>
+            <xsl:value-of
+              select="edm:PropertyValue[@Property='AuthorizationUrl']/@String
+                     |edm:PropertyValue[@Property='AuthorizationUrl']/edm:String" />
+            <xsl:variable name="refreshUrl"
+              select="edm:PropertyValue[@Property='RefreshUrl']/@String
+                     |edm:PropertyValue[@Property='RefreshUrl']/edm:String" />
+            <xsl:if test="$refreshUrl">
+              <xsl:text>","refreshUrl":"</xsl:text>
+              <xsl:value-of select="$refreshUrl" />
+            </xsl:if>
+            <xsl:text>","scopes":{</xsl:text>
+            <xsl:apply-templates select="edm:PropertyValue[@Property='Scopes']/edm:Collection/edm:Record" mode="scope" />
+            <xsl:text>}}}</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>,"flow":"implicit","authorizationUrl":"</xsl:text>
+            <xsl:value-of
+              select="edm:PropertyValue[@Property='AuthorizationUrl']/@String
+                     |edm:PropertyValue[@Property='AuthorizationUrl']/edm:String" />
+            <xsl:text>","scopes":{</xsl:text>
+            <xsl:apply-templates select="edm:PropertyValue[@Property='Scopes']/edm:Collection/edm:Record" mode="scope" />
+            <xsl:text>}</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+        <!-- TODO: content -->
       </xsl:when>
+      <!-- TODO: basic/http, openIdConnect -->
       <xsl:otherwise>
         <xsl:message>
           <xsl:text>Unknown Authorization type </xsl:text>
@@ -637,8 +671,30 @@
         </xsl:message>
       </xsl:otherwise>
     </xsl:choose>
-    <!-- TODO: content -->
+    <xsl:variable name="description"
+      select="edm:PropertyValue[@Property='Description']/@String
+             |edm:PropertyValue[@Property='Description']/edm:String" />
+    <xsl:if test="$description">
+      <xsl:text>,"description":"</xsl:text>
+      <xsl:value-of select="$description" />
+      <xsl:text>"</xsl:text>
+    </xsl:if>
     <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:Record" mode="scope">
+    <xsl:if test="position()>1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:text>"</xsl:text>
+    <xsl:value-of
+      select="edm:PropertyValue[@Property='Scope']/@String
+             |edm:PropertyValue[@Property='Scope']/edm:String" />
+    <xsl:text>":"</xsl:text>
+    <xsl:value-of
+      select="edm:PropertyValue[@Property='Description']/@String
+             |edm:PropertyValue[@Property='Description']/edm:String" />
+    <xsl:text>"</xsl:text>
   </xsl:template>
 
   <xsl:template name="security">
