@@ -9,7 +9,7 @@
 
     TODO:
     - delta: headers Prefer and Preference-Applied
-    - operation descriptions for entity sets and singletons
+    - operation descriptions for entity sets and singletons - https://issues.oasis-open.org/browse/ODATA-1264
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
     - inline definitions for Edm.* to make OpenAPI documents self-contained
@@ -662,7 +662,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
-      <!-- TODO: basic/http, openIdConnect -->
+      <!-- TODO: basic/http, openIdConnect, OAuth ClientCredentials / Password / AuthCode -->
       <xsl:otherwise>
         <xsl:message>
           <xsl:text>Unknown Authorization type </xsl:text>
