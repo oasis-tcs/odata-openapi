@@ -40,6 +40,9 @@
             "name": "TwoReadOnlySet"
         },
         {
+            "name": "TwoWriteOnlySet"
+        },
+        {
             "name": "TwoNothingSet"
         },
         {
@@ -1746,6 +1749,115 @@
                         "schema": {
                             "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
                         }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TwoWriteOnlySet": {
+            "post": {
+                "summary": "Add new entity to TwoWriteOnlySet",
+                "tags": [
+                    "TwoWriteOnlySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "TwoPartKey",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TwoWriteOnlySet(One={One},Two={Two})": {
+            "patch": {
+                "summary": "Update entity in TwoWriteOnlySet",
+                "tags": [
+                    "TwoWriteOnlySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "One",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: One",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Two",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Two",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "TwoPartKey",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from TwoWriteOnlySet",
+                "tags": [
+                    "TwoWriteOnlySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "One",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: One",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Two",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Two",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
                     },
                     "default": {
                         "$ref": "#/responses/error"

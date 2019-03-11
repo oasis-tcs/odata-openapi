@@ -2037,7 +2037,7 @@
         <xsl:with-param name="property" select="'Insertable'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="not($addressable='false') and not($resultContext) and not($insertable='false')">
+    <xsl:if test="not($readable='false') and not($addressable='false') and not($resultContext) and not($insertable='false')">
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:if test="not($insertable='false')">
@@ -2349,7 +2349,9 @@
           <xsl:with-param name="property" select="'Updatable'" />
         </xsl:call-template>
       </xsl:variable>
-      <xsl:if test="not($addressable='false' and $indexable!='true') and not($resultContext) and not($updatable='false')">
+      <xsl:if
+        test="not($readableByKey='false') and not($addressable='false' and $indexable!='true') and not($resultContext) and not($updatable='false')"
+      >
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:if test="not($updatable='false')">
@@ -2423,7 +2425,7 @@
         </xsl:call-template>
       </xsl:variable>
       <xsl:if
-        test="((not($addressable='false' and $indexable!='true') and not($resultContext)) or not($updatable='false')) and not($deletable='false')"
+        test="((not($readableByKey='false') and not($addressable='false' and $indexable!='true') and not($resultContext)) or not($updatable='false')) and not($deletable='false')"
       >
         <xsl:text>,</xsl:text>
       </xsl:if>
