@@ -3,7 +3,7 @@
     "info": {
         "title": "OData Service for namespace Supported.Annotations",
         "version": "",
-        "description": "This OData service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[SinglePartKey{bg:orange}],[SinglePartKey]-0..1>[TwoPartKey],[SinglePartKey]-*>[TwoPartKey],[SinglePartKey]-0..1>[TwoPartKey],[SinglePartKey]-*>[TwoPartKey],[TwoPartKey{bg:orange}])"
+        "description": "This OData service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[SinglePartKey{bg:orange}],[SinglePartKey]-0..1>[TwoPartKey],[SinglePartKey]-*>[TwoPartKey],[SinglePartKey]-0..1>[TwoPartKey],[SinglePartKey]-*>[TwoPartKey],[SinglePartKey]-0..1>[TwoPartKey],[SinglePartKey]-*>[TwoPartKey],[TwoPartKey{bg:orange}])"
     },
     "servers": [
         {
@@ -18,7 +18,7 @@
             "name": "NoNavigationSet"
         },
         {
-            "name": "NothingSet"
+            "name": "ReadListOnlySet"
         },
         {
             "name": "AllSingleton",
@@ -142,6 +142,8 @@
                                     "*",
                                     "AllOne",
                                     "AllMany",
+                                    "ReadOnlyOne",
+                                    "ReadOnlyMany",
                                     "NothingOne",
                                     "NothingMany"
                                 ]
@@ -263,6 +265,8 @@
                                     "*",
                                     "AllOne",
                                     "AllMany",
+                                    "ReadOnlyOne",
+                                    "ReadOnlyMany",
                                     "NothingOne",
                                     "NothingMany"
                                 ]
@@ -561,6 +565,94 @@
                 }
             }
         },
+        "/AllSet('{ID}')/ReadOnlyOne": {
+            "get": {
+                "summary": "Get related TwoPartKey",
+                "tags": [
+                    "AllSet",
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of TwoPartKey",
+                                    "type": "object",
+                                    "properties": {
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/AllSet('{ID}')/ReadOnlyMany": {
+            "get": {
+                "summary": "Get related TwoReadOnlySet",
+                "tags": [
+                    "AllSet",
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of TwoPartKey",
+                                    "type": "object",
+                                    "properties": {
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
         "/AllSet('{ID}')/NothingOne": {
             "get": {
                 "summary": "Get related TwoPartKey",
@@ -753,6 +845,8 @@
                                     "*",
                                     "AllOne",
                                     "AllMany",
+                                    "ReadOnlyOne",
+                                    "ReadOnlyMany",
                                     "NothingOne",
                                     "NothingMany"
                                 ]
@@ -874,6 +968,8 @@
                                     "*",
                                     "AllOne",
                                     "AllMany",
+                                    "ReadOnlyOne",
+                                    "ReadOnlyMany",
                                     "NothingOne",
                                     "NothingMany"
                                 ]
@@ -967,11 +1063,11 @@
                 }
             }
         },
-        "/NothingSet": {
+        "/ReadListOnlySet": {
             "get": {
-                "summary": "Get entities from NothingSet",
+                "summary": "Get entities from ReadListOnlySet",
                 "tags": [
-                    "NothingSet"
+                    "ReadListOnlySet"
                 ],
                 "parameters": [
 
@@ -1049,6 +1145,8 @@
                                     "*",
                                     "AllOne",
                                     "AllMany",
+                                    "ReadOnlyOne",
+                                    "ReadOnlyMany",
                                     "NothingOne",
                                     "NothingMany"
                                 ]
@@ -1277,6 +1375,78 @@
                 }
             }
         },
+        "/AllSingleton/ReadOnlyOne": {
+            "get": {
+                "summary": "Get related TwoPartKey",
+                "tags": [
+                    "AllSingleton",
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of TwoPartKey",
+                                    "type": "object",
+                                    "properties": {
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/AllSingleton/ReadOnlyMany": {
+            "get": {
+                "summary": "Get related TwoReadOnlySet",
+                "tags": [
+                    "AllSingleton",
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of TwoPartKey",
+                                    "type": "object",
+                                    "properties": {
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
         "/AllSingleton/NothingOne": {
             "get": {
                 "summary": "Get related TwoPartKey",
@@ -1491,6 +1661,78 @@
                             }
                         }
                     }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of TwoPartKey",
+                                    "type": "object",
+                                    "properties": {
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/ReadOnlySingleton/ReadOnlyOne": {
+            "get": {
+                "summary": "Get related TwoPartKey",
+                "tags": [
+                    "ReadOnlySingleton",
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of TwoPartKey",
+                                    "type": "object",
+                                    "properties": {
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/ReadOnlySingleton/ReadOnlyMany": {
+            "get": {
+                "summary": "Get related TwoReadOnlySet",
+                "tags": [
+                    "ReadOnlySingleton",
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+
                 ],
                 "responses": {
                     "200": {
@@ -1908,62 +2150,7 @@
                     "TwoReadOnlySet"
                 ],
                 "parameters": [
-                    {
-                        "$ref": "#/components/parameters/top"
-                    },
-                    {
-                        "$ref": "#/components/parameters/skip"
-                    },
-                    {
-                        "$ref": "#/components/parameters/search"
-                    },
-                    {
-                        "name": "filter",
-                        "in": "query",
-                        "description": "Filter items by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/count"
-                    },
-                    {
-                        "name": "orderby",
-                        "in": "query",
-                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
-                        "explode": false,
-                        "schema": {
-                            "type": "array",
-                            "uniqueItems": true,
-                            "items": {
-                                "type": "string",
-                                "enum": [
-                                    "One",
-                                    "One desc",
-                                    "Two",
-                                    "Two desc"
-                                ]
-                            }
-                        }
-                    },
-                    {
-                        "name": "select",
-                        "in": "query",
-                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
-                        "explode": false,
-                        "schema": {
-                            "type": "array",
-                            "uniqueItems": true,
-                            "items": {
-                                "type": "string",
-                                "enum": [
-                                    "One",
-                                    "Two"
-                                ]
-                            }
-                        }
-                    }
+
                 ],
                 "responses": {
                     "200": {
@@ -2017,23 +2204,6 @@
                             "type": "integer",
                             "format": "int32"
                         }
-                    },
-                    {
-                        "name": "select",
-                        "in": "query",
-                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
-                        "explode": false,
-                        "schema": {
-                            "type": "array",
-                            "uniqueItems": true,
-                            "items": {
-                                "type": "string",
-                                "enum": [
-                                    "One",
-                                    "Two"
-                                ]
-                            }
-                        }
                     }
                 ],
                 "responses": {
@@ -2054,39 +2224,7 @@
             }
         },
         "/TwoNothingSet": {
-            "get": {
-                "summary": "Get entities from TwoNothingSet",
-                "tags": [
-                    "TwoNothingSet"
-                ],
-                "parameters": [
 
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Retrieved entities",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "title": "Collection of TwoPartKey",
-                                    "type": "object",
-                                    "properties": {
-                                        "value": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "default": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            }
         }
     },
     "components": {
@@ -2203,6 +2341,20 @@
                         ]
                     },
                     "AllMany": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "ReadOnlyOne": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey"
+                            }
+                        ]
+                    },
+                    "ReadOnlyMany": {
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey"
@@ -2337,6 +2489,20 @@
                         ]
                     },
                     "AllMany": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey-create"
+                        }
+                    },
+                    "ReadOnlyOne": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey-create"
+                            }
+                        ]
+                    },
+                    "ReadOnlyMany": {
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey-create"

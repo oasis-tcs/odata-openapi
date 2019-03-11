@@ -1975,10 +1975,18 @@
     <xsl:text>":{</xsl:text>
 
     <!-- GET -->
+    <xsl:variable name="readable">
+      <xsl:call-template name="capability">
+        <xsl:with-param name="term" select="'ReadRestrictions'" />
+        <xsl:with-param name="property" select="'Readable'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <!-- TODO: remove addressable? -->
     <xsl:variable name="addressable" select="edm:Annotation[@Term='TODO.Addressable']/@Bool" />
+    <!-- TODO: remove resultContext? -->
     <xsl:variable name="resultContext"
       select="$entityType/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
-    <xsl:if test="not($addressable='false') and not($resultContext)">
+    <xsl:if test="not($readable='false') and not($addressable='false') and not($resultContext)">
       <xsl:text>"get":{</xsl:text>
 
       <xsl:call-template name="summary-description-qualified">
@@ -2272,12 +2280,19 @@
       <xsl:text>":{</xsl:text>
 
       <!-- GET -->
+      <xsl:variable name="readableByKey">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'ReadByKeyRestrictions'" />
+          <xsl:with-param name="property" select="'Readable'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <!-- TODO: remove addressable? -->
       <xsl:variable name="addressable" select="edm:Annotation[@Term='TODO.Addressable']/@Bool" />
-
+      <!-- TODO: remove resultContext? -->
       <xsl:variable name="resultContext"
         select="$entityType/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
       <!-- indexable=true or indexable=default or -->
-      <xsl:if test="not($addressable='false' and $indexable!='true') and not($resultContext)">
+      <xsl:if test="not($readableByKey='false') and not($addressable='false' and $indexable!='true') and not($resultContext)">
         <xsl:text>"get":{</xsl:text>
 
         <xsl:call-template name="summary-description-qualified">
