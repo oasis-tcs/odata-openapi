@@ -3454,47 +3454,56 @@
       <xsl:text>":{</xsl:text>
 
       <!-- GET -->
-      <xsl:text>"get":{</xsl:text>
+      <xsl:variable name="readable">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'ReadRestrictions'" />
+          <xsl:with-param name="property" select="'Readable'" />
+          <xsl:with-param name="target" select="$targetSet" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="not($readable='false')">
+        <xsl:text>"get":{</xsl:text>
 
-      <xsl:text>"summary":"Get related </xsl:text>
-      <xsl:choose>
-        <xsl:when test="not($collection)">
-          <xsl:value-of select="$simpleName" />
-        </xsl:when>
-        <xsl:when test="$targetSet">
+        <xsl:text>"summary":"Get related </xsl:text>
+        <xsl:choose>
+          <xsl:when test="not($collection)">
+            <xsl:value-of select="$simpleName" />
+          </xsl:when>
+          <xsl:when test="$targetSet">
+            <xsl:value-of select="$targetSet/@Name" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="@Name" />
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:text>","tags":["</xsl:text>
+        <xsl:value-of select="$source/@Name" />
+        <xsl:if test="not($resultContext) and $targetSet and $targetSet/@Name!=$source/@Name">
+          <xsl:text>","</xsl:text>
           <xsl:value-of select="$targetSet/@Name" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="@Name" />
-        </xsl:otherwise>
-      </xsl:choose>
-      <xsl:text>","tags":["</xsl:text>
-      <xsl:value-of select="$source/@Name" />
-      <xsl:if test="not($resultContext) and $targetSet and $targetSet/@Name!=$source/@Name">
-        <xsl:text>","</xsl:text>
-        <xsl:value-of select="$targetSet/@Name" />
+        </xsl:if>
+        <xsl:text>"]</xsl:text>
+
+        <xsl:text>,"parameters":[</xsl:text>
+        <xsl:apply-templates select="$entityType[local-name($source)='EntitySet']" mode="parameter" />
+
+        <xsl:call-template name="query-options">
+          <xsl:with-param name="after-keys" select="local-name($source)='EntitySet'" />
+          <xsl:with-param name="target" select="$targetSet" />
+          <xsl:with-param name="collection" select="$collection" />
+          <xsl:with-param name="entityType" select="$targetEntityType" />
+        </xsl:call-template>
+
+        <xsl:text>]</xsl:text>
+
+        <xsl:call-template name="responses">
+          <xsl:with-param name="code" select="'200'" />
+          <xsl:with-param name="type" select="concat('Collection(',$targetType,')')" />
+          <xsl:with-param name="description" select="'Retrieved entities'" />
+        </xsl:call-template>
+
+        <xsl:text>}</xsl:text>
       </xsl:if>
-      <xsl:text>"]</xsl:text>
-
-      <xsl:text>,"parameters":[</xsl:text>
-      <xsl:apply-templates select="$entityType[local-name($source)='EntitySet']" mode="parameter" />
-
-      <xsl:call-template name="query-options">
-        <xsl:with-param name="after-keys" select="local-name($source)='EntitySet'" />
-        <xsl:with-param name="target" select="$targetSet" />
-        <xsl:with-param name="collection" select="$collection" />
-        <xsl:with-param name="entityType" select="$targetEntityType" />
-      </xsl:call-template>
-
-      <xsl:text>]</xsl:text>
-
-      <xsl:call-template name="responses">
-        <xsl:with-param name="code" select="'200'" />
-        <xsl:with-param name="type" select="concat('Collection(',$targetType,')')" />
-        <xsl:with-param name="description" select="'Retrieved entities'" />
-      </xsl:call-template>
-
-      <xsl:text>}</xsl:text>
 
       <!-- POST -->
       <xsl:if test="$collection and ($targetSet or @ContainsTarget='true')">
@@ -3513,7 +3522,10 @@
           select="$insertRestrictions/edm:Record/edm:PropertyValue[@Property='Insertable']/@Bool" />
 
         <xsl:if test="$navigation-insertable='true' or (not($navigation-insertable) and not($insertable='false'))">
-          <xsl:text>,"post":{</xsl:text>
+          <xsl:if test="not($readable='false')">
+            <xsl:text>,</xsl:text>
+          </xsl:if>
+          <xsl:text>"post":{</xsl:text>
 
           <xsl:text>"summary":"Add related </xsl:text>
           <xsl:value-of select="$simpleName" />
