@@ -13,9 +13,6 @@
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
     - inline definitions for Edm.* to make OpenAPI documents self-contained
-    - securityDefinitions script parameter with default
-    "securityDefinitions":{"basic_auth":{"type":"basic","description": "Basic
-    Authentication"}}
     - complex or collection-valued function parameters need special treatment in /paths,
     use parameter aliases with alias option of type string
     - @Extends for entity container: include /paths from referenced container
@@ -108,6 +105,9 @@
   <xsl:variable name="coreDescriptionAliased" select="concat($coreAlias,'.Description')" />
   <xsl:variable name="coreLongDescription" select="concat($coreNamespace,'.LongDescription')" />
   <xsl:variable name="coreLongDescriptionAliased" select="concat($coreAlias,'.LongDescription')" />
+
+  <xsl:variable name="authorizationNamespace" select="'Org.OData.Authorization.V1'" />
+  <xsl:variable name="authorizationAlias" select="//edmx:Include[@Namespace=$authorizationNamespace]/@Alias" />
 
   <xsl:variable name="capabilitiesNamespace" select="'Org.OData.Capabilities.V1'" />
   <xsl:variable name="capabilitiesAlias" select="//edmx:Include[@Namespace=$capabilitiesNamespace]/@Alias" />
@@ -556,13 +556,58 @@
         <xsl:text>}}</xsl:text>
       </xsl:if>
       <xsl:text>}}</xsl:text>
+
+      <xsl:call-template name="security-schemes" />
     </xsl:if>
 
     <xsl:if test="$openapi-version!='2.0'">
       <xsl:text>}</xsl:text>
     </xsl:if>
 
+    <xsl:call-template name="security" />
+
     <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template name="security-schemes">
+    <xsl:variable name="target" select="//edm:EntityContainer" />
+    <xsl:variable name="term" select="'Authorizations'" />
+    <xsl:variable name="target-path" select="concat($target/../@Namespace,'.',$target/@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($target/../@Alias,'.',$target/@Name)" />
+    <xsl:variable name="anno"
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[@Term=concat($authorizationNamespace,'.',$term) or @Term=concat($authorizationAlias,'.',$term)]
+                                                                               |$target/edm:Annotation[@Term=concat($authorizationNamespace,'.',$term) or @Term=concat($authorizationAlias,'.',$term)]" />
+    <xsl:if test="$anno">
+      <xsl:text>,"</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$openapi-version!='2.0'">
+          <xsl:text>securitySchemes</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>securityDefinitions</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:text>":{</xsl:text>
+      <xsl:apply-templates select="$anno/edm:Collection/edm:Record" mode="authorizations" />
+      <xsl:text>}</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="edm:Record" mode="authorizations">
+    <xsl:if test="position()>1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:text>"</xsl:text>
+    <xsl:text>":{}</xsl:text>
+
+    <xsl:message>
+      <xsl:value-of select="@Type" />
+    </xsl:message>
+    <!-- TODO: content -->
+  </xsl:template>
+
+  <xsl:template name="security">
+    <!-- TODO: security (swagger2 / openapi3) -->
   </xsl:template>
 
   <xsl:template name="parameter-type">

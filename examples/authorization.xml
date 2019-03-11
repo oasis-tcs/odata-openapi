@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Authorization.V1.xml">
+    <edmx:Include Namespace="Org.OData.Authorization.V1" Alias="Auth" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="auth.example" Alias="self">
+
+      <EntityType Name="Person">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" />
+      </EntityType>
+
+      <EntityContainer Name="Container">
+        <EntitySet Name="People" EntityType="self.Person" />
+
+        <Annotation Term="Auth.SecuritySchemes">
+          <Collection>
+            <Record>
+              <PropertyValue Property="Authorization" String="api_key" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Authorization" String="petstore_auth" />
+              <PropertyValue Property="RequiredScopes">
+                <Collection>
+                  <String>write:pets</String>
+                  <String>read:pets</String>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Collection>
+        </Annotation>
+
+        <Annotation Term="Auth.Authorizations">
+          <Collection>
+            <Record Type="Auth.ApiKey">
+              <PropertyValue Property="Name" String="api_key" />
+              <PropertyValue Property="Description" String="Authentication via API key" />
+              <PropertyValue Property="KeyName" String="x-api-key" />
+              <PropertyValue Property="Location" EnumMember="Auth.KeyLocation/Header" />
+            </Record>
+            <Record Type="Auth.OAuth2Implicit">
+              <PropertyValue Property="Name" String="petstore_auth" />
+              <PropertyValue Property="Description" String="Authentication via OAuth2 with implicit flow" />
+              <PropertyValue Property="Scopes">
+                <Collection>
+                  <Record>
+                    <PropertyValue Property="Scope" String="write:pets" />
+                    <PropertyValue Property="Description" String="modify pets in your account" />
+                  </Record>
+                  <Record>
+                    <PropertyValue Property="Scope" String="read:pets" />
+                    <PropertyValue Property="Description" String="read your pet" />
+                  </Record>
+                </Collection>
+              </PropertyValue>
+              <PropertyValue Property="RefreshUrl" String="https://example.com/api/oauth/refresh" />
+              <PropertyValue Property="AuthorizationUrl" String="https://example.com/api/oauth/dialog" />
+            </Record>
+          </Collection>
+        </Annotation>
+      </EntityContainer>
+
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
