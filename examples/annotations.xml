@@ -216,6 +216,8 @@
         </EntitySet>
         <EntitySet Name="TwoReadOnlySet" EntityType="self.TwoPartKey" />
         <EntitySet Name="TwoNothingSet" EntityType="self.TwoPartKey" />
+        <Singleton Name="TwoWriteOnlySingleton" Type="self.TwoPartKey" />
+        <Singleton Name="TwoNothingSingleton" Type="self.TwoPartKey" />
       </EntityContainer>
 
       <Annotations Target="self.SinglePartKey/PatternExt">
@@ -319,37 +321,25 @@
           </Record>
         </Annotation>
         <Annotation Term="Capabilities.IndexableByKey" Bool="false" />
-        <!-- TODO: remove -->
-        <Annotation Term="Capabilities.SkipSupported" Bool="false" />
-        <Annotation Term="Capabilities.TopSupported" Bool="false" />
-        <Annotation Term="Capabilities.CountRestrictions">
+      </Annotations>
+
+      <Annotations Target="self.Container/TwoWriteOnlySingleton">
+        <Annotation Term="Capabilities.ReadRestrictions">
           <Record>
-            <PropertyValue Bool="false" Property="Countable" />
+            <PropertyValue Bool="false" Property="Readable" />
           </Record>
         </Annotation>
-        <Annotation Term="Capabilities.FilterRestrictions">
+      </Annotations>
+
+      <Annotations Target="self.Container/TwoNothingSingleton">
+        <Annotation Term="Capabilities.ReadRestrictions">
           <Record>
-            <PropertyValue Bool="false" Property="Filterable" />
+            <PropertyValue Bool="false" Property="Readable" />
           </Record>
         </Annotation>
-        <Annotation Term="Capabilities.SortRestrictions">
+        <Annotation Term="Capabilities.UpdateRestrictions">
           <Record>
-            <PropertyValue Bool="false" Property="Sortable" />
-          </Record>
-        </Annotation>
-        <Annotation Term="Capabilities.SearchRestrictions">
-          <Record>
-            <PropertyValue Bool="false" Property="Searchable" />
-          </Record>
-        </Annotation>
-        <Annotation Term="Capabilities.SelectSupport">
-          <Record>
-            <PropertyValue Bool="false" Property="Supported" />
-          </Record>
-        </Annotation>
-        <Annotation Term="Capabilities.ExpandRestrictions">
-          <Record>
-            <PropertyValue Bool="false" Property="Expandable" />
+            <PropertyValue Bool="false" Property="Updatable" />
           </Record>
         </Annotation>
       </Annotations>

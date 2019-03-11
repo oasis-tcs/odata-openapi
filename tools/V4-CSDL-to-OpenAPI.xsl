@@ -2529,75 +2529,82 @@
     <xsl:text>":{</xsl:text>
 
     <!-- GET -->
-    <xsl:text>"get":{</xsl:text>
-
-    <xsl:call-template name="summary-description-qualified">
-      <xsl:with-param name="node" select="." />
-      <xsl:with-param name="qualifier" select="'Read'" />
-      <xsl:with-param name="fallback-summary">
-        <xsl:text>Get </xsl:text>
-        <xsl:value-of select="@Name" />
-      </xsl:with-param>
-    </xsl:call-template>
-
-    <xsl:text>,"tags":["</xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>"]</xsl:text>
-    <xsl:text>,"parameters":[</xsl:text>
-
-    <xsl:variable name="delta">
+    <xsl:variable name="readable">
       <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'ChangeTracking'" />
-        <xsl:with-param name="property" select="'Supported'" />
+        <xsl:with-param name="term" select="'ReadRestrictions'" />
+        <xsl:with-param name="property" select="'Readable'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="$delta='true'">
-      <!-- TODO: Prefer, Preference-Applied -->
-    </xsl:if>
+    <xsl:if test="not($readable='false')">
+      <xsl:text>"get":{</xsl:text>
 
-    <xsl:variable name="selectable">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'SelectSupport'" />
-        <xsl:with-param name="property" select="'Supported'" />
+      <xsl:call-template name="summary-description-qualified">
+        <xsl:with-param name="node" select="." />
+        <xsl:with-param name="qualifier" select="'Read'" />
+        <xsl:with-param name="fallback-summary">
+          <xsl:text>Get </xsl:text>
+          <xsl:value-of select="@Name" />
+        </xsl:with-param>
       </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="selectable-properties"
-      select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']" />
-    <xsl:if test="not($selectable='false')">
-      <!-- copy of select expression for selectable-properties - quick-fix for Java XSLT processor -->
-      <xsl:apply-templates select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']"
-        mode="select"
-      >
-        <!-- TODO: $delta='true' -->
-        <xsl:with-param name="after" select="''" />
-      </xsl:apply-templates>
-    </xsl:if>
 
-    <xsl:variable name="expandable">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'ExpandRestrictions'" />
-        <xsl:with-param name="property" select="'Expandable'" />
+      <xsl:text>,"tags":["</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>"]</xsl:text>
+      <xsl:text>,"parameters":[</xsl:text>
+
+      <xsl:variable name="delta">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'ChangeTracking'" />
+          <xsl:with-param name="property" select="'Supported'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="$delta='true'">
+        <!-- TODO: Prefer, Preference-Applied -->
+      </xsl:if>
+
+      <xsl:variable name="selectable">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'SelectSupport'" />
+          <xsl:with-param name="property" select="'Supported'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="selectable-properties"
+        select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']" />
+      <xsl:if test="not($selectable='false')">
+        <!-- copy of select expression for selectable-properties - quick-fix for Java XSLT processor -->
+        <xsl:apply-templates select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']"
+          mode="select"
+        >
+          <!-- TODO: $delta='true' -->
+          <xsl:with-param name="after" select="''" />
+        </xsl:apply-templates>
+      </xsl:if>
+
+      <xsl:variable name="expandable">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'ExpandRestrictions'" />
+          <xsl:with-param name="property" select="'Expandable'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="not($expandable='false')">
+        <xsl:apply-templates
+          select="$entityType/edm:NavigationProperty|$entityType/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
+          mode="expand"
+        >
+          <!-- TODO: $delta='true' and -->
+          <xsl:with-param name="after" select="not($selectable='false') and $selectable-properties" />
+        </xsl:apply-templates>
+      </xsl:if>
+
+      <xsl:text>]</xsl:text>
+
+      <xsl:call-template name="responses">
+        <xsl:with-param name="type" select="$qualifiedType" />
+        <xsl:with-param name="delta" select="$delta" />
+        <xsl:with-param name="description" select="'Retrieved entity'" />
       </xsl:call-template>
-    </xsl:variable>
-    <xsl:if test="not($expandable='false')">
-      <xsl:apply-templates
-        select="$entityType/edm:NavigationProperty|$entityType/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
-        mode="expand"
-      >
-        <!-- TODO: $delta='true' and -->
-        <xsl:with-param name="after" select="not($selectable='false') and $selectable-properties" />
-      </xsl:apply-templates>
+      <xsl:text>}</xsl:text>
     </xsl:if>
-
-    <xsl:text>]</xsl:text>
-
-    <xsl:call-template name="responses">
-      <xsl:with-param name="type" select="$qualifiedType" />
-      <xsl:with-param name="delta" select="$delta" />
-      <xsl:with-param name="description" select="'Retrieved entity'" />
-    </xsl:call-template>
-    <xsl:text>}</xsl:text>
-
 
     <!-- PATCH -->
     <xsl:variable name="updatable">
@@ -2607,7 +2614,10 @@
       </xsl:call-template>
     </xsl:variable>
     <xsl:if test="not($updatable='false')">
-      <xsl:text>,"patch":{</xsl:text>
+      <xsl:if test="not($readable='false')">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+      <xsl:text>"patch":{</xsl:text>
 
       <xsl:call-template name="summary-description-qualified">
         <xsl:with-param name="node" select="." />
