@@ -201,3 +201,11 @@ Term | Annotation Target | OpenAPI field
 `Minimum` | Property | `minimum` of Schema Object
 `Pattern` | Property | `pattern` of Schema Object
 
+
+## [Authorization](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Authorization.V1.md)
+
+Term | Annotation Target | OpenAPI field
+-----|-------------------|--------------
+`Authorizations` | EntityContainer | `securitySchemes` of Components Object / `securityDefinitions` of Swagger Object 
+`SecuritySchemes` | EntityContainer | `security` of OpenAPI / Swagger Object
+

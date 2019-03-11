@@ -588,12 +588,12 @@
         </xsl:otherwise>
       </xsl:choose>
       <xsl:text>":{</xsl:text>
-      <xsl:apply-templates select="$anno/edm:Collection/edm:Record" mode="authorizations" />
+      <xsl:apply-templates select="$anno/edm:Collection/edm:Record" mode="Authorizations" />
       <xsl:text>}</xsl:text>
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="edm:Record" mode="authorizations">
+  <xsl:template match="edm:Record" mode="Authorizations">
     <xsl:if test="position()>1">
       <xsl:text>,</xsl:text>
     </xsl:if>
@@ -648,7 +648,7 @@
               <xsl:value-of select="$refreshUrl" />
             </xsl:if>
             <xsl:text>","scopes":{</xsl:text>
-            <xsl:apply-templates select="edm:PropertyValue[@Property='Scopes']/edm:Collection/edm:Record" mode="scope" />
+            <xsl:apply-templates select="edm:PropertyValue[@Property='Scopes']/edm:Collection/edm:Record" mode="Scopes" />
             <xsl:text>}}}</xsl:text>
           </xsl:when>
           <xsl:otherwise>
@@ -657,11 +657,10 @@
               select="edm:PropertyValue[@Property='AuthorizationUrl']/@String
                      |edm:PropertyValue[@Property='AuthorizationUrl']/edm:String" />
             <xsl:text>","scopes":{</xsl:text>
-            <xsl:apply-templates select="edm:PropertyValue[@Property='Scopes']/edm:Collection/edm:Record" mode="scope" />
+            <xsl:apply-templates select="edm:PropertyValue[@Property='Scopes']/edm:Collection/edm:Record" mode="Scopes" />
             <xsl:text>}</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
-        <!-- TODO: content -->
       </xsl:when>
       <!-- TODO: basic/http, openIdConnect -->
       <xsl:otherwise>
@@ -682,7 +681,7 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:Record" mode="scope">
+  <xsl:template match="edm:Record" mode="Scopes">
     <xsl:if test="position()>1">
       <xsl:text>,</xsl:text>
     </xsl:if>
@@ -698,7 +697,41 @@
   </xsl:template>
 
   <xsl:template name="security">
-    <!-- TODO: security (swagger2 / openapi3) -->
+    <xsl:variable name="target" select="//edm:EntityContainer" />
+    <xsl:variable name="term" select="'SecuritySchemes'" />
+    <xsl:variable name="target-path" select="concat($target/../@Namespace,'.',$target/@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($target/../@Alias,'.',$target/@Name)" />
+    <xsl:variable name="anno"
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[@Term=concat($authorizationNamespace,'.',$term) or @Term=concat($authorizationAlias,'.',$term)]
+                                                                               |$target/edm:Annotation[@Term=concat($authorizationNamespace,'.',$term) or @Term=concat($authorizationAlias,'.',$term)]" />
+    <xsl:if test="$anno">
+      <xsl:text>,"security":[</xsl:text>
+      <xsl:apply-templates select="$anno/edm:Collection/edm:Record" mode="SecuritySchemes" />
+      <xsl:text>]</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="edm:Record" mode="SecuritySchemes">
+    <xsl:if test="position()>1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:text>{"</xsl:text>
+    <xsl:value-of
+      select="edm:PropertyValue[@Property='Authorization']/@String
+             |edm:PropertyValue[@Property='Authorization']/edm:String" />
+    <xsl:text>":[</xsl:text>
+    <xsl:apply-templates select="edm:PropertyValue[@Property='RequiredScopes']/edm:Collection/edm:String"
+      mode="RequiredScopes" />
+    <xsl:text>]}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:String" mode="RequiredScopes">
+    <xsl:if test="position()>1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="." />
+    <xsl:text>"</xsl:text>
   </xsl:template>
 
   <xsl:template name="parameter-type">
