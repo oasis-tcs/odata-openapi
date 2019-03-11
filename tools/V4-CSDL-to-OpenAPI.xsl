@@ -598,12 +598,47 @@
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:text>"</xsl:text>
-    <xsl:text>":{}</xsl:text>
-
-    <xsl:message>
-      <xsl:value-of select="@Type" />
-    </xsl:message>
+    <xsl:value-of select="edm:PropertyValue[@Property='Name']/@String|edm:PropertyValue[@Property='Name']/edm:String" />
+    <xsl:text>":{</xsl:text>
+    <xsl:variable name="type">
+      <xsl:call-template name="substring-after-last">
+        <xsl:with-param name="input" select="@Type" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="$type='ApiKey'">
+        <xsl:text>"type":"apiKey"</xsl:text>
+        <xsl:text>,"name":"</xsl:text>
+        <xsl:value-of select="edm:PropertyValue[@Property='KeyName']/@String|edm:PropertyValue[@Property='KeyName']/edm:String" />
+        <xsl:text>","in":"</xsl:text>
+        <xsl:variable name="location"
+          select="substring-after(edm:PropertyValue[@Property='Location']/@EnumMember|edm:PropertyValue[@Property='Location']/edm:EnumMember,'/')" />
+        <xsl:choose>
+          <xsl:when test="$location='Header'">
+            <xsl:text>header</xsl:text>
+          </xsl:when>
+          <xsl:when test="$location='QueryOption'">
+            <xsl:text>query</xsl:text>
+          </xsl:when>
+          <xsl:when test="$location='Cookie'">
+            <xsl:text>cookie</xsl:text>
+          </xsl:when>
+        </xsl:choose>
+        <xsl:text>"</xsl:text>
+      </xsl:when>
+      <xsl:when test="$type='OAuth2Implicit'">
+        <xsl:text>"type":"oauth2"</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:message>
+          <xsl:text>Unknown Authorization type </xsl:text>
+          <xsl:value-of select="$type" />
+        </xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
     <!-- TODO: content -->
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template name="security">
