@@ -457,19 +457,59 @@
                 "bearerFormat": "JWT",
                 "description": "HTTP authentication with bearer token"
             },
-            "petstore_auth": {
+            "oauth_authcode": {
+                "type": "oauth2",
+                "flows": {
+                    "authorizationCode": {
+                        "scopes": {
+                            "do:something": "do something"
+                        },
+                        "refreshUrl": "https://example.com/api/oauth/refresh",
+                        "authorizationUrl": "https://example.com/api/oauth/dialog",
+                        "tokenUrl": "https://example.com/api/oauth/token"
+                    }
+                },
+                "description": "Authentication via OAuth2 with authorization code flow"
+            },
+            "oauth_clientcredentials": {
+                "type": "oauth2",
+                "flows": {
+                    "clientCredentials": {
+                        "scopes": {
+                            "do:something": "do something"
+                        },
+                        "refreshUrl": "https://example.com/api/oauth/refresh",
+                        "tokenUrl": "https://example.com/api/oauth/token"
+                    }
+                },
+                "description": "Authentication via OAuth2 with client credentials flow"
+            },
+            "oauth_implicit": {
                 "type": "oauth2",
                 "flows": {
                     "implicit": {
-                        "authorizationUrl": "https://example.com/api/oauth/dialog",
-                        "refreshUrl": "https://example.com/api/oauth/refresh",
                         "scopes": {
-                            "write:pets": "modify pets in your account",
-                            "read:pets": "read your pet"
-                        }
+                            "write:foo": "modify foo",
+                            "read:foo": "read foo"
+                        },
+                        "refreshUrl": "https://example.com/api/oauth/refresh",
+                        "authorizationUrl": "https://example.com/api/oauth/dialog"
                     }
                 },
                 "description": "Authentication via OAuth2 with implicit flow"
+            },
+            "oauth_password": {
+                "type": "oauth2",
+                "flows": {
+                    "password": {
+                        "scopes": {
+                            "do:something": "do something"
+                        },
+                        "refreshUrl": "https://example.com/api/oauth/refresh",
+                        "tokenUrl": "https://example.com/api/oauth/token"
+                    }
+                },
+                "description": "Authentication via OAuth2 with resource owner password flow"
             },
             "open_id": {
                 "type": "openIdConnect",

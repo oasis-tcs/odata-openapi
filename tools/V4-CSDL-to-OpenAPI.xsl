@@ -636,19 +636,15 @@
       <xsl:when test="$type='Http'">
         <xsl:choose>
           <xsl:when test="$openapi-version!='2.0'">
-            <xsl:text>"type":"http","scheme":"</xsl:text>
-            <xsl:value-of
-              select="edm:PropertyValue[@Property='Scheme']/@String
-                     |edm:PropertyValue[@Property='Scheme']/edm:String" />
-            <xsl:text>"</xsl:text>
-            <xsl:variable name="bearerFormat"
-              select="edm:PropertyValue[@Property='BearerFormat']/@String
-                     |edm:PropertyValue[@Property='BearerFormat']/edm:String" />
-            <xsl:if test="$bearerFormat">
-              <xsl:text>,"bearerFormat":"</xsl:text>
-              <xsl:value-of select="$bearerFormat" />
-              <xsl:text>"</xsl:text>
-            </xsl:if>
+            <xsl:text>"type":"http"</xsl:text>
+            <xsl:call-template name="auth-property">
+              <xsl:with-param name="property" select="'Scheme'" />
+              <xsl:with-param name="as" select="'scheme'" />
+            </xsl:call-template>
+            <xsl:call-template name="auth-property">
+              <xsl:with-param name="property" select="'BearerFormat'" />
+              <xsl:with-param name="as" select="'bearerFormat'" />
+            </xsl:call-template>
             <xsl:call-template name="auth-description" />
           </xsl:when>
           <xsl:otherwise>
@@ -673,31 +669,71 @@
         test="$type='OAuth2AuthCode' or $type='OAuth2ClientCredentials' or $type='OAuth2Implicit' or $type='OAuth2Password'"
       >
         <xsl:text>"type":"oauth2"</xsl:text>
+        <xsl:variable name="flow">
+          <xsl:choose>
+            <xsl:when test="$type='OAuth2AuthCode'">
+              <xsl:choose>
+                <xsl:when test="$openapi-version!='2.0'">
+                  <xsl:text>authorizationCode</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:text>accessCode</xsl:text>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:when>
+            <xsl:when test="$type='OAuth2ClientCredentials'">
+              <xsl:choose>
+                <xsl:when test="$openapi-version!='2.0'">
+                  <xsl:text>clientCredentials</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:text>application</xsl:text>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:when>
+            <xsl:when test="$type='OAuth2Implicit'">
+              <xsl:text>implicit</xsl:text>
+            </xsl:when>
+            <xsl:when test="$type='OAuth2Password'">
+              <xsl:text>password</xsl:text>
+            </xsl:when>
+          </xsl:choose>
+        </xsl:variable>
         <xsl:choose>
           <xsl:when test="$openapi-version!='2.0'">
-            <xsl:text>,"flows":{"implicit":{"authorizationUrl":"</xsl:text>
-            <xsl:value-of
-              select="edm:PropertyValue[@Property='AuthorizationUrl']/@String
-                     |edm:PropertyValue[@Property='AuthorizationUrl']/edm:String" />
-            <xsl:variable name="refreshUrl"
-              select="edm:PropertyValue[@Property='RefreshUrl']/@String
-                     |edm:PropertyValue[@Property='RefreshUrl']/edm:String" />
-            <xsl:if test="$refreshUrl">
-              <xsl:text>","refreshUrl":"</xsl:text>
-              <xsl:value-of select="$refreshUrl" />
-            </xsl:if>
-            <xsl:text>","scopes":{</xsl:text>
+            <xsl:text>,"flows":{"</xsl:text>
+            <xsl:value-of select="$flow" />
+            <xsl:text>":{"scopes":{</xsl:text>
             <xsl:apply-templates select="edm:PropertyValue[@Property='Scopes']/edm:Collection/edm:Record" mode="Scopes" />
-            <xsl:text>}}}</xsl:text>
+            <xsl:text>}</xsl:text>
+            <xsl:call-template name="auth-property">
+              <xsl:with-param name="property" select="'RefreshUrl'" />
+              <xsl:with-param name="as" select="'refreshUrl'" />
+            </xsl:call-template>
+            <xsl:call-template name="auth-property">
+              <xsl:with-param name="property" select="'AuthorizationUrl'" />
+              <xsl:with-param name="as" select="'authorizationUrl'" />
+            </xsl:call-template>
+            <xsl:call-template name="auth-property">
+              <xsl:with-param name="property" select="'TokenUrl'" />
+              <xsl:with-param name="as" select="'tokenUrl'" />
+            </xsl:call-template>
+            <xsl:text>}}</xsl:text>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:text>,"flow":"implicit","authorizationUrl":"</xsl:text>
-            <xsl:value-of
-              select="edm:PropertyValue[@Property='AuthorizationUrl']/@String
-                     |edm:PropertyValue[@Property='AuthorizationUrl']/edm:String" />
+            <xsl:text>,"flow":"</xsl:text>
+            <xsl:value-of select="$flow" />
             <xsl:text>","scopes":{</xsl:text>
             <xsl:apply-templates select="edm:PropertyValue[@Property='Scopes']/edm:Collection/edm:Record" mode="Scopes" />
             <xsl:text>}</xsl:text>
+            <xsl:call-template name="auth-property">
+              <xsl:with-param name="property" select="'AuthorizationUrl'" />
+              <xsl:with-param name="as" select="'authorizationUrl'" />
+            </xsl:call-template>
+            <xsl:call-template name="auth-property">
+              <xsl:with-param name="property" select="'TokenUrl'" />
+              <xsl:with-param name="as" select="'tokenUrl'" />
+            </xsl:call-template>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:call-template name="auth-description" />
@@ -705,11 +741,11 @@
       <xsl:when test="$type='OpenIDConnect'">
         <xsl:choose>
           <xsl:when test="$openapi-version!='2.0'">
-            <xsl:text>"type":"openIdConnect","openIdConnectUrl":"</xsl:text>
-            <xsl:value-of
-              select="edm:PropertyValue[@Property='IssuerUrl']/@String
-                     |edm:PropertyValue[@Property='IssuerUrl']/edm:String" />
-            <xsl:text>"</xsl:text>
+            <xsl:text>"type":"openIdConnect"</xsl:text>
+            <xsl:call-template name="auth-property">
+              <xsl:with-param name="property" select="'IssuerUrl'" />
+              <xsl:with-param name="as" select="'openIdConnectUrl'" />
+            </xsl:call-template>
             <xsl:call-template name="auth-description" />
           </xsl:when>
           <xsl:otherwise>
@@ -730,6 +766,21 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template name="auth-property">
+    <xsl:param name="property" />
+    <xsl:param name="as" />
+    <xsl:variable name="value"
+      select="edm:PropertyValue[@Property=$property]/@String
+                     |edm:PropertyValue[@Property=$property]/edm:String" />
+    <xsl:if test="$value">
+      <xsl:text>,"</xsl:text>
+      <xsl:value-of select="$as" />
+      <xsl:text>":"</xsl:text>
+      <xsl:value-of select="$value" />
+      <xsl:text>"</xsl:text>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template name="auth-description">
