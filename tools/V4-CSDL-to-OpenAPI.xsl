@@ -753,7 +753,6 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
-      <!-- TODO: OAuth: ClientCredentials / Password / AuthCode -->
       <xsl:otherwise>
         <xsl:text>"type":"TODO:</xsl:text>
         <xsl:value-of select="$type" />
