@@ -631,8 +631,47 @@
           </xsl:when>
         </xsl:choose>
         <xsl:text>"</xsl:text>
+        <xsl:call-template name="auth-description" />
       </xsl:when>
-      <xsl:when test="$type='OAuth2Implicit'">
+      <xsl:when test="$type='Http'">
+        <xsl:choose>
+          <xsl:when test="$openapi-version!='2.0'">
+            <xsl:text>"type":"http","scheme":"</xsl:text>
+            <xsl:value-of
+              select="edm:PropertyValue[@Property='Scheme']/@String
+                     |edm:PropertyValue[@Property='Scheme']/edm:String" />
+            <xsl:text>"</xsl:text>
+            <xsl:variable name="bearerFormat"
+              select="edm:PropertyValue[@Property='BearerFormat']/@String
+                     |edm:PropertyValue[@Property='BearerFormat']/edm:String" />
+            <xsl:if test="$bearerFormat">
+              <xsl:text>,"bearerFormat":"</xsl:text>
+              <xsl:value-of select="$bearerFormat" />
+              <xsl:text>"</xsl:text>
+            </xsl:if>
+            <xsl:call-template name="auth-description" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>"type":"basic"</xsl:text>
+            <xsl:variable name="scheme"
+              select="edm:PropertyValue[@Property='Scheme']/@String
+                     |edm:PropertyValue[@Property='Scheme']/edm:String" />
+            <xsl:choose>
+              <xsl:when test="$scheme='basic'">
+                <xsl:call-template name="auth-description" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:text>,"description":"</xsl:text>
+                <xsl:value-of select="$scheme" />
+                <xsl:text> scheme not supported by Swagger 2.0"</xsl:text>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:when
+        test="$type='OAuth2AuthCode' or $type='OAuth2ClientCredentials' or $type='OAuth2Implicit' or $type='OAuth2Password'"
+      >
         <xsl:text>"type":"oauth2"</xsl:text>
         <xsl:choose>
           <xsl:when test="$openapi-version!='2.0'">
@@ -661,15 +700,39 @@
             <xsl:text>}</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
+        <xsl:call-template name="auth-description" />
       </xsl:when>
-      <!-- TODO: basic/http, openIdConnect, OAuth ClientCredentials / Password / AuthCode -->
+      <xsl:when test="$type='OpenIDConnect'">
+        <xsl:choose>
+          <xsl:when test="$openapi-version!='2.0'">
+            <xsl:text>"type":"openIdConnect","openIdConnectUrl":"</xsl:text>
+            <xsl:value-of
+              select="edm:PropertyValue[@Property='IssuerUrl']/@String
+                     |edm:PropertyValue[@Property='IssuerUrl']/edm:String" />
+            <xsl:text>"</xsl:text>
+            <xsl:call-template name="auth-description" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>"type":"basic","description":"openIdConnect not supported by Swagger 2.0"</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <!-- TODO: OAuth: ClientCredentials / Password / AuthCode -->
       <xsl:otherwise>
+        <xsl:text>"type":"TODO:</xsl:text>
+        <xsl:value-of select="$type" />
+        <xsl:text>"</xsl:text>
         <xsl:message>
           <xsl:text>Unknown Authorization type </xsl:text>
           <xsl:value-of select="$type" />
         </xsl:message>
+        <xsl:call-template name="auth-description" />
       </xsl:otherwise>
     </xsl:choose>
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template name="auth-description">
     <xsl:variable name="description"
       select="edm:PropertyValue[@Property='Description']/@String
              |edm:PropertyValue[@Property='Description']/edm:String" />
@@ -678,7 +741,6 @@
       <xsl:value-of select="$description" />
       <xsl:text>"</xsl:text>
     </xsl:if>
-    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Record" mode="Scopes">
