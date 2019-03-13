@@ -3820,7 +3820,7 @@
           select="$insertRestrictions/edm:Record/edm:PropertyValue[@Property='Insertable']/@Bool" />
 
         <xsl:if test="$navigation-insertable='true' or (not($navigation-insertable) and not($insertable='false'))">
-          <xsl:if test="not($readable='false')">
+          <xsl:if test="$navigation-readable='true' or (not($navigation-readable) and not($readable='false')) or $resultContext">
             <xsl:text>,</xsl:text>
           </xsl:if>
           <xsl:text>"post":{</xsl:text>

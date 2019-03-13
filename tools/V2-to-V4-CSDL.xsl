@@ -347,6 +347,7 @@
         <xsl:with-param name="marker" select="'.'" />
       </xsl:call-template>
     </xsl:variable>
+    <xsl:variable name="entityType" select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]" />
     <xsl:variable name="name" select="@Name" />
 
     <EntitySet>
@@ -362,17 +363,17 @@
       <xsl:call-template name="restriction">
         <xsl:with-param name="capability" select="'Filter'" />
         <xsl:with-param name="required" select="@sap:requires-filter='true'" />
-        <xsl:with-param name="required-properties"
-          select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]/edm2:Property/@sap:required-in-filter[.='true']" />
-        <xsl:with-param name="restricted-properties"
-          select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]/edm2:Property/@sap:filter-restriction" />
-        <xsl:with-param name="excluded-properties"
-          select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]/edm2:Property/@sap:filterable[.='false']" />
+        <xsl:with-param name="required-properties" select="$entityType/edm2:Property/@sap:required-in-filter[.='true']" />
+        <xsl:with-param name="restricted-properties" select="$entityType/edm2:Property/@sap:filter-restriction" />
+        <xsl:with-param name="excluded-properties" select="$entityType/edm2:Property/@sap:filterable[.='false']" />
       </xsl:call-template>
       <xsl:call-template name="restriction">
         <xsl:with-param name="capability" select="'Sort'" />
-        <xsl:with-param name="excluded-properties"
-          select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]/edm2:Property/@sap:sortable[.='false']" />
+        <xsl:with-param name="excluded-properties" select="$entityType/edm2:Property/@sap:sortable[.='false']" />
+      </xsl:call-template>
+
+      <xsl:call-template name="to-addressable">
+        <xsl:with-param name="entityType" select="$entityType" />
       </xsl:call-template>
 
       <Annotation>
@@ -396,6 +397,59 @@
         </Record>
       </Annotation>
     </EntitySet>
+  </xsl:template>
+
+  <xsl:template name="to-addressable">
+    <xsl:param name="entityType" />
+    <xsl:variable name="name" select="@Name" />
+    <xsl:variable name="stuff">
+      <xsl:apply-templates select="../edm2:AssociationSet[edm2:End[@EntitySet=$name]]/edm2:End[@EntitySet!=$name]"
+        mode="addressable"
+      >
+        <xsl:with-param name="entityType" select="$entityType" />
+      </xsl:apply-templates>
+    </xsl:variable>
+    <!-- TODO: check if result tree fragment is empty -->
+    <xsl:if test="$stuff">
+      <Annotation>
+        <xsl:attribute name="Term">
+            <xsl:value-of select="$Capabilities" />
+            <xsl:text>.NavigationRestrictions</xsl:text>
+          </xsl:attribute>
+        <Record>
+          <PropertyValue Property="RestrictedProperties">
+            <Collection>
+              <xsl:copy-of select="$stuff" />
+            </Collection>
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="edm2:AssociationSet/edm2:End" mode="addressable">
+    <xsl:param name="entityType" />
+    <xsl:variable name="role" select="@Role" />
+    <xsl:variable name="assoc" select="../@Association" />
+    <xsl:variable name="navprop" select="$entityType/edm2:NavigationProperty[@Relationship=$assoc and @ToRole=$role]" />
+    <xsl:if test="$navprop">
+      <xsl:variable name="targetSetName" select="@EntitySet" />
+      <xsl:variable name="targetSet" select="../../edm2:EntitySet[@Name=$targetSetName]" />
+      <xsl:if test="$targetSet/@sap:addressable='false'">
+        <Record>
+          <PropertyValue Property="NavigationProperty">
+            <xsl:attribute name="NavigationPropertyPath">
+            <xsl:value-of select="$navprop/@Name" />
+            </xsl:attribute>
+          </PropertyValue>
+          <PropertyValue Property="ReadRestrictions">
+            <Record>
+              <PropertyValue Property="Readable" Bool="true" />
+            </Record>
+          </PropertyValue>
+        </Record>
+      </xsl:if>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edm2:AssociationSet/edm2:End|edm3:AssociationSet/edm3:End" mode="Binding">
@@ -893,7 +947,25 @@
 
   <xsl:template match="edm2:EntitySet/@sap:addressable">
     <xsl:if test=". = 'false'">
-      <Annotation Term="TODO.Addressable" Bool="false" />
+      <Annotation>
+        <xsl:attribute name="Term">
+          <xsl:value-of select="$Capabilities" />
+          <xsl:text>.ReadRestrictions</xsl:text>
+        </xsl:attribute>
+        <Record>
+          <PropertyValue Property="Readable" Bool="false" />
+        </Record>
+      </Annotation>
+      <!-- TODO: only if no IndexableByKey annotation exists -->
+      <Annotation>
+        <xsl:attribute name="Term">
+          <xsl:value-of select="$Capabilities" />
+          <xsl:text>.ReadByKeyRestrictions</xsl:text>
+        </xsl:attribute>
+        <Record>
+          <PropertyValue Property="Readable" Bool="false" />
+        </Record>
+      </Annotation>
     </xsl:if>
   </xsl:template>
 
