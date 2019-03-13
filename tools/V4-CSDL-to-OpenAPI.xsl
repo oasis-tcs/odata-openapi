@@ -2264,7 +2264,6 @@
     </xsl:variable>
     <!-- TODO: remove addressable? -->
     <xsl:variable name="addressable" select="edm:Annotation[@Term='TODO.Addressable']/@Bool" />
-    <!-- TODO: remove resultContext? -->
     <xsl:variable name="resultContext"
       select="$entityType/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
     <xsl:if test="not($readable='false') and not($addressable='false') and not($resultContext)">
@@ -2569,7 +2568,6 @@
       </xsl:variable>
       <!-- TODO: remove addressable? -->
       <xsl:variable name="addressable" select="edm:Annotation[@Term='TODO.Addressable']/@Bool" />
-      <!-- TODO: remove resultContext? -->
       <xsl:variable name="resultContext"
         select="$entityType/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
       <!-- indexable=true or indexable=default or -->
@@ -3754,7 +3752,14 @@
           <xsl:with-param name="target" select="$targetSet" />
         </xsl:call-template>
       </xsl:variable>
-      <xsl:if test="not($readable='false')">
+
+      <!-- ReadRestrictions on source for this navigation property -->
+      <xsl:variable name="readRestrictions"
+        select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ReadRestrictions']" />
+      <xsl:variable name="navigation-readable"
+        select="$readRestrictions/edm:Record/edm:PropertyValue[@Property='Readable']/@Bool" />
+
+      <xsl:if test="$navigation-readable='true' or (not($navigation-readable) and not($readable='false')) or $resultContext">
         <xsl:text>"get":{</xsl:text>
 
         <xsl:text>"summary":"Get related </xsl:text>
