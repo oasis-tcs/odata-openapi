@@ -155,8 +155,8 @@
   </xsl:template>
 
   <xsl:template name="capability-indexablebykey">
-    <xsl:param name="term" select="'IndexableByKey'" />
     <xsl:param name="target" select="." />
+    <xsl:variable name="term" select="'IndexableByKey'" />
     <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',$target/@Name)" />
     <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',$target/@Name)" />
     <xsl:variable name="anno"
@@ -2570,7 +2570,6 @@
       <xsl:variable name="addressable" select="edm:Annotation[@Term='TODO.Addressable']/@Bool" />
       <xsl:variable name="resultContext"
         select="$entityType/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
-      <!-- indexable=true or indexable=default or -->
       <xsl:if test="not($readableByKey='false') and not($addressable='false' and $indexable!='true') and not($resultContext)">
         <xsl:text>"get":{</xsl:text>
 

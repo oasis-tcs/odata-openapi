@@ -32,9 +32,10 @@
       <xsl:with-param name="schema" select="'Org.OData.Core.V1'" />
     </xsl:call-template>
   </xsl:variable>
+  <xsl:variable name="CapabilitiesNamespace" select="'Org.OData.Capabilities.V1'" />
   <xsl:variable name="Capabilities">
     <xsl:call-template name="include-alias">
-      <xsl:with-param name="schema" select="'Org.OData.Capabilities.V1'" />
+      <xsl:with-param name="schema" select="$CapabilitiesNamespace" />
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="Measures">
@@ -956,17 +957,41 @@
           <PropertyValue Property="Readable" Bool="false" />
         </Record>
       </Annotation>
-      <!-- TODO: only if no IndexableByKey annotation exists -->
-      <Annotation>
-        <xsl:attribute name="Term">
+      <xsl:variable name="indexable">
+        <xsl:call-template name="capability-indexablebykey">
+          <xsl:with-param name="target" select=".." />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="$indexable!='true'">
+        <Annotation>
+          <xsl:attribute name="Term">
           <xsl:value-of select="$Capabilities" />
           <xsl:text>.ReadByKeyRestrictions</xsl:text>
         </xsl:attribute>
-        <Record>
-          <PropertyValue Property="Readable" Bool="false" />
-        </Record>
-      </Annotation>
+          <Record>
+            <PropertyValue Property="Readable" Bool="false" />
+          </Record>
+        </Annotation>
+      </xsl:if>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="capability-indexablebykey">
+    <xsl:param name="target" select="." />
+    <xsl:variable name="term" select="'IndexableByKey'" />
+    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',$target/@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',$target/@Name)" />
+    <xsl:variable name="anno"
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($CapabilitiesNamespace,'.',$term) or @Term=concat($Capabilities,'.',$term))] 
+                                                                               |$target/edm:Annotation[(@Term=concat($CapabilitiesNamespace,'.',$term) or @Term=concat($Capabilities,'.',$term))]" />
+    <xsl:choose>
+      <xsl:when test="$anno/@Bool|$anno/edm:Bool">
+        <xsl:value-of select="$anno/@Bool|$anno/edm:Bool" />
+      </xsl:when>
+      <xsl:when test="$anno">
+        <xsl:text>true</xsl:text>
+      </xsl:when>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="edm2:EntitySet/@sap:requires-filter" />
