@@ -29,6 +29,7 @@ var argv = minimist(process.argv.slice(2), {
         o: "openapi-version",
         p: "pretty",
         r: "references",
+        t: "target",
         v: "odata-version"
     },
     default: {
@@ -52,7 +53,6 @@ var argv = minimist(process.argv.slice(2), {
 });
 if (argv.o == '2') argv.o = "2.0";
 if (argv.o == '3') argv.o = "3.0.0";
-if (argv.t === undefined) argv.t = source.substring(0, source.lastIndexOf('.') + 1) + 'openapi.json';
 
 if (unknown || argv._.length == 0 || argv.h) {
     console.log(`Usage: odata-openapi <options> <source files>
@@ -123,7 +123,7 @@ function transformV2V3(source, version) {
 }
 
 function transformV4(source, version, deleteSource) {
-    var target = argv.t;
+    var target = argv.t || source.substring(0, source.lastIndexOf('.') + 1) + 'openapi.json';
     
     if(argv.verbose) console.log('Transforming ' + source + ' to OpenAPI ' + argv.o + ', target file: ' + target);
 
