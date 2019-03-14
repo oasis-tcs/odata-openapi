@@ -2619,9 +2619,7 @@
           <xsl:with-param name="property" select="'Updatable'" />
         </xsl:call-template>
       </xsl:variable>
-      <xsl:if
-        test="not($readableByKey='false') and not($resultContext) and not($updatable='false')"
-      >
+      <xsl:if test="not($readableByKey='false') and not($resultContext) and not($updatable='false')">
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:if test="not($updatable='false')">
@@ -2694,9 +2692,7 @@
           <xsl:with-param name="property" select="'Deletable'" />
         </xsl:call-template>
       </xsl:variable>
-      <xsl:if
-        test="((not($readableByKey='false') and not($resultContext)) or not($updatable='false')) and not($deletable='false')"
-      >
+      <xsl:if test="((not($readableByKey='false') and not($resultContext)) or not($updatable='false')) and not($deletable='false')">
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:if test="not($deletable='false')">
@@ -3746,9 +3742,8 @@
 
       <!-- ReadRestrictions on source for this navigation property -->
       <xsl:variable name="readRestrictions"
-        select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ReadRestrictions']" />
-      <xsl:variable name="navigation-readable"
-        select="$readRestrictions/edm:Record/edm:PropertyValue[@Property='Readable']/@Bool" />
+        select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ReadRestrictions']/edm:Record/edm:PropertyValue[@Property='Readable']" />
+      <xsl:variable name="navigation-readable" select="$readRestrictions/@Bool|$readRestrictions/edm:Bool" />
 
       <xsl:if test="$navigation-readable='true' or (not($navigation-readable) and not($readable='false')) or $resultContext">
         <xsl:text>"get":{</xsl:text>
@@ -3806,9 +3801,8 @@
 
         <!-- InsertRestrictions on source for this navigation property -->
         <xsl:variable name="insertRestrictions"
-          select="$navigationPropertyRestriction/edm:PropertyValue[@Property='InsertRestrictions']" />
-        <xsl:variable name="navigation-insertable"
-          select="$insertRestrictions/edm:Record/edm:PropertyValue[@Property='Insertable']/@Bool" />
+          select="$navigationPropertyRestriction/edm:PropertyValue[@Property='InsertRestrictions']/edm:Record/edm:PropertyValue[@Property='Insertable']" />
+        <xsl:variable name="navigation-insertable" select="$insertRestrictions/@Bool|$insertRestrictions/edm:Bool" />
 
         <xsl:if test="$navigation-insertable='true' or (not($navigation-insertable) and not($insertable='false'))">
           <xsl:if test="$navigation-readable='true' or (not($navigation-readable) and not($readable='false')) or $resultContext">

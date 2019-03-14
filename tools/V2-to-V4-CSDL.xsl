@@ -410,8 +410,7 @@
         <xsl:with-param name="entityType" select="$entityType" />
       </xsl:apply-templates>
     </xsl:variable>
-    <!-- TODO: check if result tree fragment is empty -->
-    <xsl:if test="$stuff">
+    <xsl:if test="string($stuff)">
       <Annotation>
         <xsl:attribute name="Term">
             <xsl:value-of select="$Capabilities" />
@@ -445,7 +444,9 @@
           </PropertyValue>
           <PropertyValue Property="ReadRestrictions">
             <Record>
-              <PropertyValue Property="Readable" Bool="true" />
+              <PropertyValue Property="Readable">
+                <Bool>true</Bool>
+              </PropertyValue>
             </Record>
           </PropertyValue>
         </Record>
