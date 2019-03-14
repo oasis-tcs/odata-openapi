@@ -169,10 +169,6 @@
       <xsl:when test="$anno">
         <xsl:text>true</xsl:text>
       </xsl:when>
-      <xsl:otherwise>
-        <!-- true would be the correct default -->
-        <xsl:text>unspecified</xsl:text>
-      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
@@ -2262,11 +2258,9 @@
         <xsl:with-param name="property" select="'Readable'" />
       </xsl:call-template>
     </xsl:variable>
-    <!-- TODO: remove addressable? -->
-    <xsl:variable name="addressable" select="edm:Annotation[@Term='TODO.Addressable']/@Bool" />
     <xsl:variable name="resultContext"
       select="$entityType/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
-    <xsl:if test="not($readable='false') and not($addressable='false') and not($resultContext)">
+    <xsl:if test="not($readable='false') and not($resultContext)">
       <xsl:text>"get":{</xsl:text>
 
       <xsl:call-template name="summary-description-qualified">
@@ -2317,7 +2311,7 @@
         <xsl:with-param name="property" select="'Insertable'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="not($readable='false') and not($addressable='false') and not($resultContext) and not($insertable='false')">
+    <xsl:if test="not($readable='false') and not($resultContext) and not($insertable='false')">
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:if test="not($insertable='false')">
@@ -2566,11 +2560,9 @@
           <xsl:with-param name="property" select="'Readable'" />
         </xsl:call-template>
       </xsl:variable>
-      <!-- TODO: remove addressable? -->
-      <xsl:variable name="addressable" select="edm:Annotation[@Term='TODO.Addressable']/@Bool" />
       <xsl:variable name="resultContext"
         select="$entityType/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
-      <xsl:if test="not($readableByKey='false') and not($addressable='false' and $indexable!='true') and not($resultContext)">
+      <xsl:if test="not($readableByKey='false') and not($resultContext)">
         <xsl:text>"get":{</xsl:text>
 
         <xsl:call-template name="summary-description-qualified">
@@ -2628,7 +2620,7 @@
         </xsl:call-template>
       </xsl:variable>
       <xsl:if
-        test="not($readableByKey='false') and not($addressable='false' and $indexable!='true') and not($resultContext) and not($updatable='false')"
+        test="not($readableByKey='false') and not($resultContext) and not($updatable='false')"
       >
         <xsl:text>,</xsl:text>
       </xsl:if>
@@ -2703,7 +2695,7 @@
         </xsl:call-template>
       </xsl:variable>
       <xsl:if
-        test="((not($readableByKey='false') and not($addressable='false' and $indexable!='true') and not($resultContext)) or not($updatable='false')) and not($deletable='false')"
+        test="((not($readableByKey='false') and not($resultContext)) or not($updatable='false')) and not($deletable='false')"
       >
         <xsl:text>,</xsl:text>
       </xsl:if>
