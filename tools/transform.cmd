@@ -75,8 +75,8 @@ exit /b
   json_reformat.exe < ..\examples\%~n1.tmp.json > ..\examples\%~n1.openapi.json
   if not errorlevel 1 (
     del ..\examples\%~n1.tmp.json
-    if [%5]==[V2] del %~n1.V4.xml
-    if [%5]==[V3] del %~n1.V4.xml
+    if [%5]==[V2] del ..\examples\%~n1.V4.xml
+    if [%5]==[V3] del ..\examples\%~n1.V4.xml
     git.exe --no-pager diff ..\examples\%~n1.openapi.json
     
     if exist %SCHEMA_TWO% call ajv -s %SCHEMA_TWO% -d ..\examples\%~n1.openapi.json > nul

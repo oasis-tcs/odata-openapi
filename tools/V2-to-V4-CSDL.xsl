@@ -227,6 +227,7 @@
       <xsl:apply-templates
         select="*[local-name()='EntityContainer' and @m:IsDefaultEntityContainer='true']/*[local-name()='FunctionImport']" mode="Schema" />
     </Schema>
+    <xsl:apply-templates select="edm2:EntityType[@sap:semantics='parameters']" mode="readrestrictions" />
   </xsl:template>
 
   <xsl:template match="edm3:Schema">
@@ -760,6 +761,27 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="edm2:EntityType[@sap:semantics='parameters']" mode="readrestrictions">
+    <xsl:variable name="qualifiedName" select="concat(../@Namespace,'.',@Name)" />
+    <Annotations>
+      <xsl:attribute name="Target">
+        <xsl:value-of select="../@Namespace" />
+        <xsl:text>.</xsl:text>
+        <xsl:value-of select="../edm2:EntityContainer/@Name" />
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="../edm2:EntityContainer/edm2:EntitySet[@EntityType=$qualifiedName]/@Name" />
+      </xsl:attribute>
+      <Annotation>
+        <xsl:attribute name="Term">
+          <xsl:value-of select="$Capabilities" />
+          <xsl:text>.ReadRestrictions</xsl:text>
+        </xsl:attribute>
+        <Record>
+          <PropertyValue Property="Readable" Bool="false" />
+        </Record>
+      </Annotation>
+    </Annotations>
+  </xsl:template>
   <xsl:template match="edm2:EntityType/@sap:semantics[.='parameters']">
     <Annotation>
       <xsl:attribute name="Term">
@@ -949,6 +971,11 @@
 
   <xsl:template match="edm2:EntitySet/@sap:addressable">
     <xsl:if test=". = 'false'">
+      <xsl:variable name="indexable">
+        <xsl:call-template name="capability-indexablebykey">
+          <xsl:with-param name="target" select=".." />
+        </xsl:call-template>
+      </xsl:variable>
       <Annotation>
         <xsl:attribute name="Term">
           <xsl:value-of select="$Capabilities" />
@@ -956,24 +983,15 @@
         </xsl:attribute>
         <Record>
           <PropertyValue Property="Readable" Bool="false" />
+          <xsl:if test="$indexable='true'">
+            <PropertyValue Property="ReadByKeyRestrictions">
+              <Record>
+                <PropertyValue Property="Readable" Bool="true" />
+              </Record>
+            </PropertyValue>
+          </xsl:if>
         </Record>
       </Annotation>
-      <xsl:variable name="indexable">
-        <xsl:call-template name="capability-indexablebykey">
-          <xsl:with-param name="target" select=".." />
-        </xsl:call-template>
-      </xsl:variable>
-      <xsl:if test="$indexable!='true'">
-        <Annotation>
-          <xsl:attribute name="Term">
-          <xsl:value-of select="$Capabilities" />
-          <xsl:text>.ReadByKeyRestrictions</xsl:text>
-        </xsl:attribute>
-          <Record>
-            <PropertyValue Property="Readable" Bool="false" />
-          </Record>
-        </Annotation>
-      </xsl:if>
     </xsl:if>
   </xsl:template>
 
