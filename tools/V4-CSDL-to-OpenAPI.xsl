@@ -2554,6 +2554,13 @@
       <xsl:text>":{</xsl:text>
 
       <!-- GET -->
+      <xsl:variable name="readable">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'ReadRestrictions'" />
+          <xsl:with-param name="property" select="'Readable'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <!-- TODO: now nested within ReadRestrictions -->
       <xsl:variable name="readableByKey">
         <xsl:call-template name="capability">
           <xsl:with-param name="term" select="'ReadByKeyRestrictions'" />
@@ -2562,7 +2569,8 @@
       </xsl:variable>
       <xsl:variable name="resultContext"
         select="$entityType/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
-      <xsl:if test="not($readableByKey='false') and not($resultContext)">
+      <!-- TODO: readableByKey -->
+      <xsl:if test="not($readable='false') and not($resultContext)">
         <xsl:text>"get":{</xsl:text>
 
         <xsl:call-template name="summary-description-qualified">
@@ -2619,7 +2627,8 @@
           <xsl:with-param name="property" select="'Updatable'" />
         </xsl:call-template>
       </xsl:variable>
-      <xsl:if test="not($readableByKey='false') and not($resultContext) and not($updatable='false')">
+      <!-- TODO: readableByKey -->
+      <xsl:if test="not($readable='false') and not($resultContext) and not($updatable='false')">
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:if test="not($updatable='false')">
@@ -2692,7 +2701,8 @@
           <xsl:with-param name="property" select="'Deletable'" />
         </xsl:call-template>
       </xsl:variable>
-      <xsl:if test="((not($readableByKey='false') and not($resultContext)) or not($updatable='false')) and not($deletable='false')">
+      <!-- TODO: readableByKey -->
+      <xsl:if test="((not($readable='false') and not($resultContext)) or not($updatable='false')) and not($deletable='false')">
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:if test="not($deletable='false')">
