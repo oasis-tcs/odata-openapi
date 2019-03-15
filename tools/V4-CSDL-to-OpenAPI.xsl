@@ -3639,9 +3639,6 @@
     <xsl:param name="source" />
     <xsl:param name="entityType" />
 
-    <xsl:variable name="resultContext"
-      select="$entityType/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
-
     <xsl:variable name="collection" select="starts-with(@Type,'Collection(')" />
     <xsl:variable name="name" select="@Name" />
     <xsl:variable name="bindingTarget" select="$source/edm:NavigationPropertyBinding[@Path=$name]/@Target" />
@@ -3774,7 +3771,7 @@
         </xsl:choose>
         <xsl:text>","tags":["</xsl:text>
         <xsl:value-of select="$source/@Name" />
-        <xsl:if test="not($resultContext) and $targetSet and $targetSet/@Name!=$source/@Name">
+        <xsl:if test="$targetSet and $targetSet/@Name!=$source/@Name">
           <xsl:text>","</xsl:text>
           <xsl:value-of select="$targetSet/@Name" />
         </xsl:if>
@@ -3826,7 +3823,7 @@
           <xsl:value-of select="$simpleName" />
           <xsl:text>","tags":["</xsl:text>
           <xsl:value-of select="$source/@Name" />
-          <xsl:if test="not($resultContext) and $targetSet and $targetSet/@Name!=$source/@Name">
+          <xsl:if test="$targetSet and $targetSet/@Name!=$source/@Name">
             <xsl:text>","</xsl:text>
             <xsl:value-of select="$targetSet/@Name" />
           </xsl:if>

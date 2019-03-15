@@ -782,14 +782,7 @@
       </Annotation>
     </Annotations>
   </xsl:template>
-  <xsl:template match="edm2:EntityType/@sap:semantics[.='parameters']">
-    <Annotation>
-      <xsl:attribute name="Term">
-        <xsl:value-of select="$Common" />
-        <xsl:text>.ResultContext</xsl:text>
-      </xsl:attribute>
-    </Annotation>
-  </xsl:template>
+  <xsl:template match="edm2:EntityType/@sap:semantics[.='parameters']" />
   <xsl:template match="edm2:EntityType/@sap:semantics[.='aggregate']" />
 
   <xsl:template match="edm2:Property/@sap:semantics[.='currency-code']" />
