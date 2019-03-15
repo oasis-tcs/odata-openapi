@@ -223,6 +223,7 @@
           </Annotation>
         </EntitySet>
         <EntitySet Name="TwoReadOnlySet" EntityType="self.TwoPartKey" />
+        <EntitySet Name="TwoReadOnlyByKeySet" EntityType="self.TwoPartKey" />
         <EntitySet Name="TwoWriteOnlySet" EntityType="self.TwoPartKey" />
         <EntitySet Name="TwoNothingSet" EntityType="self.TwoPartKey" />
         <Singleton Name="TwoWriteOnlySingleton" Type="self.TwoPartKey" />
@@ -318,13 +319,41 @@
         </Annotation>
       </Annotations>
 
+      <Annotations Target="self.Container/TwoReadOnlyByKeySet">
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Insertable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Updatable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Deletable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record>
+            <PropertyValue Property="Readable" Bool="false" />
+            <PropertyValue Property="ReadByKeyRestrictions">
+              <Record>
+                <PropertyValue Property="Readable" Bool="true" />
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+
       <Annotations Target="self.Container/TwoWriteOnlySet">
         <Annotation Term="Capabilities.ReadRestrictions">
           <Record>
             <PropertyValue Bool="false" Property="Readable" />
           </Record>
         </Annotation>
-        </Annotations>
+      </Annotations>
 
       <Annotations Target="self.Container/TwoNothingSet">
         <Annotation Term="Capabilities.InsertRestrictions">

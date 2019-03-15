@@ -40,6 +40,9 @@
             "name": "TwoReadOnlySet"
         },
         {
+            "name": "TwoReadOnlyByKeySet"
+        },
+        {
             "name": "TwoWriteOnlySet"
         },
         {
@@ -1817,6 +1820,60 @@
                         "description": "key: Two",
                         "type": "integer",
                         "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TwoReadOnlyByKeySet": {
+
+        },
+        "/TwoReadOnlyByKeySet(One={One},Two={Two})": {
+            "get": {
+                "summary": "Get entity from TwoReadOnlyByKeySet by key",
+                "tags": [
+                    "TwoReadOnlyByKeySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "One",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: One",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Two",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Two",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
                     }
                 ],
                 "responses": {

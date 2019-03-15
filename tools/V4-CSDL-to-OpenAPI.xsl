@@ -2560,17 +2560,22 @@
           <xsl:with-param name="property" select="'Readable'" />
         </xsl:call-template>
       </xsl:variable>
-      <!-- TODO: now nested within ReadRestrictions -->
-      <xsl:variable name="readableByKey">
-        <xsl:call-template name="capability">
-          <xsl:with-param name="term" select="'ReadByKeyRestrictions'" />
-          <xsl:with-param name="property" select="'Readable'" />
-        </xsl:call-template>
-      </xsl:variable>
+      <!-- ReadRestrictions/ReadableByKey/Readable -->
+      <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
+      <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+      <xsl:variable name="readRestrictions"
+        select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.ReadRestrictions') or @Term=concat($capabilitiesAlias,'.ReadRestrictions'))] 
+                                                                                         |edm:Annotation[(@Term=concat($capabilitiesNamespace,'.ReadRestrictions') or @Term=concat($capabilitiesAlias,'.ReadRestrictions'))]" />
+      <xsl:variable name="readByKeyRestrictions-readable"
+        select="$readRestrictions/edm:Record/edm:PropertyValue[@Property='ReadByKeyRestrictions']
+                                 /edm:Record/edm:PropertyValue[@Property='Readable']" />
+      <xsl:variable name="readableByKey"
+        select="$readByKeyRestrictions-readable/@Bool|$readByKeyRestrictions-readable/edm:Bool" />
+
       <xsl:variable name="resultContext"
         select="$entityType/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
-      <!-- TODO: readableByKey -->
-      <xsl:if test="not($readable='false') and not($resultContext)">
+
+      <xsl:if test="$readableByKey='true' or (not($readableByKey) and not($readable='false')) or $resultContext">
         <xsl:text>"get":{</xsl:text>
 
         <xsl:call-template name="summary-description-qualified">
@@ -2627,8 +2632,9 @@
           <xsl:with-param name="property" select="'Updatable'" />
         </xsl:call-template>
       </xsl:variable>
-      <!-- TODO: readableByKey -->
-      <xsl:if test="not($readable='false') and not($resultContext) and not($updatable='false')">
+      <xsl:if
+        test="($readableByKey='true' or (not($readableByKey) and not($readable='false')) or $resultContext) and not($updatable='false')"
+      >
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:if test="not($updatable='false')">
@@ -2702,7 +2708,9 @@
         </xsl:call-template>
       </xsl:variable>
       <!-- TODO: readableByKey -->
-      <xsl:if test="((not($readable='false') and not($resultContext)) or not($updatable='false')) and not($deletable='false')">
+      <xsl:if
+        test="($readableByKey='true' or (not($readableByKey) and not($readable='false')) or $resultContext or not($updatable='false')) and not($deletable='false')"
+      >
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:if test="not($deletable='false')">
