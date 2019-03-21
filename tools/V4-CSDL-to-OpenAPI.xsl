@@ -1324,9 +1324,15 @@
             </xsl:call-template>
           </xsl:otherwise>
         </xsl:choose>
-        <xsl:if test="not($inParameter) and not($nullable='false') and $openapi-version='2.0'">
-          <xsl:text>,"example":"string"</xsl:text>
-        </xsl:if>
+        <!-- TODO: also check for Core.Example in OpenAPI 3 -->
+        <xsl:call-template name="Core.Example">
+          <xsl:with-param name="target" select="$target" />
+          <xsl:with-param name="default">
+            <xsl:if test="not($inParameter) and not($nullable='false') and $openapi-version='2.0'">
+              <xsl:text>"string"</xsl:text>
+            </xsl:if>
+          </xsl:with-param>
+        </xsl:call-template>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Stream'">
         <xsl:call-template name="nullableType">
@@ -1450,14 +1456,18 @@
           </xsl:when>
         </xsl:choose>
         <xsl:if test="not($inParameter and $openapi-version='2.0')">
-          <xsl:text>,"example":</xsl:text>
-          <xsl:if test="$odata-version='2.0'">
-            <xsl:text>"</xsl:text>
-          </xsl:if>
-          <xsl:text>0</xsl:text>
-          <xsl:if test="$odata-version='2.0'">
-            <xsl:text>"</xsl:text>
-          </xsl:if>
+          <xsl:call-template name="Core.Example">
+            <xsl:with-param name="target" select="$target" />
+            <xsl:with-param name="default">
+              <xsl:if test="$odata-version='2.0'">
+                <xsl:text>"</xsl:text>
+              </xsl:if>
+              <xsl:text>0</xsl:text>
+              <xsl:if test="$odata-version='2.0'">
+                <xsl:text>"</xsl:text>
+              </xsl:if>
+            </xsl:with-param>
+          </xsl:call-template>
         </xsl:if>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Byte'">
@@ -1774,6 +1784,47 @@
       <xsl:text>,"enum":[</xsl:text>
       <xsl:apply-templates select="$allowedValues/edm:Collection/edm:Record" mode="Validation.AllowedValues" />
       <xsl:text>]</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="Core.Example">
+    <xsl:param name="target" />
+    <xsl:param name="default" />
+
+    <xsl:variable name="anno-i"
+      select="$target/edm:Annotation[@Term='Core.Example' or @Term=concat($coreNamespace,'.Example')]" />
+
+    <xsl:variable name="target1">
+      <xsl:call-template name="annotation-target">
+        <xsl:with-param name="node" select="$target" />
+        <xsl:with-param name="qualifier" select="$target/ancestor::edm:Schema/@Namespace" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="target2">
+      <xsl:call-template name="annotation-target">
+        <xsl:with-param name="node" select="$target" />
+        <xsl:with-param name="qualifier" select="$target/ancestor::edm:Schema/@Alias" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="anno-e"
+      select="//edm:Annotations[@Target=$target1 or @Target=$target2]/edm:Annotation[@Term='Core.Example' or @Term=concat($coreNamespace,'.Example')]" />
+
+    <xsl:variable name="anno" select="$anno-i|$anno-e" />
+    <xsl:variable name="value" select="$anno/edm:Record/edm:PropertyValue[@Property='Value']" />
+    <xsl:variable name="value-q" select="$value/@String|$value/edm:String" />
+
+    <xsl:if test="$value-q or string($default)">
+      <xsl:text>,"example":</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$value-q">
+          <xsl:text>"</xsl:text>
+          <xsl:value-of select="$value-q" />
+          <xsl:text>"</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$default" />
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
   </xsl:template>
 
