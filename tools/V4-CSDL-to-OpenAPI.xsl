@@ -1324,7 +1324,6 @@
             </xsl:call-template>
           </xsl:otherwise>
         </xsl:choose>
-        <!-- TODO: also check for Core.Example in OpenAPI 3 -->
         <xsl:call-template name="Core.Example">
           <xsl:with-param name="target" select="$target" />
           <xsl:with-param name="default">
