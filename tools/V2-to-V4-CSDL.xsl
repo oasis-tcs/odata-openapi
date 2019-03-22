@@ -32,9 +32,10 @@
       <xsl:with-param name="schema" select="'Org.OData.Core.V1'" />
     </xsl:call-template>
   </xsl:variable>
+  <xsl:variable name="CapabilitiesNamespace" select="'Org.OData.Capabilities.V1'" />
   <xsl:variable name="Capabilities">
     <xsl:call-template name="include-alias">
-      <xsl:with-param name="schema" select="'Org.OData.Capabilities.V1'" />
+      <xsl:with-param name="schema" select="$CapabilitiesNamespace" />
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="Measures">
@@ -226,6 +227,7 @@
       <xsl:apply-templates
         select="*[local-name()='EntityContainer' and @m:IsDefaultEntityContainer='true']/*[local-name()='FunctionImport']" mode="Schema" />
     </Schema>
+    <xsl:apply-templates select="edm2:EntityType[@sap:semantics='parameters']" mode="readrestrictions" />
   </xsl:template>
 
   <xsl:template match="edm3:Schema">
@@ -347,6 +349,7 @@
         <xsl:with-param name="marker" select="'.'" />
       </xsl:call-template>
     </xsl:variable>
+    <xsl:variable name="entityType" select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]" />
     <xsl:variable name="name" select="@Name" />
 
     <EntitySet>
@@ -362,17 +365,17 @@
       <xsl:call-template name="restriction">
         <xsl:with-param name="capability" select="'Filter'" />
         <xsl:with-param name="required" select="@sap:requires-filter='true'" />
-        <xsl:with-param name="required-properties"
-          select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]/edm2:Property/@sap:required-in-filter[.='true']" />
-        <xsl:with-param name="restricted-properties"
-          select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]/edm2:Property/@sap:filter-restriction" />
-        <xsl:with-param name="excluded-properties"
-          select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]/edm2:Property/@sap:filterable[.='false']" />
+        <xsl:with-param name="required-properties" select="$entityType/edm2:Property/@sap:required-in-filter[.='true']" />
+        <xsl:with-param name="restricted-properties" select="$entityType/edm2:Property/@sap:filter-restriction" />
+        <xsl:with-param name="excluded-properties" select="$entityType/edm2:Property/@sap:filterable[.='false']" />
       </xsl:call-template>
       <xsl:call-template name="restriction">
         <xsl:with-param name="capability" select="'Sort'" />
-        <xsl:with-param name="excluded-properties"
-          select="//edm2:Schema[@Namespace=$namespace]/edm2:EntityType[@Name=$type]/edm2:Property/@sap:sortable[.='false']" />
+        <xsl:with-param name="excluded-properties" select="$entityType/edm2:Property/@sap:sortable[.='false']" />
+      </xsl:call-template>
+
+      <xsl:call-template name="to-addressable">
+        <xsl:with-param name="entityType" select="$entityType" />
       </xsl:call-template>
 
       <Annotation>
@@ -396,6 +399,60 @@
         </Record>
       </Annotation>
     </EntitySet>
+  </xsl:template>
+
+  <xsl:template name="to-addressable">
+    <xsl:param name="entityType" />
+    <xsl:variable name="name" select="@Name" />
+    <xsl:variable name="stuff">
+      <xsl:apply-templates select="../edm2:AssociationSet[edm2:End[@EntitySet=$name]]/edm2:End[@EntitySet!=$name]"
+        mode="addressable"
+      >
+        <xsl:with-param name="entityType" select="$entityType" />
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:if test="string($stuff)">
+      <Annotation>
+        <xsl:attribute name="Term">
+            <xsl:value-of select="$Capabilities" />
+            <xsl:text>.NavigationRestrictions</xsl:text>
+          </xsl:attribute>
+        <Record>
+          <PropertyValue Property="RestrictedProperties">
+            <Collection>
+              <xsl:copy-of select="$stuff" />
+            </Collection>
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="edm2:AssociationSet/edm2:End" mode="addressable">
+    <xsl:param name="entityType" />
+    <xsl:variable name="role" select="@Role" />
+    <xsl:variable name="assoc" select="../@Association" />
+    <xsl:variable name="navprop" select="$entityType/edm2:NavigationProperty[@Relationship=$assoc and @ToRole=$role]" />
+    <xsl:if test="$navprop">
+      <xsl:variable name="targetSetName" select="@EntitySet" />
+      <xsl:variable name="targetSet" select="../../edm2:EntitySet[@Name=$targetSetName]" />
+      <xsl:if test="$targetSet/@sap:addressable='false'">
+        <Record>
+          <PropertyValue Property="NavigationProperty">
+            <xsl:attribute name="NavigationPropertyPath">
+            <xsl:value-of select="$navprop/@Name" />
+            </xsl:attribute>
+          </PropertyValue>
+          <PropertyValue Property="ReadRestrictions">
+            <Record>
+              <PropertyValue Property="Readable">
+                <Bool>true</Bool>
+              </PropertyValue>
+            </Record>
+          </PropertyValue>
+        </Record>
+      </xsl:if>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edm2:AssociationSet/edm2:End|edm3:AssociationSet/edm3:End" mode="Binding">
@@ -704,14 +761,28 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="edm2:EntityType/@sap:semantics[.='parameters']">
-    <Annotation>
-      <xsl:attribute name="Term">
-        <xsl:value-of select="$Common" />
-        <xsl:text>.ResultContext</xsl:text>
+  <xsl:template match="edm2:EntityType[@sap:semantics='parameters']" mode="readrestrictions">
+    <xsl:variable name="qualifiedName" select="concat(../@Namespace,'.',@Name)" />
+    <Annotations>
+      <xsl:attribute name="Target">
+        <xsl:value-of select="../@Namespace" />
+        <xsl:text>.</xsl:text>
+        <xsl:value-of select="../edm2:EntityContainer/@Name" />
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="../edm2:EntityContainer/edm2:EntitySet[@EntityType=$qualifiedName]/@Name" />
       </xsl:attribute>
-    </Annotation>
+      <Annotation>
+        <xsl:attribute name="Term">
+          <xsl:value-of select="$Capabilities" />
+          <xsl:text>.ReadRestrictions</xsl:text>
+        </xsl:attribute>
+        <Record>
+          <PropertyValue Property="Readable" Bool="false" />
+        </Record>
+      </Annotation>
+    </Annotations>
   </xsl:template>
+  <xsl:template match="edm2:EntityType/@sap:semantics[.='parameters']" />
   <xsl:template match="edm2:EntityType/@sap:semantics[.='aggregate']" />
 
   <xsl:template match="edm2:Property/@sap:semantics[.='currency-code']" />
@@ -893,8 +964,46 @@
 
   <xsl:template match="edm2:EntitySet/@sap:addressable">
     <xsl:if test=". = 'false'">
-      <Annotation Term="TODO.Addressable" Bool="false" />
+      <xsl:variable name="indexable">
+        <xsl:call-template name="capability-indexablebykey">
+          <xsl:with-param name="target" select=".." />
+        </xsl:call-template>
+      </xsl:variable>
+      <Annotation>
+        <xsl:attribute name="Term">
+          <xsl:value-of select="$Capabilities" />
+          <xsl:text>.ReadRestrictions</xsl:text>
+        </xsl:attribute>
+        <Record>
+          <PropertyValue Property="Readable" Bool="false" />
+          <xsl:if test="$indexable='true'">
+            <PropertyValue Property="ReadByKeyRestrictions">
+              <Record>
+                <PropertyValue Property="Readable" Bool="true" />
+              </Record>
+            </PropertyValue>
+          </xsl:if>
+        </Record>
+      </Annotation>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="capability-indexablebykey">
+    <xsl:param name="target" select="." />
+    <xsl:variable name="term" select="'IndexableByKey'" />
+    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',$target/@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',$target/@Name)" />
+    <xsl:variable name="anno"
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($CapabilitiesNamespace,'.',$term) or @Term=concat($Capabilities,'.',$term))] 
+                                                                               |$target/edm:Annotation[(@Term=concat($CapabilitiesNamespace,'.',$term) or @Term=concat($Capabilities,'.',$term))]" />
+    <xsl:choose>
+      <xsl:when test="$anno/@Bool|$anno/edm:Bool">
+        <xsl:value-of select="$anno/@Bool|$anno/edm:Bool" />
+      </xsl:when>
+      <xsl:when test="$anno">
+        <xsl:text>true</xsl:text>
+      </xsl:when>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="edm2:EntitySet/@sap:requires-filter" />

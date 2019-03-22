@@ -155,8 +155,8 @@
   </xsl:template>
 
   <xsl:template name="capability-indexablebykey">
-    <xsl:param name="term" select="'IndexableByKey'" />
     <xsl:param name="target" select="." />
+    <xsl:variable name="term" select="'IndexableByKey'" />
     <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',$target/@Name)" />
     <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',$target/@Name)" />
     <xsl:variable name="anno"
@@ -169,10 +169,6 @@
       <xsl:when test="$anno">
         <xsl:text>true</xsl:text>
       </xsl:when>
-      <xsl:otherwise>
-        <!-- true would be the correct default -->
-        <xsl:text>unspecified</xsl:text>
-      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
@@ -2262,12 +2258,7 @@
         <xsl:with-param name="property" select="'Readable'" />
       </xsl:call-template>
     </xsl:variable>
-    <!-- TODO: remove addressable? -->
-    <xsl:variable name="addressable" select="edm:Annotation[@Term='TODO.Addressable']/@Bool" />
-    <!-- TODO: remove resultContext? -->
-    <xsl:variable name="resultContext"
-      select="$entityType/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
-    <xsl:if test="not($readable='false') and not($addressable='false') and not($resultContext)">
+    <xsl:if test="not($readable='false')">
       <xsl:text>"get":{</xsl:text>
 
       <xsl:call-template name="summary-description-qualified">
@@ -2318,7 +2309,7 @@
         <xsl:with-param name="property" select="'Insertable'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="not($readable='false') and not($addressable='false') and not($resultContext) and not($insertable='false')">
+    <xsl:if test="not($readable='false') and not($insertable='false')">
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:if test="not($insertable='false')">
@@ -2561,19 +2552,25 @@
       <xsl:text>":{</xsl:text>
 
       <!-- GET -->
-      <xsl:variable name="readableByKey">
+      <xsl:variable name="readable">
         <xsl:call-template name="capability">
-          <xsl:with-param name="term" select="'ReadByKeyRestrictions'" />
+          <xsl:with-param name="term" select="'ReadRestrictions'" />
           <xsl:with-param name="property" select="'Readable'" />
         </xsl:call-template>
       </xsl:variable>
-      <!-- TODO: remove addressable? -->
-      <xsl:variable name="addressable" select="edm:Annotation[@Term='TODO.Addressable']/@Bool" />
-      <!-- TODO: remove resultContext? -->
-      <xsl:variable name="resultContext"
-        select="$entityType/edm:Annotation[@Term=concat($commonNamespace,'.ResultContext') or @Term=concat($commonAlias,'.ResultContext')]" />
-      <!-- indexable=true or indexable=default or -->
-      <xsl:if test="not($readableByKey='false') and not($addressable='false' and $indexable!='true') and not($resultContext)">
+      <!-- ReadRestrictions/ReadableByKey/Readable -->
+      <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
+      <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+      <xsl:variable name="readRestrictions"
+        select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.ReadRestrictions') or @Term=concat($capabilitiesAlias,'.ReadRestrictions'))] 
+                                                                                         |edm:Annotation[(@Term=concat($capabilitiesNamespace,'.ReadRestrictions') or @Term=concat($capabilitiesAlias,'.ReadRestrictions'))]" />
+      <xsl:variable name="readByKeyRestrictions-readable"
+        select="$readRestrictions/edm:Record/edm:PropertyValue[@Property='ReadByKeyRestrictions']
+                                 /edm:Record/edm:PropertyValue[@Property='Readable']" />
+      <xsl:variable name="readableByKey"
+        select="$readByKeyRestrictions-readable/@Bool|$readByKeyRestrictions-readable/edm:Bool" />
+
+      <xsl:if test="$readableByKey='true' or (not($readableByKey) and not($readable='false'))">
         <xsl:text>"get":{</xsl:text>
 
         <xsl:call-template name="summary-description-qualified">
@@ -2630,9 +2627,7 @@
           <xsl:with-param name="property" select="'Updatable'" />
         </xsl:call-template>
       </xsl:variable>
-      <xsl:if
-        test="not($readableByKey='false') and not($addressable='false' and $indexable!='true') and not($resultContext) and not($updatable='false')"
-      >
+      <xsl:if test="($readableByKey='true' or (not($readableByKey) and not($readable='false'))) and not($updatable='false')">
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:if test="not($updatable='false')">
@@ -2705,8 +2700,9 @@
           <xsl:with-param name="property" select="'Deletable'" />
         </xsl:call-template>
       </xsl:variable>
+      <!-- TODO: readableByKey -->
       <xsl:if
-        test="((not($readableByKey='false') and not($addressable='false' and $indexable!='true') and not($resultContext)) or not($updatable='false')) and not($deletable='false')"
+        test="($readableByKey='true' or (not($readableByKey) and not($readable='false')) or not($updatable='false')) and not($deletable='false')"
       >
         <xsl:text>,</xsl:text>
       </xsl:if>
@@ -2753,7 +2749,6 @@
       <xsl:apply-templates select="$entityType/edm:NavigationProperty" mode="pathItem">
         <xsl:with-param name="source" select="." />
         <xsl:with-param name="entityType" select="$entityType" />
-        <xsl:with-param name="resultContext" select="$resultContext" />
       </xsl:apply-templates>
 
     </xsl:if>
@@ -3643,7 +3638,6 @@
   <xsl:template match="edm:NavigationProperty" mode="pathItem">
     <xsl:param name="source" />
     <xsl:param name="entityType" />
-    <xsl:param name="resultContext" select="null" />
 
     <xsl:variable name="collection" select="starts-with(@Type,'Collection(')" />
     <xsl:variable name="name" select="@Name" />
@@ -3754,7 +3748,13 @@
           <xsl:with-param name="target" select="$targetSet" />
         </xsl:call-template>
       </xsl:variable>
-      <xsl:if test="not($readable='false')">
+
+      <!-- ReadRestrictions on source for this navigation property -->
+      <xsl:variable name="readRestrictions"
+        select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ReadRestrictions']/edm:Record/edm:PropertyValue[@Property='Readable']" />
+      <xsl:variable name="navigation-readable" select="$readRestrictions/@Bool|$readRestrictions/edm:Bool" />
+
+      <xsl:if test="$navigation-readable='true' or (not($navigation-readable) and not($readable='false'))">
         <xsl:text>"get":{</xsl:text>
 
         <xsl:text>"summary":"Get related </xsl:text>
@@ -3771,7 +3771,7 @@
         </xsl:choose>
         <xsl:text>","tags":["</xsl:text>
         <xsl:value-of select="$source/@Name" />
-        <xsl:if test="not($resultContext) and $targetSet and $targetSet/@Name!=$source/@Name">
+        <xsl:if test="$targetSet and $targetSet/@Name!=$source/@Name">
           <xsl:text>","</xsl:text>
           <xsl:value-of select="$targetSet/@Name" />
         </xsl:if>
@@ -3810,12 +3810,11 @@
 
         <!-- InsertRestrictions on source for this navigation property -->
         <xsl:variable name="insertRestrictions"
-          select="$navigationPropertyRestriction/edm:PropertyValue[@Property='InsertRestrictions']" />
-        <xsl:variable name="navigation-insertable"
-          select="$insertRestrictions/edm:Record/edm:PropertyValue[@Property='Insertable']/@Bool" />
+          select="$navigationPropertyRestriction/edm:PropertyValue[@Property='InsertRestrictions']/edm:Record/edm:PropertyValue[@Property='Insertable']" />
+        <xsl:variable name="navigation-insertable" select="$insertRestrictions/@Bool|$insertRestrictions/edm:Bool" />
 
         <xsl:if test="$navigation-insertable='true' or (not($navigation-insertable) and not($insertable='false'))">
-          <xsl:if test="not($readable='false')">
+          <xsl:if test="$navigation-readable='true' or (not($navigation-readable) and not($readable='false'))">
             <xsl:text>,</xsl:text>
           </xsl:if>
           <xsl:text>"post":{</xsl:text>
@@ -3824,7 +3823,7 @@
           <xsl:value-of select="$simpleName" />
           <xsl:text>","tags":["</xsl:text>
           <xsl:value-of select="$source/@Name" />
-          <xsl:if test="not($resultContext) and $targetSet and $targetSet/@Name!=$source/@Name">
+          <xsl:if test="$targetSet and $targetSet/@Name!=$source/@Name">
             <xsl:text>","</xsl:text>
             <xsl:value-of select="$targetSet/@Name" />
           </xsl:if>

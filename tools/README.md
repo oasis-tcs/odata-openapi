@@ -171,6 +171,7 @@ Term | Annotation Target | OpenAPI field
 `InsertRestrictions/Insertable` | EntitySet | `POST` operation for inserting a new entity
 `KeyAsSegmentSupported` | EntityContainer | `paths` URL templates use key-as-segment style instead of parenthesis style
 `NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/InsertRestrictions/Insertable` | EntitySet, Singleton | `POST` operation for inserting a new entity
+`ReadByKeyRestrictions/Readable` | EntitySet | `GET` operation for reading a single entity by key
 `ReadRestrictions/Readable` | EntitySet | `GET` operation for reading an entity set, a singleton, or along a navigation property
 `SearchRestrictions/Searchable` | EntitySet | `$search` system query option for `GET` operation
 `SortRestrictions/NonSortableProperties` | EntitySet | properties not listed in `$orderby` system query option for `GET` operation
