@@ -1806,15 +1806,25 @@
 
     <xsl:variable name="anno" select="$anno-i|$anno-e" />
     <xsl:variable name="value" select="$anno/edm:Record/edm:PropertyValue[@Property='Value']" />
-    <xsl:variable name="value-q" select="$value/@String|$value/edm:String" />
+    <xsl:variable name="value-s" select="$value/@String|$value/edm:String" />
+    <xsl:variable name="value-d" select="$value/@Decimal|$value/edm:Decimal" />
 
-    <xsl:if test="$value-q or string($default)">
+    <xsl:if test="$value-s or $value-d or string($default)">
       <xsl:text>,"example":</xsl:text>
       <xsl:choose>
-        <xsl:when test="$value-q">
+        <xsl:when test="$value-s">
           <xsl:text>"</xsl:text>
-          <xsl:value-of select="$value-q" />
+          <xsl:value-of select="$value-s" />
           <xsl:text>"</xsl:text>
+        </xsl:when>
+        <xsl:when test="$value-d">
+          <xsl:if test="$odata-version='2.0'">
+            <xsl:text>"</xsl:text>
+          </xsl:if>
+          <xsl:value-of select="$value-d" />
+          <xsl:if test="$odata-version='2.0'">
+            <xsl:text>"</xsl:text>
+          </xsl:if>
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="$default" />
