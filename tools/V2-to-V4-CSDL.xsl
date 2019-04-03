@@ -248,6 +248,13 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template match="edm2:EntityType|edm3:EntityType">
+    <EntityType>
+      <xsl:apply-templates select="@*[not(starts-with(name(),'sap:'))]" />
+      <xsl:apply-templates select="@*[starts-with(name(),'sap:')]|*" />
+    </EntityType>
+  </xsl:template>
+
   <xsl:template match="edm2:Property|edm3:Property">
     <Property>
       <xsl:copy-of select="@Name" />
