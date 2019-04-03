@@ -496,6 +496,7 @@
             <xsl:if test="not(*[local-name()='Parameter'])">
               <xsl:attribute name="IncludeInServiceDocument">true</xsl:attribute>
             </xsl:if>
+            <xsl:apply-templates select="@sap:*" />
           </FunctionImport>
         </xsl:when>
         <xsl:otherwise>
@@ -683,7 +684,15 @@
   </xsl:template>
 
   <!-- SAP annotations -->
-  <xsl:template match="@sap:action-for|@sap:applicable-path" />
+  <xsl:template match="@sap:action-for">
+    <Annotation Term="SAP.ActionFor">
+      <xsl:attribute name="String">
+        <xsl:value-of select="." />
+      </xsl:attribute>
+    </Annotation>
+  </xsl:template>
+
+  <xsl:template match="@sap:applicable-path" />
 
   <xsl:template match="@sap:label">
     <Annotation>

@@ -3308,9 +3308,13 @@
       </xsl:with-param>
     </xsl:call-template>
     <xsl:text>,"tags":["</xsl:text>
+    <xsl:variable name="action-for" select="edm:Annotation[@Term='SAP.ActionFor']/@String" />
     <xsl:choose>
       <xsl:when test="@EntitySet">
         <xsl:value-of select="@EntitySet" />
+      </xsl:when>
+      <xsl:when test="//edm:EntitySet[@EntityType=$action-for]">
+        <xsl:value-of select="//edm:EntitySet[@EntityType=$action-for]/@Name" />
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>Service Operations</xsl:text>
@@ -3409,9 +3413,13 @@
       </xsl:with-param>
     </xsl:call-template>
     <xsl:text>,"tags":["</xsl:text>
+    <xsl:variable name="action-for" select="$functionImport/edm:Annotation[@Term='SAP.ActionFor']/@String" />
     <xsl:choose>
       <xsl:when test="$functionImport/@EntitySet">
         <xsl:value-of select="$functionImport/@EntitySet" />
+      </xsl:when>
+      <xsl:when test="//edm:EntitySet[@EntityType=$action-for]">
+        <xsl:value-of select="//edm:EntitySet[@EntityType=$action-for]/@Name" />
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>Service Operations</xsl:text>
