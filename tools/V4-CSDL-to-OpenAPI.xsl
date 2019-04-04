@@ -1330,12 +1330,23 @@
         </xsl:call-template>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Stream'">
-        <xsl:call-template name="nullableType">
-          <xsl:with-param name="type" select="'string'" />
-          <xsl:with-param name="nullable" select="$nullable" />
-          <xsl:with-param name="noArray" select="$noArray" />
-        </xsl:call-template>
-        <xsl:text>,"format":"base64url"</xsl:text>
+        <xsl:variable name="json-property"
+          select="$target/edm:Annotation[(@Term=concat($coreNamespace,'.AcceptableMediaTypes') or @Term=concat($coreAlias,'.AcceptableMediaTypes')) and not(@Qualifier)]/edm:Collection/edm:String[.='application/json']" />
+        <xsl:choose>
+          <xsl:when test="$json-property">
+            <xsl:if test="not($inParameter and $openapi-version='2.0')">
+              <xsl:text>"example":{}</xsl:text>
+            </xsl:if>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="nullableType">
+              <xsl:with-param name="type" select="'string'" />
+              <xsl:with-param name="nullable" select="$nullable" />
+              <xsl:with-param name="noArray" select="$noArray" />
+            </xsl:call-template>
+            <xsl:text>,"format":"base64url"</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Binary'">
         <xsl:call-template name="nullableType">
@@ -3207,6 +3218,9 @@
 
   <xsl:template match="edm:PropertyRef" mode="parameter">
     <xsl:variable name="name" select="@Name" />
+    <!-- TODO: check if $name contains a / resp. if there's an @Alias -->
+    <!-- TODO: split at /, find first part to get complex property, second to get primitive property -->
+    <!-- TODO: do recursive later -->
     <xsl:variable name="property" select="../../edm:Property[@Name=$name]" />
     <xsl:variable name="type" select="$property/@Type" />
     <xsl:if test="position()>1">
