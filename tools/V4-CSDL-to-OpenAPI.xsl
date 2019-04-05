@@ -324,7 +324,7 @@
         <xsl:value-of select="$containerDescription" />
       </xsl:when>
       <xsl:when test="//edm:EntityContainer">
-        <xsl:text>OData Service for namespace </xsl:text>
+        <xsl:text>Service for namespace </xsl:text>
         <xsl:value-of select="//edm:EntityContainer/../@Namespace" />
       </xsl:when>
       <xsl:otherwise>
@@ -369,7 +369,7 @@
         <xsl:value-of select="$containerLongDescription" />
       </xsl:when>
       <xsl:when test="//edm:EntityContainer">
-        <xsl:text>This OData service is located at [</xsl:text>
+        <xsl:text>This service is located at [</xsl:text>
         <xsl:value-of select="$scheme" />
         <xsl:text>://</xsl:text>
         <xsl:value-of select="$host" />
@@ -476,7 +476,7 @@
       <xsl:text>"top":{"name":"</xsl:text>
       <xsl:value-of select="$option-prefix" />
       <xsl:text>top","in":"query","description":"Show only the first n items</xsl:text>
-      <xsl:text>, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptiontop)",</xsl:text>
+      <xsl:text>, see [Paging - Top](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptiontop)",</xsl:text>
       <xsl:call-template name="parameter-type">
         <xsl:with-param name="type" select="'integer'" />
         <xsl:with-param name="plus" select="',&quot;minimum&quot;:0'" />
@@ -489,7 +489,7 @@
       <xsl:text>"skip":{"name":"</xsl:text>
       <xsl:value-of select="$option-prefix" />
       <xsl:text>skip","in":"query","description":"Skip the first n items</xsl:text>
-      <xsl:text>, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionskip)",</xsl:text>
+      <xsl:text>, see [Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionskip)",</xsl:text>
       <xsl:call-template name="parameter-type">
         <xsl:with-param name="type" select="'integer'" />
         <xsl:with-param name="plus" select="',&quot;minimum&quot;:0'" />
@@ -500,14 +500,14 @@
           <xsl:text>"count":{"name":"</xsl:text>
           <xsl:value-of select="$option-prefix" />
           <xsl:text>count","in":"query","description":"Include count of items</xsl:text>
-          <xsl:text>, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount)",</xsl:text>
+          <xsl:text>, see [Count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount)",</xsl:text>
           <xsl:call-template name="parameter-type">
             <xsl:with-param name="type" select="'boolean'" />
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>"count":{"name": "$inlinecount","in":"query","description":"Include count of items</xsl:text>
-          <xsl:text>, see [OData Count](http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#InlinecountSystemQueryOption)",</xsl:text>
+          <xsl:text>, see [Count](http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#InlinecountSystemQueryOption)",</xsl:text>
           <xsl:call-template name="parameter-type">
             <xsl:with-param name="type" select="'string'" />
             <xsl:with-param name="plus">
@@ -522,7 +522,7 @@
           <xsl:text>,"search":{"name":"</xsl:text>
           <xsl:value-of select="$option-prefix" />
           <xsl:text>search","in":"query","description":"Search items by search phrases</xsl:text>
-          <xsl:text>, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionsearch)",</xsl:text>
+          <xsl:text>, see [Searching](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionsearch)",</xsl:text>
           <xsl:call-template name="parameter-type">
             <xsl:with-param name="type" select="'string'" />
           </xsl:call-template>
@@ -532,7 +532,7 @@
           test="//edm:Annotation[@Term=concat($capabilitiesNamespace,'.SearchRestrictions') or @Term=concat($capabilitiesAlias,'.SearchRestrictions')]/edm:Record/edm:PropertyValue[@Property='Searchable' and @Bool='true']"
         >
           <xsl:text>,"search":{"name":"search","in":"query","description":"Search items by search phrases</xsl:text>
-          <xsl:text>, see [OData Searching](https://wiki.scn.sap.com/wiki/display/EmTech/SAP+Annotations+for+OData+Version+2.0#SAPAnnotationsforODataVersion2.0-Query_Option_searchQueryOptionsearch)",</xsl:text>
+          <xsl:text>, see [Searching](https://wiki.scn.sap.com/wiki/display/EmTech/SAP+Annotations+for+OData+Version+2.0#SAPAnnotationsforODataVersion2.0-Query_Option_searchQueryOptionsearch)",</xsl:text>
           <xsl:call-template name="parameter-type">
             <xsl:with-param name="type" select="'string'" />
           </xsl:call-template>
@@ -2157,7 +2157,7 @@
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:text>"/$batch":{"post":{"summary": "Send a group of requests","description": "Group multiple requests into a single request payload</xsl:text>
-    <xsl:text>, see [OData Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).</xsl:text>
+    <xsl:text>, see [Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).</xsl:text>
     <xsl:if test="$openapi-version!='2.0'">
       <xsl:text>\n\n*Please note that \"Try it out\" is not supported for this request.*</xsl:text>
     </xsl:if>
@@ -2493,7 +2493,7 @@
       <xsl:text>{"name":"</xsl:text>
       <xsl:value-of select="$option-prefix" />
       <xsl:text>orderby","in":"query","description":"Order items by property values</xsl:text>
-      <xsl:text>, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",</xsl:text>
+      <xsl:text>, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>"explode":false,"schema":{</xsl:text>
       </xsl:if>
@@ -2524,7 +2524,7 @@
       <xsl:text>{"name":"</xsl:text>
       <xsl:value-of select="$option-prefix" />
       <xsl:text>select","in":"query","description":"Select properties to be returned</xsl:text>
-      <xsl:text>, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",</xsl:text>
+      <xsl:text>, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>"explode":false,"schema":{</xsl:text>
       </xsl:if>
@@ -2553,7 +2553,7 @@
       <xsl:text>{"name":"</xsl:text>
       <xsl:value-of select="$option-prefix" />
       <xsl:text>expand","in":"query","description":"Expand related entities</xsl:text>
-      <xsl:text>, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",</xsl:text>
+      <xsl:text>, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>"explode":false,"schema":{</xsl:text>
       </xsl:if>
@@ -3561,7 +3561,7 @@
         <xsl:text>{"name":"</xsl:text>
         <xsl:value-of select="$option-prefix" />
         <xsl:text>filter","in":"query","description":"Filter items by property values</xsl:text>
-        <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)</xsl:text>
+        <xsl:text>, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)</xsl:text>
         <xsl:call-template name="filter-RequiredProperties">
           <xsl:with-param name="target" select="$target" />
         </xsl:call-template>
