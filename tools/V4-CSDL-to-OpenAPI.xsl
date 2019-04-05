@@ -1679,11 +1679,11 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
       </xsl:when>
-      <!-- 
-      <xsl:when test="$singleType='Edm.PropertyPath'">
-        <xsl:text>"type":"object","properties":{"@odata.propertyPath":{"type":"string"}},"required":["@odata.propertyPath"]</xsl:text>
+      <xsl:when
+        test="$singleType='Edm.AnnotationPath' or $singleType='Edm.NavigationPropertyPath' or $singleType='Edm.PropertyPath'"
+      >
+        <xsl:text>"type":"string"</xsl:text>
       </xsl:when>
-       -->
       <xsl:when test="$singleType='Edm.GeographyPoint' or $singleType='Edm.GeometryPoint'">
         <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or $target/@DefaultValue)">
           <xsl:if test="not($nullable='false')">
