@@ -2304,6 +2304,11 @@
       <xsl:text>.</xsl:text>
       <xsl:value-of select="$type" />
     </xsl:variable>
+    <xsl:variable name="aliasQualifiedType">
+      <xsl:value-of select="//edm:Schema[@Namespace=$namespace]/@Alias" />
+      <xsl:text>.</xsl:text>
+      <xsl:value-of select="$type" />
+    </xsl:variable>
     <xsl:variable name="entityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" />
 
     <xsl:text>"/</xsl:text>
@@ -2433,7 +2438,7 @@
     <xsl:text>}</xsl:text>
 
     <xsl:variable name="qualifiedCollection" select="concat('Collection(',$qualifiedType,')')" />
-    <xsl:variable name="aliasQualifiedCollection" select="concat('Collection(',$qualifiedType,')')" />
+    <xsl:variable name="aliasQualifiedCollection" select="concat('Collection(',$aliasQualifiedType,')')" />
     <xsl:apply-templates
       select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedCollection or edm:Parameter[1]/@Type=$aliasQualifiedCollection)]"
       mode="bound"
