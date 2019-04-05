@@ -547,7 +547,7 @@
       </xsl:if>
       <xsl:text>"schema":{"$ref":"</xsl:text>
       <xsl:value-of select="$reuse-schemas" />
-      <xsl:text>odata.error"}</xsl:text>
+      <xsl:text>error"}</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>}}</xsl:text>
       </xsl:if>
@@ -872,32 +872,18 @@
     <xsl:if test="//@Type[starts-with(.,'Edm.Geo')]">
       <xsl:text>"geoPosition":{"type":"array","items":{"type":"number"},"minItems":2},</xsl:text>
     </xsl:if>
-    <xsl:text>"odata.error":{"type":"object","required":["error"],"properties":{"error":{"$ref":"</xsl:text>
-    <xsl:value-of select="$reuse-schemas" />
-    <xsl:text>odata.error.main"}}}</xsl:text>
-    <xsl:text>,"odata.error.main":{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":</xsl:text>
+    <xsl:text>"error":{"type":"object","required":["error"],"properties":{"error":</xsl:text>
+    <xsl:text>{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":</xsl:text>
     <xsl:choose>
       <xsl:when test="substring($odata-version,1,3)='4.0'">
         <xsl:text>{"type":"string"},"target":{"type":"string"},"details":</xsl:text>
-        <xsl:text>{"type":"array","items":{"$ref":"</xsl:text>
-        <xsl:value-of select="$reuse-schemas" />
-        <xsl:text>odata.error.detail"}}</xsl:text>
+        <xsl:text>{"type":"array","items":{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"}}}}</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>{"$ref":"</xsl:text>
-        <xsl:value-of select="$reuse-schemas" />
-        <xsl:text>odata.error.message"}</xsl:text>
+        <xsl:text>{"type":"object","required":["lang","value"],"properties":{"lang":{"type":"string"},"value":{"type":"string"}}}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>,"innererror":{"type":"object","description":"The structure of this object is service-specific"}}}</xsl:text>
-    <xsl:choose>
-      <xsl:when test="substring($odata-version,1,3)='4.0'">
-        <xsl:text>,"odata.error.detail":{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"}}}</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>,"odata.error.message":{"type":"object","required":["lang","value"],"properties":{"lang":{"type":"string"},"value":{"type":"string"}}}</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:text>,"innererror":{"type":"object","description":"The structure of this object is service-specific"}}}}}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="description">
@@ -1693,9 +1679,11 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
       </xsl:when>
+      <!-- 
       <xsl:when test="$singleType='Edm.PropertyPath'">
         <xsl:text>"type":"object","properties":{"@odata.propertyPath":{"type":"string"}},"required":["@odata.propertyPath"]</xsl:text>
       </xsl:when>
+       -->
       <xsl:when test="$singleType='Edm.GeographyPoint' or $singleType='Edm.GeometryPoint'">
         <xsl:if test="not($openapi-version='2.0') and (not($nullable='false') or $target/@DefaultValue)">
           <xsl:if test="not($nullable='false')">
