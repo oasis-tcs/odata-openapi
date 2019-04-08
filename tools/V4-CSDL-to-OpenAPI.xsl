@@ -23,7 +23,6 @@
     - reduce duplicated code in /paths production
     - external targeting for Capabilities: NonSortableProperties, KeyAsSegmentSupported
     - external targeting for Core: Immutable, Computed, Permission/Read
-    - key property aliases
     - example values via Core.Example: Int
   -->
 
@@ -2932,7 +2931,7 @@
           select="$entityType/edm:NavigationProperty|$entityType/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
           mode="expand"
         >
-          <!-- TODO: $delta='true' and -->
+          <!-- TODO: $delta='true' -->
           <xsl:with-param name="after" select="not($selectable='false') and $selectable-properties" />
         </xsl:apply-templates>
       </xsl:if>
@@ -3127,15 +3126,29 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
-    <xsl:if test="last()>1 and not($key-as-segment)">
-      <xsl:value-of select="@Name" />
+    <xsl:if test="(@Alias or last()>1) and not($key-as-segment)">
+      <xsl:choose>
+        <xsl:when test="@Alias">
+          <xsl:value-of select="@Alias" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@Name" />
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:text>=</xsl:text>
     </xsl:if>
     <xsl:call-template name="pathValuePrefix">
       <xsl:with-param name="type" select="$type" />
     </xsl:call-template>
     <xsl:text>{</xsl:text>
-    <xsl:value-of select="@Name" />
+    <xsl:choose>
+      <xsl:when test="@Alias">
+        <xsl:value-of select="@Alias" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="@Name" />
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>}</xsl:text>
     <xsl:call-template name="pathValueSuffix">
       <xsl:with-param name="type" select="$type" />
@@ -3248,6 +3261,7 @@
             <xsl:with-param name="marker" select="'.'" />
           </xsl:call-template>
         </xsl:variable>
+        
         <xsl:call-template name="key-property">
           <xsl:with-param name="name" select="substring-after($name,'/')" />
           <xsl:with-param name="alias" select="$alias" />
@@ -3258,12 +3272,19 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:variable name="property" select="$structuredType/edm:Property[@Name=$name]" />
-        <xsl:variable name="type" select="$property/@Type" />
+        <xsl:variable name="propertyType" select="$property/@Type" />
         <xsl:if test="position()>1">
           <xsl:text>,</xsl:text>
         </xsl:if>
         <xsl:text>{"name":"</xsl:text>
-        <xsl:value-of select="$name" />
+        <xsl:choose>
+          <xsl:when test="$alias">
+            <xsl:value-of select="$alias" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$name" />
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:text>","in":"path","required":true,"description":"</xsl:text>
         <xsl:variable name="description">
           <xsl:call-template name="description">
@@ -3276,13 +3297,20 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>key: </xsl:text>
-            <xsl:value-of select="$name" />
+            <xsl:choose>
+              <xsl:when test="$alias">
+                <xsl:value-of select="$alias" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$name" />
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:text>",</xsl:text>
 
         <xsl:choose>
-          <xsl:when test="not($type)">
+          <xsl:when test="not($propertyType)">
             <xsl:text>"x-error":"key property not found"</xsl:text>
             <xsl:message>
               <xsl:text>Key property </xsl:text>
@@ -3294,10 +3322,10 @@
           <xsl:when test="$openapi-version='2.0'">
             <xsl:text>"type":</xsl:text>
             <xsl:choose>
-              <xsl:when test="$type='Edm.Int64'">
+              <xsl:when test="$propertyType='Edm.Int64'">
                 <xsl:text>"integer","format":"int64"</xsl:text>
               </xsl:when>
-              <xsl:when test="$type='Edm.Int32'">
+              <xsl:when test="$propertyType='Edm.Int32'">
                 <xsl:text>"integer","format":"int32"</xsl:text>
               </xsl:when>
               <!-- TODO: handle other Edm types, enumeration types, and type definitions -->
@@ -3309,7 +3337,7 @@
           <xsl:otherwise>
             <xsl:text>"schema":{</xsl:text>
             <xsl:call-template name="type">
-              <xsl:with-param name="type" select="$type" />
+              <xsl:with-param name="type" select="$propertyType" />
               <xsl:with-param name="nullableFacet" select="'false'" />
               <xsl:with-param name="target" select="$property" />
             </xsl:call-template>
