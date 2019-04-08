@@ -2764,7 +2764,6 @@
           <xsl:with-param name="property" select="'Deletable'" />
         </xsl:call-template>
       </xsl:variable>
-      <!-- TODO: readableByKey -->
       <xsl:if
         test="($readableByKey='true' or (not($readableByKey) and not($readable='false')) or not($updatable='false')) and not($deletable='false')"
       >
@@ -3210,71 +3209,117 @@
   </xsl:template>
 
   <xsl:template match="edm:PropertyRef" mode="parameter">
-    <xsl:variable name="name" select="@Name" />
-    <!-- TODO: check if $name contains a / resp. if there's an @Alias -->
-    <!-- TODO: split at /, find first part to get complex property, second to get primitive property -->
-    <!-- TODO: do recursive later -->
-    <xsl:variable name="property" select="../../edm:Property[@Name=$name]" />
-    <xsl:variable name="type" select="$property/@Type" />
-    <xsl:if test="position()>1">
-      <xsl:text>,</xsl:text>
-    </xsl:if>
-    <xsl:text>{"name":"</xsl:text>
-    <xsl:value-of select="$name" />
-    <xsl:text>","in":"path","required":true,"description":"</xsl:text>
-    <xsl:variable name="description">
-      <xsl:call-template name="description">
-        <xsl:with-param name="node" select="$property" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:choose>
-      <xsl:when test="$description!=''">
-        <xsl:value-of select="$description" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>key: </xsl:text>
-        <xsl:value-of select="$name" />
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>",</xsl:text>
+    <xsl:call-template name="key-property">
+      <xsl:with-param name="name" select="@Name" />
+      <xsl:with-param name="alias" select="@Alias" />
+      <xsl:with-param name="structuredType" select="../.." />
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template name="key-property">
+    <xsl:param name="name" />
+    <xsl:param name="alias" />
+    <xsl:param name="structuredType" />
 
     <xsl:choose>
-      <xsl:when test="not($type)">
-        <xsl:text>"x-error":"key property not found"</xsl:text>
-        <xsl:message>
-          <xsl:text>Key property </xsl:text>
-          <xsl:value-of select="$name" />
-          <xsl:text> not found for entity type </xsl:text>
-          <xsl:value-of select="../../@Name" />
-        </xsl:message>
-      </xsl:when>
-      <xsl:when test="$openapi-version='2.0'">
-        <xsl:text>"type":</xsl:text>
-        <xsl:choose>
-          <xsl:when test="$type='Edm.Int64'">
-            <xsl:text>"integer","format":"int64"</xsl:text>
-          </xsl:when>
-          <xsl:when test="$type='Edm.Int32'">
-            <xsl:text>"integer","format":"int32"</xsl:text>
-          </xsl:when>
-          <!-- TODO: handle other Edm types, enumeration types, and type definitions -->
-          <xsl:otherwise>
-            <xsl:text>"string"</xsl:text>
-          </xsl:otherwise>
-        </xsl:choose>
+      <xsl:when test="contains($name,'/')">
+        <xsl:variable name="first-segment" select="substring-before($name,'/')" />
+        <xsl:variable name="property" select="$structuredType/edm:Property[@Name=$first-segment]" />
+        <xsl:variable name="propertyType" select="$property/@Type" />
+        <xsl:variable name="qualifier">
+          <xsl:call-template name="substring-before-last">
+            <xsl:with-param name="input" select="$propertyType" />
+            <xsl:with-param name="marker" select="'.'" />
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="namespace">
+          <xsl:choose>
+            <xsl:when test="//edm:Schema[@Alias=$qualifier]">
+              <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$qualifier" />
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="typename">
+          <xsl:call-template name="substring-after-last">
+            <xsl:with-param name="input" select="$propertyType" />
+            <xsl:with-param name="marker" select="'.'" />
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:call-template name="key-property">
+          <xsl:with-param name="name" select="substring-after($name,'/')" />
+          <xsl:with-param name="alias" select="$alias" />
+          <xsl:with-param name="structuredType"
+            select="//edm:Schema[@Namespace=$namespace]/edm:ComplexType[@Name=$typename]
+                   |//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$typename]" />
+        </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>"schema":{</xsl:text>
-        <xsl:call-template name="type">
-          <xsl:with-param name="type" select="$type" />
-          <xsl:with-param name="nullableFacet" select="'false'" />
-          <xsl:with-param name="target" select="$property" />
-        </xsl:call-template>
+        <xsl:variable name="property" select="$structuredType/edm:Property[@Name=$name]" />
+        <xsl:variable name="type" select="$property/@Type" />
+        <xsl:if test="position()>1">
+          <xsl:text>,</xsl:text>
+        </xsl:if>
+        <xsl:text>{"name":"</xsl:text>
+        <xsl:value-of select="$name" />
+        <xsl:text>","in":"path","required":true,"description":"</xsl:text>
+        <xsl:variable name="description">
+          <xsl:call-template name="description">
+            <xsl:with-param name="node" select="$property" />
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:choose>
+          <xsl:when test="$description!=''">
+            <xsl:value-of select="$description" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>key: </xsl:text>
+            <xsl:value-of select="$name" />
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:text>",</xsl:text>
+
+        <xsl:choose>
+          <xsl:when test="not($type)">
+            <xsl:text>"x-error":"key property not found"</xsl:text>
+            <xsl:message>
+              <xsl:text>Key property </xsl:text>
+              <xsl:value-of select="$name" />
+              <xsl:text> not found for entity type </xsl:text>
+              <xsl:value-of select="../../@Name" />
+            </xsl:message>
+          </xsl:when>
+          <xsl:when test="$openapi-version='2.0'">
+            <xsl:text>"type":</xsl:text>
+            <xsl:choose>
+              <xsl:when test="$type='Edm.Int64'">
+                <xsl:text>"integer","format":"int64"</xsl:text>
+              </xsl:when>
+              <xsl:when test="$type='Edm.Int32'">
+                <xsl:text>"integer","format":"int32"</xsl:text>
+              </xsl:when>
+              <!-- TODO: handle other Edm types, enumeration types, and type definitions -->
+              <xsl:otherwise>
+                <xsl:text>"string"</xsl:text>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>"schema":{</xsl:text>
+            <xsl:call-template name="type">
+              <xsl:with-param name="type" select="$type" />
+              <xsl:with-param name="nullableFacet" select="'false'" />
+              <xsl:with-param name="target" select="$property" />
+            </xsl:call-template>
+            <xsl:text>}</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+
         <xsl:text>}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-
-    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:ActionImport">

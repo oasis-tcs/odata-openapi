@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.01">
+  <!-- TODO:
+    - single-part key with alias to complex property
+    - multi-part key
+    - three path segments
+    - navigation property segment
+  -->
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core">
+      <Annotation Term="Core.DefaultNamespace" />
+    </edmx:Include>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+    <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="kay.aliases" Alias="self">
+
+      <EntityType Name="Category">
+        <Key>
+          <PropertyRef Name="Info/ID" Alias="EntityInfoID" />
+        </Key>
+        <Property Name="Info" Type="self.EntityInfo" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" />
+      </EntityType>
+
+      <ComplexType Name="EntityInfo">
+        <Property Name="ID" Type="Edm.Int32" Nullable="false">
+          <Annotation Term="Core.Description" String="ID within EntityInfo" />
+        </Property>
+        <Property Name="Created" Type="Edm.DateTimeOffset" />
+      </ComplexType>
+
+      <EntityContainer Name="Container">
+        <Annotation Term="Capabilities.BatchSupported" Bool="false" />
+
+        <EntitySet Name="Categories" EntityType="self.Category" />
+      </EntityContainer>
+
+      <Annotations Target="self.SinglePartKey/PatternExt">
+        <Annotation Term="Validation.Pattern" String="^.+$" />
+      </Annotations>
+
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
