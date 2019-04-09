@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.01">
+  <!-- TODO:
+    containment
+    - multi-level containment
+    - containment with multi-part key
+    - recursive containment - limit depth
+    - NavigationRestrictions and containment
+  -->
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core">
+      <Annotation Term="Core.DefaultNamespace" />
+    </edmx:Include>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+    <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="Containment" Alias="self">
+
+      <EntityType Name="Whole">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" />
+        <NavigationProperty Name="One" Type="self.Part" ContainsTarget="true" />
+        <NavigationProperty Name="Many" Type="Collection(self.Part)" ContainsTarget="true" />
+      </EntityType>
+
+      <EntityType Name="Part">
+        <Key>
+          <PropertyRef Name="index" />
+        </Key>
+        <Property Name="index" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="One" Type="self.SubPart" ContainsTarget="true" />
+        <NavigationProperty Name="Many" Type="Collection(self.SubPart)" ContainsTarget="true" />
+      </EntityType>
+
+      <EntityType Name="SubPart">
+        <Key>
+          <PropertyRef Name="One" />
+          <PropertyRef Name="Two" />
+        </Key>
+        <Property Name="One" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Two" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+
+
+      <EntityContainer Name="Container">
+        <Annotation Term="Capabilities.BatchSupported" Bool="false" />
+
+        <EntitySet Name="Wholes" EntityType="self.Whole">
+          <Annotation Term="Core.Description" String="List of containers" />
+        </EntitySet>
+        <Singleton Name="TheWhole" Type="self.Whole">
+          <Annotation Term="Core.Description" String="Special container" />
+        </Singleton>
+      </EntityContainer>
+
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
