@@ -2287,7 +2287,7 @@
   </xsl:template>
 
   <xsl:template match="edm:Singleton">
-    <xsl:call-template name="pathItem-singleton">
+    <xsl:call-template name="pathItem-single-entity">
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="path-prefix" select="@Name" />
       <xsl:with-param name="with-key" select="false()" />
@@ -2669,9 +2669,14 @@
         <xsl:with-param name="node" select="." />
         <xsl:with-param name="qualifier" select="'Read'" />
         <xsl:with-param name="fallback-summary">
-          <xsl:text>Get entity from </xsl:text>
+          <xsl:text>Get </xsl:text>
+          <xsl:if test="$with-key">
+            <xsl:text>entity from </xsl:text>
+          </xsl:if>
           <xsl:value-of select="@Name" />
-          <xsl:text> by key</xsl:text>
+          <xsl:if test="$with-key">
+            <xsl:text> by key</xsl:text>
+          </xsl:if>
         </xsl:with-param>
       </xsl:call-template>
 
@@ -2679,7 +2684,20 @@
       <xsl:value-of select="@Name" />
       <xsl:text>"]</xsl:text>
       <xsl:text>,"parameters":[</xsl:text>
-      <xsl:apply-templates select="$entityType" mode="parameter" />
+
+      <xsl:if test="$with-key">
+        <xsl:apply-templates select="$entityType" mode="parameter" />
+      </xsl:if>
+
+      <xsl:variable name="delta">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'ChangeTracking'" />
+          <xsl:with-param name="property" select="'Supported'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="$delta='true'">
+        <!-- TODO: Prefer, Preference-Applied -->
+      </xsl:if>
 
       <xsl:variable name="selectable">
         <xsl:call-template name="capability">
@@ -2687,9 +2705,16 @@
           <xsl:with-param name="property" select="'Supported'" />
         </xsl:call-template>
       </xsl:variable>
+      <xsl:variable name="selectable-properties"
+        select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']" />
       <xsl:if test="not($selectable='false')">
+        <!-- copy of select expression for selectable-properties - quick-fix for Java XSLT processor -->
         <xsl:apply-templates select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']"
-          mode="select" />
+          mode="select"
+        >
+          <!-- TODO: $delta='true' -->
+          <xsl:with-param name="after" select="$with-key" />
+        </xsl:apply-templates>
       </xsl:if>
 
       <xsl:variable name="expandable">
@@ -2701,12 +2726,18 @@
       <xsl:if test="not($expandable='false')">
         <xsl:apply-templates
           select="$entityType/edm:NavigationProperty|$entityType/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
-          mode="expand" />
+          mode="expand"
+        >
+          <!-- TODO: $delta='true' -->
+          <xsl:with-param name="after" select="$with-key or (not($selectable='false') and $selectable-properties)" />
+        </xsl:apply-templates>
       </xsl:if>
+
       <xsl:text>]</xsl:text>
 
       <xsl:call-template name="responses">
         <xsl:with-param name="type" select="$qualifiedType" />
+        <xsl:with-param name="delta" select="$delta" />
         <xsl:with-param name="description" select="'Retrieved entity'" />
       </xsl:call-template>
       <xsl:text>}</xsl:text>
@@ -2729,7 +2760,10 @@
         <xsl:with-param name="node" select="." />
         <xsl:with-param name="qualifier" select="'Update'" />
         <xsl:with-param name="fallback-summary">
-          <xsl:text>Update entity in </xsl:text>
+          <xsl:text>Update </xsl:text>
+          <xsl:if test="$with-key">
+            <xsl:text>entity in </xsl:text>
+          </xsl:if>
           <xsl:value-of select="@Name" />
         </xsl:with-param>
       </xsl:call-template>
@@ -2739,11 +2773,15 @@
       <xsl:text>"],</xsl:text>
 
       <xsl:text>"parameters":[</xsl:text>
-      <xsl:apply-templates select="$entityType" mode="parameter" />
-
+      <xsl:if test="$with-key">
+        <xsl:apply-templates select="$entityType" mode="parameter" />
+      </xsl:if>
       <xsl:choose>
         <xsl:when test="$openapi-version='2.0'">
-          <xsl:text>,{"name":"</xsl:text>
+          <xsl:if test="$with-key">
+            <xsl:text>,</xsl:text>
+          </xsl:if>
+          <xsl:text>{"name":"</xsl:text>
           <xsl:value-of select="$typename" />
           <xsl:text>","in":"body",</xsl:text>
         </xsl:when>
@@ -2786,290 +2824,79 @@
     </xsl:if>
 
     <!-- DELETE -->
-    <xsl:variable name="deletable">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'DeleteRestrictions'" />
-        <xsl:with-param name="property" select="'Deletable'" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:if test="not($deletable='false')">
-      <xsl:if test="$with-get='true' or not($updatable='false')">
-        <xsl:text>,</xsl:text>
-      </xsl:if>
-      <xsl:text>"delete":{</xsl:text>
-
-      <xsl:call-template name="summary-description-qualified">
-        <xsl:with-param name="node" select="." />
-        <xsl:with-param name="qualifier" select="'Delete'" />
-        <xsl:with-param name="fallback-summary">
-          <xsl:text>Delete entity from </xsl:text>
-          <xsl:value-of select="@Name" />
-        </xsl:with-param>
-      </xsl:call-template>
-
-      <xsl:text>,"tags":["</xsl:text>
-      <xsl:value-of select="@Name" />
-      <xsl:text>"]</xsl:text>
-      <xsl:text>,"parameters":[</xsl:text>
-      <xsl:apply-templates select="$entityType" mode="parameter" />
-      <xsl:call-template name="if-match" />
-      <xsl:text>]</xsl:text>
-      <xsl:call-template name="responses" />
-      <xsl:text>}</xsl:text>
-    </xsl:if>
-
-    <xsl:text>}</xsl:text>
-
-    <xsl:apply-templates
-      select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
-      mode="bound"
-    >
-      <xsl:with-param name="entitySet" select="@Name" />
-      <xsl:with-param name="entityType" select="$entityType" />
-    </xsl:apply-templates>
-    <xsl:apply-templates
-      select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
-      mode="bound"
-    >
-      <xsl:with-param name="entitySet" select="@Name" />
-      <xsl:with-param name="entityType" select="$entityType" />
-    </xsl:apply-templates>
-
-    <xsl:apply-templates select="$entityType/edm:NavigationProperty" mode="pathItem">
-      <xsl:with-param name="source" select="." />
-      <xsl:with-param name="entityType" select="$entityType" />
-    </xsl:apply-templates>
-  </xsl:template>
-
-  <xsl:template name="pathItem-singleton">
-    <xsl:param name="type" />
-    <xsl:param name="path-prefix" />
-    <xsl:param name="with-key" />
-    <xsl:variable name="qualifier">
-      <xsl:call-template name="substring-before-last">
-        <xsl:with-param name="input" select="$type" />
-        <xsl:with-param name="marker" select="'.'" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="namespace">
-      <xsl:choose>
-        <xsl:when test="//edm:Schema[@Alias=$qualifier]">
-          <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$qualifier" />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="typename">
-      <xsl:call-template name="substring-after-last">
-        <xsl:with-param name="input" select="$type" />
-        <xsl:with-param name="marker" select="'.'" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="qualifiedType">
-      <xsl:value-of select="$namespace" />
-      <xsl:text>.</xsl:text>
-      <xsl:value-of select="$typename" />
-    </xsl:variable>
-    <xsl:variable name="aliasQualifiedType">
-      <xsl:value-of select="//edm:Schema[@Namespace=$namespace]/@Alias" />
-      <xsl:text>.</xsl:text>
-      <xsl:value-of select="$typename" />
-    </xsl:variable>
-    <xsl:variable name="entityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$typename]" />
-
-    <!-- path template -->
-    <xsl:text>"/</xsl:text>
-    <xsl:value-of select="$path-prefix" />
     <xsl:if test="$with-key">
-      <xsl:apply-templates select="$entityType" mode="key-in-path" />
-    </xsl:if>
-    <xsl:text>":{</xsl:text>
-
-    <!-- GET -->
-    <xsl:variable name="readable">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'ReadRestrictions'" />
-        <xsl:with-param name="property" select="'Readable'" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="with-get">
-      <xsl:choose>
-        <xsl:when test="$with-key">
-          <!-- ReadRestrictions/ReadableByKey/Readable -->
-          <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
-          <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
-          <xsl:variable name="readRestrictions"
-            select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.ReadRestrictions') or @Term=concat($capabilitiesAlias,'.ReadRestrictions'))] 
-                                                                                         |edm:Annotation[(@Term=concat($capabilitiesNamespace,'.ReadRestrictions') or @Term=concat($capabilitiesAlias,'.ReadRestrictions'))]" />
-          <xsl:variable name="readByKeyRestrictions-readable"
-            select="$readRestrictions/edm:Record/edm:PropertyValue[@Property='ReadByKeyRestrictions']
-                                 /edm:Record/edm:PropertyValue[@Property='Readable']" />
-          <xsl:variable name="readableByKey"
-            select="$readByKeyRestrictions-readable/@Bool|$readByKeyRestrictions-readable/edm:Bool" />
-
-          <xsl:value-of select="$readableByKey='true' or (not($readableByKey) and not($readable='false'))" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="not($readable='false')" />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:if test="$with-get='true'">
-      <xsl:text>"get":{</xsl:text>
-
-      <xsl:call-template name="summary-description-qualified">
-        <xsl:with-param name="node" select="." />
-        <xsl:with-param name="qualifier" select="'Read'" />
-        <xsl:with-param name="fallback-summary">
-          <xsl:text>Get </xsl:text>
-          <xsl:value-of select="@Name" />
-        </xsl:with-param>
-      </xsl:call-template>
-
-      <xsl:text>,"tags":["</xsl:text>
-      <xsl:value-of select="@Name" />
-      <xsl:text>"]</xsl:text>
-      <xsl:text>,"parameters":[</xsl:text>
-
-      <xsl:variable name="delta">
+      <xsl:variable name="deletable">
         <xsl:call-template name="capability">
-          <xsl:with-param name="term" select="'ChangeTracking'" />
-          <xsl:with-param name="property" select="'Supported'" />
+          <xsl:with-param name="term" select="'DeleteRestrictions'" />
+          <xsl:with-param name="property" select="'Deletable'" />
         </xsl:call-template>
       </xsl:variable>
-      <xsl:if test="$delta='true'">
-        <!-- TODO: Prefer, Preference-Applied -->
-      </xsl:if>
+      <xsl:if test="not($deletable='false')">
+        <xsl:if test="$with-get='true' or not($updatable='false')">
+          <xsl:text>,</xsl:text>
+        </xsl:if>
+        <xsl:text>"delete":{</xsl:text>
 
-      <xsl:variable name="selectable">
-        <xsl:call-template name="capability">
-          <xsl:with-param name="term" select="'SelectSupport'" />
-          <xsl:with-param name="property" select="'Supported'" />
+        <xsl:call-template name="summary-description-qualified">
+          <xsl:with-param name="node" select="." />
+          <xsl:with-param name="qualifier" select="'Delete'" />
+          <xsl:with-param name="fallback-summary">
+            <xsl:text>Delete entity from </xsl:text>
+            <xsl:value-of select="@Name" />
+          </xsl:with-param>
         </xsl:call-template>
-      </xsl:variable>
-      <xsl:variable name="selectable-properties"
-        select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']" />
-      <xsl:if test="not($selectable='false')">
-        <!-- copy of select expression for selectable-properties - quick-fix for Java XSLT processor -->
-        <xsl:apply-templates select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']"
-          mode="select"
-        >
-          <!-- TODO: $delta='true' -->
-          <xsl:with-param name="after" select="''" />
-        </xsl:apply-templates>
+
+        <xsl:text>,"tags":["</xsl:text>
+        <xsl:value-of select="@Name" />
+        <xsl:text>"]</xsl:text>
+        <xsl:text>,"parameters":[</xsl:text>
+        <xsl:apply-templates select="$entityType" mode="parameter" />
+        <xsl:call-template name="if-match" />
+        <xsl:text>]</xsl:text>
+        <xsl:call-template name="responses" />
+        <xsl:text>}</xsl:text>
       </xsl:if>
-
-      <xsl:variable name="expandable">
-        <xsl:call-template name="capability">
-          <xsl:with-param name="term" select="'ExpandRestrictions'" />
-          <xsl:with-param name="property" select="'Expandable'" />
-        </xsl:call-template>
-      </xsl:variable>
-      <xsl:if test="not($expandable='false')">
-        <xsl:apply-templates
-          select="$entityType/edm:NavigationProperty|$entityType/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
-          mode="expand"
-        >
-          <!-- TODO: $delta='true' -->
-          <xsl:with-param name="after" select="not($selectable='false') and $selectable-properties" />
-        </xsl:apply-templates>
-      </xsl:if>
-
-      <xsl:text>]</xsl:text>
-
-      <xsl:call-template name="responses">
-        <xsl:with-param name="type" select="$qualifiedType" />
-        <xsl:with-param name="delta" select="$delta" />
-        <xsl:with-param name="description" select="'Retrieved entity'" />
-      </xsl:call-template>
-      <xsl:text>}</xsl:text>
-    </xsl:if>
-
-    <!-- PATCH -->
-    <xsl:variable name="updatable">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'UpdateRestrictions'" />
-        <xsl:with-param name="property" select="'Updatable'" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:if test="not($updatable='false')">
-      <xsl:if test="$with-get='true'">
-        <xsl:text>,</xsl:text>
-      </xsl:if>
-      <xsl:text>"patch":{</xsl:text>
-
-      <xsl:call-template name="summary-description-qualified">
-        <xsl:with-param name="node" select="." />
-        <xsl:with-param name="qualifier" select="'Update'" />
-        <xsl:with-param name="fallback-summary">
-          <xsl:text>Update </xsl:text>
-          <xsl:value-of select="@Name" />
-        </xsl:with-param>
-      </xsl:call-template>
-
-      <xsl:text>,"tags":["</xsl:text>
-      <xsl:value-of select="@Name" />
-      <xsl:text>"],</xsl:text>
-
-      <xsl:choose>
-        <xsl:when test="$openapi-version='2.0'">
-          <xsl:text>"parameters":[{"name":"</xsl:text>
-          <xsl:value-of select="$typename" />
-          <xsl:text>","in":"body",</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>"requestBody":{"required":true,</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
-      <xsl:call-template name="entityTypeDescription">
-        <xsl:with-param name="entityType" select="$entityType" />
-        <xsl:with-param name="default" select="'New property values'" />
-      </xsl:call-template>
-      <xsl:if test="$openapi-version!='2.0'">
-        <xsl:text>"content":{"application/json":{</xsl:text>
-      </xsl:if>
-      <xsl:text>"schema":{</xsl:text>
-      <xsl:call-template name="schema-ref">
-        <xsl:with-param name="qualifiedName" select="$qualifiedType" />
-        <xsl:with-param name="suffix" select="'-update'" />
-      </xsl:call-template>
-      <xsl:text>}</xsl:text>
-      <xsl:if test="$openapi-version!='2.0'">
-        <xsl:text>}}</xsl:text>
-      </xsl:if>
-      <xsl:choose>
-        <xsl:when test="$openapi-version='2.0'">
-          <xsl:text>}]</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>}</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
-
-      <xsl:call-template name="responses" />
-
-      <xsl:text>}</xsl:text>
     </xsl:if>
 
     <xsl:text>}</xsl:text>
 
-    <xsl:apply-templates
-      select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
-      mode="bound"
-    >
-      <xsl:with-param name="singleton" select="@Name" />
-      <xsl:with-param name="entityType" select="$entityType" />
-    </xsl:apply-templates>
-    <xsl:apply-templates
-      select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
-      mode="bound"
-    >
-      <xsl:with-param name="singleton" select="@Name" />
-      <xsl:with-param name="entityType" select="$entityType" />
-    </xsl:apply-templates>
+    <!-- TODO: refactor templates for Action and Function - pass path prefix and parameters -->
+    <xsl:choose>
+      <xsl:when test="$with-key">
+        <xsl:apply-templates
+          select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
+          mode="bound"
+        >
+          <xsl:with-param name="entitySet" select="@Name" />
+          <xsl:with-param name="entityType" select="$entityType" />
+        </xsl:apply-templates>
+        <xsl:apply-templates
+          select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
+          mode="bound"
+        >
+          <xsl:with-param name="entitySet" select="@Name" />
+          <xsl:with-param name="entityType" select="$entityType" />
+        </xsl:apply-templates>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates
+          select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
+          mode="bound"
+        >
+          <xsl:with-param name="singleton" select="@Name" />
+          <xsl:with-param name="entityType" select="$entityType" />
+        </xsl:apply-templates>
+        <xsl:apply-templates
+          select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
+          mode="bound"
+        >
+          <xsl:with-param name="singleton" select="@Name" />
+          <xsl:with-param name="entityType" select="$entityType" />
+        </xsl:apply-templates>
+      </xsl:otherwise>
+    </xsl:choose>
 
+    <!-- TODO: refactor template for NavigationProperty - pass path prefix and parameters -->
     <xsl:apply-templates select="$entityType/edm:NavigationProperty" mode="pathItem">
       <xsl:with-param name="source" select="." />
       <xsl:with-param name="entityType" select="$entityType" />
