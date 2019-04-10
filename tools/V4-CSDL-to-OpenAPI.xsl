@@ -2461,7 +2461,7 @@
       select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedCollection or edm:Parameter[1]/@Type=$aliasQualifiedCollection)]"
       mode="bound"
     >
-      <!-- bound to entity set works as bound to singleton -->
+      <!-- TODO: use path-prefix and path-parameters and tag -->
       <xsl:with-param name="singleton" select="@Name" />
       <xsl:with-param name="entityType" select="$entityType" />
     </xsl:apply-templates>
@@ -2729,7 +2729,6 @@
 
       <xsl:text>}</xsl:text>
 
-      <!-- TODO: call actions and functions -->
       <xsl:variable name="bindingType">
         <xsl:if test="$collection">
           <xsl:text>Collection(</xsl:text>
@@ -2753,7 +2752,6 @@
         </xsl:if>
       </xsl:variable>
 
-      <!-- TODO: refactor templates for Action and Function - pass path prefix and parameters -->
       <xsl:apply-templates
         select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$bindingType or edm:Parameter[1]/@Type=$bindingTypeAliased)]"
         mode="bound"
@@ -2761,8 +2759,6 @@
         <xsl:with-param name="path-prefix" select="$path-template" />
         <xsl:with-param name="path-parameters" select="$path-parameters" />
         <xsl:with-param name="tag" select="$source/@Name" />
-        <xsl:with-param name="singleton" select="@Name" />
-        <xsl:with-param name="entityType" select="$entityType" />
       </xsl:apply-templates>
       <xsl:apply-templates
         select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$bindingType or edm:Parameter[1]/@Type=$bindingTypeAliased)]"
@@ -2930,11 +2926,20 @@
     <xsl:variable name="entityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$typename]" />
 
     <!-- path template -->
+    <xsl:variable name="path-template">
+      <xsl:value-of select="$path-prefix" />
+      <xsl:if test="$with-key">
+        <xsl:apply-templates select="$entityType" mode="key-in-path" />
+      </xsl:if>
+    </xsl:variable>
+    <xsl:variable name="path-parameters">
+      <xsl:if test="$with-key">
+        <xsl:apply-templates select="$entityType" mode="parameter" />
+      </xsl:if>
+    </xsl:variable>
+
     <xsl:text>"/</xsl:text>
-    <xsl:value-of select="$path-prefix" />
-    <xsl:if test="$with-key">
-      <xsl:apply-templates select="$entityType" mode="key-in-path" />
-    </xsl:if>
+    <xsl:value-of select="$path-template" />
     <xsl:text>":{</xsl:text>
 
     <!-- GET -->
@@ -2988,10 +2993,7 @@
       <xsl:value-of select="@Name" />
       <xsl:text>"]</xsl:text>
       <xsl:text>,"parameters":[</xsl:text>
-
-      <xsl:if test="$with-key">
-        <xsl:apply-templates select="$entityType" mode="parameter" />
-      </xsl:if>
+      <xsl:value-of select="$path-parameters" />
 
       <xsl:variable name="delta">
         <xsl:call-template name="capability">
@@ -3077,9 +3079,7 @@
       <xsl:text>"],</xsl:text>
 
       <xsl:text>"parameters":[</xsl:text>
-      <xsl:if test="$with-key">
-        <xsl:apply-templates select="$entityType" mode="parameter" />
-      </xsl:if>
+      <xsl:value-of select="$path-parameters" />
       <xsl:choose>
         <xsl:when test="$openapi-version='2.0'">
           <xsl:if test="$with-key">
@@ -3154,7 +3154,7 @@
         <xsl:value-of select="@Name" />
         <xsl:text>"]</xsl:text>
         <xsl:text>,"parameters":[</xsl:text>
-        <xsl:apply-templates select="$entityType" mode="parameter" />
+        <xsl:value-of select="$path-parameters" />
         <xsl:call-template name="if-match" />
         <xsl:text>]</xsl:text>
         <xsl:call-template name="responses" />
@@ -3164,41 +3164,22 @@
 
     <xsl:text>}</xsl:text>
 
-    <!-- TODO: refactor templates for Action and Function - pass path prefix and parameters -->
-    <xsl:choose>
-      <xsl:when test="$with-key">
-        <xsl:apply-templates
-          select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
-          mode="bound"
-        >
-          <xsl:with-param name="entitySet" select="@Name" />
-          <xsl:with-param name="entityType" select="$entityType" />
-        </xsl:apply-templates>
-        <xsl:apply-templates
-          select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
-          mode="bound"
-        >
-          <xsl:with-param name="entitySet" select="@Name" />
-          <xsl:with-param name="entityType" select="$entityType" />
-        </xsl:apply-templates>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates
-          select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
-          mode="bound"
-        >
-          <xsl:with-param name="singleton" select="@Name" />
-          <xsl:with-param name="entityType" select="$entityType" />
-        </xsl:apply-templates>
-        <xsl:apply-templates
-          select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
-          mode="bound"
-        >
-          <xsl:with-param name="singleton" select="@Name" />
-          <xsl:with-param name="entityType" select="$entityType" />
-        </xsl:apply-templates>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:apply-templates
+      select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
+      mode="bound"
+    >
+      <xsl:with-param name="path-prefix" select="$path-template" />
+      <xsl:with-param name="path-parameters" select="$path-parameters" />
+      <xsl:with-param name="tag" select="@Name" />
+    </xsl:apply-templates>
+    <xsl:apply-templates
+      select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
+      mode="bound"
+    >
+      <xsl:with-param name="path-prefix" select="$path-template" />
+      <xsl:with-param name="path-parameters" select="$path-parameters" />
+      <xsl:with-param name="tag" select="@Name" />
+    </xsl:apply-templates>
 
     <!-- TODO: refactor template for NavigationProperty - pass path prefix and parameters -->
     <xsl:apply-templates select="$entityType/edm:NavigationProperty" mode="pathItem">
@@ -4016,7 +3997,7 @@
     <xsl:value-of select="$singleton" />
     <xsl:text>"]</xsl:text>
 
-    <xsl:if test="$path-parameters or $entitySet or $openapi-version='2.0'">
+    <xsl:if test="$path-parameters!='' or $entitySet or $openapi-version='2.0'">
       <xsl:text>,"parameters":[</xsl:text>
     </xsl:if>
     <xsl:value-of select="$path-parameters" />
@@ -4027,7 +4008,7 @@
     <xsl:choose>
       <xsl:when test="$openapi-version='2.0'">
         <xsl:if test="edm:Parameter[position()>1]">
-          <xsl:if test="$path-parameters or $entitySet">
+          <xsl:if test="$path-parameters!='' or $entitySet">
             <xsl:text>,</xsl:text>
           </xsl:if>
           <xsl:text>{"name":"body","in":"body",</xsl:text>
@@ -4041,7 +4022,7 @@
         <xsl:text>]</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:if test="$path-parameters or $entitySet">
+        <xsl:if test="$path-parameters!='' or $entitySet">
           <xsl:text>]</xsl:text>
         </xsl:if>
         <xsl:if test="edm:Parameter[position()>1]">
@@ -4064,6 +4045,10 @@
   </xsl:template>
 
   <xsl:template match="edm:Function" mode="bound">
+    <xsl:param name="path-prefix" />
+    <xsl:param name="path-parameters" />
+    <xsl:param name="tag" />
+    <!-- TODO: these three must go away -->
     <xsl:param name="entitySet" />
     <xsl:param name="singleton" />
     <xsl:param name="entityType" />
@@ -4080,6 +4065,9 @@
 
     <xsl:text>,"/</xsl:text>
     <xsl:choose>
+      <xsl:when test="$path-prefix">
+        <xsl:value-of select="$path-prefix" />
+      </xsl:when>
       <xsl:when test="$entitySet">
         <xsl:value-of select="$entitySet" />
         <xsl:apply-templates select="$entityType" mode="key-in-path" />
@@ -4112,10 +4100,14 @@
       </xsl:with-param>
     </xsl:call-template>
     <xsl:text>,"tags":["</xsl:text>
+    <xsl:value-of select="$tag" />
     <xsl:value-of select="$entitySet" />
     <xsl:value-of select="$singleton" />
     <xsl:text>"],"parameters":[</xsl:text>
-    <xsl:apply-templates select="$entityType[$entitySet]|edm:Parameter[position()>1]" mode="parameter" />
+    <xsl:value-of select="$path-parameters" />
+    <xsl:apply-templates select="edm:Parameter[position()>1]" mode="parameter">
+      <xsl:with-param name="after" select="$path-parameters!=''" />
+    </xsl:apply-templates>
     <xsl:text>]</xsl:text>
 
     <xsl:call-template name="responses">
@@ -4133,7 +4125,8 @@
   </xsl:template>
 
   <xsl:template match="edm:Action/edm:Parameter|edm:Function/edm:Parameter" mode="parameter">
-    <xsl:if test="position() > 1">
+    <xsl:param name="after" />
+    <xsl:if test="$after or position() > 1">
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:text>{"name":"</xsl:text>
