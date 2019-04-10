@@ -2475,6 +2475,310 @@
     </xsl:apply-templates>
   </xsl:template>
 
+  <xsl:template match="edm:NavigationProperty" mode="pathItem">
+    <xsl:param name="source" />
+    <xsl:param name="entityType" />
+
+    <xsl:variable name="collection" select="starts-with(@Type,'Collection(')" />
+    <xsl:variable name="name" select="@Name" />
+    <xsl:variable name="bindingTarget" select="$source/edm:NavigationPropertyBinding[@Path=$name]/@Target" />
+    <xsl:variable name="targetEntitySetName">
+      <xsl:choose>
+        <xsl:when
+          test="contains($bindingTarget,'/') and substring-before($bindingTarget,'/') = concat($source/../../@Namespace,'.',$source/../@Name)"
+        >
+          <xsl:value-of select="substring-after($bindingTarget,'/')" />
+        </xsl:when>
+        <xsl:when
+          test="contains($bindingTarget,'/') and substring-before($bindingTarget,'/') = concat($source/../../@Alias,'.',$source/../@Name)"
+        >
+          <xsl:value-of select="substring-after($bindingTarget,'/')" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$bindingTarget" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="targetSet" select="//edm:EntitySet[@Name=$targetEntitySetName]" />
+
+    <!-- NavigationRestrictions on source -->
+    <xsl:variable name="target-path" select="concat($source/../../@Namespace,'.',$source/../@Name,'/',$source/@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($source/../../@Alias,'.',$source/../@Name,'/',$source/@Name)" />
+    <xsl:variable name="navigationRestrictions"
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.NavigationRestrictions') or @Term=concat($capabilitiesAlias,'.NavigationRestrictions'))] 
+                                                                               |$source/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.NavigationRestrictions') or @Term=concat($capabilitiesAlias,'.NavigationRestrictions'))]" />
+    <!-- NavigationRestrictions on source for this navigation property -->
+    <xsl:variable name="restrictedProperties"
+      select="$navigationRestrictions/edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection" />
+    <xsl:variable name="navPropName" select="@Name" />
+    <xsl:variable name="navigationPropertyRestriction"
+      select="$restrictedProperties/edm:Record[edm:PropertyValue[@Property='NavigationProperty']/@NavigationPropertyPath=$navPropName]" />
+    <!-- navigability -->
+    <xsl:variable name="sourceNavigability-pv"
+      select="$navigationRestrictions/edm:Record/edm:PropertyValue[@Property='Navigability']" />
+    <xsl:variable name="sourceNavigability"
+      select="substring-after($sourceNavigability-pv/edm:EnumMember|$sourceNavigability-pv/@EnumMember,'/')" />
+    <xsl:variable name="propertyNavigability-pv"
+      select="$navigationPropertyRestriction/edm:PropertyValue[@Property='Navigability']" />
+    <xsl:variable name="propertyNavigability"
+      select="substring-after($propertyNavigability-pv/edm:EnumMember|$propertyNavigability-pv/@EnumMember,'/')" />
+    <xsl:variable name="navigable"
+      select="$propertyNavigability='Recursive' or $propertyNavigability='Single' 
+              or (string-length($propertyNavigability)=0 and not($sourceNavigability='None'))" />
+
+    <xsl:if test="@ContainsTarget='true' or $navigable">
+      <xsl:variable name="nullable">
+        <xsl:call-template name="nullableFacetValue">
+          <xsl:with-param name="type" select="@Type" />
+          <xsl:with-param name="nullableFacet" select="@Nullable" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="singleType">
+        <xsl:choose>
+          <xsl:when test="$collection">
+            <xsl:value-of select="substring-before(substring-after(@Type,'('),')')" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="@Type" />
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="qualifier">
+        <xsl:call-template name="substring-before-last">
+          <xsl:with-param name="input" select="$singleType" />
+          <xsl:with-param name="marker" select="'.'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="targetNamespace">
+        <xsl:choose>
+          <xsl:when test="//edm:Schema[@Alias=$qualifier]">
+            <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$qualifier" />
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="simpleName">
+        <xsl:call-template name="substring-after-last">
+          <xsl:with-param name="input" select="$singleType" />
+          <xsl:with-param name="marker" select="'.'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="targetType">
+        <xsl:value-of select="$targetNamespace" />
+        <xsl:text>.</xsl:text>
+        <xsl:value-of select="$simpleName" />
+      </xsl:variable>
+      <xsl:variable name="targetEntityType"
+        select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]" />
+
+      <xsl:variable name="path-template">
+        <xsl:value-of select="$source/@Name" />
+        <xsl:apply-templates select="$entityType[local-name($source)='EntitySet']" mode="key-in-path" />
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="@Name" />
+      </xsl:variable>
+      <xsl:variable name="path-parameters">
+        <xsl:apply-templates select="$entityType[local-name($source)='EntitySet']" mode="parameter" />
+      </xsl:variable>
+
+      <xsl:text>,"/</xsl:text>
+      <xsl:value-of select="$path-template" />
+      <xsl:text>":{</xsl:text>
+
+      <!-- GET -->
+      <xsl:variable name="readable">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'ReadRestrictions'" />
+          <xsl:with-param name="property" select="'Readable'" />
+          <xsl:with-param name="target" select="$targetSet" />
+        </xsl:call-template>
+      </xsl:variable>
+
+      <!-- ReadRestrictions on source for this navigation property -->
+      <xsl:variable name="readRestrictions"
+        select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ReadRestrictions']/edm:Record/edm:PropertyValue[@Property='Readable']" />
+      <xsl:variable name="navigation-readable" select="$readRestrictions/@Bool|$readRestrictions/edm:Bool" />
+
+      <xsl:if test="$navigation-readable='true' or (not($navigation-readable) and not($readable='false'))">
+        <xsl:text>"get":{</xsl:text>
+
+        <xsl:text>"summary":"Get related </xsl:text>
+        <xsl:choose>
+          <xsl:when test="not($collection)">
+            <xsl:value-of select="$simpleName" />
+          </xsl:when>
+          <xsl:when test="$targetSet">
+            <xsl:value-of select="$targetSet/@Name" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="@Name" />
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:text>","tags":["</xsl:text>
+        <xsl:value-of select="$source/@Name" />
+        <xsl:if test="$targetSet and $targetSet/@Name!=$source/@Name">
+          <xsl:text>","</xsl:text>
+          <xsl:value-of select="$targetSet/@Name" />
+        </xsl:if>
+        <xsl:text>"]</xsl:text>
+
+        <xsl:text>,"parameters":[</xsl:text>
+        <xsl:value-of select="$path-parameters" />
+
+        <xsl:call-template name="query-options">
+          <xsl:with-param name="after-keys" select="local-name($source)='EntitySet'" />
+          <xsl:with-param name="target" select="$targetSet" />
+          <xsl:with-param name="collection" select="$collection" />
+          <xsl:with-param name="entityType" select="$targetEntityType" />
+        </xsl:call-template>
+
+        <xsl:text>]</xsl:text>
+
+        <xsl:call-template name="responses">
+          <xsl:with-param name="code" select="'200'" />
+          <xsl:with-param name="type" select="concat('Collection(',$targetType,')')" />
+          <xsl:with-param name="description" select="'Retrieved entities'" />
+        </xsl:call-template>
+
+        <xsl:text>}</xsl:text>
+      </xsl:if>
+
+      <!-- POST -->
+      <xsl:if test="$collection and ($targetSet or @ContainsTarget='true')">
+        <xsl:variable name="insertable">
+          <xsl:call-template name="capability">
+            <xsl:with-param name="term" select="'InsertRestrictions'" />
+            <xsl:with-param name="property" select="'Insertable'" />
+            <xsl:with-param name="target" select="$targetSet" />
+          </xsl:call-template>
+        </xsl:variable>
+
+        <!-- InsertRestrictions on source for this navigation property -->
+        <xsl:variable name="insertRestrictions"
+          select="$navigationPropertyRestriction/edm:PropertyValue[@Property='InsertRestrictions']/edm:Record/edm:PropertyValue[@Property='Insertable']" />
+        <xsl:variable name="navigation-insertable" select="$insertRestrictions/@Bool|$insertRestrictions/edm:Bool" />
+
+        <xsl:if test="$navigation-insertable='true' or (not($navigation-insertable) and not($insertable='false'))">
+          <xsl:if test="$navigation-readable='true' or (not($navigation-readable) and not($readable='false'))">
+            <xsl:text>,</xsl:text>
+          </xsl:if>
+          <xsl:text>"post":{</xsl:text>
+
+          <xsl:text>"summary":"Add related </xsl:text>
+          <xsl:value-of select="$simpleName" />
+          <xsl:text>","tags":["</xsl:text>
+          <xsl:value-of select="$source/@Name" />
+          <xsl:if test="$targetSet and $targetSet/@Name!=$source/@Name">
+            <xsl:text>","</xsl:text>
+            <xsl:value-of select="$targetSet/@Name" />
+          </xsl:if>
+          <xsl:text>"]</xsl:text>
+
+          <xsl:text>,"parameters":[</xsl:text>
+          <xsl:value-of select="$path-parameters"></xsl:value-of>
+
+          <xsl:choose>
+            <xsl:when test="$openapi-version='2.0'">
+              <xsl:if test="local-name($source)='EntitySet'">
+                <xsl:text>,</xsl:text>
+              </xsl:if>
+              <xsl:text>{"name":"</xsl:text>
+              <xsl:value-of select="$simpleName" />
+              <xsl:text>","in":"body",</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>],"requestBody":{"required":true,</xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
+          <xsl:call-template name="entityTypeDescription">
+            <xsl:with-param name="entityType" select="$targetEntityType" />
+            <xsl:with-param name="default" select="'New entity'" />
+          </xsl:call-template>
+          <xsl:if test="$openapi-version!='2.0'">
+            <xsl:text>"content":{"application/json":{</xsl:text>
+          </xsl:if>
+          <xsl:text>"schema":{</xsl:text>
+          <xsl:call-template name="schema-ref">
+            <xsl:with-param name="qualifiedName" select="$targetType" />
+            <xsl:with-param name="suffix" select="'-create'" />
+          </xsl:call-template>
+          <xsl:text>}</xsl:text>
+          <xsl:if test="$openapi-version!='2.0'">
+            <xsl:text>}}</xsl:text>
+          </xsl:if>
+          <xsl:choose>
+            <xsl:when test="$openapi-version='2.0'">
+              <xsl:text>}]</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>}</xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
+
+          <xsl:call-template name="responses">
+            <xsl:with-param name="code" select="'201'" />
+            <xsl:with-param name="type" select="$targetType" />
+            <xsl:with-param name="description" select="'Created entity'" />
+          </xsl:call-template>
+
+          <xsl:text>}</xsl:text>
+        </xsl:if>
+      </xsl:if>
+
+      <xsl:text>}</xsl:text>
+
+      <!-- TODO: call actions and functions -->
+      <xsl:variable name="bindingType">
+        <xsl:if test="$collection">
+          <xsl:text>Collection(</xsl:text>
+        </xsl:if>
+        <xsl:value-of select="$targetEntityType/../@Namespace" />
+        <xsl:text>.</xsl:text>
+        <xsl:value-of select="$targetEntityType/@Name" />
+        <xsl:if test="$collection">
+          <xsl:text>)</xsl:text>
+        </xsl:if>
+      </xsl:variable>
+      <xsl:variable name="bindingTypeAliased">
+        <xsl:if test="$collection">
+          <xsl:text>Collection(</xsl:text>
+        </xsl:if>
+        <xsl:value-of select="$targetEntityType/../@Alias" />
+        <xsl:text>.</xsl:text>
+        <xsl:value-of select="$targetEntityType/@Name" />
+        <xsl:if test="$collection">
+          <xsl:text>)</xsl:text>
+        </xsl:if>
+      </xsl:variable>
+
+      <!-- TODO: refactor templates for Action and Function - pass path prefix and parameters -->
+      <xsl:apply-templates
+        select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$bindingType or edm:Parameter[1]/@Type=$bindingTypeAliased)]"
+        mode="bound"
+      >
+        <xsl:with-param name="path-prefix" select="$path-template" />
+        <xsl:with-param name="path-parameters" select="$path-parameters" />
+        <xsl:with-param name="tag" select="$source/@Name" />
+        <xsl:with-param name="singleton" select="@Name" />
+        <xsl:with-param name="entityType" select="$entityType" />
+      </xsl:apply-templates>
+      <xsl:apply-templates
+        select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$bindingType or edm:Parameter[1]/@Type=$bindingTypeAliased)]"
+        mode="bound"
+      >
+        <xsl:with-param name="path-prefix" select="$path-template" />
+        <xsl:with-param name="path-parameters" select="$path-parameters" />
+        <xsl:with-param name="tag" select="$source/@Name" />
+      </xsl:apply-templates>
+
+      <!-- TODO: for collection-valued containment nav props: key access -->
+
+      <!-- TODO: recurse for containment nav props -->
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template name="filter-RequiredProperties">
     <xsl:param name="target" select="." />
     <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',$target/@Name)" />
@@ -3663,262 +3967,20 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:NavigationProperty" mode="pathItem">
-    <xsl:param name="source" />
-    <xsl:param name="entityType" />
-
-    <xsl:variable name="collection" select="starts-with(@Type,'Collection(')" />
-    <xsl:variable name="name" select="@Name" />
-    <xsl:variable name="bindingTarget" select="$source/edm:NavigationPropertyBinding[@Path=$name]/@Target" />
-    <xsl:variable name="targetEntitySetName">
-      <xsl:choose>
-        <xsl:when
-          test="contains($bindingTarget,'/') and substring-before($bindingTarget,'/') = concat($source/../../@Namespace,'.',$source/../@Name)"
-        >
-          <xsl:value-of select="substring-after($bindingTarget,'/')" />
-        </xsl:when>
-        <xsl:when
-          test="contains($bindingTarget,'/') and substring-before($bindingTarget,'/') = concat($source/../../@Alias,'.',$source/../@Name)"
-        >
-          <xsl:value-of select="substring-after($bindingTarget,'/')" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$bindingTarget" />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="targetSet" select="//edm:EntitySet[@Name=$targetEntitySetName]" />
-
-    <!-- NavigationRestrictions on source -->
-    <xsl:variable name="target-path" select="concat($source/../../@Namespace,'.',$source/../@Name,'/',$source/@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat($source/../../@Alias,'.',$source/../@Name,'/',$source/@Name)" />
-    <xsl:variable name="navigationRestrictions"
-      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.NavigationRestrictions') or @Term=concat($capabilitiesAlias,'.NavigationRestrictions'))] 
-                                                                               |$source/edm:Annotation[(@Term=concat($capabilitiesNamespace,'.NavigationRestrictions') or @Term=concat($capabilitiesAlias,'.NavigationRestrictions'))]" />
-    <!-- NavigationRestrictions on source for this navigation property -->
-    <xsl:variable name="restrictedProperties"
-      select="$navigationRestrictions/edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection" />
-    <xsl:variable name="navPropName" select="@Name" />
-    <xsl:variable name="navigationPropertyRestriction"
-      select="$restrictedProperties/edm:Record[edm:PropertyValue[@Property='NavigationProperty']/@NavigationPropertyPath=$navPropName]" />
-    <!-- navigability -->
-    <xsl:variable name="sourceNavigability-pv"
-      select="$navigationRestrictions/edm:Record/edm:PropertyValue[@Property='Navigability']" />
-    <xsl:variable name="sourceNavigability"
-      select="substring-after($sourceNavigability-pv/edm:EnumMember|$sourceNavigability-pv/@EnumMember,'/')" />
-    <xsl:variable name="propertyNavigability-pv"
-      select="$navigationPropertyRestriction/edm:PropertyValue[@Property='Navigability']" />
-    <xsl:variable name="propertyNavigability"
-      select="substring-after($propertyNavigability-pv/edm:EnumMember|$propertyNavigability-pv/@EnumMember,'/')" />
-    <xsl:variable name="navigable"
-      select="$propertyNavigability='Recursive' or $propertyNavigability='Single' 
-              or (string-length($propertyNavigability)=0 and not($sourceNavigability='None'))" />
-
-    <xsl:if test="@ContainsTarget='true' or $navigable">
-      <xsl:variable name="nullable">
-        <xsl:call-template name="nullableFacetValue">
-          <xsl:with-param name="type" select="@Type" />
-          <xsl:with-param name="nullableFacet" select="@Nullable" />
-        </xsl:call-template>
-      </xsl:variable>
-      <xsl:variable name="singleType">
-        <xsl:choose>
-          <xsl:when test="$collection">
-            <xsl:value-of select="substring-before(substring-after(@Type,'('),')')" />
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="@Type" />
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
-      <xsl:variable name="qualifier">
-        <xsl:call-template name="substring-before-last">
-          <xsl:with-param name="input" select="$singleType" />
-          <xsl:with-param name="marker" select="'.'" />
-        </xsl:call-template>
-      </xsl:variable>
-      <xsl:variable name="targetNamespace">
-        <xsl:choose>
-          <xsl:when test="//edm:Schema[@Alias=$qualifier]">
-            <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="$qualifier" />
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
-      <xsl:variable name="simpleName">
-        <xsl:call-template name="substring-after-last">
-          <xsl:with-param name="input" select="$singleType" />
-          <xsl:with-param name="marker" select="'.'" />
-        </xsl:call-template>
-      </xsl:variable>
-      <xsl:variable name="targetType">
-        <xsl:value-of select="$targetNamespace" />
-        <xsl:text>.</xsl:text>
-        <xsl:value-of select="$simpleName" />
-      </xsl:variable>
-      <xsl:variable name="targetEntityType"
-        select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]" />
-
-      <xsl:text>,"/</xsl:text>
-      <xsl:value-of select="$source/@Name" />
-      <xsl:apply-templates select="$entityType[local-name($source)='EntitySet']" mode="key-in-path" />
-      <xsl:text>/</xsl:text>
-      <xsl:value-of select="@Name" />
-      <xsl:text>":{</xsl:text>
-
-      <!-- GET -->
-      <xsl:variable name="readable">
-        <xsl:call-template name="capability">
-          <xsl:with-param name="term" select="'ReadRestrictions'" />
-          <xsl:with-param name="property" select="'Readable'" />
-          <xsl:with-param name="target" select="$targetSet" />
-        </xsl:call-template>
-      </xsl:variable>
-
-      <!-- ReadRestrictions on source for this navigation property -->
-      <xsl:variable name="readRestrictions"
-        select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ReadRestrictions']/edm:Record/edm:PropertyValue[@Property='Readable']" />
-      <xsl:variable name="navigation-readable" select="$readRestrictions/@Bool|$readRestrictions/edm:Bool" />
-
-      <xsl:if test="$navigation-readable='true' or (not($navigation-readable) and not($readable='false'))">
-        <xsl:text>"get":{</xsl:text>
-
-        <xsl:text>"summary":"Get related </xsl:text>
-        <xsl:choose>
-          <xsl:when test="not($collection)">
-            <xsl:value-of select="$simpleName" />
-          </xsl:when>
-          <xsl:when test="$targetSet">
-            <xsl:value-of select="$targetSet/@Name" />
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="@Name" />
-          </xsl:otherwise>
-        </xsl:choose>
-        <xsl:text>","tags":["</xsl:text>
-        <xsl:value-of select="$source/@Name" />
-        <xsl:if test="$targetSet and $targetSet/@Name!=$source/@Name">
-          <xsl:text>","</xsl:text>
-          <xsl:value-of select="$targetSet/@Name" />
-        </xsl:if>
-        <xsl:text>"]</xsl:text>
-
-        <xsl:text>,"parameters":[</xsl:text>
-        <xsl:apply-templates select="$entityType[local-name($source)='EntitySet']" mode="parameter" />
-
-        <xsl:call-template name="query-options">
-          <xsl:with-param name="after-keys" select="local-name($source)='EntitySet'" />
-          <xsl:with-param name="target" select="$targetSet" />
-          <xsl:with-param name="collection" select="$collection" />
-          <xsl:with-param name="entityType" select="$targetEntityType" />
-        </xsl:call-template>
-
-        <xsl:text>]</xsl:text>
-
-        <xsl:call-template name="responses">
-          <xsl:with-param name="code" select="'200'" />
-          <xsl:with-param name="type" select="concat('Collection(',$targetType,')')" />
-          <xsl:with-param name="description" select="'Retrieved entities'" />
-        </xsl:call-template>
-
-        <xsl:text>}</xsl:text>
-      </xsl:if>
-
-      <!-- POST -->
-      <xsl:if test="$collection and ($targetSet or @ContainsTarget='true')">
-        <xsl:variable name="insertable">
-          <xsl:call-template name="capability">
-            <xsl:with-param name="term" select="'InsertRestrictions'" />
-            <xsl:with-param name="property" select="'Insertable'" />
-            <xsl:with-param name="target" select="$targetSet" />
-          </xsl:call-template>
-        </xsl:variable>
-
-        <!-- InsertRestrictions on source for this navigation property -->
-        <xsl:variable name="insertRestrictions"
-          select="$navigationPropertyRestriction/edm:PropertyValue[@Property='InsertRestrictions']/edm:Record/edm:PropertyValue[@Property='Insertable']" />
-        <xsl:variable name="navigation-insertable" select="$insertRestrictions/@Bool|$insertRestrictions/edm:Bool" />
-
-        <xsl:if test="$navigation-insertable='true' or (not($navigation-insertable) and not($insertable='false'))">
-          <xsl:if test="$navigation-readable='true' or (not($navigation-readable) and not($readable='false'))">
-            <xsl:text>,</xsl:text>
-          </xsl:if>
-          <xsl:text>"post":{</xsl:text>
-
-          <xsl:text>"summary":"Add related </xsl:text>
-          <xsl:value-of select="$simpleName" />
-          <xsl:text>","tags":["</xsl:text>
-          <xsl:value-of select="$source/@Name" />
-          <xsl:if test="$targetSet and $targetSet/@Name!=$source/@Name">
-            <xsl:text>","</xsl:text>
-            <xsl:value-of select="$targetSet/@Name" />
-          </xsl:if>
-          <xsl:text>"]</xsl:text>
-
-          <xsl:text>,"parameters":[</xsl:text>
-          <xsl:apply-templates select="$entityType[local-name($source)='EntitySet']" mode="parameter" />
-
-          <xsl:choose>
-            <xsl:when test="$openapi-version='2.0'">
-              <xsl:if test="local-name($source)='EntitySet'">
-                <xsl:text>,</xsl:text>
-              </xsl:if>
-              <xsl:text>{"name":"</xsl:text>
-              <xsl:value-of select="$simpleName" />
-              <xsl:text>","in":"body",</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:text>],"requestBody":{"required":true,</xsl:text>
-            </xsl:otherwise>
-          </xsl:choose>
-          <xsl:call-template name="entityTypeDescription">
-            <xsl:with-param name="entityType" select="$targetEntityType" />
-            <xsl:with-param name="default" select="'New entity'" />
-          </xsl:call-template>
-          <xsl:if test="$openapi-version!='2.0'">
-            <xsl:text>"content":{"application/json":{</xsl:text>
-          </xsl:if>
-          <xsl:text>"schema":{</xsl:text>
-          <xsl:call-template name="schema-ref">
-            <xsl:with-param name="qualifiedName" select="$targetType" />
-            <xsl:with-param name="suffix" select="'-create'" />
-          </xsl:call-template>
-          <xsl:text>}</xsl:text>
-          <xsl:if test="$openapi-version!='2.0'">
-            <xsl:text>}}</xsl:text>
-          </xsl:if>
-          <xsl:choose>
-            <xsl:when test="$openapi-version='2.0'">
-              <xsl:text>}]</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:text>}</xsl:text>
-            </xsl:otherwise>
-          </xsl:choose>
-
-          <xsl:call-template name="responses">
-            <xsl:with-param name="code" select="'201'" />
-            <xsl:with-param name="type" select="$targetType" />
-            <xsl:with-param name="description" select="'Created entity'" />
-          </xsl:call-template>
-
-          <xsl:text>}</xsl:text>
-        </xsl:if>
-      </xsl:if>
-
-      <xsl:text>}</xsl:text>
-    </xsl:if>
-  </xsl:template>
-
   <xsl:template match="edm:Action" mode="bound">
+    <xsl:param name="path-prefix" />
+    <xsl:param name="path-parameters" />
+    <xsl:param name="tag" />
+    <!-- TODO: these three must go away -->
     <xsl:param name="entitySet" />
     <xsl:param name="singleton" />
     <xsl:param name="entityType" />
 
     <xsl:text>,"/</xsl:text>
     <xsl:choose>
+      <xsl:when test="$path-prefix">
+        <xsl:value-of select="$path-prefix" />
+      </xsl:when>
       <xsl:when test="$entitySet">
         <xsl:value-of select="$entitySet" />
         <xsl:apply-templates select="$entityType" mode="key-in-path" />
@@ -3949,13 +4011,15 @@
       </xsl:with-param>
     </xsl:call-template>
     <xsl:text>,"tags":["</xsl:text>
+    <xsl:value-of select="$tag" />
     <xsl:value-of select="$entitySet" />
     <xsl:value-of select="$singleton" />
     <xsl:text>"]</xsl:text>
 
-    <xsl:if test="$entitySet or $openapi-version='2.0'">
+    <xsl:if test="$path-parameters or $entitySet or $openapi-version='2.0'">
       <xsl:text>,"parameters":[</xsl:text>
     </xsl:if>
+    <xsl:value-of select="$path-parameters" />
     <xsl:if test="$entitySet">
       <xsl:apply-templates select="$entityType" mode="parameter" />
     </xsl:if>
@@ -3963,7 +4027,7 @@
     <xsl:choose>
       <xsl:when test="$openapi-version='2.0'">
         <xsl:if test="edm:Parameter[position()>1]">
-          <xsl:if test="$entitySet">
+          <xsl:if test="$path-parameters or $entitySet">
             <xsl:text>,</xsl:text>
           </xsl:if>
           <xsl:text>{"name":"body","in":"body",</xsl:text>
@@ -3977,7 +4041,7 @@
         <xsl:text>]</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:if test="$entitySet">
+        <xsl:if test="$path-parameters or $entitySet">
           <xsl:text>]</xsl:text>
         </xsl:if>
         <xsl:if test="edm:Parameter[position()>1]">
