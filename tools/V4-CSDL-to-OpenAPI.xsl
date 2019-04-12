@@ -2766,7 +2766,7 @@
         mode="bound"
       >
         <xsl:with-param name="path-prefix" select="$path-template" />
-        <xsl:with-param name="path-parameters" select="$path-parameters" />
+        <xsl:with-param name="prefix-parameters" select="$path-parameters" />
         <xsl:with-param name="tag" select="$source/@Name" />
       </xsl:apply-templates>
       <xsl:apply-templates
@@ -2774,20 +2774,22 @@
         mode="bound"
       >
         <xsl:with-param name="path-prefix" select="$path-template" />
-        <xsl:with-param name="path-parameters" select="$path-parameters" />
+        <xsl:with-param name="prefix-parameters" select="$path-parameters" />
         <xsl:with-param name="tag" select="$source/@Name" />
       </xsl:apply-templates>
 
       <xsl:if test="@ContainsTarget='true'">
         <!-- TODO: call pathItem-single-entity in collection case -->
-        <!-- TODO: single case would duplicate GET, rethink what is done here -->
-        <!--
+        <!-- TODO: single case would duplicate GET, rethink what is done here 
+        <xsl:if test="$collection">
+          <xsl:text>,</xsl:text>
           <xsl:call-template name="pathItem-single-entity">
-          <xsl:with-param name="type" select="$singleType" />
-          <xsl:with-param name="path-prefix" select="$path-template" />
-          <xsl:with-param name="path-parameters" select="$path-parameters" />
-          <xsl:with-param name="with-key" select="$collection" />
+            <xsl:with-param name="type" select="$singleType" />
+            <xsl:with-param name="path-prefix" select="$path-template" />
+            <xsl:with-param name="prefix-parameters" select="$path-parameters" />
+            <xsl:with-param name="with-key" select="$collection" />
           </xsl:call-template>
+        </xsl:if>
         -->
       </xsl:if>
     </xsl:if>
@@ -2908,6 +2910,7 @@
   <xsl:template name="pathItem-single-entity">
     <xsl:param name="type" />
     <xsl:param name="path-prefix" />
+    <xsl:param name="prefix-parameters" />
     <xsl:param name="with-key" />
     <xsl:variable name="qualifier">
       <xsl:call-template name="substring-before-last">
@@ -2944,6 +2947,7 @@
     <xsl:variable name="entityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$typename]" />
 
     <!-- path template -->
+    <!-- TODO: will fail if contained entity has same key name as one of its containers -->
     <xsl:variable name="path-template">
       <xsl:value-of select="$path-prefix" />
       <xsl:if test="$with-key">
@@ -2951,6 +2955,10 @@
       </xsl:if>
     </xsl:variable>
     <xsl:variable name="path-parameters">
+      <xsl:value-of select="$prefix-parameters" />
+      <xsl:if test="$prefix-parameters!='' and $with-key">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
       <xsl:if test="$with-key">
         <xsl:apply-templates select="$entityType" mode="parameter" />
       </xsl:if>
@@ -3193,7 +3201,7 @@
       mode="bound"
     >
       <xsl:with-param name="path-prefix" select="$path-template" />
-      <xsl:with-param name="path-parameters" select="$path-parameters" />
+      <xsl:with-param name="prefix-parameters" select="$path-parameters" />
       <xsl:with-param name="tag" select="@Name" />
     </xsl:apply-templates>
     <xsl:apply-templates
@@ -3201,7 +3209,7 @@
       mode="bound"
     >
       <xsl:with-param name="path-prefix" select="$path-template" />
-      <xsl:with-param name="path-parameters" select="$path-parameters" />
+      <xsl:with-param name="prefix-parameters" select="$path-parameters" />
       <xsl:with-param name="tag" select="@Name" />
     </xsl:apply-templates>
 
@@ -3209,6 +3217,8 @@
     <xsl:apply-templates select="$entityType/edm:NavigationProperty" mode="pathItem">
       <xsl:with-param name="source" select="." />
       <xsl:with-param name="entityType" select="$entityType" />
+      <xsl:with-param name="path-prefix" select="$path-template" />
+      <xsl:with-param name="prefix-parameters" select="$path-parameters" />
     </xsl:apply-templates>
   </xsl:template>
 
@@ -3974,7 +3984,7 @@
 
   <xsl:template match="edm:Action" mode="bound">
     <xsl:param name="path-prefix" />
-    <xsl:param name="path-parameters" />
+    <xsl:param name="prefix-parameters" />
     <xsl:param name="tag" />
 
     <xsl:text>,"/</xsl:text>
@@ -4004,15 +4014,15 @@
     <xsl:value-of select="$tag" />
     <xsl:text>"]</xsl:text>
 
-    <xsl:if test="$path-parameters!='' or $openapi-version='2.0'">
+    <xsl:if test="$prefix-parameters!='' or $openapi-version='2.0'">
       <xsl:text>,"parameters":[</xsl:text>
     </xsl:if>
-    <xsl:value-of select="$path-parameters" />
+    <xsl:value-of select="$prefix-parameters" />
 
     <xsl:choose>
       <xsl:when test="$openapi-version='2.0'">
         <xsl:if test="edm:Parameter[position()>1]">
-          <xsl:if test="$path-parameters!=''">
+          <xsl:if test="$prefix-parameters!=''">
             <xsl:text>,</xsl:text>
           </xsl:if>
           <xsl:text>{"name":"body","in":"body",</xsl:text>
@@ -4026,7 +4036,7 @@
         <xsl:text>]</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:if test="$path-parameters!=''">
+        <xsl:if test="$prefix-parameters!=''">
           <xsl:text>]</xsl:text>
         </xsl:if>
         <xsl:if test="edm:Parameter[position()>1]">
@@ -4050,7 +4060,7 @@
 
   <xsl:template match="edm:Function" mode="bound">
     <xsl:param name="path-prefix" />
-    <xsl:param name="path-parameters" />
+    <xsl:param name="prefix-parameters" />
     <xsl:param name="tag" />
 
     <xsl:variable name="singleReturnType">
@@ -4094,9 +4104,9 @@
     <xsl:text>,"tags":["</xsl:text>
     <xsl:value-of select="$tag" />
     <xsl:text>"],"parameters":[</xsl:text>
-    <xsl:value-of select="$path-parameters" />
+    <xsl:value-of select="$prefix-parameters" />
     <xsl:apply-templates select="edm:Parameter[position()>1]" mode="parameter">
-      <xsl:with-param name="after" select="$path-parameters!=''" />
+      <xsl:with-param name="after" select="$prefix-parameters!=''" />
     </xsl:apply-templates>
     <xsl:text>]</xsl:text>
 
