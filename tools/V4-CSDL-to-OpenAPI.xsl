@@ -2638,8 +2638,17 @@
 
         <xsl:call-template name="responses">
           <xsl:with-param name="code" select="'200'" />
-          <xsl:with-param name="type" select="concat('Collection(',$targetType,')')" />
-          <xsl:with-param name="description" select="'Retrieved entities'" />
+          <xsl:with-param name="type" select="@Type" />
+          <xsl:with-param name="description">
+            <xsl:choose>
+              <xsl:when test="not($collection)">
+                <xsl:text>Retrieved entity</xsl:text>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:text>Retrieved entities</xsl:text>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:with-param>
         </xsl:call-template>
 
         <xsl:text>}</xsl:text>
@@ -2769,9 +2778,18 @@
         <xsl:with-param name="tag" select="$source/@Name" />
       </xsl:apply-templates>
 
-      <!-- TODO: for collection-valued containment nav props: key access -->
-
-      <!-- TODO: recurse for containment nav props -->
+      <xsl:if test="@ContainsTarget='true'">
+        <!-- TODO: call pathItem-single-entity in collection case -->
+        <!-- TODO: single case would duplicate GET, rethink what is done here -->
+        <!--
+          <xsl:call-template name="pathItem-single-entity">
+          <xsl:with-param name="type" select="$singleType" />
+          <xsl:with-param name="path-prefix" select="$path-template" />
+          <xsl:with-param name="path-parameters" select="$path-parameters" />
+          <xsl:with-param name="with-key" select="$collection" />
+          </xsl:call-template>
+        -->
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 
@@ -2943,6 +2961,7 @@
     <xsl:text>":{</xsl:text>
 
     <!-- GET -->
+    <!-- TODO: pass as parameter for navigation property case -->
     <xsl:variable name="readable">
       <xsl:call-template name="capability">
         <xsl:with-param name="term" select="'ReadRestrictions'" />
@@ -3005,6 +3024,7 @@
         <!-- TODO: Prefer, Preference-Applied -->
       </xsl:if>
 
+      <!-- TODO: pass as parameter for navigation property case -->
       <xsl:variable name="selectable">
         <xsl:call-template name="capability">
           <xsl:with-param name="term" select="'SelectSupport'" />
@@ -3023,6 +3043,7 @@
         </xsl:apply-templates>
       </xsl:if>
 
+      <!-- TODO: pass as parameter for navigation property case -->
       <xsl:variable name="expandable">
         <xsl:call-template name="capability">
           <xsl:with-param name="term" select="'ExpandRestrictions'" />
@@ -3050,6 +3071,7 @@
     </xsl:if>
 
     <!-- PATCH -->
+    <!-- TODO: pass as parameter for navigation property case -->
     <xsl:variable name="updatable">
       <xsl:call-template name="capability">
         <xsl:with-param name="term" select="'UpdateRestrictions'" />
@@ -3128,7 +3150,9 @@
     </xsl:if>
 
     <!-- DELETE -->
+    <!-- TODO: needs to be allowed for single-valued containment navigation -->
     <xsl:if test="$with-key">
+      <!-- TODO: pass as parameter for navigation property case -->
       <xsl:variable name="deletable">
         <xsl:call-template name="capability">
           <xsl:with-param name="term" select="'DeleteRestrictions'" />
@@ -4043,7 +4067,7 @@
     <xsl:text>,"/</xsl:text>
     <xsl:value-of select="$path-prefix" />
     <xsl:text>/</xsl:text>
-    
+
     <xsl:choose>
       <xsl:when
         test="../edm:Annotation[(@Term=concat($coreNamespace,'.DefaultNamespace') or @Term=concat($coreAlias,'.DefaultNamespace')) and not(@Qualifier)]" />
@@ -4066,7 +4090,7 @@
         <xsl:value-of select="@Name" />
       </xsl:with-param>
     </xsl:call-template>
-    
+
     <xsl:text>,"tags":["</xsl:text>
     <xsl:value-of select="$tag" />
     <xsl:text>"],"parameters":[</xsl:text>
