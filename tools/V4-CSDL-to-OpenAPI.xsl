@@ -2785,16 +2785,17 @@
       <xsl:if test="@ContainsTarget='true'">
         <!-- TODO: call pathItem-single-entity in collection case -->
         <!-- TODO: single case would duplicate GET, rethink what is done here
-          <xsl:if test="$collection">
+        -->
+        <xsl:if test="$collection">
           <xsl:text>,</xsl:text>
           <xsl:call-template name="pathItem-single-entity">
-          <xsl:with-param name="type" select="$singleType" />
-          <xsl:with-param name="path-prefix" select="$path-template" />
-          <xsl:with-param name="prefix-parameters" select="$path-parameters" />
-          <xsl:with-param name="with-key" select="$collection" />
+            <xsl:with-param name="type" select="$singleType" />
+            <xsl:with-param name="with-key" select="$collection" />
+            <xsl:with-param name="tag" select="$source/@Name" />
+            <xsl:with-param name="path-prefix" select="$path-template" />
+            <xsl:with-param name="prefix-parameters" select="$path-parameters" />
           </xsl:call-template>
-          </xsl:if>
-        -->
+        </xsl:if>
       </xsl:if>
     </xsl:if>
   </xsl:template>

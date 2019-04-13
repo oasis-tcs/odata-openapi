@@ -663,6 +663,493 @@
                 }
             }
         },
+        "/Wholes('{ID}')/Many({index})": {
+            "get": {
+                "summary": "Get entity from related Many by key",
+                "tags": [
+                    "Wholes"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "index",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: index",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "index"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "One",
+                                "Many"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Part"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in related Many",
+                "tags": [
+                    "Wholes"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "index",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: index",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Part",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Part-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from related Many",
+                "tags": [
+                    "Wholes"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "index",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: index",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Wholes('{ID}')/Many({index})/self.Likes()": {
+            "get": {
+                "summary": "Invoke function Likes",
+                "description": "How many like this part",
+                "tags": [
+                    "Wholes"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "index",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: index",
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Wholes('{ID}')/Many({index})/self.Like": {
+            "post": {
+                "summary": "Invoke action Like",
+                "description": "I like this part",
+                "tags": [
+                    "Wholes"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "index",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: index",
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Wholes('{ID}')/Many({index})/One": {
+            "get": {
+                "summary": "Get related SubPart",
+                "tags": [
+                    "Many"
+                ],
+                "parameters": [
+                    { "TODO":"prefix-parameters" },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.SubPart"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Wholes('{ID}')/Many({index})/Many": {
+            "get": {
+                "summary": "Get related Many",
+                "tags": [
+                    "Many"
+                ],
+                "parameters": [
+                    { "TODO":"prefix-parameters" },
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "One desc",
+                                "Two",
+                                "Two desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of SubPart",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Containment.SubPart"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add related SubPart",
+                "tags": [
+                    "Many"
+                ],
+                "parameters": [
+                    { "TODO":"prefix-parameters" },
+                    {
+                        "name": "SubPart",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.SubPart-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.SubPart"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Wholes('{ID}')/Many({index})/Many(One={One},Two={Two})": {
+            "get": {
+                "summary": "Get entity from related Many by key",
+                "tags": [
+                    "Many"
+                ],
+                "parameters": [
+                    { "TODO":"prefix-parameters" },
+                    {
+                        "name": "One",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: One",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Two",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Two",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.SubPart"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in Many",
+                "tags": [
+                    "Many"
+                ],
+                "parameters": [
+                    { "TODO":"prefix-parameters" },
+                    {
+                        "name": "One",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: One",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Two",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Two",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "SubPart",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.SubPart-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from Many",
+                "tags": [
+                    "Many"
+                ],
+                "parameters": [
+                    { "TODO":"prefix-parameters" },
+                    {
+                        "name": "One",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: One",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Two",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Two",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
         "/TheWhole": {
             "get": {
                 "summary": "Get TheWhole",
@@ -1024,6 +1511,458 @@
                 ],
                 "parameters": [
 
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TheWhole/Many({index})": {
+            "get": {
+                "summary": "Get entity from Many by key",
+                "tags": [
+                    "TheWhole"
+                ],
+                "parameters": [
+                    {
+                        "name": "index",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: index",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "index"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "One",
+                                "Many"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Part"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in Many",
+                "tags": [
+                    "TheWhole"
+                ],
+                "parameters": [
+                    {
+                        "name": "index",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: index",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Part",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Part-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from Many",
+                "tags": [
+                    "TheWhole"
+                ],
+                "parameters": [
+                    {
+                        "name": "index",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: index",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TheWhole/Many({index})/self.Likes()": {
+            "get": {
+                "summary": "Invoke function Likes",
+                "description": "How many like this part",
+                "tags": [
+                    "TheWhole"
+                ],
+                "parameters": [
+                    {
+                        "name": "index",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: index",
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TheWhole/Many({index})/self.Like": {
+            "post": {
+                "summary": "Invoke action Like",
+                "description": "I like this part",
+                "tags": [
+                    "TheWhole"
+                ],
+                "parameters": [
+                    {
+                        "name": "index",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: index",
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TheWhole/Many({index})/One": {
+            "get": {
+                "summary": "Get related SubPart",
+                "tags": [
+                    "Many"
+                ],
+                "parameters": [
+                    { "TODO":"prefix-parameters" },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.SubPart"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TheWhole/Many({index})/Many": {
+            "get": {
+                "summary": "Get related Many",
+                "tags": [
+                    "Many"
+                ],
+                "parameters": [
+                    { "TODO":"prefix-parameters" },
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "One desc",
+                                "Two",
+                                "Two desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of SubPart",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Containment.SubPart"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add related SubPart",
+                "tags": [
+                    "Many"
+                ],
+                "parameters": [
+                    { "TODO":"prefix-parameters" },
+                    {
+                        "name": "SubPart",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.SubPart-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.SubPart"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TheWhole/Many({index})/Many(One={One},Two={Two})": {
+            "get": {
+                "summary": "Get entity from Many by key",
+                "tags": [
+                    "Many"
+                ],
+                "parameters": [
+                    { "TODO":"prefix-parameters" },
+                    {
+                        "name": "One",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: One",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Two",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Two",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.SubPart"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in Many",
+                "tags": [
+                    "Many"
+                ],
+                "parameters": [
+                    { "TODO":"prefix-parameters" },
+                    {
+                        "name": "One",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: One",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Two",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Two",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "SubPart",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.SubPart-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from Many",
+                "tags": [
+                    "Many"
+                ],
+                "parameters": [
+                    { "TODO":"prefix-parameters" },
+                    {
+                        "name": "One",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: One",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Two",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Two",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
                 ],
                 "responses": {
                     "204": {
