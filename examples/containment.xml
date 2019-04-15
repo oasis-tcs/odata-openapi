@@ -93,6 +93,16 @@
         <ReturnType Type="Edm.Int32" />
       </Function>
 
+      <EntityType Name="Folder">
+        <Key>
+          <PropertyRef Name="Name" />
+        </Key>
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" />
+        <NavigationProperty Name="Folders" Type="Collection(self.Folder)" ContainsTarget="true" />
+      </EntityType>
+
+
       <EntityContainer Name="Container">
         <Annotation Term="Capabilities.BatchSupported" Bool="false" />
 
@@ -102,6 +112,9 @@
         <Singleton Name="TheWhole" Type="self.Whole">
           <Annotation Term="Core.Description" String="Special container" />
         </Singleton>
+        <EntitySet Name="Folders" EntityType="self.Folder">
+          <Annotation Term="Core.Description" String="List of folders" />
+        </EntitySet>
       </EntityContainer>
 
     </Schema>

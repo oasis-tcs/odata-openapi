@@ -24,6 +24,7 @@
     - external targeting for Capabilities: NonSortableProperties, KeyAsSegmentSupported
     - external targeting for Core: Immutable, Computed, Permission/Read
     - example values via Core.Example: Int
+    - containment: single-valued containment, NavigationPropertyRestrictions with multi-segment paths
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -46,11 +47,13 @@
   <xsl:param name="x-tensions" select="null" />
 
   <xsl:param name="odata-version" select="'4.0'" />
+  <xsl:param name="odata-schema" select="'https://oasis-tcs.github.io/odata-openapi/examples/odata-definitions.json'" />
+
   <xsl:param name="diagram" select="null" />
   <xsl:param name="references" select="null" />
   <xsl:param name="top-example" select="50" />
+  <xsl:param name="max-levels" select="5" />
 
-  <xsl:param name="odata-schema" select="'https://oasis-tcs.github.io/odata-openapi/examples/odata-definitions.json'" />
   <xsl:param name="openapi-formatoption" select="''" />
   <xsl:param name="openapi-version" select="'2.0'" />
   <xsl:param name="openapi-root" select="''" />
@@ -2284,6 +2287,7 @@
         <xsl:with-param name="root" select="." />
         <xsl:with-param name="path-prefix" select="@Name" />
         <xsl:with-param name="prefix-parameters" select="''" />
+        <xsl:with-param name="level" select="0" />
       </xsl:call-template>
     </xsl:if>
   </xsl:template>
@@ -2295,6 +2299,7 @@
       <xsl:with-param name="root" select="." />
       <xsl:with-param name="path-prefix" select="@Name" />
       <xsl:with-param name="prefix-parameters" select="''" />
+      <xsl:with-param name="level" select="0" />
     </xsl:call-template>
   </xsl:template>
 
@@ -2483,6 +2488,7 @@
     <xsl:param name="root" />
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
+    <xsl:param name="level" />
 
     <xsl:variable name="collection" select="starts-with(@Type,'Collection(')" />
     <xsl:variable name="name" select="@Name" />
@@ -2783,9 +2789,8 @@
         <xsl:with-param name="prefix-parameters" select="$path-parameters" />
       </xsl:apply-templates>
 
-      <xsl:if test="@ContainsTarget='true'">
-        <!-- TODO: single case would duplicate GET, rethink what is done here
-        -->
+      <xsl:if test="@ContainsTarget='true' and $level&lt;$max-levels">
+        <!-- TODO: single case would duplicate GET, rethink what is done here -->
         <xsl:if test="$collection">
           <xsl:text>,</xsl:text>
           <xsl:call-template name="pathItem-single-entity">
@@ -2794,6 +2799,7 @@
             <xsl:with-param name="root" select="$root" />
             <xsl:with-param name="path-prefix" select="$path-template" />
             <xsl:with-param name="prefix-parameters" select="$path-parameters" />
+            <xsl:with-param name="level" select="$level" />
           </xsl:call-template>
         </xsl:if>
       </xsl:if>
@@ -2918,6 +2924,8 @@
     <xsl:param name="root" />
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
+    <xsl:param name="level" />
+
     <xsl:variable name="qualifier">
       <xsl:call-template name="substring-before-last">
         <xsl:with-param name="input" select="$type" />
@@ -2952,12 +2960,12 @@
     </xsl:variable>
     <xsl:variable name="entityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$typename]" />
 
-    <!-- path template -->
-    <!-- TODO: will fail if contained entity has same key name as one of its containers -->
     <xsl:variable name="path-template">
       <xsl:value-of select="$path-prefix" />
       <xsl:if test="$with-key">
-        <xsl:apply-templates select="$entityType" mode="key-in-path" />
+        <xsl:apply-templates select="$entityType" mode="key-in-path">
+          <xsl:with-param name="level" select="$level" />
+        </xsl:apply-templates>
       </xsl:if>
     </xsl:variable>
     <xsl:variable name="path-parameters">
@@ -2966,7 +2974,9 @@
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:if test="$with-key">
-        <xsl:apply-templates select="$entityType" mode="parameter" />
+        <xsl:apply-templates select="$entityType" mode="parameter">
+          <xsl:with-param name="level" select="$level" />
+        </xsl:apply-templates>
       </xsl:if>
     </xsl:variable>
 
@@ -3233,6 +3243,7 @@
       <xsl:with-param name="root" select="$root" />
       <xsl:with-param name="path-prefix" select="$path-template" />
       <xsl:with-param name="prefix-parameters" select="$path-parameters" />
+      <xsl:with-param name="level" select="1+$level" />
     </xsl:apply-templates>
   </xsl:template>
 
@@ -3269,6 +3280,7 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityType" mode="key-in-path">
+    <xsl:param name="level" />
     <xsl:choose>
       <xsl:when test="edm:Key">
         <xsl:choose>
@@ -3280,7 +3292,9 @@
           </xsl:otherwise>
         </xsl:choose>
 
-        <xsl:apply-templates select="edm:Key/edm:PropertyRef" mode="key-in-path" />
+        <xsl:apply-templates select="edm:Key/edm:PropertyRef" mode="key-in-path">
+          <xsl:with-param name="level" select="$level" />
+        </xsl:apply-templates>
 
         <xsl:if test="not($key-as-segment)">
           <xsl:text>)</xsl:text>
@@ -3311,7 +3325,10 @@
         </xsl:variable>
 
         <xsl:apply-templates select="//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]"
-          mode="key-in-path" />
+          mode="key-in-path"
+        >
+          <xsl:with-param name="level" select="$level" />
+        </xsl:apply-templates>
       </xsl:when>
       <xsl:otherwise>
         <xsl:message>
@@ -3327,6 +3344,7 @@
   </xsl:template>
 
   <xsl:template match="edm:PropertyRef" mode="key-in-path">
+    <xsl:param name="level" />
     <xsl:variable name="name" select="@Name" />
     <xsl:variable name="type" select="../../edm:Property[@Name=$name]/@Type" />
     <xsl:if test="position()>1">
@@ -3362,6 +3380,10 @@
         <xsl:value-of select="@Name" />
       </xsl:otherwise>
     </xsl:choose>
+    <xsl:if test="$level>0">
+      <xsl:text>-</xsl:text>
+      <xsl:value-of select="$level" />
+    </xsl:if>
     <xsl:text>}</xsl:text>
     <xsl:call-template name="pathValueSuffix">
       <xsl:with-param name="type" select="$type" />
@@ -3397,9 +3419,12 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityType" mode="parameter">
+    <xsl:param name="level" />
     <xsl:choose>
       <xsl:when test="edm:Key">
-        <xsl:apply-templates select="edm:Key/edm:PropertyRef" mode="parameter" />
+        <xsl:apply-templates select="edm:Key/edm:PropertyRef" mode="parameter">
+          <xsl:with-param name="level" select="$level" />
+        </xsl:apply-templates>
       </xsl:when>
       <xsl:when test="@BaseType">
         <xsl:variable name="basetypeQualifier">
@@ -3426,7 +3451,10 @@
         </xsl:variable>
 
         <xsl:apply-templates select="//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]"
-          mode="parameter" />
+          mode="parameter"
+        >
+          <xsl:with-param name="level" select="$level" />
+        </xsl:apply-templates>
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>"ERROR: entity type with neither key nor base type"</xsl:text>
@@ -3435,10 +3463,12 @@
   </xsl:template>
 
   <xsl:template match="edm:PropertyRef" mode="parameter">
+    <xsl:param name="level" />
     <xsl:call-template name="key-property">
       <xsl:with-param name="name" select="@Name" />
       <xsl:with-param name="alias" select="@Alias" />
       <xsl:with-param name="structuredType" select="../.." />
+      <xsl:with-param name="level" select="$level" />
     </xsl:call-template>
   </xsl:template>
 
@@ -3446,6 +3476,7 @@
     <xsl:param name="name" />
     <xsl:param name="alias" />
     <xsl:param name="structuredType" />
+    <xsl:param name="level" />
 
     <xsl:choose>
       <xsl:when test="contains($name,'/')">
@@ -3481,6 +3512,7 @@
           <xsl:with-param name="structuredType"
             select="//edm:Schema[@Namespace=$namespace]/edm:ComplexType[@Name=$typename]
                    |//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$typename]" />
+          <xsl:with-param name="level" select="$level" />
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
@@ -3498,6 +3530,10 @@
             <xsl:value-of select="$name" />
           </xsl:otherwise>
         </xsl:choose>
+        <xsl:if test="$level>0">
+          <xsl:text>-</xsl:text>
+          <xsl:value-of select="$level" />
+        </xsl:if>
         <xsl:text>","in":"path","required":true,"description":"</xsl:text>
         <xsl:variable name="description">
           <xsl:call-template name="description">
