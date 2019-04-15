@@ -2588,9 +2588,6 @@
       </xsl:variable>
       <xsl:variable name="path-parameters">
         <xsl:value-of select="$prefix-parameters" />
-        <!--
-          <xsl:apply-templates select="$entityType[local-name($source)='EntitySet']" mode="parameter" />
-        -->
       </xsl:variable>
 
       <xsl:text>,"/</xsl:text>
