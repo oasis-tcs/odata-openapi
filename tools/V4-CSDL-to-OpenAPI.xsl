@@ -3021,6 +3021,9 @@
           <xsl:if test="$with-key">
             <xsl:text>entity from </xsl:text>
           </xsl:if>
+          <xsl:if test="contains($path-prefix,'/')">
+            <xsl:text>related </xsl:text>
+          </xsl:if>
           <xsl:value-of select="@Name" />
           <xsl:if test="$with-key">
             <xsl:text> by key</xsl:text>
@@ -3112,6 +3115,9 @@
           <xsl:if test="$with-key">
             <xsl:text>entity in </xsl:text>
           </xsl:if>
+          <xsl:if test="contains($path-prefix,'/')">
+            <xsl:text>related </xsl:text>
+          </xsl:if>
           <xsl:value-of select="@Name" />
         </xsl:with-param>
       </xsl:call-template>
@@ -3190,6 +3196,9 @@
           <xsl:with-param name="qualifier" select="'Delete'" />
           <xsl:with-param name="fallback-summary">
             <xsl:text>Delete entity from </xsl:text>
+            <xsl:if test="contains($path-prefix,'/')">
+              <xsl:text>related </xsl:text>
+            </xsl:if>
             <xsl:value-of select="@Name" />
           </xsl:with-param>
         </xsl:call-template>
