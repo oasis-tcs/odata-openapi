@@ -3,7 +3,7 @@
     "info": {
         "title": "Service for namespace Containment",
         "version": "",
-        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[Whole{bg:orange}],[Whole]++-0..1>[Part],[Whole]++-*>[Part],[Part{bg:orange}],[Part]++-0..1>[SubPart],[Part]++-*>[SubPart],[SubPart{bg:orange}])"
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[Whole{bg:orange}],[Whole]++-0..1>[Part],[Whole]++-*>[Part],[Part{bg:orange}],[Part]++-0..1>[SubPart],[Part]++-*>[SubPart],[SubPart{bg:orange}],[Folder{bg:orange}],[Folder]++-*>[Folder])"
     },
     "schemes": [
         "https"
@@ -24,6 +24,10 @@
         {
             "name": "TheWhole",
             "description": "Special container"
+        },
+        {
+            "name": "Folders",
+            "description": "List of folders"
         }
     ],
     "paths": {
@@ -2099,6 +2103,1720 @@
                     }
                 }
             }
+        },
+        "/Folders": {
+            "get": {
+                "summary": "Get entities from Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Name desc",
+                                "Description",
+                                "Description desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Description"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "Folders"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of Folder",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Containment.Folder"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Folder",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Folders('{Name}')": {
+            "get": {
+                "summary": "Get entity from Folders by key",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Description"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "Folders"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Folder",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Folders('{Name}')/Folders": {
+            "get": {
+                "summary": "Get related Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Name desc",
+                                "Description",
+                                "Description desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Description"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "Folders"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of Folder",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Containment.Folder"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add related Folder",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Folder",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Folders('{Name}')/Folders('{Name}')": {
+            "get": {
+                "summary": "Get entity from related Folders by key",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Description"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "Folders"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in related Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Folder",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from related Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Folders('{Name}')/Folders('{Name}')/Folders": {
+            "get": {
+                "summary": "Get related Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Name desc",
+                                "Description",
+                                "Description desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Description"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "Folders"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of Folder",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Containment.Folder"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add related Folder",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Folder",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Folders('{Name}')/Folders('{Name}')/Folders('{Name}')": {
+            "get": {
+                "summary": "Get entity from related Folders by key",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Description"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "Folders"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in related Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Folder",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from related Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Folders('{Name}')/Folders('{Name}')/Folders('{Name}')/Folders": {
+            "get": {
+                "summary": "Get related Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Name desc",
+                                "Description",
+                                "Description desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Description"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "Folders"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of Folder",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Containment.Folder"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add related Folder",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Folder",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Folders('{Name}')/Folders('{Name}')/Folders('{Name}')/Folders('{Name}')": {
+            "get": {
+                "summary": "Get entity from related Folders by key",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Description"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "Folders"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in related Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Folder",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from related Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Folders('{Name}')/Folders('{Name}')/Folders('{Name}')/Folders('{Name}')/Folders": {
+            "get": {
+                "summary": "Get related Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Name desc",
+                                "Description",
+                                "Description desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Description"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "Folders"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of Folder",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Containment.Folder"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add related Folder",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Folder",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Folders('{Name}')/Folders('{Name}')/Folders('{Name}')/Folders('{Name}')/Folders('{Name}')": {
+            "get": {
+                "summary": "Get entity from related Folders by key",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Description"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "Folders"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in related Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Folder",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from related Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Folders('{Name}')/Folders('{Name}')/Folders('{Name}')/Folders('{Name}')/Folders('{Name}')/Folders": {
+            "get": {
+                "summary": "Get related Folders",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Name desc",
+                                "Description",
+                                "Description desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Name",
+                                "Description"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "Folders"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of Folder",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Containment.Folder"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add related Folder",
+                "tags": [
+                    "Folders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Name",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Folder",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.Folder"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -2248,6 +3966,66 @@
         "Containment.SubPart-update": {
             "type": "object",
             "title": "SubPart (for update)"
+        },
+        "Containment.Folder": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "type": "string"
+                },
+                "Description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "string"
+                },
+                "Folders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Containment.Folder"
+                    }
+                }
+            },
+            "title": "Folder"
+        },
+        "Containment.Folder-create": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "type": "string"
+                },
+                "Description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "string"
+                },
+                "Folders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Containment.Folder-create"
+                    }
+                }
+            },
+            "required": [
+                "Name"
+            ],
+            "title": "Folder (for create)"
+        },
+        "Containment.Folder-update": {
+            "type": "object",
+            "properties": {
+                "Description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "string"
+                }
+            },
+            "title": "Folder (for update)"
         },
         "error": {
             "type": "object",
