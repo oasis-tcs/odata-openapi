@@ -2482,6 +2482,9 @@
   <xsl:template match="edm:NavigationProperty" mode="pathItem">
     <xsl:param name="source" />
     <xsl:param name="entityType" />
+    <xsl:param name="tag" />
+    <xsl:param name="path-prefix" />
+    <xsl:param name="prefix-parameters" />
 
     <xsl:variable name="collection" select="starts-with(@Type,'Collection(')" />
     <xsl:variable name="name" select="@Name" />
@@ -2515,6 +2518,7 @@
     <xsl:variable name="restrictedProperties"
       select="$navigationRestrictions/edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection" />
     <xsl:variable name="navPropName" select="@Name" />
+    <!-- TODO: consider path-prefix -->
     <xsl:variable name="navigationPropertyRestriction"
       select="$restrictedProperties/edm:Record[edm:PropertyValue[@Property='NavigationProperty']/@NavigationPropertyPath=$navPropName]" />
     <!-- navigability -->
@@ -2578,13 +2582,15 @@
         select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]" />
 
       <xsl:variable name="path-template">
-        <xsl:value-of select="$source/@Name" />
-        <xsl:apply-templates select="$entityType[local-name($source)='EntitySet']" mode="key-in-path" />
+        <xsl:value-of select="$path-prefix" />
         <xsl:text>/</xsl:text>
         <xsl:value-of select="@Name" />
       </xsl:variable>
       <xsl:variable name="path-parameters">
-        <xsl:apply-templates select="$entityType[local-name($source)='EntitySet']" mode="parameter" />
+        <xsl:value-of select="$prefix-parameters" />
+        <!--
+          <xsl:apply-templates select="$entityType[local-name($source)='EntitySet']" mode="parameter" />
+        -->
       </xsl:variable>
 
       <xsl:text>,"/</xsl:text>
@@ -2621,8 +2627,8 @@
           </xsl:otherwise>
         </xsl:choose>
         <xsl:text>","tags":["</xsl:text>
-        <xsl:value-of select="$source/@Name" />
-        <xsl:if test="$targetSet and $targetSet/@Name!=$source/@Name">
+        <xsl:value-of select="$tag" />
+        <xsl:if test="$targetSet and $targetSet/@Name!=$tag">
           <xsl:text>","</xsl:text>
           <xsl:value-of select="$targetSet/@Name" />
         </xsl:if>
@@ -2632,7 +2638,7 @@
         <xsl:value-of select="$path-parameters" />
 
         <xsl:call-template name="query-options">
-          <xsl:with-param name="after-keys" select="local-name($source)='EntitySet'" />
+          <xsl:with-param name="after-keys" select="$prefix-parameters!=''" />
           <xsl:with-param name="target" select="$targetSet" />
           <xsl:with-param name="collection" select="$collection" />
           <xsl:with-param name="entityType" select="$targetEntityType" />
@@ -2682,7 +2688,7 @@
           <xsl:text>"summary":"Add related </xsl:text>
           <xsl:value-of select="$simpleName" />
           <xsl:text>","tags":["</xsl:text>
-          <xsl:value-of select="$source/@Name" />
+          <xsl:value-of select="$tag" />
           <xsl:if test="$targetSet and $targetSet/@Name!=$source/@Name">
             <xsl:text>","</xsl:text>
             <xsl:value-of select="$targetSet/@Name" />
@@ -2694,7 +2700,7 @@
 
           <xsl:choose>
             <xsl:when test="$openapi-version='2.0'">
-              <xsl:if test="local-name($source)='EntitySet'">
+              <xsl:if test="$prefix-parameters!=''">
                 <xsl:text>,</xsl:text>
               </xsl:if>
               <xsl:text>{"name":"</xsl:text>
@@ -2769,7 +2775,7 @@
         select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$bindingType or edm:Parameter[1]/@Type=$bindingTypeAliased)]"
         mode="bound"
       >
-        <xsl:with-param name="tag" select="$source/@Name" />
+        <xsl:with-param name="tag" select="$tag" />
         <xsl:with-param name="path-prefix" select="$path-template" />
         <xsl:with-param name="prefix-parameters" select="$path-parameters" />
       </xsl:apply-templates>
@@ -2777,7 +2783,7 @@
         select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$bindingType or edm:Parameter[1]/@Type=$bindingTypeAliased)]"
         mode="bound"
       >
-        <xsl:with-param name="tag" select="$source/@Name" />
+        <xsl:with-param name="tag" select="$tag" />
         <xsl:with-param name="path-prefix" select="$path-template" />
         <xsl:with-param name="prefix-parameters" select="$path-parameters" />
       </xsl:apply-templates>
@@ -2791,7 +2797,7 @@
           <xsl:call-template name="pathItem-single-entity">
             <xsl:with-param name="type" select="$singleType" />
             <xsl:with-param name="with-key" select="$collection" />
-            <xsl:with-param name="tag" select="$source/@Name" />
+            <xsl:with-param name="tag" select="$tag" />
             <xsl:with-param name="path-prefix" select="$path-template" />
             <xsl:with-param name="prefix-parameters" select="$path-parameters" />
           </xsl:call-template>
