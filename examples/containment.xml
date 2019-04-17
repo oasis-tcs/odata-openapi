@@ -39,6 +39,7 @@
         <NavigationProperty Name="One" Type="self.SubPart" ContainsTarget="true" />
         <NavigationProperty Name="Many" Type="Collection(self.SubPart)" ContainsTarget="true" />
         <NavigationProperty Name="ManyReadListOnly" Type="Collection(self.SubPart)" ContainsTarget="true" />
+        <NavigationProperty Name="ManyReadByKeyOnly" Type="Collection(self.SubPart)" ContainsTarget="true" />
       </EntityType>
 
       <EntityType Name="SubPart">
@@ -126,6 +127,39 @@
                     </PropertyValue>
                     <!-- TODO: turn off query options for GET collection -->
                   </Record>
+                  <Record>
+                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Many/ManyReadByKeyOnly" />
+                    <PropertyValue Property="InsertRestrictions">
+                      <Record>
+                        <PropertyValue Property="Insertable" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="ReadRestrictions">
+                      <Record>
+                        <PropertyValue Property="Readable" Bool="false" />
+                        <PropertyValue Property="ReadByKeyRestrictions">
+                          <Record>
+                            <PropertyValue Property="Readable" Bool="true" />
+                          </Record>
+                        </PropertyValue>
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="SelectSupport">
+                      <Record>
+                        <PropertyValue Property="Supported" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="UpdateRestrictions">
+                      <Record>
+                        <PropertyValue Property="Updatable" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="DeleteRestrictions">
+                      <Record>
+                        <PropertyValue Property="Deletable" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                  </Record>
                 </Collection>
               </PropertyValue>
             </Record>
@@ -154,6 +188,51 @@
                     </Record>
                   </PropertyValue>
                   <!-- TODO: turn off query options for GET collection -->
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Many/ManyReadByKeyOnly" />
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Insertable">
+                        <Bool>false</Bool>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Readable">
+                        <Bool>false</Bool>
+                      </PropertyValue>
+                      <PropertyValue Property="ReadByKeyRestrictions">
+                        <Record>
+                          <PropertyValue Property="Readable">
+                            <Bool>true</Bool>
+                          </PropertyValue>
+                        </Record>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SelectSupport">
+                    <Record>
+                      <PropertyValue Property="Supported">
+                        <Bool>false</Bool>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="UpdateRestrictions">
+                    <Record>
+                      <PropertyValue Property="Updatable">
+                        <Bool>false</Bool>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="DeleteRestrictions">
+                    <Record>
+                      <PropertyValue Property="Deletable">
+                        <Bool>false</Bool>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
                 </Record>
               </Collection>
             </PropertyValue>
