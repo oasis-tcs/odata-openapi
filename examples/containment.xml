@@ -38,6 +38,7 @@
         <Property Name="index" Type="Edm.Int32" Nullable="false" />
         <NavigationProperty Name="One" Type="self.SubPart" ContainsTarget="true" />
         <NavigationProperty Name="Many" Type="Collection(self.SubPart)" ContainsTarget="true" />
+        <NavigationProperty Name="ManyReadListOnly" Type="Collection(self.SubPart)" ContainsTarget="true" />
       </EntityType>
 
       <EntityType Name="SubPart">
@@ -116,12 +117,14 @@
               <PropertyValue Property="RestrictedProperties">
                 <Collection>
                   <Record>
-                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Many/Many" />
-                    <PropertyValue Property="ExpandRestrictions">
+                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Many/ManyReadListOnly" />
+                    <PropertyValue Property="IndexableByKey" Bool="false" />
+                    <PropertyValue Property="InsertRestrictions">
                       <Record>
-                        <PropertyValue Property="Expandable" Bool="false" />
+                        <PropertyValue Property="Insertable" Bool="false" />
                       </Record>
                     </PropertyValue>
+                    <!-- TODO: turn off query options for GET collection -->
                   </Record>
                 </Collection>
               </PropertyValue>
@@ -132,6 +135,31 @@
           <Annotation Term="Core.Description" String="List of folders" />
         </EntitySet>
       </EntityContainer>
+
+      <Annotations Target="self.Container/Wholes">
+        <Annotation Term="Capabilities.NavigationRestrictions">
+          <Record>
+            <PropertyValue Property="RestrictedProperties">
+              <Collection>
+                <Record>
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Many/ManyReadListOnly" />
+                  <PropertyValue Property="IndexableByKey">
+                    <Bool>false</Bool>
+                  </PropertyValue>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Insertable">
+                        <Bool>false</Bool>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <!-- TODO: turn off query options for GET collection -->
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
 
     </Schema>
   </edmx:DataServices>

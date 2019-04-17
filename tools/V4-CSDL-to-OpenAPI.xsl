@@ -24,7 +24,7 @@
     - external targeting for Capabilities: NonSortableProperties, KeyAsSegmentSupported
     - external targeting for Core: Immutable, Computed, Permission/Read
     - example values via Core.Example: Int
-    - containment: single-valued containment
+    - containment: single-valued containment, Capabilities for GET collection
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -2616,6 +2616,7 @@
       <xsl:variable name="targetEntityType"
         select="//edm:Schema[@Namespace=$targetNamespace]/edm:EntityType[@Name=$simpleName]" />
 
+      <!-- TODO: extract template pathItem-entity-collection that is also used for entity sets -->
       <xsl:variable name="path-template">
         <xsl:value-of select="$path-prefix" />
         <xsl:text>/</xsl:text>
@@ -2669,6 +2670,7 @@
         <xsl:text>,"parameters":[</xsl:text>
         <xsl:value-of select="$path-parameters" />
 
+        <!-- TODO: this is not correct for containment navigation properties -->
         <xsl:call-template name="query-options">
           <xsl:with-param name="after-keys" select="$prefix-parameters!=''" />
           <xsl:with-param name="target" select="$targetSet" />
@@ -2823,27 +2825,32 @@
       <xsl:if test="@ContainsTarget='true' and $level&lt;$max-levels">
         <!-- TODO: single case would duplicate GET, rethink what is done here -->
         <xsl:if test="$collection">
-          <xsl:text>,</xsl:text>
-          <xsl:call-template name="pathItem-single-entity">
-            <xsl:with-param name="type" select="$singleType" />
-            <xsl:with-param name="with-key" select="$collection" />
-            <xsl:with-param name="root" select="$root" />
-            <xsl:with-param name="path-prefix" select="$path-template" />
-            <xsl:with-param name="prefix-parameters" select="$path-parameters" />
-            <xsl:with-param name="level" select="$level" />
-            <xsl:with-param name="navigationRestrictions" select="$navigationRestrictions" />
-            <xsl:with-param name="navigation-prefix" select="concat($navPropPath,'/')" />
-            <xsl:with-param name="readRestrictions"
-              select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ReadRestrictions']" />
-            <xsl:with-param name="selectSupport"
-              select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SelectSupport']" />
-            <xsl:with-param name="expandRestrictions"
-              select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ExpandRestrictions']" />
-            <xsl:with-param name="updateRestrictions"
-              select="$navigationPropertyRestriction/edm:PropertyValue[@Property='UpdateRestrictions']" />
-            <xsl:with-param name="deleteRestrictions"
-              select="$navigationPropertyRestriction/edm:PropertyValue[@Property='DeleteRestrictions']" />
-          </xsl:call-template>
+          <xsl:variable name="indexable-p"
+            select="$navigationPropertyRestriction/edm:PropertyValue[@Property='IndexableByKey']" />
+          <xsl:variable name="indexable" select="$indexable-p/@Bool|$indexable-p/edm:Bool" />
+          <xsl:if test="not($indexable='false')">
+            <xsl:text>,</xsl:text>
+            <xsl:call-template name="pathItem-single-entity">
+              <xsl:with-param name="type" select="$singleType" />
+              <xsl:with-param name="with-key" select="$collection" />
+              <xsl:with-param name="root" select="$root" />
+              <xsl:with-param name="path-prefix" select="$path-template" />
+              <xsl:with-param name="prefix-parameters" select="$path-parameters" />
+              <xsl:with-param name="level" select="$level" />
+              <xsl:with-param name="navigationRestrictions" select="$navigationRestrictions" />
+              <xsl:with-param name="navigation-prefix" select="concat($navPropPath,'/')" />
+              <xsl:with-param name="readRestrictions"
+                select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ReadRestrictions']" />
+              <xsl:with-param name="selectSupport"
+                select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SelectSupport']" />
+              <xsl:with-param name="expandRestrictions"
+                select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ExpandRestrictions']" />
+              <xsl:with-param name="updateRestrictions"
+                select="$navigationPropertyRestriction/edm:PropertyValue[@Property='UpdateRestrictions']" />
+              <xsl:with-param name="deleteRestrictions"
+                select="$navigationPropertyRestriction/edm:PropertyValue[@Property='DeleteRestrictions']" />
+            </xsl:call-template>
+          </xsl:if>
         </xsl:if>
       </xsl:if>
     </xsl:if>
