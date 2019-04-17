@@ -2523,7 +2523,7 @@
       select="$propertyNavigability='Recursive' or $propertyNavigability='Single' 
               or (string-length($propertyNavigability)=0 and not($rootNavigability='None'))" />
 
-    <xsl:if test="@ContainsTarget='true' or $navigable">
+    <xsl:if test="$navigable">
       <xsl:variable name="nullable">
         <xsl:call-template name="nullableFacetValue">
           <xsl:with-param name="type" select="@Type" />
