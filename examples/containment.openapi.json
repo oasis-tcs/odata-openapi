@@ -3,7 +3,7 @@
     "info": {
         "title": "Service for namespace Containment",
         "version": "",
-        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[Whole{bg:orange}],[Whole]++-0..1>[Part],[Whole]++-*>[Part],[Part{bg:orange}],[Part]++-0..1>[SubPart],[Part]++-*>[SubPart],[Part]++-*>[SubPart],[SubPart{bg:orange}],[Folder{bg:orange}],[Folder]++-*>[Folder])"
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[Whole{bg:orange}],[Whole]++-0..1>[Part],[Whole]++-*>[Part],[Part{bg:orange}],[Part]++-0..1>[SubPart],[Part]++-*>[SubPart],[Part]++-*>[SubPart],[Part]++-*>[SubPart],[SubPart{bg:orange}],[Folder{bg:orange}],[Folder]++-*>[Folder])"
     },
     "schemes": [
         "https"
@@ -407,7 +407,8 @@
                                 "*",
                                 "One",
                                 "Many",
-                                "ManyReadListOnly"
+                                "ManyReadListOnly",
+                                "ManyReadByKeyOnly"
                             ]
                         }
                     }
@@ -552,7 +553,8 @@
                                 "*",
                                 "One",
                                 "Many",
-                                "ManyReadListOnly"
+                                "ManyReadListOnly",
+                                "ManyReadByKeyOnly"
                             ]
                         }
                     }
@@ -716,7 +718,8 @@
                                 "*",
                                 "One",
                                 "Many",
-                                "ManyReadListOnly"
+                                "ManyReadListOnly",
+                                "ManyReadByKeyOnly"
                             ]
                         }
                     }
@@ -1334,6 +1337,61 @@
                 }
             }
         },
+        "/Wholes('{ID}')/Many({index-1})/ManyReadByKeyOnly": {
+
+        },
+        "/Wholes('{ID}')/Many({index-1})/ManyReadByKeyOnly(One={One-2},Two={Two-2})": {
+            "get": {
+                "summary": "Get entity from related ManyReadByKeyOnly by key",
+                "tags": [
+                    "Wholes"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "index-1",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: index",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "One-2",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: One",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Two-2",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Two",
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.SubPart"
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
         "/TheWhole": {
             "get": {
                 "summary": "Get TheWhole",
@@ -1484,7 +1542,8 @@
                                 "*",
                                 "One",
                                 "Many",
-                                "ManyReadListOnly"
+                                "ManyReadListOnly",
+                                "ManyReadByKeyOnly"
                             ]
                         }
                     }
@@ -1610,7 +1669,8 @@
                                 "*",
                                 "One",
                                 "Many",
-                                "ManyReadListOnly"
+                                "ManyReadListOnly",
+                                "ManyReadByKeyOnly"
                             ]
                         }
                     }
@@ -1748,7 +1808,8 @@
                                 "*",
                                 "One",
                                 "Many",
-                                "ManyReadListOnly"
+                                "ManyReadListOnly",
+                                "ManyReadByKeyOnly"
                             ]
                         }
                     }
@@ -2281,6 +2342,54 @@
                                     }
                                 }
                             }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TheWhole/Many({index-1})/ManyReadByKeyOnly": {
+
+        },
+        "/TheWhole/Many({index-1})/ManyReadByKeyOnly(One={One-2},Two={Two-2})": {
+            "get": {
+                "summary": "Get entity from related ManyReadByKeyOnly by key",
+                "tags": [
+                    "TheWhole"
+                ],
+                "parameters": [
+                    {
+                        "name": "index-1",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: index",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "One-2",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: One",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Two-2",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Two",
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Containment.SubPart"
                         }
                     },
                     "default": {
@@ -4092,6 +4201,12 @@
                     "items": {
                         "$ref": "#/definitions/Containment.SubPart"
                     }
+                },
+                "ManyReadByKeyOnly": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Containment.SubPart"
+                    }
                 }
             },
             "title": "Part"
@@ -4113,6 +4228,12 @@
                     }
                 },
                 "ManyReadListOnly": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Containment.SubPart-create"
+                    }
+                },
+                "ManyReadByKeyOnly": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/Containment.SubPart-create"
