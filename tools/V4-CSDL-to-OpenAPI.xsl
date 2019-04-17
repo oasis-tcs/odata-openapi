@@ -2440,62 +2440,19 @@
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:if test="not($insertable='false')">
-      <xsl:text>"post":{</xsl:text>
-
-      <xsl:call-template name="summary-description-qualified">
-        <xsl:with-param name="node" select="." />
-        <xsl:with-param name="qualifier" select="'Create'" />
-        <xsl:with-param name="fallback-summary">
+      <!-- TODO: extract more into template -->
+      <xsl:call-template name="pathItem-entity-collection">
+        <xsl:with-param name="root" select="." />
+        <xsl:with-param name="prefix-parameters" select="''" />
+        <xsl:with-param name="targetSet" select="." />
+        <xsl:with-param name="summary">
           <xsl:text>Add new entity to </xsl:text>
           <xsl:value-of select="@Name" />
         </xsl:with-param>
-      </xsl:call-template>
-
-      <xsl:text>,"tags":["</xsl:text>
-      <xsl:value-of select="@Name" />
-      <xsl:text>"],</xsl:text>
-
-      <xsl:choose>
-        <xsl:when test="$openapi-version='2.0'">
-          <xsl:text>"parameters":[{"name":"</xsl:text>
-          <xsl:value-of select="$type" />
-          <xsl:text>","in":"body",</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>"requestBody":{"required":true,</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
-      <xsl:call-template name="entityTypeDescription">
+        <xsl:with-param name="simpleName" select="$type" />
+        <xsl:with-param name="qualifiedType" select="$qualifiedType" />
         <xsl:with-param name="entityType" select="$entityType" />
-        <xsl:with-param name="default" select="'New entity'" />
       </xsl:call-template>
-      <xsl:if test="$openapi-version!='2.0'">
-        <xsl:text>"content":{"application/json":{</xsl:text>
-      </xsl:if>
-      <xsl:text>"schema":{</xsl:text>
-      <xsl:call-template name="schema-ref">
-        <xsl:with-param name="qualifiedName" select="$qualifiedType" />
-        <xsl:with-param name="suffix" select="'-create'" />
-      </xsl:call-template>
-      <xsl:text>}</xsl:text>
-      <xsl:if test="$openapi-version!='2.0'">
-        <xsl:text>}}</xsl:text>
-      </xsl:if>
-      <xsl:choose>
-        <xsl:when test="$openapi-version='2.0'">
-          <xsl:text>}]</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>}</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
-
-      <xsl:call-template name="responses">
-        <xsl:with-param name="code" select="'201'" />
-        <xsl:with-param name="type" select="$qualifiedType" />
-        <xsl:with-param name="description" select="'Created entity'" />
-      </xsl:call-template>
-      <xsl:text>}</xsl:text>
     </xsl:if>
 
     <xsl:text>}</xsl:text>
@@ -2717,66 +2674,21 @@
           <xsl:if test="$navigation-readable='true' or (not($navigation-readable) and not($readable='false'))">
             <xsl:text>,</xsl:text>
           </xsl:if>
-          <xsl:text>"post":{</xsl:text>
 
-          <xsl:text>"summary":"Add related </xsl:text>
-          <xsl:value-of select="$simpleName" />
-          <xsl:text>","tags":["</xsl:text>
-          <xsl:value-of select="$root/@Name" />
-          <xsl:if test="$targetSet and $targetSet/@Name!=$root/@Name">
-            <xsl:text>","</xsl:text>
-            <xsl:value-of select="$targetSet/@Name" />
-          </xsl:if>
-          <xsl:text>"]</xsl:text>
-
-          <xsl:text>,"parameters":[</xsl:text>
-          <xsl:value-of select="$path-parameters"></xsl:value-of>
-
-          <xsl:choose>
-            <xsl:when test="$openapi-version='2.0'">
-              <xsl:if test="$prefix-parameters!=''">
-                <xsl:text>,</xsl:text>
-              </xsl:if>
-              <xsl:text>{"name":"</xsl:text>
+          <!-- TODO: extract more into template -->
+          <xsl:call-template name="pathItem-entity-collection">
+            <xsl:with-param name="root" select="$root" />
+            <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
+            <xsl:with-param name="targetSet" select="$targetSet" />
+            <xsl:with-param name="summary">
+              <xsl:text>Add related </xsl:text>
               <xsl:value-of select="$simpleName" />
-              <xsl:text>","in":"body",</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:text>],"requestBody":{"required":true,</xsl:text>
-            </xsl:otherwise>
-          </xsl:choose>
-          <xsl:call-template name="entityTypeDescription">
+            </xsl:with-param>
+            <xsl:with-param name="simpleName" select="$simpleName" />
+            <xsl:with-param name="qualifiedType" select="$targetType" />
             <xsl:with-param name="entityType" select="$targetEntityType" />
-            <xsl:with-param name="default" select="'New entity'" />
-          </xsl:call-template>
-          <xsl:if test="$openapi-version!='2.0'">
-            <xsl:text>"content":{"application/json":{</xsl:text>
-          </xsl:if>
-          <xsl:text>"schema":{</xsl:text>
-          <xsl:call-template name="schema-ref">
-            <xsl:with-param name="qualifiedName" select="$targetType" />
-            <xsl:with-param name="suffix" select="'-create'" />
-          </xsl:call-template>
-          <xsl:text>}</xsl:text>
-          <xsl:if test="$openapi-version!='2.0'">
-            <xsl:text>}}</xsl:text>
-          </xsl:if>
-          <xsl:choose>
-            <xsl:when test="$openapi-version='2.0'">
-              <xsl:text>}]</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:text>}</xsl:text>
-            </xsl:otherwise>
-          </xsl:choose>
-
-          <xsl:call-template name="responses">
-            <xsl:with-param name="code" select="'201'" />
-            <xsl:with-param name="type" select="$targetType" />
-            <xsl:with-param name="description" select="'Created entity'" />
           </xsl:call-template>
 
-          <xsl:text>}</xsl:text>
         </xsl:if>
       </xsl:if>
 
@@ -2966,6 +2878,86 @@
         <xsl:text>}</xsl:text>
       </xsl:if>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="pathItem-entity-collection">
+    <xsl:param name="root" />
+
+    <xsl:param name="prefix-parameters" />
+    <!-- TODO: check if these parameters are needed -->
+    <xsl:param name="targetSet" />
+    <xsl:param name="summary" />
+    <xsl:param name="simpleName" />
+    <xsl:param name="qualifiedType" />
+    <xsl:param name="entityType" />
+
+    <xsl:text>"post":{</xsl:text>
+
+    <xsl:text>"summary":"</xsl:text>
+    <xsl:value-of select="$summary" />
+    <xsl:text>","tags":["</xsl:text>
+    <xsl:value-of select="$root/@Name" />
+    <xsl:if test="$targetSet and $targetSet/@Name!=$root/@Name">
+      <xsl:text>","</xsl:text>
+      <xsl:value-of select="$targetSet/@Name" />
+    </xsl:if>
+    <xsl:text>"]</xsl:text>
+
+    <xsl:if test="$openapi-version='2.0' or $prefix-parameters!=''">
+      <xsl:text>,"parameters":[</xsl:text>
+    </xsl:if>
+    <xsl:value-of select="$prefix-parameters" />
+
+    <xsl:choose>
+      <xsl:when test="$openapi-version='2.0'">
+        <xsl:if test="$prefix-parameters!=''">
+          <xsl:text>,</xsl:text>
+        </xsl:if>
+        <xsl:text>{"name":"</xsl:text>
+        <xsl:value-of select="$simpleName" />
+        <xsl:text>","in":"body",</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:if test="$prefix-parameters!=''">
+          <xsl:text>]</xsl:text>
+        </xsl:if>
+        <xsl:text>,"requestBody":{"required":true,</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+
+    <xsl:call-template name="entityTypeDescription">
+      <xsl:with-param name="entityType" select="$entityType" />
+      <xsl:with-param name="default" select="'New entity'" />
+    </xsl:call-template>
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>"content":{"application/json":{</xsl:text>
+    </xsl:if>
+    <xsl:text>"schema":{</xsl:text>
+    <xsl:call-template name="schema-ref">
+      <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+      <xsl:with-param name="suffix" select="'-create'" />
+    </xsl:call-template>
+    <xsl:text>}</xsl:text>
+    <xsl:if test="$openapi-version!='2.0'">
+      <xsl:text>}}</xsl:text>
+    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="$openapi-version='2.0'">
+        <xsl:text>}]</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>}</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+
+    <xsl:call-template name="responses">
+      <xsl:with-param name="code" select="'201'" />
+      <xsl:with-param name="type" select="$qualifiedType" />
+      <xsl:with-param name="description" select="'Created entity'" />
+    </xsl:call-template>
+
+    <xsl:text>}</xsl:text>
+
   </xsl:template>
 
   <xsl:template name="pathItem-single-entity">
