@@ -2690,26 +2690,14 @@
         <xsl:with-param name="node" select="." />
         <xsl:with-param name="qualifier" select="'Query'" />
         <xsl:with-param name="fallback-summary">
-          <xsl:choose>
-            <xsl:when test="contains($path-prefix,'/')">
-              <xsl:text>Get related </xsl:text>
-              <xsl:choose>
-                <xsl:when test="not($return-collection)">
-                  <xsl:value-of select="$typename" />
-                </xsl:when>
-                <xsl:when test="$targetSet">
-                  <xsl:value-of select="$targetSet/@Name" />
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:value-of select="@Name" />
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:text>Get entities from </xsl:text>
-              <xsl:value-of select="@Name" />
-            </xsl:otherwise>
-          </xsl:choose>
+          <xsl:text>Get </xsl:text>
+          <xsl:if test="$return-collection">
+            <xsl:text>entities from </xsl:text>
+          </xsl:if>
+          <xsl:if test="contains($path-prefix,'/')">
+            <xsl:text>related </xsl:text>
+          </xsl:if>
+          <xsl:value-of select="@Name" />
         </xsl:with-param>
       </xsl:call-template>
 
@@ -2771,16 +2759,11 @@
         <xsl:with-param name="node" select="." />
         <xsl:with-param name="qualifier" select="'Query'" />
         <xsl:with-param name="fallback-summary">
-          <xsl:choose>
-            <xsl:when test="contains($path-prefix,'/')">
-              <xsl:text>Add related </xsl:text>
-              <xsl:value-of select="$typename" />
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:text>Add new entity to </xsl:text>
-              <xsl:value-of select="@Name" />
-            </xsl:otherwise>
-          </xsl:choose>
+          <xsl:text>Add new entity to </xsl:text>
+          <xsl:if test="contains($path-prefix,'/')">
+            <xsl:text>related </xsl:text>
+          </xsl:if>
+          <xsl:value-of select="@Name" />
         </xsl:with-param>
       </xsl:call-template>
 
