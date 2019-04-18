@@ -2812,9 +2812,13 @@
     <xsl:if test="$with-get">
       <xsl:text>"get":{</xsl:text>
 
-      <xsl:text>"summary":"</xsl:text>
-      <xsl:value-of select="$get-summary" />
-      <xsl:text>","tags":["</xsl:text>
+      <xsl:call-template name="summary-description-qualified">
+        <xsl:with-param name="node" select="." />
+        <xsl:with-param name="qualifier" select="'Query'" />
+        <xsl:with-param name="fallback-summary" select="$get-summary" />
+      </xsl:call-template>
+
+      <xsl:text>,"tags":["</xsl:text>
       <xsl:value-of select="$root/@Name" />
       <xsl:if test="$targetSet and $targetSet/@Name!=$root/@Name">
         <xsl:text>","</xsl:text>
@@ -2835,9 +2839,17 @@
 
       <xsl:text>]</xsl:text>
 
+      <xsl:variable name="delta">
+        <xsl:call-template name="capability">
+          <xsl:with-param name="term" select="'ChangeTracking'" />
+          <xsl:with-param name="property" select="'Supported'" />
+        </xsl:call-template>
+      </xsl:variable>
+
       <xsl:call-template name="responses">
         <xsl:with-param name="code" select="'200'" />
         <xsl:with-param name="type" select="$type" />
+        <xsl:with-param name="delta" select="$delta" />
         <xsl:with-param name="description">
           <xsl:choose>
             <xsl:when test="not($collection)">
@@ -2860,9 +2872,13 @@
 
       <xsl:text>"post":{</xsl:text>
 
-      <xsl:text>"summary":"</xsl:text>
-      <xsl:value-of select="$post-summary" />
-      <xsl:text>","tags":["</xsl:text>
+      <xsl:call-template name="summary-description-qualified">
+        <xsl:with-param name="node" select="." />
+        <xsl:with-param name="qualifier" select="'Query'" />
+        <xsl:with-param name="fallback-summary" select="$post-summary" />
+      </xsl:call-template>
+
+      <xsl:text>,"tags":["</xsl:text>
       <xsl:value-of select="$root/@Name" />
       <xsl:if test="$targetSet and $targetSet/@Name!=$root/@Name">
         <xsl:text>","</xsl:text>
