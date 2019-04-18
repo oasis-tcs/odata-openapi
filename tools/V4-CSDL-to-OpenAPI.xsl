@@ -2274,6 +2274,11 @@
   </xsl:template>
 
   <xsl:template match="edm:EntitySet">
+    <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+    <xsl:variable name="annotations"
+      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation|edm:Annotation" />
+
     <xsl:variable name="readable">
       <xsl:call-template name="capability">
         <xsl:with-param name="term" select="'ReadRestrictions'" />
@@ -2292,6 +2297,8 @@
       <xsl:with-param name="type" select="@EntityType" />
       <xsl:with-param name="return-collection" select="true()" />
       <xsl:with-param name="root" select="." />
+      <xsl:with-param name="navigationPropertyRestriction" select="null" />
+      <xsl:with-param name="navigation-prefix" select="''" />
       <xsl:with-param name="path-prefix" select="@Name" />
       <xsl:with-param name="prefix-parameters" select="''" />
       <xsl:with-param name="targetSet" select="." />
@@ -2304,11 +2311,6 @@
     </xsl:variable>
 
     <xsl:if test="not($indexable='false')">
-      <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
-      <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
-      <xsl:variable name="annotations"
-        select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation|edm:Annotation" />
-
       <xsl:text>,</xsl:text>
       <xsl:call-template name="pathItem-single-entity">
         <xsl:with-param name="type" select="@EntityType" />
@@ -2462,11 +2464,18 @@
           <xsl:with-param name="type" select="$singleType" />
           <xsl:with-param name="return-collection" select="$collection" />
           <xsl:with-param name="root" select="$root" />
+          <xsl:with-param name="navigationPropertyRestriction" select="$navigationPropertyRestriction" />
+          <xsl:with-param name="navigation-prefix" select="$navigation-prefix" />
           <xsl:with-param name="path-prefix" select="$path-template" />
           <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
           <xsl:with-param name="targetSet" select="$targetSet" />
           <xsl:with-param name="with-get"
             select="$navigation-readable='true' or (not($navigation-readable) and not($readable='false'))" />
+          <!-- TODO: need to look at both navigation restrictions and annotations on target set, same as with readable and insertable above.
+            combine them either here or in template
+            <xsl:with-param name="selectSupport"
+            select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SelectSupport']" />
+          -->
           <xsl:with-param name="with-post"
             select="$collection and ($targetSet or @ContainsTarget='true') and ($navigation-insertable='true' or (not($navigation-insertable) and not($insertable='false')))" />
         </xsl:call-template>
@@ -2490,6 +2499,7 @@
               select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ReadRestrictions']" />
             <xsl:with-param name="selectSupport"
               select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SelectSupport']" />
+            <!-- TODO: this is not correct, ExpandRestrictions are on container-child-level only -->
             <xsl:with-param name="expandRestrictions"
               select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ExpandRestrictions']" />
             <xsl:with-param name="updateRestrictions"
@@ -2619,6 +2629,8 @@
     <xsl:param name="type" />
     <xsl:param name="return-collection" />
     <xsl:param name="root" />
+    <xsl:param name="navigationPropertyRestriction" />
+    <xsl:param name="navigation-prefix" />
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
     <!-- TODO: check if these parameters are needed -->
@@ -2715,6 +2727,7 @@
       <!-- TODO: this is not correct for containment navigation properties -->
       <xsl:call-template name="query-options">
         <xsl:with-param name="after-keys" select="$prefix-parameters!=''" />
+        <xsl:with-param name="navigationPropertyRestriction" select="$navigationPropertyRestriction" />
         <xsl:with-param name="target" select="$targetSet" />
         <xsl:with-param name="collection" select="$return-collection" />
         <xsl:with-param name="entityType" select="$entityType" />
@@ -2859,6 +2872,7 @@
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
     <xsl:param name="level" />
+    <!-- TODO: should be sufficient to pass just the records within RestrictedProperties/Collection -->
     <xsl:param name="navigationRestrictions" />
     <xsl:param name="navigation-prefix" />
     <xsl:param name="readRestrictions" />
@@ -2994,9 +3008,11 @@
         </xsl:apply-templates>
       </xsl:if>
 
+      <!-- TODO: this is not correct, ExpandRestrictions are on container-child-level only, not in navigation restrictions -->
       <xsl:variable name="expandable-p" select="$expandRestrictions/edm:Record/edm:PropertyValue[@Property='Expandable']" />
       <xsl:variable name="expandable" select="$expandable-p/@Bool|$expandable-p/edm:Bool" />
       <xsl:if test="not($expandable='false')">
+        <!-- TODO: exclude properties that are listed in NonExpandableProperties -->
         <xsl:apply-templates
           select="$entityType/edm:NavigationProperty|$entityType/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
           mode="expand"
@@ -3154,11 +3170,11 @@
     <xsl:apply-templates select="$entityType/edm:NavigationProperty" mode="pathItem">
       <xsl:with-param name="entityType" select="$entityType" />
       <xsl:with-param name="root" select="$root" />
+      <xsl:with-param name="navigationRestrictions" select="$navigationRestrictions" />
+      <xsl:with-param name="navigation-prefix" select="$navigation-prefix" />
       <xsl:with-param name="path-prefix" select="$path-template" />
       <xsl:with-param name="prefix-parameters" select="$path-parameters" />
       <xsl:with-param name="level" select="1+$level" />
-      <xsl:with-param name="navigationRestrictions" select="$navigationRestrictions" />
-      <xsl:with-param name="navigation-prefix" select="$navigation-prefix" />
     </xsl:apply-templates>
   </xsl:template>
 
@@ -3686,6 +3702,7 @@
 
   <xsl:template name="query-options">
     <xsl:param name="after-keys" />
+    <xsl:param name="navigationPropertyRestriction" />
     <xsl:param name="target" />
     <xsl:param name="collection" />
     <xsl:param name="entityType" />
@@ -3743,6 +3760,10 @@
         <xsl:with-param name="target" select="$target" />
       </xsl:call-template>
     </xsl:variable>
+
+    <xsl:variable name="selectSupported-p"
+      select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SelectSupport']/edm:Record/edm:PropertyValue[@Property='Supported']" />
+    <xsl:variable name="navigation-selectable" select="$selectSupported-p/@Bool|$selectSupported-p/edm:Bool" />
 
     <xsl:variable name="expandable">
       <xsl:call-template name="capability">
@@ -3833,7 +3854,7 @@
 
     <xsl:variable name="selectable-properties"
       select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']" />
-    <xsl:if test="not($selectable='false')">
+    <xsl:if test="not($navigation-selectable='false' or (not($navigation-selectable) and $selectable='false'))">
       <!-- copy of select expression for selectable-properties - quick-fix for Java XSLT processor -->
       <xsl:apply-templates select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']"
         mode="select"
@@ -3848,6 +3869,7 @@
         select="$entityType/edm:NavigationProperty|$entityType/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
         mode="expand"
       >
+      <!-- TODO: expand after with complicated selectable -->
         <xsl:with-param name="after"
           select="$after-keys or ($collection and (not($top-supported='false') or not($skip-supported='false') or not($searchable='false') or not($filterable='false') or not($countable='false') or not($sortable='false'))) or (not($selectable='false') and $selectable-properties)" />
       </xsl:apply-templates>
