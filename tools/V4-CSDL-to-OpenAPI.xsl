@@ -3041,9 +3041,8 @@
       </xsl:if>
       <xsl:text>"patch":{</xsl:text>
 
-      <xsl:call-template name="summary-description-qualified">
-        <xsl:with-param name="node" select="." />
-        <xsl:with-param name="qualifier" select="'Update'" />
+      <xsl:call-template name="operation-summary-description">
+        <xsl:with-param name="restriction" select="$updateRestrictions" />
         <xsl:with-param name="fallback-summary">
           <xsl:text>Update </xsl:text>
           <xsl:if test="$with-key">
@@ -3119,9 +3118,8 @@
         </xsl:if>
         <xsl:text>"delete":{</xsl:text>
 
-        <xsl:call-template name="summary-description-qualified">
-          <xsl:with-param name="node" select="." />
-          <xsl:with-param name="qualifier" select="'Delete'" />
+        <xsl:call-template name="operation-summary-description">
+          <xsl:with-param name="restriction" select="$deleteRestrictions" />
           <xsl:with-param name="fallback-summary">
             <xsl:text>Delete </xsl:text>
             <xsl:if test="$with-key">
