@@ -2297,10 +2297,14 @@
       <xsl:with-param name="type" select="@EntityType" />
       <xsl:with-param name="return-collection" select="true()" />
       <xsl:with-param name="root" select="." />
-      <xsl:with-param name="navigationPropertyRestriction" select="null" />
-      <xsl:with-param name="navigation-prefix" select="''" />
       <xsl:with-param name="path-prefix" select="@Name" />
       <xsl:with-param name="prefix-parameters" select="''" />
+      <xsl:with-param name="navigationPropertyRestriction" select="null" />
+      <xsl:with-param name="navigation-prefix" select="''" />
+      <xsl:with-param name="readRestrictions"
+        select="$annotations[@Term=concat($capabilitiesNamespace,'.ReadRestrictions') or @Term=concat($capabilitiesAlias,'.ReadRestrictions')]" />
+      <xsl:with-param name="insertRestrictions"
+        select="$annotations[@Term=concat($capabilitiesNamespace,'.InsertRestrictions') or @Term=concat($capabilitiesAlias,'.InsertRestrictions')]" />
       <xsl:with-param name="targetSet" select="." />
       <xsl:with-param name="with-get" select="not($readable='false')" />
       <xsl:with-param name="with-post" select="not($insertable='false')" />
@@ -2464,10 +2468,14 @@
           <xsl:with-param name="type" select="$singleType" />
           <xsl:with-param name="return-collection" select="$collection" />
           <xsl:with-param name="root" select="$root" />
-          <xsl:with-param name="navigationPropertyRestriction" select="$navigationPropertyRestriction" />
-          <xsl:with-param name="navigation-prefix" select="$navigation-prefix" />
           <xsl:with-param name="path-prefix" select="$path-template" />
           <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
+          <xsl:with-param name="navigationPropertyRestriction" select="$navigationPropertyRestriction" />
+          <xsl:with-param name="navigation-prefix" select="$navigation-prefix" />
+          <xsl:with-param name="readRestrictions"
+            select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ReadRestrictions']" />
+          <xsl:with-param name="insertRestrictions"
+            select="$navigationPropertyRestriction/edm:PropertyValue[@Property='InsertRestrictions']" />
           <xsl:with-param name="targetSet" select="$targetSet" />
           <xsl:with-param name="with-get"
             select="$navigation-readable='true' or (not($navigation-readable) and not($readable='false'))" />
@@ -2629,10 +2637,12 @@
     <xsl:param name="type" />
     <xsl:param name="return-collection" />
     <xsl:param name="root" />
-    <xsl:param name="navigationPropertyRestriction" />
-    <xsl:param name="navigation-prefix" />
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
+    <xsl:param name="navigationPropertyRestriction" />
+    <xsl:param name="navigation-prefix" />
+    <xsl:param name="readRestrictions" />
+    <xsl:param name="insertRestrictions" />
     <!-- TODO: check if these parameters are needed -->
     <xsl:param name="targetSet" />
     <xsl:param name="with-get" />
@@ -2698,9 +2708,8 @@
     <xsl:if test="$with-get">
       <xsl:text>"get":{</xsl:text>
 
-      <xsl:call-template name="summary-description-qualified">
-        <xsl:with-param name="node" select="." />
-        <xsl:with-param name="qualifier" select="'Query'" />
+      <xsl:call-template name="operation-summary-description">
+        <xsl:with-param name="restriction" select="$readRestrictions" />
         <xsl:with-param name="fallback-summary">
           <xsl:text>Get </xsl:text>
           <xsl:if test="$return-collection">
@@ -2768,9 +2777,8 @@
 
       <xsl:text>"post":{</xsl:text>
 
-      <xsl:call-template name="summary-description-qualified">
-        <xsl:with-param name="node" select="." />
-        <xsl:with-param name="qualifier" select="'Query'" />
+      <xsl:call-template name="operation-summary-description">
+        <xsl:with-param name="restriction" select="$insertRestrictions" />
         <xsl:with-param name="fallback-summary">
           <xsl:text>Add new entity to </xsl:text>
           <xsl:if test="contains($path-prefix,'/')">
