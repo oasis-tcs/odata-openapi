@@ -2942,12 +2942,13 @@
     <!-- GET -->
     <xsl:variable name="readable-p" select="$readRestrictions/edm:Record/edm:PropertyValue[@Property='Readable']" />
     <xsl:variable name="readable" select="$readable-p/@Bool|$readable-p/edm:Bool" />
+    <xsl:variable name="readByKeyRestrictions"
+      select="$readRestrictions/edm:Record/edm:PropertyValue[@Property='ReadByKeyRestrictions']" />
     <xsl:variable name="with-get">
       <xsl:choose>
         <xsl:when test="$with-key">
           <xsl:variable name="readByKeyRestrictions-readable"
-            select="$readRestrictions/edm:Record/edm:PropertyValue[@Property='ReadByKeyRestrictions']
-                                     /edm:Record/edm:PropertyValue[@Property='Readable']" />
+            select="$readByKeyRestrictions/edm:Record/edm:PropertyValue[@Property='Readable']" />
           <xsl:variable name="readableByKey"
             select="$readByKeyRestrictions-readable/@Bool|$readByKeyRestrictions-readable/edm:Bool" />
           <xsl:value-of select="$readableByKey='true' or (not($readableByKey) and not($readable='false'))" />
@@ -2960,9 +2961,8 @@
     <xsl:if test="$with-get='true'">
       <xsl:text>"get":{</xsl:text>
 
-      <xsl:call-template name="summary-description-qualified">
-        <xsl:with-param name="node" select="." />
-        <xsl:with-param name="qualifier" select="'Read'" />
+      <xsl:call-template name="operation-summary-description">
+        <xsl:with-param name="restriction" select="$readRestrictions[not($with-key)]|$readByKeyRestrictions[$with-key]" />
         <xsl:with-param name="fallback-summary">
           <xsl:text>Get </xsl:text>
           <xsl:if test="$with-key">
@@ -3869,7 +3869,7 @@
         select="$entityType/edm:NavigationProperty|$entityType/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
         mode="expand"
       >
-      <!-- TODO: expand after with complicated selectable -->
+        <!-- TODO: expand after with complicated selectable -->
         <xsl:with-param name="after"
           select="$after-keys or ($collection and (not($top-supported='false') or not($skip-supported='false') or not($searchable='false') or not($filterable='false') or not($countable='false') or not($sortable='false'))) or (not($selectable='false') and $selectable-properties)" />
       </xsl:apply-templates>
@@ -4276,6 +4276,41 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template name="operation-summary-description">
+    <xsl:param name="restriction" />
+    <xsl:param name="fallback-summary" />
+
+    <xsl:variable name="description-p" select="$restriction/edm:Record/edm:PropertyValue[@Property='Description']" />
+    <xsl:variable name="summary">
+      <xsl:call-template name="escape">
+        <xsl:with-param name="string" select="$description-p/@String|$description-p/edm:String" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:text>"summary":"</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$summary!=''">
+        <xsl:value-of select="$summary" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$fallback-summary" />
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>"</xsl:text>
+
+    <xsl:variable name="longDescription-p" select="$restriction/edm:Record/edm:PropertyValue[@Property='LongDescription']" />
+    <xsl:variable name="description">
+      <xsl:call-template name="escape">
+        <xsl:with-param name="string" select="$longDescription-p/@String|$longDescription-p/edm:String" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="$description!=''">
+      <xsl:text>,"description":"</xsl:text>
+      <xsl:value-of select="$description" />
+      <xsl:text>"</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <!-- TODO: remove -->
   <xsl:template name="summary-description-qualified">
     <xsl:param name="node" />
     <xsl:param name="qualifier" />
