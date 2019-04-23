@@ -53,6 +53,7 @@
   <xsl:param name="references" select="null" />
   <xsl:param name="top-example" select="50" />
   <xsl:param name="max-levels" select="5" />
+  <xsl:param name="update-verb" select="'patch'" />
 
   <xsl:param name="openapi-formatoption" select="''" />
   <xsl:param name="openapi-version" select="'2.0'" />
@@ -3047,7 +3048,9 @@
       <xsl:if test="$with-get='true'">
         <xsl:text>,</xsl:text>
       </xsl:if>
-      <xsl:text>"patch":{</xsl:text>
+      <xsl:text>"</xsl:text>
+      <xsl:value-of select="$update-verb" />
+      <xsl:text>":{</xsl:text>
 
       <xsl:call-template name="operation-summary-description">
         <xsl:with-param name="restriction" select="$updateRestrictions" />
