@@ -9,7 +9,6 @@
 
     TODO:
     - delta: headers Prefer and Preference-Applied
-    - operation descriptions for entity sets and singletons - https://issues.oasis-open.org/browse/ODATA-1264
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
     - inline definitions for Edm.* to make OpenAPI documents self-contained
@@ -20,11 +19,10 @@
     - system query options for actions/functions/imports depending on "Collection("
     - 200 response for PATCH if $odata-version!='2.0'
     - ETag for GET / If-Match for PATCH and DELETE depending on @Core.OptimisticConcurrency
-    - reduce duplicated code in /paths production
-    - external targeting for Capabilities: NonSortableProperties, KeyAsSegmentSupported
+    - external targeting for Capabilities.KeyAsSegmentSupported
     - external targeting for Core: Immutable, Computed, Permission/Read
     - example values via Core.Example: Int
-    - navigation restrictions for GET collection-valued (containment) navigation
+    - count/expand restrictions for GET collection-valued (containment) navigation - https://issues.oasis-open.org/browse/ODATA-1300
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -2278,7 +2276,12 @@
     <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
     <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
     <xsl:variable name="annotations"
-      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation|edm:Annotation" />
+      select="edm:Annotation|//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation" />
+
+    <xsl:variable name="readRestrictions"
+      select="$annotations[@Term=concat($capabilitiesNamespace,'.ReadRestrictions') or @Term=concat($capabilitiesAlias,'.ReadRestrictions')]" />
+    <xsl:variable name="insertRestrictions"
+      select="$annotations[@Term=concat($capabilitiesNamespace,'.InsertRestrictions') or @Term=concat($capabilitiesAlias,'.InsertRestrictions')]" />
 
     <xsl:variable name="readable">
       <xsl:call-template name="capability">
@@ -2302,10 +2305,8 @@
       <xsl:with-param name="prefix-parameters" select="''" />
       <xsl:with-param name="navigationPropertyRestriction" select="null" />
       <xsl:with-param name="navigation-prefix" select="''" />
-      <xsl:with-param name="readRestrictions"
-        select="$annotations[@Term=concat($capabilitiesNamespace,'.ReadRestrictions') or @Term=concat($capabilitiesAlias,'.ReadRestrictions')]" />
-      <xsl:with-param name="insertRestrictions"
-        select="$annotations[@Term=concat($capabilitiesNamespace,'.InsertRestrictions') or @Term=concat($capabilitiesAlias,'.InsertRestrictions')]" />
+      <xsl:with-param name="readRestrictions" select="$readRestrictions" />
+      <xsl:with-param name="insertRestrictions" select="$insertRestrictions" />
       <xsl:with-param name="targetSet" select="." />
       <xsl:with-param name="with-get" select="not($readable='false')" />
       <xsl:with-param name="with-post" select="not($insertable='false')" />
@@ -2327,8 +2328,7 @@
         <xsl:with-param name="navigationRestrictions"
           select="$annotations[@Term=concat($capabilitiesNamespace,'.NavigationRestrictions') or @Term=concat($capabilitiesAlias,'.NavigationRestrictions')]" />
         <xsl:with-param name="navigation-prefix" select="''" />
-        <xsl:with-param name="readRestrictions"
-          select="$annotations[@Term=concat($capabilitiesNamespace,'.ReadRestrictions') or @Term=concat($capabilitiesAlias,'.ReadRestrictions')]" />
+        <xsl:with-param name="readRestrictions" select="$readRestrictions" />
         <xsl:with-param name="selectSupport"
           select="$annotations[@Term=concat($capabilitiesNamespace,'.SelectSupport') or @Term=concat($capabilitiesAlias,'.SelectSupport')]" />
         <xsl:with-param name="expandRestrictions"
@@ -2345,7 +2345,7 @@
     <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
     <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
     <xsl:variable name="annotations"
-      select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation|edm:Annotation" />
+      select="edm:Annotation|//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation" />
 
     <xsl:call-template name="pathItem-single-entity">
       <xsl:with-param name="type" select="@Type" />
@@ -2734,7 +2734,6 @@
       <xsl:text>,"parameters":[</xsl:text>
       <xsl:value-of select="$prefix-parameters" />
 
-      <!-- TODO: this is not correct for containment navigation properties -->
       <xsl:call-template name="query-options">
         <xsl:with-param name="after-keys" select="$prefix-parameters!=''" />
         <xsl:with-param name="navigationPropertyRestriction" select="$navigationPropertyRestriction" />
@@ -3716,16 +3715,19 @@
     <xsl:param name="collection" />
     <xsl:param name="entityType" />
 
-    <xsl:variable name="topSupported">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'TopSupported'" />
-        <xsl:with-param name="target" select="$target" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="topSupported-p" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='TopSupported']" />
-    <xsl:variable name="navigation-topSupported" select="$topSupported-p/@Bool|$topSupported-p/edm:Bool" />
+    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',$target/@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',$target/@Name)" />
+    <xsl:variable name="target-annotations"
+      select="$target/edm:Annotation|//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation" />
+
+    <xsl:variable name="target-topSupported-p"
+      select="$target-annotations[@Term=concat($capabilitiesNamespace,'.TopSupported') or @Term=concat($capabilitiesAlias,'.TopSupported')]" />
+    <xsl:variable name="target-topSupported" select="$target-topSupported-p/@Bool|$target-topSupported-p/edm:Bool" />
+    <xsl:variable name="navigation-topSupported-p"
+      select="$navigationPropertyRestriction/edm:PropertyValue[@Property='TopSupported']" />
+    <xsl:variable name="navigation-topSupported" select="$navigation-topSupported-p/@Bool|$navigation-topSupported-p/edm:Bool" />
     <xsl:variable name="with-top"
-      select="not($navigation-topSupported='false' or (not($navigation-topSupported) and $topSupported='false'))" />
+      select="not($navigation-topSupported='false' or (not($navigation-topSupported) and $target-topSupported='false'))" />
 
     <xsl:variable name="skipSupported">
       <xsl:call-template name="capability">
@@ -3771,7 +3773,7 @@
         <xsl:with-param name="target" select="$target" />
       </xsl:call-template>
     </xsl:variable>
-    <!-- TODO: CountRestrictions works similar to ExpandRestrictions and NavigationRestrictions -->
+    <!-- TODO: with-count similar to other restrictions, see https://issues.oasis-open.org/browse/ODATA-1300 -->
 
     <xsl:variable name="sortable">
       <xsl:call-template name="capability">
@@ -3809,7 +3811,7 @@
         <xsl:with-param name="target" select="$target" />
       </xsl:call-template>
     </xsl:variable>
-    <!-- TODO: CountRestrictions works similar to ExpandRestrictions and NavigationRestrictions -->
+    <!-- TODO: with-expand similar to other restrictions, see https://issues.oasis-open.org/browse/ODATA-1300 -->
 
     <xsl:if test="$collection">
 
@@ -3881,7 +3883,7 @@
         <xsl:variable name="navigation-non-sortable"
           select="$navigation-sortRestrictions/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
         <xsl:variable name="target-non-sortable"
-          select="$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
+          select="$target-annotations[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
         <xsl:variable name="non-sortable" select="$navigation-non-sortable|$target-non-sortable[not($navigation-non-sortable)]" />
         <xsl:apply-templates select="$entityType/edm:Property[not(@Name=$non-sortable)]" mode="orderby">
           <xsl:with-param name="after"
