@@ -4316,42 +4316,6 @@
     </xsl:if>
   </xsl:template>
 
-  <!-- TODO: remove -->
-  <xsl:template name="summary-description-qualified">
-    <xsl:param name="node" />
-    <xsl:param name="qualifier" />
-    <xsl:param name="fallback-summary" />
-
-    <xsl:variable name="summary">
-      <xsl:call-template name="Core.Description">
-        <xsl:with-param name="node" select="$node" />
-        <xsl:with-param name="qualifier" select="$qualifier" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:text>"summary":"</xsl:text>
-    <xsl:choose>
-      <xsl:when test="$summary!=''">
-        <xsl:value-of select="$summary" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$fallback-summary" />
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>"</xsl:text>
-
-    <xsl:variable name="description">
-      <xsl:call-template name="Core.LongDescription">
-        <xsl:with-param name="node" select="$node" />
-        <xsl:with-param name="qualifier" select="$qualifier" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:if test="$description!=''">
-      <xsl:text>,"description":"</xsl:text>
-      <xsl:value-of select="$description" />
-      <xsl:text>"</xsl:text>
-    </xsl:if>
-  </xsl:template>
-
   <xsl:template name="summary-description">
     <xsl:param name="node" select="." />
     <xsl:param name="node2" select="." />
