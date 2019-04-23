@@ -3729,89 +3729,69 @@
     <xsl:variable name="with-top"
       select="not($navigation-topSupported='false' or (not($navigation-topSupported) and $target-topSupported='false'))" />
 
-    <xsl:variable name="skipSupported">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'SkipSupported'" />
-        <xsl:with-param name="target" select="$target" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="skipSupported-p" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SkipSupported']" />
-    <xsl:variable name="navigation-skipSupported" select="$skipSupported-p/@Bool|$skipSupported-p/edm:Bool" />
+    <xsl:variable name="target-skipSupported-p"
+      select="$target-annotations[@Term=concat($capabilitiesNamespace,'.SkipSupported') or @Term=concat($capabilitiesAlias,'.SkipSupported')]" />
+    <xsl:variable name="target-skipSupported" select="$target-skipSupported-p/@Bool|$target-skipSupported-p/edm:Bool" />
+    <xsl:variable name="navigation-skipSupported-p"
+      select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SkipSupported']" />
+    <xsl:variable name="navigation-skipSupported"
+      select="$navigation-skipSupported-p/@Bool|$navigation-skipSupported-p/edm:Bool" />
     <xsl:variable name="with-skip"
-      select="not($navigation-skipSupported='false' or (not($navigation-skipSupported) and $skipSupported='false'))" />
+      select="not($navigation-skipSupported='false' or (not($navigation-skipSupported) and $target-skipSupported='false'))" />
 
-    <xsl:variable name="searchable">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'SearchRestrictions'" />
-        <xsl:with-param name="property" select="'Searchable'" />
-        <xsl:with-param name="target" select="$target" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="searchable-p"
+    <xsl:variable name="target-searchable-p"
+      select="$target-annotations[@Term=concat($capabilitiesNamespace,'.SearchRestrictions') or @Term=concat($capabilitiesAlias,'.SearchRestrictions')]/edm:Record/edm:PropertyValue[@Property='Searchable']" />
+    <xsl:variable name="target-searchable" select="$target-searchable-p/@Bool|$target-searchable-p/edm:Bool" />
+    <xsl:variable name="navigation-searchable-p"
       select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SearchRestrictions']/edm:Record/edm:PropertyValue[@Property='Searchable']" />
-    <xsl:variable name="navigation-searchable" select="$searchable-p/@Bool|$searchable-p/edm:Bool" />
+    <xsl:variable name="navigation-searchable" select="$navigation-searchable-p/@Bool|$navigation-searchable-p/edm:Bool" />
     <xsl:variable name="with-search"
-      select="not($navigation-searchable='false' or (not($navigation-searchable) and $searchable='false'))" />
+      select="not($navigation-searchable='false' or (not($navigation-searchable) and $target-searchable='false'))" />
 
-    <xsl:variable name="filterable">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'FilterRestrictions'" />
-        <xsl:with-param name="property" select="'Filterable'" />
-        <xsl:with-param name="target" select="$target" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="filterable-p"
+    <xsl:variable name="target-filterRestrictions"
+      select="$target-annotations[@Term=concat($capabilitiesNamespace,'.FilterRestrictions') or @Term=concat($capabilitiesAlias,'.FilterRestrictions')]/edm:Record" />
+    <xsl:variable name="target-filterable-p" select="$target-filterRestrictions/edm:PropertyValue[@Property='Filterable']" />
+    <xsl:variable name="target-filterable" select="$target-filterable-p/@Bool|$target-filterable-p/edm:Bool" />
+    <xsl:variable name="navigation-filterable-p"
       select="$navigationPropertyRestriction/edm:PropertyValue[@Property='FilterRestrictions']/edm:Record/edm:PropertyValue[@Property='Filterable']" />
-    <xsl:variable name="navigation-filterable" select="$filterable-p/@Bool|$filterable-p/edm:Bool" />
+    <xsl:variable name="navigation-filterable" select="$navigation-filterable-p/@Bool|$navigation-filterable-p/edm:Bool" />
     <xsl:variable name="with-filter"
-      select="not($navigation-filterable='false' or (not($navigation-filterable) and $filterable='false'))" />
+      select="not($navigation-filterable='false' or (not($navigation-filterable) and $target-filterable='false'))" />
 
-    <xsl:variable name="countable">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'CountRestrictions'" />
-        <xsl:with-param name="property" select="'Countable'" />
-        <xsl:with-param name="target" select="$target" />
-      </xsl:call-template>
-    </xsl:variable>
+    <xsl:variable name="target-countable-p"
+      select="$target-annotations[@Term=concat($capabilitiesNamespace,'.CountRestrictions') or @Term=concat($capabilitiesAlias,'.CountRestrictions')]/edm:Record/edm:PropertyValue[@Property='Countable']" />
+    <xsl:variable name="target-countable" select="$target-countable-p/@Bool|$target-countable-p/edm:Bool" />
     <!-- TODO: with-count similar to other restrictions, see https://issues.oasis-open.org/browse/ODATA-1300 -->
+    <xsl:variable name="with-count" select="not($target-filterable='false')" />
 
-    <xsl:variable name="sortable">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'SortRestrictions'" />
-        <xsl:with-param name="property" select="'Sortable'" />
-        <xsl:with-param name="target" select="$target" />
-      </xsl:call-template>
-    </xsl:variable>
+    <xsl:variable name="target-sortRestrictions"
+      select="$target-annotations[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record" />
+    <xsl:variable name="target-sortable-p" select="$target-sortRestrictions/edm:PropertyValue[@Property='Sortable']" />
+    <xsl:variable name="target-sortable" select="$target-sortable-p/@Bool|$target-sortable-p/edm:Bool" />
     <xsl:variable name="navigation-sortRestrictions"
       select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SortRestrictions']/edm:Record" />
     <xsl:variable name="sortable-p" select="$navigation-sortRestrictions/edm:PropertyValue[@Property='Sortable']" />
     <xsl:variable name="navigation-sortable" select="$sortable-p/@Bool|$sortable-p/edm:Bool" />
     <xsl:variable name="with-sort"
-      select="not($navigation-sortable='false' or (not($navigation-sortable) and $sortable='false'))" />
+      select="not($navigation-sortable='false' or (not($navigation-sortable) and $target-sortable='false'))" />
 
-    <xsl:variable name="selectable">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'SelectSupport'" />
-        <xsl:with-param name="property" select="'Supported'" />
-        <xsl:with-param name="target" select="$target" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="selectSupported-p"
+    <xsl:variable name="target-selectable-p"
+      select="$target-annotations[@Term=concat($capabilitiesNamespace,'.SelectSupport') or @Term=concat($capabilitiesAlias,'.SelectSupport')]/edm:Record/edm:PropertyValue[@Property='Supported']" />
+    <xsl:variable name="target-selectable" select="$target-selectable-p/@Bool|$target-selectable-p/edm:Bool" />
+    <xsl:variable name="navigation-selectSupported-p"
       select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SelectSupport']/edm:Record/edm:PropertyValue[@Property='Supported']" />
-    <xsl:variable name="navigation-selectable" select="$selectSupported-p/@Bool|$selectSupported-p/edm:Bool" />
+    <xsl:variable name="navigation-selectable"
+      select="$navigation-selectSupported-p/@Bool|$navigation-selectSupported-p/edm:Bool" />
     <xsl:variable name="selectable-properties"
       select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']" />
     <xsl:variable name="with-select"
-      select="not($navigation-selectable='false' or (not($navigation-selectable) and $selectable='false')) and $selectable-properties" />
+      select="not($navigation-selectable='false' or (not($navigation-selectable) and $target-selectable='false')) and $selectable-properties" />
 
-    <xsl:variable name="expandable">
-      <xsl:call-template name="capability">
-        <xsl:with-param name="term" select="'ExpandRestrictions'" />
-        <xsl:with-param name="property" select="'Expandable'" />
-        <xsl:with-param name="target" select="$target" />
-      </xsl:call-template>
-    </xsl:variable>
+    <xsl:variable name="target-expandable-p"
+      select="$target-annotations[@Term=concat($capabilitiesNamespace,'.ExpandRestrictions') or @Term=concat($capabilitiesAlias,'.ExpandRestrictions')]/edm:Record/edm:PropertyValue[@Property='Expandable']" />
+    <xsl:variable name="target-expandable" select="$target-expandable-p/@Bool|$target-expandable-p/edm:Bool" />
     <!-- TODO: with-expand similar to other restrictions, see https://issues.oasis-open.org/browse/ODATA-1300 -->
+    <xsl:variable name="with-expand" select="not($target-expandable='false')" />
 
     <xsl:if test="$collection">
 
@@ -3846,13 +3826,6 @@
         <xsl:if test="$after-keys or $with-top or $with-skip or $with-search">
           <xsl:text>,</xsl:text>
         </xsl:if>
-        <xsl:variable name="filter-required">
-          <xsl:call-template name="capability">
-            <xsl:with-param name="term" select="'FilterRestrictions'" />
-            <xsl:with-param name="property" select="'RequiresFilter'" />
-            <xsl:with-param name="target" select="$target" />
-          </xsl:call-template>
-        </xsl:variable>
         <xsl:text>{"name":"</xsl:text>
         <xsl:value-of select="$option-prefix" />
         <xsl:text>filter","in":"query","description":"Filter items by property values</xsl:text>
@@ -3864,13 +3837,16 @@
         <xsl:call-template name="parameter-type">
           <xsl:with-param name="type" select="'string'" />
         </xsl:call-template>
-        <xsl:if test="$filter-required='true'">
+        <xsl:variable name="target-requiresfilter-p"
+          select="$target-filterRestrictions/edm:PropertyValue[@Property='RequiresFilter']" />
+        <xsl:variable name="target-requiresfilter" select="$target-requiresfilter-p/@Bool|$target-requiresfilter-p/edm:Bool" />
+        <xsl:if test="$target-requiresfilter='true'">
           <xsl:text>,"required":true</xsl:text>
         </xsl:if>
         <xsl:text>}</xsl:text>
       </xsl:if>
 
-      <xsl:if test="not($countable='false')">
+      <xsl:if test="$with-count">
         <xsl:if test="$after-keys or $with-top or $with-skip or $with-search or $with-filter">
           <xsl:text>,</xsl:text>
         </xsl:if>
@@ -3883,11 +3859,11 @@
         <xsl:variable name="navigation-non-sortable"
           select="$navigation-sortRestrictions/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
         <xsl:variable name="target-non-sortable"
-          select="$target-annotations[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
+          select="$target-sortRestrictions/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
         <xsl:variable name="non-sortable" select="$navigation-non-sortable|$target-non-sortable[not($navigation-non-sortable)]" />
         <xsl:apply-templates select="$entityType/edm:Property[not(@Name=$non-sortable)]" mode="orderby">
           <xsl:with-param name="after"
-            select="$after-keys or $with-top or $with-skip or $with-search or $with-filter or not($countable='false')" />
+            select="$after-keys or $with-top or $with-skip or $with-search or $with-filter or $with-count" />
         </xsl:apply-templates>
       </xsl:if>
 
@@ -3899,17 +3875,17 @@
         mode="select"
       >
         <xsl:with-param name="after"
-          select="$after-keys or ($collection and ($with-top or $with-skip or $with-search or $with-filter or not($countable='false') or $with-sort))" />
+          select="$after-keys or ($collection and ($with-top or $with-skip or $with-search or $with-filter or $with-count or $with-sort))" />
       </xsl:apply-templates>
     </xsl:if>
 
-    <xsl:if test="not($expandable='false')">
+    <xsl:if test="$with-expand">
       <xsl:apply-templates
         select="$entityType/edm:NavigationProperty|$entityType/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']"
         mode="expand"
       >
         <xsl:with-param name="after"
-          select="$after-keys or ($collection and ($with-top or $with-skip or $with-search or $with-filter or not($countable='false') or $with-sort)) or $with-select" />
+          select="$after-keys or ($collection and ($with-top or $with-skip or $with-search or $with-filter or $with-count or $with-sort)) or $with-select" />
       </xsl:apply-templates>
     </xsl:if>
   </xsl:template>
