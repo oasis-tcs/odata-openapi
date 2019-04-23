@@ -3780,8 +3780,9 @@
         <xsl:with-param name="target" select="$target" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:variable name="sortable-p"
-      select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SortRestrictions']/edm:Record/edm:PropertyValue[@Property='Sortable']" />
+    <xsl:variable name="navigation-sortRestrictions"
+      select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SortRestrictions']/edm:Record" />
+    <xsl:variable name="sortable-p" select="$navigation-sortRestrictions/edm:PropertyValue[@Property='Sortable']" />
     <xsl:variable name="navigation-sortable" select="$sortable-p/@Bool|$sortable-p/edm:Bool" />
     <xsl:variable name="with-sort"
       select="not($navigation-sortable='false' or (not($navigation-sortable) and $sortable='false'))" />
@@ -3877,9 +3878,11 @@
       </xsl:if>
 
       <xsl:if test="$with-sort">
-        <!-- TODO: also look on navigaton restrictions -->
-        <xsl:variable name="non-sortable"
+        <xsl:variable name="navigation-non-sortable"
+          select="$navigation-sortRestrictions/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
+        <xsl:variable name="target-non-sortable"
           select="$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
+        <xsl:variable name="non-sortable" select="$navigation-non-sortable|$target-non-sortable[not($navigation-non-sortable)]" />
         <xsl:apply-templates select="$entityType/edm:Property[not(@Name=$non-sortable)]" mode="orderby">
           <xsl:with-param name="after"
             select="$after-keys or $with-top or $with-skip or $with-search or $with-filter or not($countable='false')" />
