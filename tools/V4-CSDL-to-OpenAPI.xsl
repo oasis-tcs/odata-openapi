@@ -4405,9 +4405,11 @@
     </xsl:variable>
 
     <xsl:variable name="longdescription">
-      <xsl:call-template name="Core.LongDescription">
-        <xsl:with-param name="node" select="." />
-      </xsl:call-template>
+      <xsl:if test="$property-longDescription">
+        <xsl:call-template name="Core.LongDescription">
+          <xsl:with-param name="node" select="." />
+        </xsl:call-template>
+      </xsl:if>
     </xsl:variable>
 
     <xsl:choose>
@@ -4450,49 +4452,24 @@
 
   <xsl:template name="description">
     <xsl:param name="node" />
-    <xsl:param name="node2" select="null" />
 
     <xsl:variable name="quickinfo">
-      <xsl:variable name="first">
-        <xsl:call-template name="Common.QuickInfo">
-          <xsl:with-param name="node" select="$node" />
-        </xsl:call-template>
-      </xsl:variable>
-      <xsl:value-of select="$first" />
-      <xsl:if test="$first='' and $node2">
-        <xsl:call-template name="Common.QuickInfo">
-          <xsl:with-param name="node" select="$node2" />
-        </xsl:call-template>
-      </xsl:if>
+      <xsl:call-template name="Common.QuickInfo">
+        <xsl:with-param name="node" select="$node" />
+      </xsl:call-template>
     </xsl:variable>
 
     <xsl:variable name="description">
-      <xsl:variable name="first">
-        <xsl:call-template name="Core.Description">
-          <xsl:with-param name="node" select="$node" />
-        </xsl:call-template>
-      </xsl:variable>
-      <xsl:value-of select="$first" />
-      <xsl:if test="$first='' and $node2">
-        <xsl:call-template name="Core.Description">
-          <xsl:with-param name="node" select="$node2" />
-        </xsl:call-template>
-      </xsl:if>
+      <xsl:call-template name="Core.Description">
+        <xsl:with-param name="node" select="$node" />
+      </xsl:call-template>
     </xsl:variable>
 
     <xsl:variable name="longdescription">
       <xsl:if test="$property-longDescription">
-        <xsl:variable name="first">
-          <xsl:call-template name="Core.LongDescription">
-            <xsl:with-param name="node" select="$node" />
-          </xsl:call-template>
-        </xsl:variable>
-        <xsl:value-of select="$first" />
-        <xsl:if test="$first='' and $node2">
-          <xsl:call-template name="Core.LongDescription">
-            <xsl:with-param name="node" select="$node2" />
-          </xsl:call-template>
-        </xsl:if>
+        <xsl:call-template name="Core.LongDescription">
+          <xsl:with-param name="node" select="$node" />
+        </xsl:call-template>
       </xsl:if>
     </xsl:variable>
 
@@ -4508,7 +4485,6 @@
         </xsl:if>
         <xsl:value-of select="$longdescription" />
       </xsl:when>
-      <!-- TODO: this is fishy, already used in summary -->
       <xsl:otherwise>
         <xsl:call-template name="Common.Label">
           <xsl:with-param name="node" select="$node" />
