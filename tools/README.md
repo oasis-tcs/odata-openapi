@@ -163,33 +163,46 @@ Term | Annotation Target | OpenAPI field
 
 Term | Annotation Target | OpenAPI field
 -----|-------------------|--------------
-`CountRestrictions/Countable` | EntitySet | `$count` system query option for `GET` operation
-`DeleteRestrictions/Deletable` | EntitySet | `DELETE` operation for deleting an existing entity
-`ExpandRestrictions/Expandable` | EntitySet, Singleton | `$expand` system query option for `GET` operations
-`FilterRestrictions/Filterable` | EntitySet | `$filter` system query option for `GET` operation
-`FilterRestrictions/RequiredProperties` | EntitySet | required properties in `$filter` system query option for `GET` operation (parameter description only)
-`FilterRestrictions/RequiresFilter` | EntitySet | `$filter` system query option for `GET` operation is `required`
+`CountRestrictions`<br>&emsp;`/Countable` | EntitySet | `$count` system query option for `GET` operation
+`DeleteRestrictions`<br>&emsp;`/Deletable` | EntitySet | `DELETE` operation for deleting an existing entity
+&emsp;`/Description` | EntitySet | `summary` of Operation Object
+&emsp;`/LongDescription` | EntitySet | `description` of Operation Object
+`ExpandRestrictions`<br>&emsp;`/Expandable` | EntitySet, Singleton | `$expand` system query option for `GET` operations
+`FilterRestrictions`<br>&emsp;`/Filterable` | EntitySet | `$filter` system query option for `GET` operation
+&emsp;`/RequiredProperties` | EntitySet | required properties in `$filter` system query option for `GET` operation (parameter description only)
+&emsp;`/RequiresFilter` | EntitySet | `$filter` system query option for `GET` operation is `required`
 `IndexableByKey` | EntitySet | `GET` operation for single entity
-`InsertRestrictions/Insertable` | EntitySet | `POST` operation for inserting a new entity
+`InsertRestrictions`<br>&emsp;`/Insertable` | EntitySet | `POST` operation for inserting a new entity
+&emsp;`/Description` | EntitySet | `summary` of Operation Object
+&emsp;`/LongDescription` | EntitySet | `description` of Operation Object
 `KeyAsSegmentSupported` | EntityContainer | `paths` URL templates use key-as-segment style instead of parenthesis style
-`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/DeleteRestrictions/Deletable` | EntitySet, Singleton | `DELETE` operation for deleting a contained entity via a navigation path
-`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/FilterRestrictions/...` | EntitySet, Singleton | `$filter` system query option for reading related entities via a navigation path
-`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/InsertRestrictions/Insertable` | EntitySet, Singleton | `POST` operation for inserting a new related entity via a navigation path
-`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/ReadByKeyRestrictions/Readable` | EntitySet, Singleton | `GET` operation for reading a contained entity by key via a navigation path
-`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/ReadRestrictions/Readable` | EntitySet, Singleton | `GET` operation for reading related entities via a navigation path
-`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/SearchRestrictions/Searchable` | EntitySet, Singleton | `$search` system query option for reading related entities via a navigation path
-`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/SkipSupported` | EntitySet, Singleton | `$skip` system query option for reading contained entities via a navigation path
-`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/SortRestrictions/...` | EntitySet, Singleton | `$orderby` system query option for reading related entities via a navigation path
-`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/TopSupported` | EntitySet, Singleton | `$top` system query option for reading contained entities via a navigation path
-`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/UpdateRestrictions/Updatable` | EntitySet, Singleton | `PATCH` operation for modifying a contained entity via a navigation path
-`ReadByKeyRestrictions/Readable` | EntitySet | `GET` operation for reading a single entity by key
-`ReadRestrictions/Readable` | EntitySet | `GET` operation for reading an entity set, a singleton, or along a navigation property
-`SearchRestrictions/Searchable` | EntitySet | `$search` system query option for `GET` operation
+`NavigationRestrictions`<br>&emsp;`/RestrictedProperties` | EntitySet, Singleton | operations via a navigation path
+&emsp;&emsp;`/DeleteRestrictions/...` | EntitySet, Singleton | `DELETE` operation for deleting a contained entity via a navigation path
+&emsp;&emsp;`/FilterRestrictions/...` | EntitySet, Singleton | `$filter` system query option for reading related entities via a navigation path
+&emsp;&emsp;`/InsertRestrictions/...` | EntitySet, Singleton | `POST` operation for inserting a new related entity via a navigation path
+&emsp;&emsp;`/ReadByKeyRestrictions/...` | EntitySet, Singleton | `GET` operation for reading a contained entity by key via a navigation path
+&emsp;&emsp;`/ReadRestrictions/...` | EntitySet, Singleton | `GET` operation for reading related entities via a navigation path
+&emsp;&emsp;`/SearchRestrictions/...` | EntitySet, Singleton | `$search` system query option for reading related entities via a navigation path
+&emsp;&emsp;`/SelectSupport/...` | EntitySet, Singleton | `$select` system query option for reading related entities via a navigation path
+&emsp;&emsp;`/SkipSupported` | EntitySet, Singleton | `$skip` system query option for reading contained entities via a navigation path
+&emsp;&emsp;`/SortRestrictions/...` | EntitySet, Singleton | `$orderby` system query option for reading related entities via a navigation path
+&emsp;&emsp;`/TopSupported` | EntitySet, Singleton | `$top` system query option for reading contained entities via a navigation path
+&emsp;&emsp;`/UpdateRestrictions/...` | EntitySet, Singleton | `PATCH` operation for modifying a contained entity via a navigation path
+`ReadByKeyRestrictions`<br>&emsp;`/Readable` | EntitySet | `GET` operation for reading a single entity by key
+&emsp;`/Description` | EntitySet | `summary` of Operation Object
+&emsp;`/LongDescription` | EntitySet | `description` of Operation Object
+`ReadRestrictions`<br>&emsp;`/Readable` | EntitySet | `GET` operation for reading an entity set, a singleton, or along a navigation property
+&emsp;`/Description` | EntitySet | `summary` of Operation Object
+&emsp;`/LongDescription` | EntitySet | `description` of Operation Object
+`SearchRestrictions`<br>&emsp;`/Searchable` | EntitySet | `$search` system query option for `GET` operation
+`SelectSupport`<br>&emsp;`/Supported` | EntitySet | `$select` system query option for `GET` operation
 `SkipSupported` | EntitySet | `$skip` system query option for `GET` operation
-`SortRestrictions/NonSortableProperties` | EntitySet | properties not listed in `$orderby` system query option for `GET` operation
-`SortRestrictions/Sortable` | EntitySet | `$orderby` system query option for `GET` operation
+`SortRestrictions`<br>&emsp;`/NonSortableProperties` | EntitySet | properties not listed in `$orderby` system query option for `GET` operation
+`SortRestrictions`<br>&emsp;`/Sortable` | EntitySet | `$orderby` system query option for `GET` operation
 `TopSupported` | EntitySet | `$top` system query option for `GET` operation
-`UpdateRestrictions/Updatable` | EntitySet, Singleton | `PATCH` operation for modifying an existing entity
+`UpdateRestrictions`<br>&emsp;`/Updatable` | EntitySet, Singleton | `PATCH` operation for modifying an existing entity
+&emsp;`/Description` | EntitySet | `summary` of Operation Object
+&emsp;`/LongDescription` | EntitySet | `description` of Operation Object
 
 
 ## [Common](https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common)
