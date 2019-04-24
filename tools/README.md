@@ -150,10 +150,12 @@ Term | Annotation Target | OpenAPI field
 `Description` | EntityType | `description` of Request Body Object
 `Description` | ComplexType, EntityType, EnumerationType, Parameter, Property, TypeDefinition | `description` of Schema Object
 `Description` | Schema, EntityContainer | `info.title`
+`Example`   | Property | `example` of Schema Object
 `Immutable` | Property | omit from Update structure
 `LongDescription` | Action, ActionImport, Function, FunctionImport | `description` of Operation Object
 `LongDescription` | ComplexType, EntityType, EnumerationType, Parameter, Property, TypeDefinition | `description` of Schema Object
 `LongDescription` | Schema, EntityContainer | `info.description`
+`Permissions:Read`   | Property | omit read-only properties from Create and Update structures
 `SchemaVersion` | Schema | `info.version`
 
 
@@ -170,13 +172,22 @@ Term | Annotation Target | OpenAPI field
 `IndexableByKey` | EntitySet | `GET` operation for single entity
 `InsertRestrictions/Insertable` | EntitySet | `POST` operation for inserting a new entity
 `KeyAsSegmentSupported` | EntityContainer | `paths` URL templates use key-as-segment style instead of parenthesis style
-`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/InsertRestrictions/Insertable` | EntitySet, Singleton | `POST` operation for inserting a new entity
+`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/DeleteRestrictions/Deletable` | EntitySet, Singleton | `DELETE` operation for deleting a contained entity via a navigation path
+`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/FilterRestrictions/...` | EntitySet, Singleton | `$filter` system query option for reading related entities via a navigation path
+`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/InsertRestrictions/Insertable` | EntitySet, Singleton | `POST` operation for inserting a new related entity via a navigation path
+`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/ReadByKeyRestrictions/Readable` | EntitySet, Singleton | `GET` operation for reading a contained entity by key via a navigation path
+`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/ReadRestrictions/Readable` | EntitySet, Singleton | `GET` operation for reading related entities via a navigation path
+`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/SearchRestrictions/Searchable` | EntitySet, Singleton | `$search` system query option for reading related entities via a navigation path
+`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/SkipSupported` | EntitySet, Singleton | `$skip` system query option for reading contained entities via a navigation path
+`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/SortRestrictions/...` | EntitySet, Singleton | `$orderby` system query option for reading related entities via a navigation path
+`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/TopSupported` | EntitySet, Singleton | `$top` system query option for reading contained entities via a navigation path
+`NavigationRestrictions/RestrictedProperties` <br>&nbsp;&nbsp;&nbsp;`/UpdateRestrictions/Updatable` | EntitySet, Singleton | `PATCH` operation for modifying a contained entity via a navigation path
 `ReadByKeyRestrictions/Readable` | EntitySet | `GET` operation for reading a single entity by key
 `ReadRestrictions/Readable` | EntitySet | `GET` operation for reading an entity set, a singleton, or along a navigation property
 `SearchRestrictions/Searchable` | EntitySet | `$search` system query option for `GET` operation
+`SkipSupported` | EntitySet | `$skip` system query option for `GET` operation
 `SortRestrictions/NonSortableProperties` | EntitySet | properties not listed in `$orderby` system query option for `GET` operation
 `SortRestrictions/Sortable` | EntitySet | `$orderby` system query option for `GET` operation
-`SkipSupported` | EntitySet | `$skip` system query option for `GET` operation
 `TopSupported` | EntitySet | `$top` system query option for `GET` operation
 `UpdateRestrictions/Updatable` | EntitySet, Singleton | `PATCH` operation for modifying an existing entity
 
@@ -185,7 +196,7 @@ Term | Annotation Target | OpenAPI field
 
 Term | Annotation Target | OpenAPI field
 -----|-------------------|--------------
-`FieldControl: Mandatory` | Property | require in Create structure
+`FieldControl:Mandatory` | Property | require in Create structure
 `Label` | Action, ActionImport, Function, FunctionImport | `title` of Operation Object
 `Label` | ComplexType, EntityType, EnumerationType, Property, TypeDefinition | `title` of Schema Object
 `QuickInfo` | Action, ActionImport, Function, FunctionImport | `description` of Operation Object
@@ -209,4 +220,3 @@ Term | Annotation Target | OpenAPI field
 -----|-------------------|--------------
 `Authorizations` | EntityContainer | `securitySchemes` of Components Object / `securityDefinitions` of Swagger Object 
 `SecuritySchemes` | EntityContainer | `security` of OpenAPI / Swagger Object
-
