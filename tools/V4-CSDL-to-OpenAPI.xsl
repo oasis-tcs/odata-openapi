@@ -4329,43 +4329,91 @@
     <xsl:param name="node2" select="." />
     <xsl:param name="fallback-summary" />
 
-    <xsl:variable name="summary">
-      <xsl:call-template name="Common.Label">
-        <xsl:with-param name="node" select="$node" />
-      </xsl:call-template>
+    <xsl:variable name="label">
+      <xsl:variable name="first">
+        <xsl:call-template name="Common.Label">
+          <xsl:with-param name="node" select="$node" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:value-of select="$first" />
+      <xsl:if test="$first='' and $node2">
+        <xsl:call-template name="Common.Label">
+          <xsl:with-param name="node" select="$node2" />
+        </xsl:call-template>
+      </xsl:if>
     </xsl:variable>
-    <xsl:text>"summary":"</xsl:text>
-    <xsl:choose>
-      <xsl:when test="$summary!=''">
-        <xsl:value-of select="$summary" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:variable name="summary2">
-          <xsl:call-template name="Common.Label">
-            <xsl:with-param name="node" select="$node2" />
+
+    <xsl:variable name="quickinfo">
+      <xsl:variable name="first">
+        <xsl:call-template name="Common.QuickInfo">
+          <xsl:with-param name="node" select="$node" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:value-of select="$first" />
+      <xsl:if test="$first='' and $node2">
+        <xsl:call-template name="Common.QuickInfo">
+          <xsl:with-param name="node" select="$node2" />
+        </xsl:call-template>
+      </xsl:if>
+    </xsl:variable>
+
+    <xsl:variable name="description">
+      <xsl:variable name="first">
+        <xsl:call-template name="Core.Description">
+          <xsl:with-param name="node" select="$node" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:value-of select="$first" />
+      <xsl:if test="$first='' and $node2">
+        <xsl:call-template name="Core.Description">
+          <xsl:with-param name="node" select="$node2" />
+        </xsl:call-template>
+      </xsl:if>
+    </xsl:variable>
+
+    <xsl:variable name="longdescription">
+      <xsl:if test="$property-longDescription">
+        <xsl:variable name="first">
+          <xsl:call-template name="Core.LongDescription">
+            <xsl:with-param name="node" select="$node" />
           </xsl:call-template>
         </xsl:variable>
-        <xsl:choose>
-          <xsl:when test="$summary2!=''">
-            <xsl:value-of select="$summary2" />
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="$fallback-summary" />
-          </xsl:otherwise>
-        </xsl:choose>
+        <xsl:value-of select="$first" />
+        <xsl:if test="$first='' and $node2">
+          <xsl:call-template name="Core.LongDescription">
+            <xsl:with-param name="node" select="$node2" />
+          </xsl:call-template>
+        </xsl:if>
+      </xsl:if>
+    </xsl:variable>
+
+    <xsl:text>"summary":"</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$label!=''">
+        <xsl:value-of select="$label" />
+      </xsl:when>
+      <xsl:when test="$description!=''">
+        <xsl:value-of select="$description" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$fallback-summary" />
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>"</xsl:text>
 
-    <xsl:variable name="description">
-      <xsl:call-template name="description">
-        <xsl:with-param name="node" select="$node" />
-        <xsl:with-param name="node2" select="$node2" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:if test="$description!=''">
+    <xsl:if test="$quickinfo!='' or ($label!='' and $description!='') or $longdescription!=''">
       <xsl:text>,"description":"</xsl:text>
-      <xsl:value-of select="$description" />
+      <xsl:value-of select="$quickinfo" />
+      <xsl:if test="$label!=''"><!-- i.e. $description has not been used for summary -->
+        <xsl:if test="$quickinfo!=''">
+          <xsl:text>  \n</xsl:text>
+        </xsl:if>
+        <xsl:value-of select="$description" />
+      </xsl:if>
+      <xsl:if test="($quickinfo!='' or ($label!='' and $description!='')) and $longdescription!=''">
+        <xsl:text>  \n</xsl:text>
+      </xsl:if>
+      <xsl:value-of select="$longdescription" />
       <xsl:text>"</xsl:text>
     </xsl:if>
   </xsl:template>
