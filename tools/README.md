@@ -171,7 +171,7 @@ Term | Annotation Target | OpenAPI field
 `FilterRestrictions`<br>&emsp;`/Filterable` | EntitySet | `$filter` system query option for `GET` operation
 &emsp;`/RequiredProperties` | EntitySet | required properties in `$filter` system query option for `GET` operation (parameter description only)
 &emsp;`/RequiresFilter` | EntitySet | `$filter` system query option for `GET` operation is `required`
-`IndexableByKey` | EntitySet | `GET` operation for single entity
+`IndexableByKey` | EntitySet | `GET`, `PATCH`, and `DELETE` operations for a single entity within an entity set
 `InsertRestrictions`<br>&emsp;`/Insertable` | EntitySet | `POST` operation for inserting a new entity
 &emsp;`/Description` | EntitySet | `summary` of Operation Object
 &emsp;`/LongDescription` | EntitySet | `description` of Operation Object
@@ -191,7 +191,7 @@ Term | Annotation Target | OpenAPI field
 `ReadByKeyRestrictions`<br>&emsp;`/Readable` | EntitySet | `GET` operation for reading a single entity by key
 &emsp;`/Description` | EntitySet | `summary` of Operation Object
 &emsp;`/LongDescription` | EntitySet | `description` of Operation Object
-`ReadRestrictions`<br>&emsp;`/Readable` | EntitySet | `GET` operation for reading an entity set, a singleton, or along a navigation property
+`ReadRestrictions`<br>&emsp;`/Readable` | EntitySet, Singleton | `GET` operation for reading an entity set or singleton
 &emsp;`/Description` | EntitySet | `summary` of Operation Object
 &emsp;`/LongDescription` | EntitySet | `description` of Operation Object
 `SearchRestrictions`<br>&emsp;`/Searchable` | EntitySet | `$search` system query option for `GET` operation
