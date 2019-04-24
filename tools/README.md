@@ -198,7 +198,7 @@ Term | Annotation Target | OpenAPI field
 `SelectSupport`<br>&emsp;`/Supported` | EntitySet | `$select` system query option for `GET` operation
 `SkipSupported` | EntitySet | `$skip` system query option for `GET` operation
 `SortRestrictions`<br>&emsp;`/NonSortableProperties` | EntitySet | properties not listed in `$orderby` system query option for `GET` operation
-`SortRestrictions`<br>&emsp;`/Sortable` | EntitySet | `$orderby` system query option for `GET` operation
+&emsp;`/Sortable` | EntitySet | `$orderby` system query option for `GET` operation
 `TopSupported` | EntitySet | `$top` system query option for `GET` operation
 `UpdateRestrictions`<br>&emsp;`/Updatable` | EntitySet, Singleton | `PATCH` operation for modifying an existing entity
 &emsp;`/Description` | EntitySet | `summary` of Operation Object
