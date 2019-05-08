@@ -3147,9 +3147,11 @@
         <xsl:text>"]</xsl:text>
         <xsl:text>,"parameters":[</xsl:text>
         <xsl:value-of select="$path-parameters" />
-        <xsl:call-template name="if-match">
+        <!-- TODO: depends on Core.OptimisticConcurrency
+          <xsl:call-template name="if-match">
           <xsl:with-param name="after" select="$path-parameters!=''" />
-        </xsl:call-template>
+          </xsl:call-template>
+        -->
         <xsl:text>]</xsl:text>
         <xsl:call-template name="responses" />
         <xsl:text>}</xsl:text>
