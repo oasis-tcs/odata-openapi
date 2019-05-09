@@ -1077,9 +1077,15 @@
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="hashpair">
     <xsl:variable name="qualifiedName" select="concat(../@Namespace,'.',@Name)" />
+    <xsl:variable name="target-path" select="concat(../@Namespace,'.',@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat(../@Alias,'.',@Name)" />
+
     <!-- TODO: also external annotations - testcase - run-time -->
     <xsl:variable name="computed"
       select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')]]/@Name" />
+    <xsl:variable name="computed-ext"
+      select="//edm:Annotations[substring-before(@Target,'/') = $target-path or substring-before(@Target,'/') = $target-path-aliased and edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')]]/@Target" />
+
     <xsl:variable name="immutable"
       select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable')]]/@Name" />
     <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
@@ -1132,7 +1138,9 @@
 
     <xsl:text>"type":"object"</xsl:text>
     <!-- everything except computed and read-only properties -->
-    <xsl:apply-templates select="edm:Property[not(@Name=$computed or @Name=$read-only)]|edm:NavigationProperty"
+    <xsl:apply-templates
+      select="edm:Property[not(@Name=$computed or concat($target-path,'/',@Name) = $computed-ext or concat($target-path-aliased,'/',@Name) = $computed-ext 
+                            or @Name=$read-only)]|edm:NavigationProperty"
       mode="hash"
     >
       <xsl:with-param name="name" select="'properties'" />
@@ -1140,7 +1148,10 @@
     </xsl:apply-templates>
     <!-- non-computed key properties are required, as are properties marked with Common.FieldControl=Mandatory -->
     <xsl:apply-templates
-      select="edm:Property[(@Name=../edm:Key/edm:PropertyRef/@Name and not(@Name=$computed or @Name=$read-only)) or concat($qualifiedName,'/',@Name)=$mandatory]"
+      select="edm:Property[(@Name=../edm:Key/edm:PropertyRef/@Name 
+                             and not(@Name=$computed or concat($target-path,'/',@Name) = $computed-ext or concat($target-path-aliased,'/',@Name) = $computed-ext 
+                                  or @Name=$read-only)) 
+                           or concat($qualifiedName,'/',@Name)=$mandatory]"
       mode="required" />
 
     <xsl:if test="@BaseType">
@@ -1170,7 +1181,9 @@
     <xsl:text>"type":"object"</xsl:text>
     <!-- only updatable non-key properties -->
     <xsl:apply-templates
-      select="edm:Property[not(@Name=$immutable or @Name=$computed or @Name=$read-only or @Name=../edm:Key/edm:PropertyRef/@Name)]"
+      select="edm:Property[not(@Name=$immutable 
+                            or @Name=$computed or concat($target-path,'/',@Name) = $computed-ext or concat($target-path-aliased,'/',@Name) = $computed-ext 
+                            or @Name=$read-only or @Name=../edm:Key/edm:PropertyRef/@Name)]"
       mode="hash"
     >
       <xsl:with-param name="name" select="'properties'" />
