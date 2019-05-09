@@ -20,7 +20,7 @@
     - 200 response for PATCH if $odata-version!='2.0'
     - ETag for GET / If-Match for PATCH and DELETE depending on @Core.OptimisticConcurrency
     - external targeting for Capabilities.KeyAsSegmentSupported
-    - external targeting for Core: Immutable, Computed, Permission/Read
+    - external targeting for Core.Permission/Read
     - example values via Core.Example: Int
     - count/expand restrictions for GET collection-valued (containment) navigation - https://issues.oasis-open.org/browse/ODATA-1300
   -->
@@ -1080,14 +1080,17 @@
     <xsl:variable name="target-path" select="concat(../@Namespace,'.',@Name)" />
     <xsl:variable name="target-path-aliased" select="concat(../@Alias,'.',@Name)" />
 
-    <!-- TODO: also external annotations - testcase - run-time -->
     <xsl:variable name="computed"
       select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')]]/@Name" />
     <xsl:variable name="computed-ext"
-      select="//edm:Annotations[substring-before(@Target,'/') = $target-path or substring-before(@Target,'/') = $target-path-aliased and edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')]]/@Target" />
+      select="//edm:Annotations[(substring-before(@Target,'/') = $target-path or substring-before(@Target,'/') = $target-path-aliased) and edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')]]/@Target" />
 
     <xsl:variable name="immutable"
       select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable')]]/@Name" />
+    <xsl:variable name="immutable-ext"
+      select="//edm:Annotations[(substring-before(@Target,'/') = $target-path or substring-before(@Target,'/') = $target-path-aliased) and edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable')]]/@Target" />
+
+    <!-- TODO: also external targeting -->
     <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
     <xsl:variable name="read-only"
       select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Permissions' or @Term=concat($coreAlias,'.Permissions')]/edm:EnumMember='Org.OData.Core.V1.Permission/Read']/@Name" />
@@ -1181,7 +1184,7 @@
     <xsl:text>"type":"object"</xsl:text>
     <!-- only updatable non-key properties -->
     <xsl:apply-templates
-      select="edm:Property[not(@Name=$immutable 
+      select="edm:Property[not(@Name=$immutable or concat($target-path,'/',@Name) = $immutable-ext or concat($target-path-aliased,'/',@Name) = $immutable-ext 
                             or @Name=$computed or concat($target-path,'/',@Name) = $computed-ext or concat($target-path-aliased,'/',@Name) = $computed-ext 
                             or @Name=$read-only or @Name=../edm:Key/edm:PropertyRef/@Name)]"
       mode="hash"
