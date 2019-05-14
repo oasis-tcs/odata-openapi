@@ -2722,7 +2722,16 @@
     <xsl:value-of select="$path-prefix" />
     <xsl:text>":{</xsl:text>
 
+    <xsl:if test="$prefix-parameters!=''">
+      <xsl:text>"parameters":[</xsl:text>
+      <xsl:value-of select="$prefix-parameters" />
+      <xsl:text>]</xsl:text>
+    </xsl:if>
+
     <xsl:if test="$with-get">
+      <xsl:if test="$prefix-parameters!=''">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
       <xsl:text>"get":{</xsl:text>
 
       <xsl:call-template name="operation-summary-description">
@@ -2748,16 +2757,12 @@
       <xsl:text>"]</xsl:text>
 
       <xsl:text>,"parameters":[</xsl:text>
-      <xsl:value-of select="$prefix-parameters" />
-
       <xsl:call-template name="query-options">
-        <xsl:with-param name="after-keys" select="$prefix-parameters!=''" />
         <xsl:with-param name="navigationPropertyRestriction" select="$navigationPropertyRestriction" />
         <xsl:with-param name="target" select="$targetSet" />
         <xsl:with-param name="collection" select="$return-collection" />
         <xsl:with-param name="entityType" select="$entityType" />
       </xsl:call-template>
-
       <xsl:text>]</xsl:text>
 
       <xsl:variable name="delta">
@@ -2787,7 +2792,7 @@
     </xsl:if>
 
     <xsl:if test="$with-post">
-      <xsl:if test="$with-get">
+      <xsl:if test="$prefix-parameters!='' or $with-get">
         <xsl:text>,</xsl:text>
       </xsl:if>
 
@@ -2812,24 +2817,13 @@
       </xsl:if>
       <xsl:text>"]</xsl:text>
 
-      <xsl:if test="$openapi-version='2.0' or $prefix-parameters!=''">
-        <xsl:text>,"parameters":[</xsl:text>
-      </xsl:if>
-      <xsl:value-of select="$prefix-parameters" />
-
       <xsl:choose>
         <xsl:when test="$openapi-version='2.0'">
-          <xsl:if test="$prefix-parameters!=''">
-            <xsl:text>,</xsl:text>
-          </xsl:if>
-          <xsl:text>{"name":"</xsl:text>
+          <xsl:text>,"parameters":[{"name":"</xsl:text>
           <xsl:value-of select="$typename" />
           <xsl:text>","in":"body",</xsl:text>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:if test="$prefix-parameters!=''">
-            <xsl:text>]</xsl:text>
-          </xsl:if>
           <xsl:text>,"requestBody":{"required":true,</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
@@ -2850,14 +2844,10 @@
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>}}</xsl:text>
       </xsl:if>
-      <xsl:choose>
-        <xsl:when test="$openapi-version='2.0'">
-          <xsl:text>}]</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>}</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
+      <xsl:text>}</xsl:text>
+      <xsl:if test="$openapi-version='2.0'">
+        <xsl:text>]</xsl:text>
+      </xsl:if>
 
       <xsl:call-template name="responses">
         <xsl:with-param name="code" select="'201'" />
@@ -2963,6 +2953,12 @@
     <xsl:value-of select="$path-template" />
     <xsl:text>":{</xsl:text>
 
+    <xsl:if test="$path-parameters!=''">
+      <xsl:text>"parameters":[</xsl:text>
+      <xsl:value-of select="$path-parameters" />
+      <xsl:text>]</xsl:text>
+    </xsl:if>
+
     <!-- GET -->
     <xsl:variable name="readable-p" select="$readRestrictions/edm:Record/edm:PropertyValue[@Property='Readable']" />
     <xsl:variable name="readable" select="$readable-p/@Bool|$readable-p/edm:Bool" />
@@ -2983,6 +2979,9 @@
       </xsl:choose>
     </xsl:variable>
     <xsl:if test="$with-get='true'">
+      <xsl:if test="$path-parameters!=''">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
       <xsl:text>"get":{</xsl:text>
 
       <xsl:call-template name="operation-summary-description">
@@ -3006,7 +3005,6 @@
       <xsl:value-of select="$root/@Name" />
       <xsl:text>"]</xsl:text>
       <xsl:text>,"parameters":[</xsl:text>
-      <xsl:value-of select="$path-parameters" />
 
       <xsl:variable name="delta">
         <xsl:call-template name="capability">
@@ -3028,7 +3026,7 @@
           mode="select"
         >
           <!-- TODO: $delta='true' -->
-          <xsl:with-param name="after" select="$path-parameters!=''" />
+          <xsl:with-param name="after" select="false()" />
         </xsl:apply-templates>
       </xsl:if>
 
@@ -3042,7 +3040,7 @@
           mode="expand"
         >
           <!-- TODO: $delta='true' -->
-          <xsl:with-param name="after" select="$path-parameters!='' or (not($selectable='false') and $selectable-properties)" />
+          <xsl:with-param name="after" select="(not($selectable='false') and $selectable-properties)" />
         </xsl:apply-templates>
       </xsl:if>
 
@@ -3060,7 +3058,7 @@
     <xsl:variable name="updatable-p" select="$updateRestrictions/edm:Record/edm:PropertyValue[@Property='Updatable']" />
     <xsl:variable name="updatable" select="$updatable-p/@Bool|$updatable-p/edm:Bool" />
     <xsl:if test="not($updatable='false')">
-      <xsl:if test="$with-get='true'">
+      <xsl:if test="$path-parameters!='' or $with-get='true'">
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:text>"</xsl:text>
@@ -3085,19 +3083,14 @@
       <xsl:value-of select="$root/@Name" />
       <xsl:text>"],</xsl:text>
 
-      <xsl:text>"parameters":[</xsl:text>
-      <xsl:value-of select="$path-parameters" />
       <xsl:choose>
         <xsl:when test="$openapi-version='2.0'">
-          <xsl:if test="$path-parameters!=''">
-            <xsl:text>,</xsl:text>
-          </xsl:if>
-          <xsl:text>{"name":"</xsl:text>
+          <xsl:text>"parameters":[{"name":"</xsl:text>
           <xsl:value-of select="$typename" />
           <xsl:text>","in":"body",</xsl:text>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>],"requestBody":{"required":true,</xsl:text>
+          <xsl:text>"requestBody":{"required":true,</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
       <xsl:call-template name="entityTypeDescription">
@@ -3139,7 +3132,7 @@
       <xsl:variable name="deletable-p" select="$deleteRestrictions/edm:Record/edm:PropertyValue[@Property='Deletable']" />
       <xsl:variable name="deletable" select="$deletable-p/@Bool|$deletable-p/edm:Bool" />
       <xsl:if test="not($deletable='false')">
-        <xsl:if test="$with-get='true' or not($updatable='false')">
+        <xsl:if test="$path-parameters!='' or $with-get='true' or not($updatable='false')">
           <xsl:text>,</xsl:text>
         </xsl:if>
         <xsl:text>"delete":{</xsl:text>
@@ -3161,14 +3154,13 @@
         <xsl:text>,"tags":["</xsl:text>
         <xsl:value-of select="$root/@Name" />
         <xsl:text>"]</xsl:text>
-        <xsl:text>,"parameters":[</xsl:text>
-        <xsl:value-of select="$path-parameters" />
         <!-- TODO: depends on Core.OptimisticConcurrency
+          <xsl:text>,"parameters":[</xsl:text>
           <xsl:call-template name="if-match">
           <xsl:with-param name="after" select="$path-parameters!=''" />
           </xsl:call-template>
+          <xsl:text>]</xsl:text>
         -->
-        <xsl:text>]</xsl:text>
         <xsl:call-template name="responses" />
         <xsl:text>}</xsl:text>
       </xsl:if>
