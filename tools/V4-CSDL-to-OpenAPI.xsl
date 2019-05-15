@@ -1803,7 +1803,7 @@
     <xsl:param name="default" />
 
     <xsl:variable name="anno-i"
-      select="$target/edm:Annotation[@Term='Core.Example' or @Term=concat($coreNamespace,'.Example')]" />
+      select="$target/edm:Annotation[@Term=concat($coreNamespace,'.Example') or @Term=concat($coreAlias,'.Example')]" />
 
     <xsl:variable name="target1">
       <xsl:call-template name="annotation-target">
@@ -1818,7 +1818,7 @@
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="anno-e"
-      select="//edm:Annotations[@Target=$target1 or @Target=$target2]/edm:Annotation[@Term='Core.Example' or @Term=concat($coreNamespace,'.Example')]" />
+      select="//edm:Annotations[@Target=$target1 or @Target=$target2]/edm:Annotation[@Term=concat($coreNamespace,'.Example') or @Term=concat($coreAlias,'.Example')]" />
 
     <xsl:variable name="anno" select="$anno-i|$anno-e" />
     <xsl:variable name="value" select="$anno/edm:Record/edm:PropertyValue[@Property='Value']" />
