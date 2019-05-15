@@ -2317,6 +2317,7 @@
       <xsl:with-param name="type" select="@EntityType" />
       <xsl:with-param name="return-collection" select="true()" />
       <xsl:with-param name="root" select="." />
+      <xsl:with-param name="operationid-prefix" select="@Name" />
       <xsl:with-param name="path-prefix" select="@Name" />
       <xsl:with-param name="prefix-parameters" select="''" />
       <xsl:with-param name="navigationPropertyRestriction" select="null" />
@@ -2338,6 +2339,7 @@
         <xsl:with-param name="type" select="@EntityType" />
         <xsl:with-param name="with-key" select="true()" />
         <xsl:with-param name="root" select="." />
+        <xsl:with-param name="operationid-prefix" select="@Name" />
         <xsl:with-param name="path-prefix" select="@Name" />
         <xsl:with-param name="prefix-parameters" select="''" />
         <xsl:with-param name="level" select="0" />
@@ -2367,6 +2369,7 @@
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="with-key" select="false()" />
       <xsl:with-param name="root" select="." />
+      <xsl:with-param name="operationid-prefix" select="@Name" />
       <xsl:with-param name="path-prefix" select="@Name" />
       <xsl:with-param name="prefix-parameters" select="''" />
       <xsl:with-param name="level" select="0" />
@@ -2388,6 +2391,7 @@
 
   <xsl:template match="edm:NavigationProperty" mode="pathItem">
     <xsl:param name="root" />
+    <xsl:param name="operationid-prefix" />
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
     <xsl:param name="level" />
@@ -2447,6 +2451,12 @@
         </xsl:choose>
       </xsl:variable>
 
+      <xsl:variable name="operationid">
+        <xsl:value-of select="$operationid-prefix" />
+        <xsl:text>$</xsl:text>
+        <xsl:value-of select="@Name" />
+      </xsl:variable>
+
       <xsl:variable name="path-template">
         <xsl:value-of select="$path-prefix" />
         <xsl:text>/</xsl:text>
@@ -2485,10 +2495,11 @@
           <xsl:with-param name="type" select="$singleType" />
           <xsl:with-param name="return-collection" select="$collection" />
           <xsl:with-param name="root" select="$root" />
+          <xsl:with-param name="operationid-prefix" select="$operationid" />
           <xsl:with-param name="path-prefix" select="$path-template" />
           <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
           <xsl:with-param name="navigationPropertyRestriction" select="$navigationPropertyRestriction" />
-          <xsl:with-param name="navigation-prefix" select="$navigation-prefix" />
+          <xsl:with-param name="navigation-prefix" select="concat($navPropPath,'/')" />
           <xsl:with-param name="readRestrictions"
             select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ReadRestrictions']" />
           <xsl:with-param name="insertRestrictions"
@@ -2515,6 +2526,7 @@
             <xsl:with-param name="type" select="$singleType" />
             <xsl:with-param name="with-key" select="$collection" />
             <xsl:with-param name="root" select="$root" />
+            <xsl:with-param name="operationid-prefix" select="$operationid" />
             <xsl:with-param name="path-prefix" select="$path-template" />
             <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
             <xsl:with-param name="level" select="$level" />
@@ -2654,6 +2666,7 @@
     <xsl:param name="type" />
     <xsl:param name="return-collection" />
     <xsl:param name="root" />
+    <xsl:param name="operationid-prefix" />
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
     <xsl:param name="navigationPropertyRestriction" />
@@ -2734,6 +2747,10 @@
       </xsl:if>
       <xsl:text>"get":{</xsl:text>
 
+      <xsl:text>"operationId":"</xsl:text>
+      <xsl:value-of select="$operationid-prefix" />
+      <xsl:text>$$r",</xsl:text>
+
       <xsl:call-template name="operation-summary-description">
         <xsl:with-param name="restriction" select="$readRestrictions" />
         <xsl:with-param name="fallback-summary">
@@ -2797,6 +2814,10 @@
       </xsl:if>
 
       <xsl:text>"post":{</xsl:text>
+
+      <xsl:text>"operationId":"</xsl:text>
+      <xsl:value-of select="$operationid-prefix" />
+      <xsl:text>$$c",</xsl:text>
 
       <xsl:call-template name="operation-summary-description">
         <xsl:with-param name="restriction" select="$insertRestrictions" />
@@ -2865,14 +2886,17 @@
       mode="bound"
     >
       <xsl:with-param name="tag" select="$root/@Name" />
+      <xsl:with-param name="operationid-prefix" select="$operationid-prefix" />
       <xsl:with-param name="path-prefix" select="$path-prefix" />
       <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
     </xsl:apply-templates>
+
     <xsl:apply-templates
       select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$bindingType or edm:Parameter[1]/@Type=$bindingTypeAliased)]"
       mode="bound"
     >
       <xsl:with-param name="tag" select="$root/@Name" />
+      <xsl:with-param name="operationid-prefix" select="$operationid-prefix" />
       <xsl:with-param name="path-prefix" select="$path-prefix" />
       <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
     </xsl:apply-templates>
@@ -2883,6 +2907,7 @@
     <xsl:param name="type" />
     <xsl:param name="with-key" />
     <xsl:param name="root" />
+    <xsl:param name="operationid-prefix" />
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
     <xsl:param name="level" />
@@ -2928,6 +2953,13 @@
       <xsl:value-of select="$typename" />
     </xsl:variable>
     <xsl:variable name="entityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$typename]" />
+
+    <xsl:variable name="operationid">
+      <xsl:value-of select="$operationid-prefix" />
+      <xsl:if test="$with-key">
+        <xsl:text>$$key</xsl:text>
+      </xsl:if>
+    </xsl:variable>
 
     <xsl:variable name="path-template">
       <xsl:value-of select="$path-prefix" />
@@ -2983,6 +3015,10 @@
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:text>"get":{</xsl:text>
+
+      <xsl:text>"operationId":"</xsl:text>
+      <xsl:value-of select="$operationid" />
+      <xsl:text>$$r",</xsl:text>
 
       <xsl:call-template name="operation-summary-description">
         <xsl:with-param name="restriction" select="$readRestrictions[not($with-key)]|$readByKeyRestrictions[$with-key]" />
@@ -3065,6 +3101,10 @@
       <xsl:value-of select="$update-verb" />
       <xsl:text>":{</xsl:text>
 
+      <xsl:text>"operationId":"</xsl:text>
+      <xsl:value-of select="$operationid" />
+      <xsl:text>$$u",</xsl:text>
+
       <xsl:call-template name="operation-summary-description">
         <xsl:with-param name="restriction" select="$updateRestrictions" />
         <xsl:with-param name="fallback-summary">
@@ -3137,6 +3177,10 @@
         </xsl:if>
         <xsl:text>"delete":{</xsl:text>
 
+        <xsl:text>"operationId":"</xsl:text>
+        <xsl:value-of select="$operationid" />
+        <xsl:text>$$d",</xsl:text>
+
         <xsl:call-template name="operation-summary-description">
           <xsl:with-param name="restriction" select="$deleteRestrictions" />
           <xsl:with-param name="fallback-summary">
@@ -3173,14 +3217,17 @@
       mode="bound"
     >
       <xsl:with-param name="tag" select="$root/@Name" />
+      <xsl:with-param name="operationid-prefix" select="$operationid" />
       <xsl:with-param name="path-prefix" select="$path-template" />
       <xsl:with-param name="prefix-parameters" select="$path-parameters" />
     </xsl:apply-templates>
+
     <xsl:apply-templates
       select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
       mode="bound"
     >
       <xsl:with-param name="tag" select="$root/@Name" />
+      <xsl:with-param name="operationid-prefix" select="$operationid" />
       <xsl:with-param name="path-prefix" select="$path-template" />
       <xsl:with-param name="prefix-parameters" select="$path-parameters" />
     </xsl:apply-templates>
@@ -3190,6 +3237,7 @@
       <xsl:with-param name="root" select="$root" />
       <xsl:with-param name="navigationRestrictions" select="$navigationRestrictions" />
       <xsl:with-param name="navigation-prefix" select="$navigation-prefix" />
+      <xsl:with-param name="operationid-prefix" select="$operationid" />
       <xsl:with-param name="path-prefix" select="$path-template" />
       <xsl:with-param name="prefix-parameters" select="$path-parameters" />
       <xsl:with-param name="level" select="1+$level" />
@@ -3581,6 +3629,11 @@
     <xsl:text>"/</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{"post":{</xsl:text>
+
+    <xsl:text>"operationId":"</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>",</xsl:text>
+
     <xsl:call-template name="summary-description">
       <xsl:with-param name="node" select="." />
       <xsl:with-param name="node2" select="$action" />
@@ -3589,6 +3642,7 @@
         <xsl:value-of select="$action/@Name" />
       </xsl:with-param>
     </xsl:call-template>
+
     <xsl:text>,"tags":["</xsl:text>
     <xsl:variable name="action-for" select="edm:Annotation[@Term='SAP.ActionFor']/@String" />
     <xsl:choose>
@@ -3603,6 +3657,7 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>"]</xsl:text>
+
     <xsl:if test="$action/edm:Parameter">
       <xsl:choose>
         <xsl:when test="$odata-version='2.0'">
@@ -3686,6 +3741,11 @@
       <xsl:text>)</xsl:text>
     </xsl:if>
     <xsl:text>":{"get":{</xsl:text>
+
+    <xsl:text>"operationId":"</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>",</xsl:text>
+
     <xsl:call-template name="summary-description">
       <xsl:with-param name="node" select="$functionImport" />
       <xsl:with-param name="node2" select="." />
@@ -3694,6 +3754,7 @@
         <xsl:value-of select="@Name" />
       </xsl:with-param>
     </xsl:call-template>
+
     <xsl:text>,"tags":["</xsl:text>
     <xsl:variable name="action-for" select="$functionImport/edm:Annotation[@Term='SAP.ActionFor']/@String" />
     <xsl:choose>
@@ -3868,8 +3929,7 @@
           select="$target-sortRestrictions/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
         <xsl:variable name="non-sortable" select="$navigation-non-sortable|$target-non-sortable[not($navigation-non-sortable)]" />
         <xsl:apply-templates select="$entityType/edm:Property[not(@Name=$non-sortable)]" mode="orderby">
-          <xsl:with-param name="after"
-            select="$with-top or $with-skip or $with-search or $with-filter or $with-count" />
+          <xsl:with-param name="after" select="$with-top or $with-skip or $with-search or $with-filter or $with-count" />
         </xsl:apply-templates>
       </xsl:if>
 
@@ -3995,6 +4055,7 @@
 
   <xsl:template match="edm:Action" mode="bound">
     <xsl:param name="tag" />
+    <xsl:param name="operationid-prefix" />
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
 
@@ -4015,12 +4076,29 @@
     </xsl:choose>
     <xsl:value-of select="@Name" />
     <xsl:text>":{"post":{</xsl:text>
+
+    <xsl:text>"operationId":"</xsl:text>
+    <xsl:value-of select="$operationid-prefix" />
+    <xsl:text>$</xsl:text>
+    <xsl:choose>
+      <xsl:when test="../@Alias">
+        <xsl:value-of select="../@Alias" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="../@Namespace" />
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>.</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>",</xsl:text>
+
     <xsl:call-template name="summary-description">
       <xsl:with-param name="fallback-summary">
         <xsl:text>Invoke action </xsl:text>
         <xsl:value-of select="@Name" />
       </xsl:with-param>
     </xsl:call-template>
+
     <xsl:text>,"tags":["</xsl:text>
     <xsl:value-of select="$tag" />
     <xsl:text>"]</xsl:text>
@@ -4071,6 +4149,7 @@
 
   <xsl:template match="edm:Function" mode="bound">
     <xsl:param name="tag" />
+    <xsl:param name="operationid-prefix" />
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
 
@@ -4105,6 +4184,22 @@
     <xsl:text>(</xsl:text>
     <xsl:apply-templates select="edm:Parameter[position()>1]" mode="path" />
     <xsl:text>)":{"get":{</xsl:text>
+
+    <xsl:text>"operationId":"</xsl:text>
+    <xsl:value-of select="$operationid-prefix" />
+    <xsl:text>$</xsl:text>
+    <xsl:choose>
+      <xsl:when test="../@Alias">
+        <xsl:value-of select="../@Alias" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="../@Namespace" />
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>.</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>",</xsl:text>
+
     <xsl:call-template name="summary-description">
       <xsl:with-param name="fallback-summary">
         <xsl:text>Invoke function </xsl:text>
