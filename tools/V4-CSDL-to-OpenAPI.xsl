@@ -3719,7 +3719,6 @@
   </xsl:template>
 
   <xsl:template name="query-options">
-    <xsl:param name="after-keys" />
     <xsl:param name="navigationPropertyRestriction" />
     <xsl:param name="target" />
     <xsl:param name="collection" />
@@ -3806,16 +3805,13 @@
     <xsl:if test="$collection">
 
       <xsl:if test="$with-top">
-        <xsl:if test="$after-keys">
-          <xsl:text>,</xsl:text>
-        </xsl:if>
         <xsl:text>{"$ref":"</xsl:text>
         <xsl:value-of select="$reuse-parameters" />
         <xsl:text>top"}</xsl:text>
       </xsl:if>
 
       <xsl:if test="$with-skip">
-        <xsl:if test="$after-keys or $with-top">
+        <xsl:if test="$with-top">
           <xsl:text>,</xsl:text>
         </xsl:if>
         <xsl:text>{"$ref":"</xsl:text>
@@ -3824,7 +3820,7 @@
       </xsl:if>
 
       <xsl:if test="$with-search">
-        <xsl:if test="$after-keys or $with-top or $with-skip">
+        <xsl:if test="$with-top or $with-skip">
           <xsl:text>,</xsl:text>
         </xsl:if>
         <xsl:text>{"$ref":"</xsl:text>
@@ -3833,7 +3829,7 @@
       </xsl:if>
 
       <xsl:if test="$with-filter">
-        <xsl:if test="$after-keys or $with-top or $with-skip or $with-search">
+        <xsl:if test="$with-top or $with-skip or $with-search">
           <xsl:text>,</xsl:text>
         </xsl:if>
         <xsl:text>{"name":"</xsl:text>
@@ -3857,7 +3853,7 @@
       </xsl:if>
 
       <xsl:if test="$with-count">
-        <xsl:if test="$after-keys or $with-top or $with-skip or $with-search or $with-filter">
+        <xsl:if test="$with-top or $with-skip or $with-search or $with-filter">
           <xsl:text>,</xsl:text>
         </xsl:if>
         <xsl:text>{"$ref":"</xsl:text>
@@ -3873,7 +3869,7 @@
         <xsl:variable name="non-sortable" select="$navigation-non-sortable|$target-non-sortable[not($navigation-non-sortable)]" />
         <xsl:apply-templates select="$entityType/edm:Property[not(@Name=$non-sortable)]" mode="orderby">
           <xsl:with-param name="after"
-            select="$after-keys or $with-top or $with-skip or $with-search or $with-filter or $with-count" />
+            select="$with-top or $with-skip or $with-search or $with-filter or $with-count" />
         </xsl:apply-templates>
       </xsl:if>
 
@@ -3885,7 +3881,7 @@
         mode="select"
       >
         <xsl:with-param name="after"
-          select="$after-keys or ($collection and ($with-top or $with-skip or $with-search or $with-filter or $with-count or $with-sort))" />
+          select="$collection and ($with-top or $with-skip or $with-search or $with-filter or $with-count or $with-sort)" />
       </xsl:apply-templates>
     </xsl:if>
 
@@ -3895,7 +3891,7 @@
         mode="expand"
       >
         <xsl:with-param name="after"
-          select="$after-keys or ($collection and ($with-top or $with-skip or $with-search or $with-filter or $with-count or $with-sort)) or $with-select" />
+          select="($collection and ($with-top or $with-skip or $with-search or $with-filter or $with-count or $with-sort)) or $with-select" />
       </xsl:apply-templates>
     </xsl:if>
   </xsl:template>
