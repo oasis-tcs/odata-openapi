@@ -1223,19 +1223,26 @@
 
   <xsl:template match="edm:Property|edm:NavigationProperty" mode="hashvalue">
     <xsl:param name="suffix" select="null" />
-    <xsl:call-template name="type">
-      <xsl:with-param name="type" select="@Type" />
-      <xsl:with-param name="nullableFacet" select="@Nullable" />
-      <xsl:with-param name="suffix" select="$suffix" />
-    </xsl:call-template>
-    <xsl:choose>
-      <xsl:when test="local-name()='Property'">
-        <xsl:apply-templates select="*[local-name()!='Annotation']" mode="list2" />
-      </xsl:when>
-      <xsl:otherwise>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:call-template name="title-description" />
+    <xsl:variable name="type">
+      <xsl:call-template name="type">
+        <xsl:with-param name="type" select="@Type" />
+        <xsl:with-param name="nullableFacet" select="@Nullable" />
+        <xsl:with-param name="suffix" select="$suffix" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="title">
+      <xsl:call-template name="title-description" />
+    </xsl:variable>
+    <xsl:if test="not($openapi-version='2.0') and starts-with($type,'&quot;$ref&quot;:') and $title!=''">
+      <xsl:text>"anyOf":[{</xsl:text>
+    </xsl:if>
+    <xsl:value-of select="$type" />
+    <xsl:if test="not($openapi-version='2.0') and starts-with($type,'&quot;$ref&quot;:') and $title!=''">
+      <xsl:text>}]</xsl:text>
+    </xsl:if>
+    <xsl:if test="not($openapi-version='2.0' and starts-with($type,'&quot;$ref&quot;:'))">
+      <xsl:value-of select="$title" />
+    </xsl:if>
   </xsl:template>
 
   <xsl:template name="nullableFacetValue">
@@ -3868,8 +3875,7 @@
           select="$target-sortRestrictions/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
         <xsl:variable name="non-sortable" select="$navigation-non-sortable|$target-non-sortable[not($navigation-non-sortable)]" />
         <xsl:apply-templates select="$entityType/edm:Property[not(@Name=$non-sortable)]" mode="orderby">
-          <xsl:with-param name="after"
-            select="$with-top or $with-skip or $with-search or $with-filter or $with-count" />
+          <xsl:with-param name="after" select="$with-top or $with-skip or $with-search or $with-filter or $with-count" />
         </xsl:apply-templates>
       </xsl:if>
 
