@@ -1,7 +1,7 @@
 @echo off 
 setlocal
 
-@rem  This script uses the Apache Xalan 2.7.1 XSLT processor
+@rem  This script uses the Apache Xalan 2.7.2 XSLT processor
 @rem  For a description of Xalan command-line parameters see http://xalan.apache.org/xalan-j/commandline.html
 @rem
 @rem  Prerequisites
