@@ -22,7 +22,6 @@
     - external targeting for Capabilities.KeyAsSegmentSupported
     - external targeting for Core.Permission/Read
     - example values via Core.Example: Int
-    - examples if multiple Core.Example annotations are found (with different qualifiers)
     - JSON Schema reference for "JSON properties" - https://issues.oasis-open.org/browse/ODATA-1275
     - count/expand restrictions for GET collection-valued (containment) navigation - https://issues.oasis-open.org/browse/ODATA-1300
   -->
@@ -1887,6 +1886,11 @@
       select="//edm:Annotations[@Target=$target1 or @Target=$target2]/edm:Annotation[@Term=concat($coreNamespace,'.Example') or @Term=concat($coreAlias,'.Example')]" />
 
     <xsl:variable name="anno" select="$anno-i|$anno-e" />
+    <xsl:if test="count($anno)>1">
+      <xsl:message>
+        <xsl:text>More than one example</xsl:text>
+      </xsl:message>
+    </xsl:if>
     <xsl:variable name="value" select="$anno/edm:Record/edm:PropertyValue[@Property='Value']" />
     <xsl:variable name="value-s" select="$value/@String|$value/edm:String" />
     <xsl:variable name="value-d" select="$value/@Decimal|$value/edm:Decimal" />
