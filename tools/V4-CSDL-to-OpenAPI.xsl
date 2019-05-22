@@ -23,7 +23,6 @@
     - external targeting for Core.Permission/Read
     - example values via Core.Example: Int
     - examples if multiple Core.Example annotations are found (with different qualifiers)
-    - (abstract) base types: add oneOf defined sub-types
     - JSON Schema reference for "JSON properties" - https://issues.oasis-open.org/browse/ODATA-1275
     - count/expand restrictions for GET collection-valued (containment) navigation - https://issues.oasis-open.org/browse/ODATA-1300
   -->
@@ -1102,6 +1101,10 @@
     <xsl:variable name="mandatory"
       select="//edm:Annotations[edm:Annotation[@Term=concat($commonAlias,'.FieldControl') and @EnumMember=concat($commonAlias,'.FieldControlType/Mandatory')] and $qualifiedName=substring-before(@Target,'/')]/@Target" />
 
+    <xsl:variable name="derivedTypes"
+      select="//edm:EntityType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]
+             |//edm:ComplexType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]" />
+
     <!-- full structure -->
     <xsl:text>"</xsl:text>
     <xsl:value-of select="$qualifiedName" />
@@ -1124,23 +1127,16 @@
       <xsl:text>}]</xsl:text>
     </xsl:if>
 
-    <xsl:variable name="derivedTypes"
-      select="//edm:EntityType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]
-             |//edm:ComplexType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]" />
-
-    <xsl:if test="$derivedTypes">
+    <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
       <xsl:choose>
-        <xsl:when test="@Abstract">
+        <xsl:when test="@Abstract='true'">
           <xsl:text>,"oneOf":[</xsl:text>
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>,"anyOf":[</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates
-        select="//edm:EntityType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]
-               |//edm:ComplexType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]"
-        mode="ref" />
+      <xsl:apply-templates select="$derivedTypes" mode="ref" />
       <xsl:text>]</xsl:text>
     </xsl:if>
 
@@ -1185,6 +1181,19 @@
       <xsl:text>}]</xsl:text>
     </xsl:if>
 
+    <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
+      <xsl:choose>
+        <xsl:when test="@Abstract='true'">
+          <xsl:text>,"oneOf":[</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>,"anyOf":[</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="$derivedTypes" mode="ref" />
+      <xsl:text>]</xsl:text>
+    </xsl:if>
+
     <xsl:call-template name="title-description">
       <xsl:with-param name="fallback-title" select="@Name" />
       <xsl:with-param name="suffix" select="' (for create)'" />
@@ -1219,6 +1228,19 @@
 
     <xsl:if test="@BaseType">
       <xsl:text>}]</xsl:text>
+    </xsl:if>
+
+    <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
+      <xsl:choose>
+        <xsl:when test="@Abstract='true'">
+          <xsl:text>,"oneOf":[</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>,"anyOf":[</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="$derivedTypes" mode="ref" />
+      <xsl:text>]</xsl:text>
     </xsl:if>
 
     <xsl:call-template name="title-description">
