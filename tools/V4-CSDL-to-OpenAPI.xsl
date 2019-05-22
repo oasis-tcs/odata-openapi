@@ -22,6 +22,9 @@
     - external targeting for Capabilities.KeyAsSegmentSupported
     - external targeting for Core.Permission/Read
     - example values via Core.Example: Int
+    - examples if multiple Core.Example annotations are found (with different qualifiers)
+    - (abstract) base types: add oneOf defined sub-types
+    - JSON Schema reference for "JSON properties" - https://issues.oasis-open.org/browse/ODATA-1275
     - count/expand restrictions for GET collection-valued (containment) navigation - https://issues.oasis-open.org/browse/ODATA-1300
   -->
 
@@ -1077,6 +1080,7 @@
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="hashpair">
     <xsl:variable name="qualifiedName" select="concat(../@Namespace,'.',@Name)" />
+    <xsl:variable name="aliasQualifiedName" select="concat(../@Alias,'.',@Name)" />
     <xsl:variable name="target-path" select="concat(../@Namespace,'.',@Name)" />
     <xsl:variable name="target-path-aliased" select="concat(../@Alias,'.',@Name)" />
 
@@ -1118,6 +1122,26 @@
 
     <xsl:if test="@BaseType">
       <xsl:text>}]</xsl:text>
+    </xsl:if>
+
+    <xsl:variable name="derivedTypes"
+      select="//edm:EntityType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]
+             |//edm:ComplexType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]" />
+
+    <xsl:if test="$derivedTypes">
+      <xsl:choose>
+        <xsl:when test="@Abstract">
+          <xsl:text>,"oneOf":[</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>,"anyOf":[</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates
+        select="//edm:EntityType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]
+               |//edm:ComplexType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]"
+        mode="ref" />
+      <xsl:text>]</xsl:text>
     </xsl:if>
 
     <xsl:call-template name="title-description">
@@ -1200,6 +1224,18 @@
     <xsl:call-template name="title-description">
       <xsl:with-param name="fallback-title" select="@Name" />
       <xsl:with-param name="suffix" select="' (for update)'" />
+    </xsl:call-template>
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:EntityType|edm:ComplexType" mode="ref">
+    <xsl:if test="position() > 1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:text>{</xsl:text>
+    <xsl:call-template name="ref">
+      <xsl:with-param name="qualifier" select="../@Namespace" />
+      <xsl:with-param name="name" select="@Name" />
     </xsl:call-template>
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -1341,7 +1377,8 @@
       </xsl:when>
       <xsl:when test="$singleType='Edm.Stream'">
         <xsl:variable name="json-property"
-          select="$target/edm:Annotation[(@Term=concat($coreNamespace,'.AcceptableMediaTypes') or @Term=concat($coreAlias,'.AcceptableMediaTypes')) and not(@Qualifier)]/edm:Collection/edm:String[.='application/json']" />
+          select="$target/edm:Annotation[(@Term=concat($coreNamespace,'.AcceptableMediaTypes')
+                                       or @Term=concat($coreAlias,'.AcceptableMediaTypes')) and not(@Qualifier)]/edm:Collection/edm:String[starts-with(.,'application/json')]" />
         <xsl:choose>
           <xsl:when test="$json-property">
             <xsl:if test="not($inParameter and $openapi-version='2.0')">
