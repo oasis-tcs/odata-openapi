@@ -1916,11 +1916,12 @@
     <xsl:variable name="schema"
       select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[(@Term=concat($jsonNamespace,'.Schema') or @Term=concat($jsonAlias,'.Schema')) and not(@Qualifier)]
                                                                                |$target/edm:Annotation[(@Term=concat($jsonNamespace,'.Schema') or @Term=concat($jsonAlias,'.Schema')) and not(@Qualifier)]" />
-    <xsl:variable name="ref" select="$schema/edm:Record/edm:PropertyValue[@Property='ref']" />
-    <xsl:if test="$ref">
-      <xsl:text>"$ref":"</xsl:text>
-      <xsl:value-of select="$ref/@String|$ref/edm:String" />
-      <xsl:text>"</xsl:text>
+    <xsl:if test="$schema">
+      <xsl:variable name="schema-string" select="$schema/@String|$schema/edm:String" />
+      <xsl:call-template name="substring-before-last">
+        <xsl:with-param name="input" select="substring-after($schema-string,'{')" />
+        <xsl:with-param name="marker" select="'}'" />
+      </xsl:call-template>
     </xsl:if>
   </xsl:template>
 
@@ -3119,10 +3120,7 @@
       <xsl:variable name="selectable-properties"
         select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']" />
       <xsl:if test="not($selectable='false')">
-        <!-- copy of select expression for selectable-properties - quick-fix for Java XSLT processor -->
-        <xsl:apply-templates select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']"
-          mode="select"
-        >
+        <xsl:apply-templates select="$selectable-properties" mode="select">
           <!-- TODO: $delta='true' -->
           <xsl:with-param name="after" select="false()" />
         </xsl:apply-templates>
@@ -3973,10 +3971,7 @@
     </xsl:if>
 
     <xsl:if test="$with-select">
-      <!-- copy of select expression for selectable-properties - quick-fix for Java XSLT processor -->
-      <xsl:apply-templates select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']"
-        mode="select"
-      >
+      <xsl:apply-templates select="$selectable-properties" mode="select">
         <xsl:with-param name="after"
           select="$collection and ($with-top or $with-skip or $with-search or $with-filter or $with-count or $with-sort)" />
       </xsl:apply-templates>
