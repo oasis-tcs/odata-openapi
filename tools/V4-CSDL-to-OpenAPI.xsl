@@ -1109,23 +1109,11 @@
       select="//edm:EntityType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]
              |//edm:ComplexType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]" />
 
+    <!-- TODO: extract template, call three times with different suffix -->
     <!-- full structure -->
     <xsl:text>"</xsl:text>
     <xsl:value-of select="$qualifiedName" />
-    <xsl:text>":{</xsl:text>
-
-    <!-- TODO: instead copy properties, this "allOf" interferes with $derivedTypes - three places / refactor -->
-    <!--
-      <xsl:if test="@BaseType">
-      <xsl:text>"allOf":[{</xsl:text>
-      <xsl:call-template name="schema-ref">
-      <xsl:with-param name="qualifiedName" select="@BaseType" />
-      </xsl:call-template>
-      <xsl:text>},{</xsl:text>
-      </xsl:if>
-    -->
-
-    <xsl:text>"type":"object","properties":{</xsl:text>
+    <xsl:text>":{"type":"object","properties":{</xsl:text>
     <xsl:call-template name="properties">
       <xsl:with-param name="structuredType" select="." />
       <!--
@@ -1133,15 +1121,6 @@
       -->
     </xsl:call-template>
     <xsl:text>}</xsl:text>
-
-    <!--
-      <xsl:apply-templates select="edm:Property|edm:NavigationProperty" mode="hash">
-      <xsl:with-param name="name" select="'properties'" />
-      </xsl:apply-templates>
-      <xsl:if test="@BaseType">
-      <xsl:text>}]</xsl:text>
-      </xsl:if>
-    -->
 
     <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
       <xsl:choose>
@@ -1206,7 +1185,9 @@
           <xsl:text>,"anyOf":[</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="$derivedTypes" mode="ref" />
+      <xsl:apply-templates select="$derivedTypes" mode="ref">
+        <xsl:with-param name="suffix" select="'-create'" />
+      </xsl:apply-templates>
       <xsl:text>]</xsl:text>
     </xsl:if>
 
@@ -1219,32 +1200,12 @@
     <!-- update structure -->
     <xsl:text>,"</xsl:text>
     <xsl:value-of select="$qualifiedName" />
-    <xsl:text>-update":{</xsl:text>
-
-    <xsl:if test="@BaseType">
-      <xsl:text>"allOf":[{</xsl:text>
-      <xsl:call-template name="schema-ref">
-        <xsl:with-param name="qualifiedName" select="@BaseType" />
-        <xsl:with-param name="suffix" select="'-update'" />
-      </xsl:call-template>
-      <xsl:text>},{</xsl:text>
-    </xsl:if>
-
-    <xsl:text>"type":"object"</xsl:text>
-    <!-- only updatable non-key properties -->
-    <xsl:apply-templates
-      select="edm:Property[not(@Name=$immutable or concat($target-path,'/',@Name) = $immutable-ext or concat($target-path-aliased,'/',@Name) = $immutable-ext 
-                            or @Name=$computed or concat($target-path,'/',@Name) = $computed-ext or concat($target-path-aliased,'/',@Name) = $computed-ext 
-                            or @Name=$read-only or @Name=../edm:Key/edm:PropertyRef/@Name)]"
-      mode="hash"
-    >
-      <xsl:with-param name="name" select="'properties'" />
+    <xsl:text>-update":{"type":"object","properties":{</xsl:text>
+    <xsl:call-template name="properties">
+      <xsl:with-param name="structuredType" select="." />
       <xsl:with-param name="suffix" select="'-update'" />
-    </xsl:apply-templates>
-
-    <xsl:if test="@BaseType">
-      <xsl:text>}]</xsl:text>
-    </xsl:if>
+    </xsl:call-template>
+    <xsl:text>}</xsl:text>
 
     <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
       <xsl:choose>
@@ -1255,7 +1216,9 @@
           <xsl:text>,"anyOf":[</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="$derivedTypes" mode="ref" />
+      <xsl:apply-templates select="$derivedTypes" mode="ref">
+        <xsl:with-param name="suffix" select="'-update'" />
+      </xsl:apply-templates>
       <xsl:text>]</xsl:text>
     </xsl:if>
 
@@ -1267,6 +1230,7 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="ref">
+    <xsl:param name="suffix" select="null" />
     <xsl:if test="position() > 1">
       <xsl:text>,</xsl:text>
     </xsl:if>
@@ -1274,6 +1238,7 @@
     <xsl:call-template name="ref">
       <xsl:with-param name="qualifier" select="../@Namespace" />
       <xsl:with-param name="name" select="@Name" />
+      <xsl:with-param name="suffix" select="$suffix" />
     </xsl:call-template>
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -1298,32 +1263,76 @@
   <xsl:template name="properties">
     <xsl:param name="structuredType" />
     <xsl:param name="suffix" select="null" />
-    <xsl:if test="$structuredType/@BaseType">
-      <xsl:variable name="qualifier">
-        <xsl:call-template name="substring-before-last">
-          <xsl:with-param name="input" select="$structuredType/@BaseType" />
-          <xsl:with-param name="marker" select="'.'" />
-        </xsl:call-template>
-      </xsl:variable>
-      <xsl:variable name="name">
-        <xsl:call-template name="substring-after-last">
-          <xsl:with-param name="input" select="$structuredType/@BaseType" />
-          <xsl:with-param name="marker" select="'.'" />
-        </xsl:call-template>
-      </xsl:variable>
-      <!-- recurse to base type -->
-      <xsl:call-template name="properties">
-        <xsl:with-param name="structuredType"
-          select="//edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:ComplexType[@Name=$name]
+
+    <xsl:variable name="qualifiedName" select="concat($structuredType/../@Namespace,'.',$structuredType/@Name)" />
+    <xsl:variable name="aliasQualifiedName" select="concat($structuredType/../@Alias,'.',$structuredType/@Name)" />
+
+    <xsl:variable name="computed"
+      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')]]/@Name" />
+    <xsl:variable name="computed-ext"
+      select="//edm:Annotations[(substring-before(@Target,'/') = $qualifiedName or substring-before(@Target,'/') = $aliasQualifiedName) and edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')]]/@Target" />
+
+    <xsl:variable name="immutable"
+      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable')]]/@Name" />
+    <xsl:variable name="immutable-ext"
+      select="//edm:Annotations[(substring-before(@Target,'/') = $qualifiedName or substring-before(@Target,'/') = $aliasQualifiedName) and edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable')]]/@Target" />
+
+    <!-- TODO: also external targeting -->
+    <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
+    <xsl:variable name="read-only"
+      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Permissions' or @Term=concat($coreAlias,'.Permissions')]/edm:EnumMember='Org.OData.Core.V1.Permission/Read']/@Name" />
+    <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
+    <xsl:variable name="mandatory"
+      select="//edm:Annotations[edm:Annotation[@Term=concat($commonAlias,'.FieldControl') and @EnumMember=concat($commonAlias,'.FieldControlType/Mandatory')] and $qualifiedName=substring-before(@Target,'/')]/@Target" />
+
+    <xsl:variable name="baseproperties">
+      <xsl:if test="$structuredType/@BaseType">
+        <xsl:variable name="qualifier">
+          <xsl:call-template name="substring-before-last">
+            <xsl:with-param name="input" select="$structuredType/@BaseType" />
+            <xsl:with-param name="marker" select="'.'" />
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="name">
+          <xsl:call-template name="substring-after-last">
+            <xsl:with-param name="input" select="$structuredType/@BaseType" />
+            <xsl:with-param name="marker" select="'.'" />
+          </xsl:call-template>
+        </xsl:variable>
+        <!-- recurse to base type -->
+        <xsl:call-template name="properties">
+          <xsl:with-param name="structuredType"
+            select="//edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:ComplexType[@Name=$name]
                  |//edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:EntityType[@Name=$name]" />
-        <xsl:with-param name="suffix" select="$suffix" />
-      </xsl:call-template>
-      <!-- TODO: need to check base-properties and here-properties -->
+          <xsl:with-param name="suffix" select="$suffix" />
+        </xsl:call-template>
+      </xsl:if>
+    </xsl:variable>
+    <xsl:variable name="hereproperties">
+      <xsl:choose>
+        <xsl:when test="$suffix='-update'">
+          <!-- only updatable non-key properties -->
+          <xsl:apply-templates
+            select="$structuredType/edm:Property[not(@Name=$immutable or concat($qualifiedName,'/',@Name) = $immutable-ext or concat($aliasQualifiedName,'/',@Name) = $immutable-ext
+                                                  or @Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext
+                                                  or @Name=$read-only or @Name=../edm:Key/edm:PropertyRef/@Name)]"
+          >
+            <xsl:with-param name="name" select="'properties'" />
+            <xsl:with-param name="suffix" select="'-update'" />
+          </xsl:apply-templates>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="$structuredType/edm:Property|$structuredType/edm:NavigationProperty">
+            <xsl:with-param name="suffix" select="$suffix" />
+          </xsl:apply-templates>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:value-of select="$baseproperties" />
+    <xsl:if test="$baseproperties!='' and $hereproperties!=''">
       <xsl:text>,</xsl:text>
     </xsl:if>
-    <xsl:apply-templates select="$structuredType/edm:Property|$structuredType/edm:NavigationProperty">
-      <xsl:with-param name="suffix" select="$suffix" />
-    </xsl:apply-templates>
+    <xsl:value-of select="$hereproperties" />
   </xsl:template>
 
   <xsl:template match="edm:Property|edm:NavigationProperty">
