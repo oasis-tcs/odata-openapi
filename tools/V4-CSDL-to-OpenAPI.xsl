@@ -1084,27 +1084,6 @@
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="hashpair">
     <xsl:variable name="qualifiedName" select="concat(../@Namespace,'.',@Name)" />
     <xsl:variable name="aliasQualifiedName" select="concat(../@Alias,'.',@Name)" />
-    <xsl:variable name="target-path" select="concat(../@Namespace,'.',@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat(../@Alias,'.',@Name)" />
-
-    <xsl:variable name="computed"
-      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')]]/@Name" />
-    <xsl:variable name="computed-ext"
-      select="//edm:Annotations[(substring-before(@Target,'/') = $target-path or substring-before(@Target,'/') = $target-path-aliased) and edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')]]/@Target" />
-
-    <xsl:variable name="immutable"
-      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable')]]/@Name" />
-    <xsl:variable name="immutable-ext"
-      select="//edm:Annotations[(substring-before(@Target,'/') = $target-path or substring-before(@Target,'/') = $target-path-aliased) and edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable')]]/@Target" />
-
-    <!-- TODO: also external targeting -->
-    <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
-    <xsl:variable name="read-only"
-      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Permissions' or @Term=concat($coreAlias,'.Permissions')]/edm:EnumMember='Org.OData.Core.V1.Permission/Read']/@Name" />
-    <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
-    <xsl:variable name="mandatory"
-      select="//edm:Annotations[edm:Annotation[@Term=concat($commonAlias,'.FieldControl') and @EnumMember=concat($commonAlias,'.FieldControlType/Mandatory')] and $qualifiedName=substring-before(@Target,'/')]/@Target" />
-
     <xsl:variable name="derivedTypes"
       select="//edm:EntityType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]
              |//edm:ComplexType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]" />
