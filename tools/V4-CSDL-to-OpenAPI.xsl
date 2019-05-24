@@ -1113,14 +1113,11 @@
     <!-- full structure -->
     <xsl:text>"</xsl:text>
     <xsl:value-of select="$qualifiedName" />
-    <xsl:text>":{"type":"object","properties":{</xsl:text>
+    <xsl:text>":{"type":"object"</xsl:text>
+
     <xsl:call-template name="properties">
       <xsl:with-param name="structuredType" select="." />
-      <!--
-        <xsl:with-param name="suffix" select="'-...'" />
-      -->
     </xsl:call-template>
-    <xsl:text>}</xsl:text>
 
     <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
       <xsl:choose>
@@ -1143,38 +1140,12 @@
     <!-- create structure -->
     <xsl:text>,"</xsl:text>
     <xsl:value-of select="$qualifiedName" />
-    <xsl:text>-create":{</xsl:text>
+    <xsl:text>-create":{"type":"object"</xsl:text>
 
-    <xsl:if test="@BaseType">
-      <xsl:text>"allOf":[{</xsl:text>
-      <xsl:call-template name="schema-ref">
-        <xsl:with-param name="qualifiedName" select="@BaseType" />
-        <xsl:with-param name="suffix" select="'-create'" />
-      </xsl:call-template>
-      <xsl:text>},{</xsl:text>
-    </xsl:if>
-
-    <xsl:text>"type":"object"</xsl:text>
-    <!-- everything except computed and read-only properties -->
-    <xsl:apply-templates
-      select="edm:Property[not(@Name=$computed or concat($target-path,'/',@Name) = $computed-ext or concat($target-path-aliased,'/',@Name) = $computed-ext 
-                            or @Name=$read-only)]|edm:NavigationProperty"
-      mode="hash"
-    >
-      <xsl:with-param name="name" select="'properties'" />
+    <xsl:call-template name="properties">
+      <xsl:with-param name="structuredType" select="." />
       <xsl:with-param name="suffix" select="'-create'" />
-    </xsl:apply-templates>
-    <!-- non-computed key properties are required, as are properties marked with Common.FieldControl=Mandatory -->
-    <xsl:apply-templates
-      select="edm:Property[(@Name=../edm:Key/edm:PropertyRef/@Name 
-                             and not(@Name=$computed or concat($target-path,'/',@Name) = $computed-ext or concat($target-path-aliased,'/',@Name) = $computed-ext 
-                                  or @Name=$read-only)) 
-                           or concat($qualifiedName,'/',@Name)=$mandatory]"
-      mode="required" />
-
-    <xsl:if test="@BaseType">
-      <xsl:text>}]</xsl:text>
-    </xsl:if>
+    </xsl:call-template>
 
     <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
       <xsl:choose>
@@ -1200,12 +1171,12 @@
     <!-- update structure -->
     <xsl:text>,"</xsl:text>
     <xsl:value-of select="$qualifiedName" />
-    <xsl:text>-update":{"type":"object","properties":{</xsl:text>
+    <xsl:text>-update":{"type":"object"</xsl:text>
+
     <xsl:call-template name="properties">
       <xsl:with-param name="structuredType" select="." />
       <xsl:with-param name="suffix" select="'-update'" />
     </xsl:call-template>
-    <xsl:text>}</xsl:text>
 
     <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
       <xsl:choose>
@@ -1263,6 +1234,7 @@
   <xsl:template name="properties">
     <xsl:param name="structuredType" />
     <xsl:param name="suffix" select="null" />
+    <xsl:param name="direct" select="true()" />
 
     <xsl:variable name="qualifiedName" select="concat($structuredType/../@Namespace,'.',$structuredType/@Name)" />
     <xsl:variable name="aliasQualifiedName" select="concat($structuredType/../@Alias,'.',$structuredType/@Name)" />
@@ -1305,6 +1277,7 @@
             select="//edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:ComplexType[@Name=$name]
                  |//edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:EntityType[@Name=$name]" />
           <xsl:with-param name="suffix" select="$suffix" />
+          <xsl:with-param name="direct" select="false()" />
         </xsl:call-template>
       </xsl:if>
     </xsl:variable>
@@ -1321,6 +1294,16 @@
             <xsl:with-param name="suffix" select="'-update'" />
           </xsl:apply-templates>
         </xsl:when>
+        <xsl:when test="$suffix='-create'">
+          <!-- everything except computed and read-only properties -->
+          <xsl:apply-templates
+            select="$structuredType/edm:Property[not(@Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext 
+                                                  or @Name=$read-only)]|$structuredType/edm:NavigationProperty"
+          >
+            <xsl:with-param name="name" select="'properties'" />
+            <xsl:with-param name="suffix" select="'-create'" />
+          </xsl:apply-templates>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates select="$structuredType/edm:Property|$structuredType/edm:NavigationProperty">
             <xsl:with-param name="suffix" select="$suffix" />
@@ -1328,11 +1311,27 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <xsl:if test="$direct and ($baseproperties!='' or $hereproperties!='')">
+      <xsl:text>,"properties":{</xsl:text>
+    </xsl:if>
     <xsl:value-of select="$baseproperties" />
     <xsl:if test="$baseproperties!='' and $hereproperties!=''">
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:value-of select="$hereproperties" />
+    <xsl:if test="$direct and ($baseproperties!='' or $hereproperties!='')">
+      <xsl:text>}</xsl:text>
+    </xsl:if>
+    <!-- TODO: required array needs to be collected recursively, appended, and then put here -->
+    <xsl:if test="$direct and $suffix='-create'">
+      <!-- non-computed key properties are required, as are properties marked with Common.FieldControl=Mandatory -->
+      <xsl:apply-templates
+        select="$structuredType/edm:Property[(@Name=../edm:Key/edm:PropertyRef/@Name 
+                                                  and not(@Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext 
+                                               or @Name=$read-only)) 
+                                               or concat($qualifiedName,'/',@Name)=$mandatory]"
+        mode="required" />
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edm:Property|edm:NavigationProperty">
