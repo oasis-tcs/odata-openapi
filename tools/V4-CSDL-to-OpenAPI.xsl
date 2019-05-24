@@ -1114,22 +1114,34 @@
     <xsl:value-of select="$qualifiedName" />
     <xsl:text>":{</xsl:text>
 
-    <xsl:if test="@BaseType">
+    <!-- TODO: instead copy properties, this "allOf" interferes with $derivedTypes - three places / refactor -->
+    <!--
+      <xsl:if test="@BaseType">
       <xsl:text>"allOf":[{</xsl:text>
       <xsl:call-template name="schema-ref">
-        <xsl:with-param name="qualifiedName" select="@BaseType" />
+      <xsl:with-param name="qualifiedName" select="@BaseType" />
       </xsl:call-template>
       <xsl:text>},{</xsl:text>
-    </xsl:if>
+      </xsl:if>
+    -->
 
-    <xsl:text>"type":"object"</xsl:text>
-    <xsl:apply-templates select="edm:Property|edm:NavigationProperty" mode="hash">
+    <xsl:text>"type":"object","properties":{</xsl:text>
+    <xsl:call-template name="properties">
+      <xsl:with-param name="structuredType" select="." />
+      <!--
+        <xsl:with-param name="suffix" select="'-...'" />
+      -->
+    </xsl:call-template>
+    <xsl:text>}</xsl:text>
+
+    <!--
+      <xsl:apply-templates select="edm:Property|edm:NavigationProperty" mode="hash">
       <xsl:with-param name="name" select="'properties'" />
-    </xsl:apply-templates>
-
-    <xsl:if test="@BaseType">
+      </xsl:apply-templates>
+      <xsl:if test="@BaseType">
       <xsl:text>}]</xsl:text>
-    </xsl:if>
+      </xsl:if>
+    -->
 
     <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
       <xsl:choose>
@@ -1281,6 +1293,68 @@
     <xsl:if test="position() = last()">
       <xsl:text>]</xsl:text>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="properties">
+    <xsl:param name="structuredType" />
+    <xsl:param name="suffix" select="null" />
+    <xsl:if test="$structuredType/@BaseType">
+      <xsl:variable name="qualifier">
+        <xsl:call-template name="substring-before-last">
+          <xsl:with-param name="input" select="$structuredType/@BaseType" />
+          <xsl:with-param name="marker" select="'.'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="name">
+        <xsl:call-template name="substring-after-last">
+          <xsl:with-param name="input" select="$structuredType/@BaseType" />
+          <xsl:with-param name="marker" select="'.'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <!-- recurse to base type -->
+      <xsl:call-template name="properties">
+        <xsl:with-param name="structuredType"
+          select="//edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:ComplexType[@Name=$name]
+                 |//edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:EntityType[@Name=$name]" />
+        <xsl:with-param name="suffix" select="$suffix" />
+      </xsl:call-template>
+      <!-- TODO: need to check base-properties and here-properties -->
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:apply-templates select="$structuredType/edm:Property|$structuredType/edm:NavigationProperty">
+      <xsl:with-param name="suffix" select="$suffix" />
+    </xsl:apply-templates>
+  </xsl:template>
+
+  <xsl:template match="edm:Property|edm:NavigationProperty">
+    <xsl:param name="suffix" select="null" />
+    <xsl:variable name="type">
+      <xsl:call-template name="type">
+        <xsl:with-param name="type" select="@Type" />
+        <xsl:with-param name="nullableFacet" select="@Nullable" />
+        <xsl:with-param name="suffix" select="$suffix" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="title">
+      <xsl:call-template name="title-description" />
+    </xsl:variable>
+    <xsl:if test="position() > 1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>":{</xsl:text>
+    <xsl:if test="not($openapi-version='2.0') and starts-with($type,'&quot;$ref&quot;:') and $title!=''">
+      <xsl:text>"anyOf":[{</xsl:text>
+    </xsl:if>
+    <xsl:value-of select="$type" />
+    <xsl:if test="not($openapi-version='2.0') and starts-with($type,'&quot;$ref&quot;:') and $title!=''">
+      <xsl:text>}]</xsl:text>
+    </xsl:if>
+    <xsl:if test="not($openapi-version='2.0' and starts-with($type,'&quot;$ref&quot;:'))">
+      <xsl:value-of select="$title" />
+    </xsl:if>
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Property|edm:NavigationProperty" mode="hashvalue">
