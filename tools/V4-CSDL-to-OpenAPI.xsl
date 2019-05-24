@@ -1234,6 +1234,7 @@
           </xsl:call-template>
         </xsl:variable>
         <!-- recurse to base type -->
+        <!-- TODO: if base type is not defined in this document, add allOf, tunnel similar to required -->
         <xsl:call-template name="properties">
           <xsl:with-param name="structuredType"
             select="//edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:ComplexType[@Name=$name]

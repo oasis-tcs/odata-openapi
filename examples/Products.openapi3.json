@@ -1920,7 +1920,7 @@
                 ],
                 "anyOf": [
                     {
-                        "$ref": "#/components/schemas/ProductService.FeaturedProduct"
+                        "$ref": "#/components/schemas/ProductService.FeaturedProduct-create"
                     }
                 ],
                 "title": "Product (for create)"
@@ -1966,62 +1966,203 @@
                 },
                 "anyOf": [
                     {
-                        "$ref": "#/components/schemas/ProductService.FeaturedProduct"
+                        "$ref": "#/components/schemas/ProductService.FeaturedProduct-update"
                     }
                 ],
                 "title": "Product (for update)"
             },
             "ProductService.FeaturedProduct": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/ProductService.Product"
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
                     },
-                    {
-                        "type": "object",
-                        "properties": {
-                            "Advertisement": {
-                                "nullable": true,
-                                "anyOf": [
-                                    {
-                                        "$ref": "#/components/schemas/ProductService.Advertisement"
-                                    }
-                                ]
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ReleaseDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z"
+                    },
+                    "DiscontinuedDate": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z"
+                    },
+                    "Rating": {
+                        "type": "integer",
+                        "format": "int16"
+                    },
+                    "Price": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
                             }
+                        ],
+                        "format": "double",
+                        "example": 3.14
+                    },
+                    "Categories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProductService.Category"
                         }
+                    },
+                    "Supplier": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "./People.openapi3.json#/components/schemas/PeopleService.Supplier"
+                            }
+                        ]
+                    },
+                    "ProductDetail": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ProductService.ProductDetail"
+                            }
+                        ]
+                    },
+                    "Advertisement": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ProductService.Advertisement"
+                            }
+                        ]
                     }
-                ],
+                },
                 "title": "FeaturedProduct"
             },
             "ProductService.FeaturedProduct-create": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/ProductService.Product-create"
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
                     },
-                    {
-                        "type": "object",
-                        "properties": {
-                            "Advertisement": {
-                                "nullable": true,
-                                "anyOf": [
-                                    {
-                                        "$ref": "#/components/schemas/ProductService.Advertisement-create"
-                                    }
-                                ]
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ReleaseDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z"
+                    },
+                    "DiscontinuedDate": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z"
+                    },
+                    "Rating": {
+                        "type": "integer",
+                        "format": "int16"
+                    },
+                    "Price": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
                             }
+                        ],
+                        "format": "double",
+                        "example": 3.14
+                    },
+                    "Categories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProductService.Category-create"
                         }
+                    },
+                    "Supplier": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "./People.openapi3.json#/components/schemas/PeopleService.Supplier"
+                            }
+                        ]
+                    },
+                    "ProductDetail": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ProductService.ProductDetail-create"
+                            }
+                        ]
+                    },
+                    "Advertisement": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ProductService.Advertisement-create"
+                            }
+                        ]
                     }
+                },
+                "required": [
+                    "ID"
                 ],
                 "title": "FeaturedProduct (for create)"
             },
             "ProductService.FeaturedProduct-update": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/ProductService.Product-update"
+                "type": "object",
+                "properties": {
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
                     },
-                    {
-                        "type": "object"
+                    "Description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ReleaseDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z"
+                    },
+                    "DiscontinuedDate": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z"
+                    },
+                    "Rating": {
+                        "type": "integer",
+                        "format": "int16"
+                    },
+                    "Price": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "double",
+                        "example": 3.14
                     }
-                ],
+                },
                 "title": "FeaturedProduct (for update)"
             },
             "ProductService.ProductDetail": {
