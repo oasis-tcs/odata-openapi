@@ -1193,23 +1193,6 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:Property" mode="required">
-    <xsl:if test="position() = 1">
-      <xsl:text>,"required":[</xsl:text>
-    </xsl:if>
-    <xsl:if test="position()>1">
-      <xsl:text>,</xsl:text>
-    </xsl:if>
-
-    <xsl:text>"</xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>"</xsl:text>
-
-    <xsl:if test="position() = last()">
-      <xsl:text>]</xsl:text>
-    </xsl:if>
-  </xsl:template>
-
   <xsl:template name="properties">
     <xsl:param name="structuredType" />
     <xsl:param name="suffix" select="null" />
@@ -1254,7 +1237,7 @@
         <xsl:call-template name="properties">
           <xsl:with-param name="structuredType"
             select="//edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:ComplexType[@Name=$name]
-                 |//edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:EntityType[@Name=$name]" />
+                   |//edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:EntityType[@Name=$name]" />
           <xsl:with-param name="suffix" select="$suffix" />
           <xsl:with-param name="direct" select="false()" />
         </xsl:call-template>
@@ -1290,27 +1273,71 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <xsl:variable name="required">
+      <xsl:if test="$suffix='-create'">
+        <!-- non-computed key properties are required, as are properties marked with Common.FieldControl=Mandatory -->
+        <xsl:apply-templates
+          select="$structuredType/edm:Property[(@Name=../edm:Key/edm:PropertyRef/@Name 
+                                                  and not(@Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext 
+                                               or @Name=$read-only)) 
+                                               or concat($qualifiedName,'/',@Name)=$mandatory]"
+          mode="required" />
+      </xsl:if>
+    </xsl:variable>
+
     <xsl:if test="$direct and ($baseproperties!='' or $hereproperties!='')">
       <xsl:text>,"properties":{</xsl:text>
     </xsl:if>
-    <xsl:value-of select="$baseproperties" />
-    <xsl:if test="$baseproperties!='' and $hereproperties!=''">
+
+    <xsl:if test="not($direct)">
+      <!-- prefix result with required properties -->
+      <xsl:value-of select="$required" />
+      <!-- comma separator if there are already required properties -->
+      <xsl:if test="$structuredType/@BaseType and $required!='' and starts-with($baseproperties,'&quot;')">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+      <!-- at the top of the chain inject the pipe separator between required and properties -->
+      <xsl:if test="not($structuredType/@BaseType)">
+        <xsl:text>|</xsl:text>
+      </xsl:if>
+    </xsl:if>
+
+    <xsl:if test="$direct">
+      <xsl:value-of select="substring-after($baseproperties,'|')" />
+    </xsl:if>
+    <xsl:if test="not($direct)">
+      <xsl:value-of select="$baseproperties" />
+    </xsl:if>
+    <xsl:if test="substring-after($baseproperties,'|')!='' and $hereproperties!=''">
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:value-of select="$hereproperties" />
+
     <xsl:if test="$direct and ($baseproperties!='' or $hereproperties!='')">
       <xsl:text>}</xsl:text>
     </xsl:if>
     <!-- TODO: required array needs to be collected recursively, appended, and then put here -->
-    <xsl:if test="$direct and $suffix='-create'">
-      <!-- non-computed key properties are required, as are properties marked with Common.FieldControl=Mandatory -->
-      <xsl:apply-templates
-        select="$structuredType/edm:Property[(@Name=../edm:Key/edm:PropertyRef/@Name 
-                                                  and not(@Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext 
-                                               or @Name=$read-only)) 
-                                               or concat($qualifiedName,'/',@Name)=$mandatory]"
-        mode="required" />
+    <xsl:if test="$direct">
+      <xsl:variable name="baserequired" select="substring-before($baseproperties,'|')" />
+      <xsl:if test="$required!='' or $baserequired!=''">
+        <xsl:text>,"required":[</xsl:text>
+        <xsl:value-of select="$required" />
+        <xsl:if test="$required!='' and $baserequired!=''">
+          <xsl:text>,</xsl:text>
+        </xsl:if>
+        <xsl:value-of select="$baserequired" />
+        <xsl:text>]</xsl:text>
+      </xsl:if>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="edm:Property" mode="required">
+    <xsl:if test="position()>1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>"</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Property|edm:NavigationProperty">
