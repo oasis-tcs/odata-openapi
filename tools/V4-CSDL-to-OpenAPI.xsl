@@ -1108,6 +1108,9 @@
         </xsl:otherwise>
       </xsl:choose>
       <xsl:apply-templates select="$derivedTypes" mode="ref" />
+      <if test="not(@Abstract='true')">
+        <xsl:text>,{}</xsl:text>
+      </if>
       <xsl:text>]</xsl:text>
     </xsl:if>
 
@@ -1138,6 +1141,9 @@
       <xsl:apply-templates select="$derivedTypes" mode="ref">
         <xsl:with-param name="suffix" select="'-create'" />
       </xsl:apply-templates>
+      <if test="not(@Abstract='true')">
+        <xsl:text>,{}</xsl:text>
+      </if>
       <xsl:text>]</xsl:text>
     </xsl:if>
 
@@ -1169,6 +1175,9 @@
       <xsl:apply-templates select="$derivedTypes" mode="ref">
         <xsl:with-param name="suffix" select="'-update'" />
       </xsl:apply-templates>
+      <if test="not(@Abstract='true')">
+        <xsl:text>,{}</xsl:text>
+      </if>
       <xsl:text>]</xsl:text>
     </xsl:if>
 
