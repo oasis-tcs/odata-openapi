@@ -3337,6 +3337,14 @@
                         ]
                     }
                 },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Manager"
+                    },
+                    {
+
+                    }
+                ],
                 "title": "Employee"
             },
             "org.example.Employee-create": {
@@ -3363,6 +3371,14 @@
                 "required": [
                     "ID"
                 ],
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Manager-create"
+                    },
+                    {
+
+                    }
+                ],
                 "title": "Employee (for create)"
             },
             "org.example.Employee-update": {
@@ -3375,99 +3391,129 @@
                         "type": "string"
                     }
                 },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/org.example.Manager-update"
+                    },
+                    {
+
+                    }
+                ],
                 "title": "Employee (for update)"
             },
             "org.example.Manager": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/org.example.Employee"
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string"
                     },
-                    {
-                        "type": "object",
-                        "properties": {
-                            "AnnualBudget": {
-                                "anyOf": [
-                                    {
-                                        "type": "number"
-                                    },
-                                    {
-                                        "type": "string"
-                                    }
-                                ],
-                                "nullable": true,
-                                "format": "decimal",
-                                "multipleOf": 1,
-                                "example": 0
-                            },
-                            "Employees": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/org.example.Employee"
-                                }
+                    "FirstName": {
+                        "type": "string"
+                    },
+                    "LastName": {
+                        "type": "string"
+                    },
+                    "Manager": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/org.example.Manager"
                             }
+                        ]
+                    },
+                    "AnnualBudget": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "nullable": true,
+                        "format": "decimal",
+                        "multipleOf": 1,
+                        "example": 0
+                    },
+                    "Employees": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/org.example.Employee"
                         }
                     }
-                ],
+                },
                 "title": "Manager"
             },
             "org.example.Manager-create": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/org.example.Employee-create"
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string"
                     },
-                    {
-                        "type": "object",
-                        "properties": {
-                            "AnnualBudget": {
-                                "anyOf": [
-                                    {
-                                        "type": "number"
-                                    },
-                                    {
-                                        "type": "string"
-                                    }
-                                ],
-                                "nullable": true,
-                                "format": "decimal",
-                                "multipleOf": 1,
-                                "example": 0
-                            },
-                            "Employees": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/org.example.Employee-create"
-                                }
+                    "FirstName": {
+                        "type": "string"
+                    },
+                    "LastName": {
+                        "type": "string"
+                    },
+                    "Manager": {
+                        "nullable": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/org.example.Manager-create"
                             }
+                        ]
+                    },
+                    "AnnualBudget": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "nullable": true,
+                        "format": "decimal",
+                        "multipleOf": 1,
+                        "example": 0
+                    },
+                    "Employees": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/org.example.Employee-create"
                         }
                     }
+                },
+                "required": [
+                    "ID"
                 ],
                 "title": "Manager (for create)"
             },
             "org.example.Manager-update": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/org.example.Employee-update"
+                "type": "object",
+                "properties": {
+                    "FirstName": {
+                        "type": "string"
                     },
-                    {
-                        "type": "object",
-                        "properties": {
-                            "AnnualBudget": {
-                                "anyOf": [
-                                    {
-                                        "type": "number"
-                                    },
-                                    {
-                                        "type": "string"
-                                    }
-                                ],
-                                "nullable": true,
-                                "format": "decimal",
-                                "multipleOf": 1,
-                                "example": 0
+                    "LastName": {
+                        "type": "string"
+                    },
+                    "AnnualBudget": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
                             }
-                        }
+                        ],
+                        "nullable": true,
+                        "format": "decimal",
+                        "multipleOf": 1,
+                        "example": 0
                     }
-                ],
+                },
                 "title": "Manager (for update)"
             },
             "org.example.Category17": {
@@ -5885,26 +5931,74 @@
             },
             "X.PersonType": {
                 "type": "object",
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/Y.DeveloperType"
+                    },
+                    {
+
+                    }
+                ],
                 "title": "PersonType"
             },
             "X.PersonType-create": {
                 "type": "object",
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/Y.DeveloperType-create"
+                    },
+                    {
+
+                    }
+                ],
                 "title": "PersonType (for create)"
             },
             "X.PersonType-update": {
                 "type": "object",
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/Y.DeveloperType-update"
+                    },
+                    {
+
+                    }
+                ],
                 "title": "PersonType (for update)"
             },
             "X.MovieType": {
                 "type": "object",
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/Y.ArchivedMovieType"
+                    },
+                    {
+
+                    }
+                ],
                 "title": "MovieType"
             },
             "X.MovieType-create": {
                 "type": "object",
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/Y.ArchivedMovieType-create"
+                    },
+                    {
+
+                    }
+                ],
                 "title": "MovieType (for create)"
             },
             "X.MovieType-update": {
                 "type": "object",
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/Y.ArchivedMovieType-update"
+                    },
+                    {
+
+                    }
+                ],
                 "title": "MovieType (for update)"
             },
             "X.FriendType": {
@@ -5920,36 +6014,24 @@
                 "title": "FriendType (for update)"
             },
             "Y.DeveloperType": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/X.PersonType"
-                    },
-                    {
-                        "type": "object"
-                    }
-                ],
+                "type": "object",
+                "properties": {
+
+                },
                 "title": "DeveloperType"
             },
             "Y.DeveloperType-create": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/X.PersonType-create"
-                    },
-                    {
-                        "type": "object"
-                    }
-                ],
+                "type": "object",
+                "properties": {
+
+                },
                 "title": "DeveloperType (for create)"
             },
             "Y.DeveloperType-update": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/X.PersonType-update"
-                    },
-                    {
-                        "type": "object"
-                    }
-                ],
+                "type": "object",
+                "properties": {
+
+                },
                 "title": "DeveloperType (for update)"
             },
             "Y.ScrumTeamType": {
@@ -5995,60 +6077,39 @@
                 "title": "ScrumTeamType (for update)"
             },
             "Y.ArchivedMovieType": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/X.MovieType"
-                    },
-                    {
-                        "type": "object",
-                        "properties": {
-                            "ArchivedAt": {
-                                "type": "string",
-                                "nullable": true,
-                                "format": "date",
-                                "example": "2017-04-13"
-                            }
-                        }
+                "type": "object",
+                "properties": {
+                    "ArchivedAt": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date",
+                        "example": "2017-04-13"
                     }
-                ],
+                },
                 "title": "ArchivedMovieType"
             },
             "Y.ArchivedMovieType-create": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/X.MovieType-create"
-                    },
-                    {
-                        "type": "object",
-                        "properties": {
-                            "ArchivedAt": {
-                                "type": "string",
-                                "nullable": true,
-                                "format": "date",
-                                "example": "2017-04-13"
-                            }
-                        }
+                "type": "object",
+                "properties": {
+                    "ArchivedAt": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date",
+                        "example": "2017-04-13"
                     }
-                ],
+                },
                 "title": "ArchivedMovieType (for create)"
             },
             "Y.ArchivedMovieType-update": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/X.MovieType-update"
-                    },
-                    {
-                        "type": "object",
-                        "properties": {
-                            "ArchivedAt": {
-                                "type": "string",
-                                "nullable": true,
-                                "format": "date",
-                                "example": "2017-04-13"
-                            }
-                        }
+                "type": "object",
+                "properties": {
+                    "ArchivedAt": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date",
+                        "example": "2017-04-13"
                     }
-                ],
+                },
                 "title": "ArchivedMovieType (for update)"
             },
             "Y.SomeThingType": {

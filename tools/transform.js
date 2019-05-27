@@ -79,7 +79,7 @@ function transform(source) {
         return;
     }
 
-    if(argv.verbose) console.log('Checking OData version used in source file: ' + source);
+    if (argv.verbose) console.log('Checking OData version used in source file: ' + source);
 
     xslt4node.transform(
         {
@@ -104,7 +104,7 @@ function transform(source) {
 function transformV2V3(source, version) {
     var target = source.substring(0, source.lastIndexOf('.') + 1) + 'tmp';
 
-    if(argv.verbose) console.log('Transforming ' + source + ' to OData V4, target file: ' + target);
+    if (argv.verbose) console.log('Transforming ' + source + ' to OData V4, target file: ' + target);
 
     xslt4node.transform(
         {
@@ -124,8 +124,8 @@ function transformV2V3(source, version) {
 
 function transformV4(source, version, deleteSource) {
     var target = argv.t || source.substring(0, source.lastIndexOf('.') + 1) + 'openapi.json';
-    
-    if(argv.verbose) console.log('Transforming ' + source + ' to OpenAPI ' + argv.o + ', target file: ' + target);
+
+    if (argv.verbose) console.log('Transforming ' + source + ' to OpenAPI ' + argv.o + ', target file: ' + target);
 
     xslt4node.transform(
         {
@@ -146,10 +146,16 @@ function transformV4(source, version, deleteSource) {
             if (err) {
                 console.error(err);
             } else {
-                if (argv.pretty)
-                    fs.writeFileSync(target, JSON.stringify(JSON.parse(result), null, 4));
-                if (deleteSource){
-                    if(argv.verbose) console.log('Removing intermediate file: ' + source);
+                if (argv.pretty) {
+                    try {
+                        fs.writeFileSync(target, JSON.stringify(JSON.parse(result), null, 4));
+                    } catch (e) {
+                        console.log(e);
+                        fs.writeFileSync(target, result);
+                    }
+                }
+                if (deleteSource) {
+                    if (argv.verbose) console.log('Removing intermediate file: ' + source);
                     fs.unlink(source, (err) => { if (err) console.error(err); });
                 }
             }
