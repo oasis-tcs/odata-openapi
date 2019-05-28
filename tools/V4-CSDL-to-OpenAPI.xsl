@@ -1099,14 +1099,7 @@
     </xsl:call-template>
 
     <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
-      <xsl:choose>
-        <xsl:when test="@Abstract='true'">
-          <xsl:text>,"oneOf":[</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>,"anyOf":[</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
+      <xsl:text>,"anyOf":[</xsl:text>
       <xsl:apply-templates select="$derivedTypes" mode="ref" />
       <xsl:if test="not(@Abstract='true')">
         <xsl:text>,{}</xsl:text>
@@ -1130,14 +1123,7 @@
     </xsl:call-template>
 
     <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
-      <xsl:choose>
-        <xsl:when test="@Abstract='true'">
-          <xsl:text>,"oneOf":[</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>,"anyOf":[</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
+      <xsl:text>,"anyOf":[</xsl:text>
       <xsl:apply-templates select="$derivedTypes" mode="ref">
         <xsl:with-param name="suffix" select="'-create'" />
       </xsl:apply-templates>
@@ -1164,14 +1150,7 @@
     </xsl:call-template>
 
     <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
-      <xsl:choose>
-        <xsl:when test="@Abstract='true'">
-          <xsl:text>,"oneOf":[</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>,"anyOf":[</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
+      <xsl:text>,"anyOf":[</xsl:text>
       <xsl:apply-templates select="$derivedTypes" mode="ref">
         <xsl:with-param name="suffix" select="'-update'" />
       </xsl:apply-templates>
