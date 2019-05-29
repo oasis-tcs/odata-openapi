@@ -22,7 +22,6 @@
     - external targeting for Capabilities.KeyAsSegmentSupported
     - external targeting for Core.Permission/Read
     - example values via Core.Example: Int
-    - Inlined JSON Schema for "JSON properties" - https://issues.oasis-open.org/browse/ODATA-1275
     - count/expand restrictions for GET collection-valued (containment) navigation - https://issues.oasis-open.org/browse/ODATA-1300
   -->
 
@@ -1088,44 +1087,47 @@
       select="//edm:EntityType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]
              |//edm:ComplexType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]" />
 
-    <!-- TODO: extract template, call three times with different suffix -->
-    <!-- full structure -->
+    <xsl:call-template name="structure">
+      <xsl:with-param name="qualifiedName" select="$qualifiedName" />
+      <xsl:with-param name="derivedTypes" select="$derivedTypes" />
+    </xsl:call-template>
+
+    <xsl:text>,</xsl:text>
+
+    <xsl:call-template name="structure">
+      <xsl:with-param name="qualifiedName" select="$qualifiedName" />
+      <xsl:with-param name="derivedTypes" select="$derivedTypes" />
+      <xsl:with-param name="suffix" select="'-create'" />
+    </xsl:call-template>
+
+    <xsl:text>,</xsl:text>
+
+    <xsl:call-template name="structure">
+      <xsl:with-param name="qualifiedName" select="$qualifiedName" />
+      <xsl:with-param name="derivedTypes" select="$derivedTypes" />
+      <xsl:with-param name="suffix" select="'-update'" />
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template name="structure">
+    <xsl:param name="qualifiedName" />
+    <xsl:param name="derivedTypes" />
+    <xsl:param name="suffix" select="null" />
+
     <xsl:text>"</xsl:text>
     <xsl:value-of select="$qualifiedName" />
+    <xsl:value-of select="$suffix" />
     <xsl:text>":{"type":"object"</xsl:text>
 
     <xsl:call-template name="properties">
       <xsl:with-param name="structuredType" select="." />
-    </xsl:call-template>
-
-    <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
-      <xsl:text>,"anyOf":[</xsl:text>
-      <xsl:apply-templates select="$derivedTypes" mode="ref" />
-      <xsl:if test="not(@Abstract='true')">
-        <xsl:text>,{}</xsl:text>
-      </xsl:if>
-      <xsl:text>]</xsl:text>
-    </xsl:if>
-
-    <xsl:call-template name="title-description">
-      <xsl:with-param name="fallback-title" select="@Name" />
-    </xsl:call-template>
-    <xsl:text>}</xsl:text>
-
-    <!-- create structure -->
-    <xsl:text>,"</xsl:text>
-    <xsl:value-of select="$qualifiedName" />
-    <xsl:text>-create":{"type":"object"</xsl:text>
-
-    <xsl:call-template name="properties">
-      <xsl:with-param name="structuredType" select="." />
-      <xsl:with-param name="suffix" select="'-create'" />
+      <xsl:with-param name="suffix" select="$suffix" />
     </xsl:call-template>
 
     <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
       <xsl:text>,"anyOf":[</xsl:text>
       <xsl:apply-templates select="$derivedTypes" mode="ref">
-        <xsl:with-param name="suffix" select="'-create'" />
+        <xsl:with-param name="suffix" select="$suffix" />
       </xsl:apply-templates>
       <xsl:if test="not(@Abstract='true')">
         <xsl:text>,{}</xsl:text>
@@ -1135,34 +1137,12 @@
 
     <xsl:call-template name="title-description">
       <xsl:with-param name="fallback-title" select="@Name" />
-      <xsl:with-param name="suffix" select="' (for create)'" />
-    </xsl:call-template>
-    <xsl:text>}</xsl:text>
-
-    <!-- update structure -->
-    <xsl:text>,"</xsl:text>
-    <xsl:value-of select="$qualifiedName" />
-    <xsl:text>-update":{"type":"object"</xsl:text>
-
-    <xsl:call-template name="properties">
-      <xsl:with-param name="structuredType" select="." />
-      <xsl:with-param name="suffix" select="'-update'" />
-    </xsl:call-template>
-
-    <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
-      <xsl:text>,"anyOf":[</xsl:text>
-      <xsl:apply-templates select="$derivedTypes" mode="ref">
-        <xsl:with-param name="suffix" select="'-update'" />
-      </xsl:apply-templates>
-      <xsl:if test="not(@Abstract='true')">
-        <xsl:text>,{}</xsl:text>
-      </xsl:if>
-      <xsl:text>]</xsl:text>
-    </xsl:if>
-
-    <xsl:call-template name="title-description">
-      <xsl:with-param name="fallback-title" select="@Name" />
-      <xsl:with-param name="suffix" select="' (for update)'" />
+      <xsl:with-param name="suffix">
+        <xsl:text></xsl:text>
+        <xsl:if test="$suffix">
+          <xsl:value-of select="concat(' (','for ',substring($suffix,2),')')" />
+        </xsl:if>
+      </xsl:with-param>
     </xsl:call-template>
     <xsl:text>}</xsl:text>
   </xsl:template>
