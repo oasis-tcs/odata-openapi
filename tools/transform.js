@@ -22,7 +22,7 @@ var unknown = false;
 
 var argv = minimist(process.argv.slice(2), {
     string: ["o", "openapi-version", "t", "target", "scheme", "host", "basePath"],
-    boolean: ["d", "diagram", "h", "help", "p", "pretty", "r", "references", "verbose"],
+    boolean: ["d", "diagram", "h", "help", "p", "pretty", "r", "references", "u", "used-schemas-only", "verbose"],
     alias: {
         d: "diagram",
         h: "help",
@@ -30,6 +30,7 @@ var argv = minimist(process.argv.slice(2), {
         p: "pretty",
         r: "references",
         t: "target",
+        u: "used-schemas-only",
         v: "odata-version"
     },
     default: {
@@ -66,6 +67,7 @@ Options:
  -r, --references        include references to other files
  --scheme                scheme (default: http)
  -t, --target            target file (only useful with a single source file)
+ -u, --used-schemas-only produce only schemas that are actually used in operation objects
  --verbose               output additional progress information`);
 } else {
     for (var i = 0; i < argv._.length; i++) {
@@ -131,7 +133,7 @@ function transformV4(source, version, deleteSource) {
         {
             xsltPath: xsltpath + 'V4-CSDL-to-OpenAPI.xsl',
             sourcePath: source,
-            result: (argv.pretty ? Buffer : target),
+            result: (argv.pretty || argv.u ? Buffer : target),
             params: {
                 basePath: argv.basePath,
                 diagram: argv.diagram,
@@ -146,9 +148,12 @@ function transformV4(source, version, deleteSource) {
             if (err) {
                 console.error(err);
             } else {
-                if (argv.pretty) {
+                if (argv.pretty || argv.u) {
                     try {
-                        fs.writeFileSync(target, JSON.stringify(JSON.parse(result), null, 4));
+                        let openapi = JSON.parse(result);
+                        if (argv.u)
+                            deleteUnusedSchemas(openapi);
+                        fs.writeFileSync(target, JSON.stringify(openapi, null, (argv.pretty ? 4 : 0)));
                     } catch (e) {
                         console.log(e);
                         fs.writeFileSync(target, result);
@@ -161,4 +166,60 @@ function transformV4(source, version, deleteSource) {
             }
         }
     );
+}
+
+function deleteUnusedSchemas(openapi) {
+    var referenced;
+    var deleted;
+
+    while (true) {
+        referenced = {};
+        getReferencedSchemas(openapi, referenced);
+
+        if (openapi.hasOwnProperty('components'))
+            deleted = deleteUnreferenced(openapi.components.schemas, referenced, '#/components/schemas/');
+        else
+            deleted = deleteUnreferenced(openapi.definitions, referenced, '#/definitions/');
+
+        if (!deleted) break;
+    }
+
+    if (openapi.hasOwnProperty('components')) {
+        deleteUnreferenced(openapi.components.parameters, referenced, '#/components/parameters/');
+        if (Object.keys(openapi.components.parameters).length == 0)
+            delete openapi.components.parameters;
+    } else {
+        deleteUnreferenced(openapi.parameters, referenced, '#/parameters/');
+        if (Object.keys(openapi.parameters).length == 0)
+            delete openapi.parameters;
+    }
+}
+
+function getReferencedSchemas(document, referenced) {
+    Object.keys(document).forEach(key => {
+        let value = document[key];
+        if (key == '$ref') {
+            if (value.startsWith('#'))
+                referenced[value] = true;
+        } else {
+            if (Array.isArray(value)) {
+                value.forEach(item => getReferencedSchemas(item, referenced))
+            } else if (typeof value == 'object' && value != null) {
+                getReferencedSchemas(value, referenced);
+            }
+        }
+    });
+}
+
+function deleteUnreferenced(schemas, referenced, prefix) {
+    var deleted = false;
+
+    Object.keys(schemas).forEach(key => {
+        if (!referenced[prefix + key]) {
+            delete schemas[key];
+            deleted = true;
+        }
+    });
+
+    return deleted;
 }
