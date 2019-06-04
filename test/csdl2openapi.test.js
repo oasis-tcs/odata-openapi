@@ -16,7 +16,7 @@ describe('Examples', function () {
         Object.keys(result1.paths).forEach(path => {
             const pathItemObject = result1.paths[path];
             Object.keys(pathItemObject).forEach(key => {
-                if (['get', 'patch'].includes(key)) pathItemObject[key] = {};
+                if (['get'].includes(key)) pathItemObject[key] = {};
             });
         });
         delete result1.paths["/ProductsByRating(Rating={Rating})"];
