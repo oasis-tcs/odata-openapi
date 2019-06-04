@@ -2550,8 +2550,8 @@
     <xsl:param name="navigationRestrictions" />
     <xsl:param name="navigation-prefix" />
 
-    <xsl:variable name="name" select="@Name" />
-    <xsl:variable name="bindingTarget" select="$root/edm:NavigationPropertyBinding[@Path=$name]/@Target" />
+    <xsl:variable name="navPropPath" select="concat($navigation-prefix,@Name)" />
+    <xsl:variable name="bindingTarget" select="$root/edm:NavigationPropertyBinding[@Path=$navPropPath]/@Target" />
     <xsl:variable name="targetEntitySetName">
       <xsl:choose>
         <xsl:when
