@@ -19,6 +19,7 @@ describe('Examples', function () {
                 if (['get', 'post', 'patch', 'delete'].includes(key)) pathItemObject[key] = {};
             });
         });
+        delete result1.paths["/ProductsByRating(Rating={Rating})"];
         result1.info.description = '';
         result1.components = {};
 
