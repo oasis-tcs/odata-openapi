@@ -13,12 +13,12 @@ describe('Examples', function () {
     it('csdl-16.1', function () {
         let openapi = lib.csdl2openapi(example1);
         //TODO: remove result tweaking
-        Object.keys(result1.paths).forEach(path => {
-            const pathItemObject = result1.paths[path];
-            Object.keys(pathItemObject).forEach(key => {
-                if (['get'].includes(key)) pathItemObject[key] = {};
-            });
-        });
+        // Object.keys(result1.paths).forEach(path => {
+        //     const pathItemObject = result1.paths[path];
+        //     Object.keys(pathItemObject).forEach(key => {
+        //         if (['get'].includes(key)) pathItemObject[key] = {};
+        //     });
+        // });
         delete result1.paths["/ProductsByRating(Rating={Rating})"];
         result1.info.description = '';
         result1.components = {};
