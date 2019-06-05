@@ -14,7 +14,7 @@ describe('Examples', function () {
         let openapi = lib.csdl2openapi(example1);
         //TODO: remove result tweaking
         result1.info.description = '';
-        result1.components = {};
+        //result1.components = {};
 
         assert.deepStrictEqual(openapi, result1, 'CSDL specification example');
     })
