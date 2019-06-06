@@ -11,11 +11,7 @@ const result1 = require('../examples/csdl-16.1.openapi3.json');
 describe('Examples', function () {
 
     it('csdl-16.1', function () {
-        let openapi = lib.csdl2openapi(example1);
-        //TODO: remove result tweaking
-        result1.info.description = '';
-        //result1.components = {};
-
+        let openapi = lib.csdl2openapi(example1, { diagram: true });
         assert.deepStrictEqual(openapi, result1, 'CSDL specification example');
     })
 
