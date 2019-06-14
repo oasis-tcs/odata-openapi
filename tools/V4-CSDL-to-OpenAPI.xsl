@@ -1170,19 +1170,19 @@
     <xsl:variable name="aliasQualifiedName" select="concat($structuredType/../@Alias,'.',$structuredType/@Name)" />
 
     <xsl:variable name="computed"
-      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')]]/@Name" />
+      select="$structuredType/edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')]]/@Name" />
     <xsl:variable name="computed-ext"
       select="//edm:Annotations[(substring-before(@Target,'/') = $qualifiedName or substring-before(@Target,'/') = $aliasQualifiedName) and edm:Annotation[@Term='Org.OData.Core.V1.Computed' or @Term=concat($coreAlias,'.Computed')]]/@Target" />
 
     <xsl:variable name="immutable"
-      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable')]]/@Name" />
+      select="$structuredType/edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable')]]/@Name" />
     <xsl:variable name="immutable-ext"
       select="//edm:Annotations[(substring-before(@Target,'/') = $qualifiedName or substring-before(@Target,'/') = $aliasQualifiedName) and edm:Annotation[@Term='Org.OData.Core.V1.Immutable' or @Term=concat($coreAlias,'.Immutable')]]/@Target" />
 
     <!-- TODO: also external targeting -->
     <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
     <xsl:variable name="read-only"
-      select="edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Permissions' or @Term=concat($coreAlias,'.Permissions')]/edm:EnumMember='Org.OData.Core.V1.Permission/Read']/@Name" />
+      select="$structuredType/edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Permissions' or @Term=concat($coreAlias,'.Permissions')]/edm:EnumMember='Org.OData.Core.V1.Permission/Read']/@Name" />
     <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
     <xsl:variable name="mandatory"
       select="//edm:Annotations[edm:Annotation[@Term=concat($commonAlias,'.FieldControl') and @EnumMember=concat($commonAlias,'.FieldControlType/Mandatory')] and $qualifiedName=substring-before(@Target,'/')]/@Target" />
