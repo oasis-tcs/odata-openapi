@@ -1212,7 +1212,7 @@
     <xsl:variable name="mandatory"
       select="//edm:Annotations[edm:Annotation[@Term=concat($commonAlias,'.FieldControl') and @EnumMember=concat($commonAlias,'.FieldControlType/Mandatory')] and $qualifiedName=substring-before(@Target,'/')]/@Target" />
 
-    <xsl:variable name="baseproperties">
+    <xsl:variable name="basetypeinfo">
       <xsl:if test="$structuredType/@BaseType">
         <xsl:variable name="qualifier">
           <xsl:call-template name="substring-before-last">
@@ -1237,6 +1237,8 @@
         </xsl:call-template>
       </xsl:if>
     </xsl:variable>
+    <xsl:variable name="baseproperties" select="substring-after($basetypeinfo,'|')" />
+
     <xsl:variable name="hereproperties">
       <xsl:choose>
         <xsl:when test="$suffix='-update'">
@@ -1287,7 +1289,7 @@
       <!-- prefix result with required properties -->
       <xsl:value-of select="$required" />
       <!-- comma separator if there are already required properties -->
-      <xsl:if test="$structuredType/@BaseType and $required!='' and starts-with($baseproperties,'&quot;')">
+      <xsl:if test="$structuredType/@BaseType and $required!='' and starts-with($basetypeinfo,'&quot;')">
         <xsl:text>,</xsl:text>
       </xsl:if>
       <!-- at the top of the chain inject the pipe separator between required and properties -->
@@ -1297,12 +1299,12 @@
     </xsl:if>
 
     <xsl:if test="$direct">
-      <xsl:value-of select="substring-after($baseproperties,'|')" />
-    </xsl:if>
-    <xsl:if test="not($direct)">
       <xsl:value-of select="$baseproperties" />
     </xsl:if>
-    <xsl:if test="substring-after($baseproperties,'|')!='' and $hereproperties!=''">
+    <xsl:if test="not($direct)">
+      <xsl:value-of select="$basetypeinfo" />
+    </xsl:if>
+    <xsl:if test="$baseproperties!='' and $hereproperties!=''">
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:value-of select="$hereproperties" />
@@ -1312,7 +1314,7 @@
     </xsl:if>
     <!-- TODO: required array needs to be collected recursively, appended, and then put here -->
     <xsl:if test="$direct">
-      <xsl:variable name="baserequired" select="substring-before($baseproperties,'|')" />
+      <xsl:variable name="baserequired" select="substring-before($basetypeinfo,'|')" />
       <xsl:if test="$required!='' or $baserequired!=''">
         <xsl:text>,"required":[</xsl:text>
         <xsl:value-of select="$required" />
