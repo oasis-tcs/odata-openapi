@@ -18,10 +18,10 @@ const result3 = require('../examples/miscellaneous.openapi3.json');
 const example4 = csdl.xml2json(fs.readFileSync('examples/example.xml'));
 const result4 = require('../examples/example.openapi3.json');
 
-const example5 = csdl.xml2json(fs.readFileSync('examples/Northwind.xml'));
-const result6 = require('../examples/Northwind.openapi3.json');
+const example5 = csdl.xml2json(fs.readFileSync('examples/annotations.xml'));
+const result5 = require('../examples/annotations.openapi3.json');
 
-//TODO: People, Products
+//TODO: containment, maybe also People, Products
 
 describe('Examples', function () {
 
@@ -50,7 +50,12 @@ describe('Examples', function () {
             basePath: '/V4/OData/(S(nsga2k1tyctb0cn0ofcgcn4o))/OData.svc',
             diagram: true
         });
-        assert.deepStrictEqual(openapi, result4, 'example');
+        assert.deepStrictEqual(openapi, result4, 'read/write example service');
+    })
+
+    it('annotations', function () {
+        let openapi = lib.csdl2openapi(example5, { diagram: true });
+        assert.deepStrictEqual(openapi, result5, 'Annotations');
     })
 
 })
