@@ -1083,20 +1083,17 @@
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="hashpair">
     <xsl:variable name="qualifiedName" select="concat(../@Namespace,'.',@Name)" />
     <xsl:variable name="aliasQualifiedName" select="concat(../@Alias,'.',@Name)" />
-    <xsl:variable name="derivedTypes"
-      select="//edm:EntityType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]
-             |//edm:ComplexType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]" />
 
     <xsl:call-template name="structure">
       <xsl:with-param name="qualifiedName" select="$qualifiedName" />
-      <xsl:with-param name="derivedTypes" select="$derivedTypes" />
+      <xsl:with-param name="aliasQualifiedName" select="$aliasQualifiedName" />
     </xsl:call-template>
 
     <xsl:text>,</xsl:text>
 
     <xsl:call-template name="structure">
       <xsl:with-param name="qualifiedName" select="$qualifiedName" />
-      <xsl:with-param name="derivedTypes" select="$derivedTypes" />
+      <xsl:with-param name="aliasQualifiedName" select="$aliasQualifiedName" />
       <xsl:with-param name="suffix" select="'-create'" />
     </xsl:call-template>
 
@@ -1104,14 +1101,14 @@
 
     <xsl:call-template name="structure">
       <xsl:with-param name="qualifiedName" select="$qualifiedName" />
-      <xsl:with-param name="derivedTypes" select="$derivedTypes" />
+      <xsl:with-param name="aliasQualifiedName" select="$aliasQualifiedName" />
       <xsl:with-param name="suffix" select="'-update'" />
     </xsl:call-template>
   </xsl:template>
 
   <xsl:template name="structure">
     <xsl:param name="qualifiedName" />
-    <xsl:param name="derivedTypes" />
+    <xsl:param name="aliasQualifiedName" />
     <xsl:param name="suffix" select="null" />
 
     <xsl:text>"</xsl:text>
@@ -1124,16 +1121,11 @@
       <xsl:with-param name="suffix" select="$suffix" />
     </xsl:call-template>
 
-    <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
-      <xsl:text>,"anyOf":[</xsl:text>
-      <xsl:apply-templates select="$derivedTypes" mode="ref">
-        <xsl:with-param name="suffix" select="$suffix" />
-      </xsl:apply-templates>
-      <xsl:if test="not(@Abstract='true')">
-        <xsl:text>,{}</xsl:text>
-      </xsl:if>
-      <xsl:text>]</xsl:text>
-    </xsl:if>
+    <xsl:call-template name="derivedTypes">
+      <xsl:with-param name="qualifiedName" select="$qualifiedName" />
+      <xsl:with-param name="aliasQualifiedName" select="$aliasQualifiedName" />
+      <xsl:with-param name="suffix" select="$suffix" />
+    </xsl:call-template>
 
     <xsl:call-template name="title-description">
       <xsl:with-param name="fallback-title" select="@Name" />
@@ -1147,9 +1139,33 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
+  <xsl:template name="derivedTypes">
+    <xsl:param name="qualifiedName" />
+    <xsl:param name="aliasQualifiedName" />
+    <xsl:param name="suffix" select="null" />
+    <xsl:variable name="derivedTypes"
+      select="//edm:EntityType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]
+             |//edm:ComplexType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]" />
+
+    <xsl:if test="$derivedTypes and $openapi-version!='2.0'">
+      <xsl:text>,"anyOf":[</xsl:text>
+      <xsl:apply-templates select="$derivedTypes" mode="ref">
+        <xsl:with-param name="suffix" select="$suffix" />
+      </xsl:apply-templates>
+      <xsl:if test="not(@Abstract='true')">
+        <xsl:text>,{}</xsl:text>
+      </xsl:if>
+      <xsl:text>]</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="ref">
     <xsl:param name="suffix" select="null" />
-    <xsl:if test="position() > 1">
+    <xsl:param name="recursive" select="false()" />
+    <xsl:variable name="qualifiedName" select="concat(../@Namespace,'.',@Name)" />
+    <xsl:variable name="aliasQualifiedName" select="concat(../@Alias,'.',@Name)" />
+
+    <xsl:if test="position()>1 or $recursive">
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:text>{</xsl:text>
@@ -1159,6 +1175,15 @@
       <xsl:with-param name="suffix" select="$suffix" />
     </xsl:call-template>
     <xsl:text>}</xsl:text>
+
+    <xsl:apply-templates
+      select="//edm:EntityType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]
+             |//edm:ComplexType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]"
+      mode="ref"
+    >
+      <xsl:with-param name="suffix" select="$suffix" />
+      <xsl:with-param name="recursive" select="true()" />
+    </xsl:apply-templates>
   </xsl:template>
 
   <xsl:template name="properties">
