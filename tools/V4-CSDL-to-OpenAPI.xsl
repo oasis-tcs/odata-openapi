@@ -2266,54 +2266,23 @@
   <xsl:template match="@DefaultValue">
     <xsl:param name="type" />
     <xsl:text>,"default":</xsl:text>
-    <xsl:variable name="qualifier">
-      <xsl:call-template name="substring-before-last">
-        <xsl:with-param name="input" select="$type" />
-        <xsl:with-param name="marker" select="'.'" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="typename">
-      <xsl:call-template name="substring-after-last">
-        <xsl:with-param name="input" select="$type" />
-        <xsl:with-param name="marker" select="'.'" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="underlyingType">
-      <xsl:choose>
-        <xsl:when test="//edm:Schema[@Namespace=$qualifier]/edm:TypeDefinition[@Name=$typename]/@UnderlyingType">
-          <xsl:value-of select="//edm:Schema[@Namespace=$qualifier]/edm:TypeDefinition[@Name=$typename]/@UnderlyingType" />
-        </xsl:when>
-        <xsl:when test="//edm:Schema[@Alias=$qualifier]/edm:TypeDefinition[@Name=$typename]/@UnderlyingType">
-          <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/edm:TypeDefinition[@Name=$typename]/@UnderlyingType" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$type" />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="underlyingQualifier">
-      <xsl:call-template name="substring-before-last">
-        <xsl:with-param name="input" select="$underlyingType" />
-        <xsl:with-param name="marker" select="'.'" />
-      </xsl:call-template>
-    </xsl:variable>
     <xsl:choose>
-      <xsl:when test=".='-INF' or .='INF' or .='NaN'">
-        <xsl:text>"</xsl:text>
-        <xsl:value-of select="." />
-        <xsl:text>"</xsl:text>
-      </xsl:when>
-      <xsl:when test="$underlyingType='Edm.Boolean' and (.='true' or .='false' or .='null')">
+      <xsl:when test="$type='Edm.Boolean' and (.='true' or .='false' or .='null')">
         <xsl:value-of select="." />
       </xsl:when>
       <xsl:when
-        test="($underlyingType='Edm.Decimal' or $underlyingType='Edm.Double' or $underlyingType='Edm.Single'
-              or $underlyingType='Edm.Byte' or $underlyingType='Edm.SByte' or $underlyingType='Edm.Int16' or $underlyingType='Edm.Int32' or $underlyingType='Edm.Int64') and .=number(.)"
+        test="($type='Edm.Decimal' or $type='Edm.Double' or $type='Edm.Single' or 
+       $type='Edm.Byte' or $type='Edm.SByte' or $type='Edm.Int16' or $type='Edm.Int32') and .=number(.)"
       >
         <xsl:value-of select="." />
       </xsl:when>
+      <xsl:when test="$type='Edm.Int64' and number(.) &lt; 9007199254740992">
+        <xsl:value-of select="." />
+      </xsl:when>
       <!-- FAKE: couldn't determine underlying primitive type, so guess from value -->
-      <xsl:when test="$underlyingQualifier!='Edm' and (.='true' or .='false' or .='null' or .=number(.))">
+      <xsl:when
+        test="substring($type,4)!='Edm.' and (.='true' or .='false' or .='null' or (.=number(.) and string-length(.) &lt; 16))"
+      >
         <xsl:value-of select="." />
       </xsl:when>
       <xsl:otherwise>
