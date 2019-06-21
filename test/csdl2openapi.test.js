@@ -55,7 +55,17 @@ describe('Examples', function () {
 
     it('annotations', function () {
         let openapi = lib.csdl2openapi(example5, { diagram: true });
+        assert.deepStrictEqual(Object.keys(openapi.paths), Object.keys(result5.paths), 'Paths');
+        assert.deepStrictEqual(operations(openapi.paths), operations(result5.paths), 'Paths');
         assert.deepStrictEqual(openapi, result5, 'Annotations');
     })
 
 })
+
+function operations(paths) {
+    const p = {};
+    Object.keys(paths).forEach(template => {
+        p[template] = Object.keys(paths[template])
+    });
+    return p;
+}
