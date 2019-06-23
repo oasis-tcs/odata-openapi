@@ -21,7 +21,10 @@ const result4 = require('../examples/example.openapi3.json');
 const example5 = csdl.xml2json(fs.readFileSync('examples/annotations.xml'));
 const result5 = require('../examples/annotations.openapi3.json');
 
-//TODO: containment, maybe also People, Products
+const example6 = csdl.xml2json(fs.readFileSync('examples/containment.xml'));
+const result6 = require('../examples/containment.openapi3.json');
+
+//TODO: People, Products
 
 describe('Examples', function () {
 
@@ -55,9 +58,16 @@ describe('Examples', function () {
 
     it('annotations', function () {
         let openapi = lib.csdl2openapi(example5, { diagram: true });
-        assert.deepStrictEqual(Object.keys(openapi.paths), Object.keys(result5.paths), 'Paths');
+        assert.deepStrictEqual(Object.keys(openapi.paths).sort(), Object.keys(result5.paths).sort(), 'Paths');
         assert.deepStrictEqual(operations(openapi.paths), operations(result5.paths), 'Paths');
         assert.deepStrictEqual(openapi, result5, 'Annotations');
+    })
+
+    it('containment', function () {
+        let openapi = lib.csdl2openapi(example6, { diagram: true });
+        assert.deepStrictEqual(Object.keys(openapi.paths).sort(), Object.keys(result6.paths).sort(), 'Paths');
+        assert.deepStrictEqual(operations(openapi.paths), operations(result6.paths), 'Paths');
+        assert.deepStrictEqual(openapi, result6, 'Annotations');
     })
 
 })

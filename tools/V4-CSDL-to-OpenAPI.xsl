@@ -1161,11 +1161,8 @@
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="ref">
     <xsl:param name="suffix" select="null" />
-    <xsl:param name="recursive" select="false()" />
-    <xsl:variable name="qualifiedName" select="concat(../@Namespace,'.',@Name)" />
-    <xsl:variable name="aliasQualifiedName" select="concat(../@Alias,'.',@Name)" />
 
-    <xsl:if test="position()>1 or $recursive">
+    <xsl:if test="position()>1">
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:text>{</xsl:text>
@@ -1175,15 +1172,6 @@
       <xsl:with-param name="suffix" select="$suffix" />
     </xsl:call-template>
     <xsl:text>}</xsl:text>
-
-    <xsl:apply-templates
-      select="//edm:EntityType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]
-             |//edm:ComplexType[@BaseType=$qualifiedName or @BaseType=$aliasQualifiedName]"
-      mode="ref"
-    >
-      <xsl:with-param name="suffix" select="$suffix" />
-      <xsl:with-param name="recursive" select="true()" />
-    </xsl:apply-templates>
   </xsl:template>
 
   <xsl:template name="properties">

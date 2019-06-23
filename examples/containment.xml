@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.01">
   <!-- TODO:
     containment
@@ -20,7 +20,7 @@
   </edmx:Reference>
   <edmx:DataServices>
     <Schema Namespace="Containment" Alias="self">
-
+      
       <EntityType Name="Whole">
         <Key>
           <PropertyRef Name="ID" />
@@ -30,7 +30,7 @@
         <NavigationProperty Name="One" Type="self.Part" ContainsTarget="true" />
         <NavigationProperty Name="Many" Type="Collection(self.Part)" ContainsTarget="true" />
       </EntityType>
-
+      
       <EntityType Name="Part">
         <Key>
           <PropertyRef Name="index" />
@@ -41,7 +41,7 @@
         <NavigationProperty Name="ManyReadListOnly" Type="Collection(self.SubPart)" ContainsTarget="true" />
         <NavigationProperty Name="ManyReadByKeyOnly" Type="Collection(self.SubPart)" ContainsTarget="true" />
       </EntityType>
-
+      
       <EntityType Name="SubPart">
         <Key>
           <PropertyRef Name="One" />
@@ -50,51 +50,51 @@
         <Property Name="One" Type="Edm.Int32" Nullable="false" />
         <Property Name="Two" Type="Edm.Int32" Nullable="false" />
       </EntityType>
-
+      
       <Action Name="Like" IsBound="true">
         <Annotation Term="Core.Description" String="I like this whole" />
         <Parameter Name="__it" Type="self.Whole" />
       </Action>
-
+      
       <Action Name="Like" IsBound="true">
         <Annotation Term="Core.Description" String="I like all of these wholes" />
         <Parameter Name="__it" Type="Collection(self.Whole)" />
       </Action>
-
+      
       <Action Name="Like" IsBound="true">
         <Annotation Term="Core.Description" String="I like this part" />
         <Parameter Name="__it" Type="self.Part" />
       </Action>
-
+      
       <Action Name="Like" IsBound="true">
         <Annotation Term="Core.Description" String="I like all of these parts" />
         <Parameter Name="__it" Type="Collection(self.Part)" />
       </Action>
-
+      
       <Function Name="Likes" IsBound="true">
         <Annotation Term="Core.Description" String="How many like this whole" />
         <Parameter Name="__it" Type="self.Whole" />
         <ReturnType Type="Edm.Int32" />
       </Function>
-
+      
       <Function Name="Likes" IsBound="true">
         <Annotation Term="Core.Description" String="How many like these wholes" />
         <Parameter Name="__it" Type="Collection(self.Whole)" />
         <ReturnType Type="Edm.Int32" />
       </Function>
-
+      
       <Function Name="Likes" IsBound="true">
         <Annotation Term="Core.Description" String="How many like this part" />
         <Parameter Name="__it" Type="self.Part" />
         <ReturnType Type="Edm.Int32" />
       </Function>
-
+      
       <Function Name="Likes" IsBound="true">
         <Annotation Term="Core.Description" String="How many like these parts" />
         <Parameter Name="__it" Type="Collection(self.Part)" />
         <ReturnType Type="Edm.Int32" />
       </Function>
-
+      
       <EntityType Name="Folder">
         <Key>
           <PropertyRef Name="Name" />
@@ -103,11 +103,11 @@
         <Property Name="Description" Type="Edm.String" />
         <NavigationProperty Name="Folders" Type="Collection(self.Folder)" ContainsTarget="true" />
       </EntityType>
-
-
+      
+      
       <EntityContainer Name="Container">
         <Annotation Term="Capabilities.BatchSupported" Bool="false" />
-
+        
         <EntitySet Name="Wholes" EntityType="self.Whole">
           <Annotation Term="Core.Description" String="List of containers" />
         </EntitySet>
@@ -142,6 +142,7 @@
                   <Record>
                     <PropertyValue Property="NavigationProperty" NavigationPropertyPath="One/ManyReadByKeyOnly" />
                     <PropertyValue Property="Navigability" EnumMember="Capabilities.NavigationType/None" />
+                    <!-- TOD: this is odd, remove Navigability above or set it to Single -->
                     <PropertyValue Property="SelectSupport">
                       <Record>
                         <PropertyValue Property="Supported" Bool="false" />
@@ -230,7 +231,7 @@
           <Annotation Term="Core.Description" String="List of folders" />
         </EntitySet>
       </EntityContainer>
-
+      
       <Annotations Target="self.Container/Wholes">
         <Annotation Term="Capabilities.NavigationRestrictions">
           <Record>
@@ -239,6 +240,7 @@
                 <Record>
                   <PropertyValue Property="NavigationProperty" NavigationPropertyPath="One/ManyReadListOnly" />
                   <PropertyValue Property="Navigability" EnumMember="Capabilities.NavigationType/None" />
+                  <!-- TOD: this is odd, remove Navigability above or set it to Single -->                  
                   <PropertyValue Property="SelectSupport">
                     <Record>
                       <PropertyValue Property="Supported">
@@ -315,7 +317,7 @@
           </Record>
         </Annotation>
       </Annotations>
-
+      
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>
