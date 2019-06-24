@@ -3781,6 +3781,7 @@
 
     <xsl:call-template name="responses">
       <xsl:with-param name="type" select="$action/edm:ReturnType/@Type" />
+      <xsl:with-param name="nullableFacet" select="edm:ReturnType/@Nullable" />
     </xsl:call-template>
     <xsl:text>}}</xsl:text>
   </xsl:template>
@@ -3854,6 +3855,7 @@
 
     <xsl:call-template name="responses">
       <xsl:with-param name="type" select="edm:ReturnType/@Type" />
+      <xsl:with-param name="nullableFacet" select="edm:ReturnType/@Nullable" />
     </xsl:call-template>
     <xsl:text>}}</xsl:text>
   </xsl:template>
@@ -4035,6 +4037,7 @@
   <xsl:template name="responses">
     <xsl:param name="code" select="'200'" />
     <xsl:param name="type" select="null" />
+    <xsl:param name="nullableFacet" select="'false'" />
     <xsl:param name="delta" select="'false'" />
     <xsl:param name="description" select="'Success'" />
 
@@ -4093,7 +4096,7 @@
         </xsl:if>
         <xsl:call-template name="type">
           <xsl:with-param name="type" select="$type" />
-          <xsl:with-param name="nullableFacet" select="'false'" />
+          <xsl:with-param name="nullableFacet" select="$nullableFacet" />
           <xsl:with-param name="inResponse" select="true()" />
         </xsl:call-template>
         <xsl:if test="$delta='true'">
@@ -4201,6 +4204,7 @@
 
     <xsl:call-template name="responses">
       <xsl:with-param name="type" select="edm:ReturnType/@Type" />
+      <xsl:with-param name="nullableFacet" select="edm:ReturnType/@Nullable" />
     </xsl:call-template>
     <xsl:text>}}</xsl:text>
   </xsl:template>
@@ -4259,6 +4263,7 @@
 
     <xsl:call-template name="responses">
       <xsl:with-param name="type" select="edm:ReturnType/@Type" />
+      <xsl:with-param name="nullableFacet" select="edm:ReturnType/@Nullable" />
     </xsl:call-template>
     <xsl:text>}}</xsl:text>
   </xsl:template>

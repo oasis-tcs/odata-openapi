@@ -2,6 +2,9 @@ const assert = require('assert');
 const fs = require('fs');
 
 //TODO:
+// descriptions on path parameters for keys
+// descriptions on entity types for POST and PATCH request bodies
+// descriptions on entity types as fallback for description on entity set?
 // key-as-segment
 // key-aliases
 // navigation properties inherited from base type A.n1 -> B.n2 -> C.n3 
@@ -33,6 +36,9 @@ const result6 = require('../examples/containment.openapi3.json');
 
 const example7 = csdl.xml2json(fs.readFileSync('examples/authorization.xml'));
 const result7 = require('../examples/authorization.openapi3.json');
+
+const example8 = csdl.xml2json(fs.readFileSync('examples/TM1.xml'));
+const result8 = require('../examples/TM1.openapi3.json');
 
 
 describe('Examples', function () {
@@ -78,6 +84,12 @@ describe('Examples', function () {
     it('authorization', function () {
         const openapi = lib.csdl2openapi(example7, { diagram: true });
         check(openapi, result7);
+    })
+
+    //TODO: remove after extracting specialized test cases
+    it('TM1', function () {
+        const openapi = lib.csdl2openapi(example8, { scheme: 'http', diagram: true });
+        check(openapi, result8);
     })
 
     it('empty input', function () {
@@ -212,6 +224,78 @@ describe('Examples', function () {
         const actual = lib.csdl2openapi(csdl, {});
         assert.deepStrictEqual(Object.keys(actual.paths).sort(), Object.keys(expected.paths).sort(), 'Paths');
         assert.deepStrictEqual(operations(actual.paths), operations(expected.paths), 'Operations');
+    })
+
+    it('return type with facets', function () {
+        const csdl = {
+            $EntityContainer: 'this.Container',
+            this: {
+                fun: [
+                    { $Kind: 'Function', $ReturnType: { $MaxLength: 20 } },
+                    { $Kind: 'Function', $Parameter: [{ $Name: 'in' }], $ReturnType: { $Collection: true, $MaxLength: 20 } }
+                ],
+                Container: { fun: { $Function: 'this.fun' } }
+            }
+        };
+        const expected = {
+            paths: {
+                '/fun()': {
+                    get: {
+                        responses: {
+                            200: {
+                                description: 'Success',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            type: 'string',
+                                            maxLength: 20
+                                        }
+                                    }
+                                }
+                            },
+                            default: {}
+                        }
+                    }
+                },
+                "/fun(in='{in}')": {
+                    get: {
+                        responses: {
+                            200: {
+                                description: 'Success',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            type: 'object',
+                                            title: 'Collection of String',
+                                            properties: {
+                                                value: {
+                                                    type: 'array',
+                                                    items: {
+                                                        type: 'string',
+                                                        maxLength: 20
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            default: {}
+                        }
+                    }
+                },
+                '/$batch': { post: {} }
+            }
+        };
+        const actual = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(Object.keys(actual.paths).sort(), Object.keys(expected.paths).sort(), 'Paths');
+        assert.deepStrictEqual(operations(actual.paths), operations(expected.paths), 'Operations');
+        assert.deepStrictEqual(
+            actual.paths['/fun()'].get.responses[200],
+            expected.paths['/fun()'].get.responses[200], 'fun');
+        assert.deepStrictEqual(
+            actual.paths["/fun(in='{in}')"].get.responses[200],
+            expected.paths["/fun(in='{in}')"].get.responses[200], 'fun(in)');
     })
 
 })
