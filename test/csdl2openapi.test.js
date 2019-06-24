@@ -4,9 +4,8 @@ const fs = require('fs');
 //TODO:
 // key-as-segment
 // key-aliases
-// navigation to entity type with key inherited from base type
 // navigation properties inherited from base type A.n1 -> B.n2 -> C.n3 
-// collection-navigation to entity type without key or unknown entity type: suppress path item
+// collection-navigation to entity type without key or unknown entity type: suppress path item with key segment
 // remaining Edm types, especially Geo* - see odata-definitions.json
 // (external) annotations on actions, functions, parameters, returntype
 // control mapping of reference URLs 
@@ -115,6 +114,129 @@ describe('Examples', function () {
         };
         const openapi = lib.csdl2openapi(csdl, {});
         assert.deepStrictEqual(openapi, expected, 'Empty CSDL document');
+    })
+
+    it('no key', function () {
+        const csdl = {
+            $EntityContainer: 'this.Container',
+            this: {
+                NoKey: { $Kind: 'EntityType' },
+                Container: { Set: { $Collection: true, $Type: 'this.NoKey' } }
+            }
+        };
+        const expected = {
+            openapi: '3.0.0',
+            info: {
+                title: 'OData CSDL document',
+                description: '',
+                version: ''
+            },
+            paths: {
+                '/Set': { get: {}, post: {} },
+                '/$batch': { post: {} }
+            },
+            components: {
+                schemas: {
+                    'ReuseTypes.FirstName': { title: 'FirstName', type: 'string' }
+                }
+            }
+        };
+        const actual = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(Object.keys(actual.paths).sort(), Object.keys(expected.paths).sort(), 'Paths');
+        assert.deepStrictEqual(operations(actual.paths), operations(expected.paths), 'Operations');
+    })
+
+    it('base type not found', function () {
+        const csdl = {
+            $EntityContainer: 'this.Container',
+            this: {
+                Derived: { $Kind: 'EntityType', $BaseType: 'this.Base' },
+                Container: { Set: { $Collection: true, $Type: 'this.Derived' } }
+            }
+        };
+        const expected = {
+            openapi: '3.0.0',
+            info: {
+                title: 'OData CSDL document',
+                description: '',
+                version: ''
+            },
+            paths: {
+                '/Set': { get: {}, post: {} },
+                '/$batch': { post: {} }
+            },
+            components: {
+                schemas: {
+                    'ReuseTypes.FirstName': { title: 'FirstName', type: 'string' }
+                }
+            }
+        };
+        const actual = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(Object.keys(actual.paths).sort(), Object.keys(expected.paths).sort(), 'Paths');
+        assert.deepStrictEqual(operations(actual.paths), operations(expected.paths), 'Operations');
+    })
+
+    it('no inherited key', function () {
+        const csdl = {
+            $EntityContainer: 'this.Container',
+            this: {
+                Base: { $Kind: 'EntityType' },
+                Derived: { $Kind: 'EntityType', $BaseType: 'this.Base' },
+                Container: { Set: { $Collection: true, $Type: 'this.Derived' } }
+            }
+        };
+        const expected = {
+            openapi: '3.0.0',
+            info: {
+                title: 'OData CSDL document',
+                description: '',
+                version: ''
+            },
+            paths: {
+                '/Set': { get: {}, post: {} },
+                '/$batch': { post: {} }
+            },
+            components: {
+                schemas: {
+                    'ReuseTypes.FirstName': { title: 'FirstName', type: 'string' }
+                }
+            }
+        };
+        const actual = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(Object.keys(actual.paths).sort(), Object.keys(expected.paths).sort(), 'Paths');
+        assert.deepStrictEqual(operations(actual.paths), operations(expected.paths), 'Operations');
+    })
+
+    it('inherited key', function () {
+        const csdl = {
+            $EntityContainer: 'this.Container',
+            this: {
+                Base: { $Kind: 'EntityType', $Key: ['key'], key: {} },
+                Derived: { $Kind: 'EntityType', $BaseType: 'this.Base' },
+                Container: { Set: { $Collection: true, $Type: 'this.Derived' } }
+            }
+        };
+        const expected = {
+            openapi: '3.0.0',
+            info: {
+                title: 'OData CSDL document',
+                description: '',
+                version: ''
+            },
+            paths: {
+                '/Set': { get: {}, post: {} },
+                "/Set('{key}')": { parameters: [], get: {}, patch: {}, delete: {} },
+                '/$batch': { post: {} }
+            },
+            components: {
+                schemas: {
+                    'ReuseTypes.FirstName': { title: 'FirstName', type: 'string' }
+                }
+            }
+        };
+        const actual = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(Object.keys(actual.paths).sort(), Object.keys(expected.paths).sort(), 'Paths');
+        assert.deepStrictEqual(operations(actual.paths), operations(expected.paths), 'Operations');
     })
 
 })
