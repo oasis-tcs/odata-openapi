@@ -7,7 +7,6 @@ const fs = require('fs');
 // navigation to entity type with key inherited from base type
 // navigation properties inherited from base type A.n1 -> B.n2 -> C.n3 
 // collection-navigation to entity type without key or unknown entity type: suppress path item
-// document without entity container, similar to csdl-16.2.xml, but with types
 // remaining Edm types, especially Geo* - see odata-definitions.json
 // (external) annotations on actions, functions, parameters, returntype
 // control mapping of reference URLs 
@@ -80,6 +79,42 @@ describe('Examples', function () {
     it('authorization', function () {
         const openapi = lib.csdl2openapi(example7, { diagram: true });
         check(openapi, result7);
+    })
+
+    it('empty input', function () {
+        const csdl = {};
+        const expected = {
+            openapi: '3.0.0',
+            info: {
+                title: 'OData CSDL document',
+                description: '',
+                version: ''
+            },
+            paths: {},
+            components: { schemas: {} }
+        };
+        const openapi = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(openapi, expected, 'Empty CSDL document');
+    })
+
+    it('only types', function () {
+        const csdl = { ReuseTypes: { FirstName: { $Kind: 'TypeDefinition' } } };
+        const expected = {
+            openapi: '3.0.0',
+            info: {
+                title: 'OData CSDL document',
+                description: '',
+                version: ''
+            },
+            paths: {},
+            components: {
+                schemas: {
+                    'ReuseTypes.FirstName': { title: 'FirstName', type: 'string' }
+                }
+            }
+        };
+        const openapi = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(openapi, expected, 'Empty CSDL document');
     })
 
 })
