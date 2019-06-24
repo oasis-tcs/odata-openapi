@@ -125,20 +125,9 @@ describe('Examples', function () {
             }
         };
         const expected = {
-            openapi: '3.0.0',
-            info: {
-                title: 'OData CSDL document',
-                description: '',
-                version: ''
-            },
             paths: {
                 '/Set': { get: {}, post: {} },
                 '/$batch': { post: {} }
-            },
-            components: {
-                schemas: {
-                    'ReuseTypes.FirstName': { title: 'FirstName', type: 'string' }
-                }
             }
         };
         const actual = lib.csdl2openapi(csdl, {});
@@ -155,20 +144,9 @@ describe('Examples', function () {
             }
         };
         const expected = {
-            openapi: '3.0.0',
-            info: {
-                title: 'OData CSDL document',
-                description: '',
-                version: ''
-            },
             paths: {
                 '/Set': { get: {}, post: {} },
                 '/$batch': { post: {} }
-            },
-            components: {
-                schemas: {
-                    'ReuseTypes.FirstName': { title: 'FirstName', type: 'string' }
-                }
             }
         };
         const actual = lib.csdl2openapi(csdl, {});
@@ -186,20 +164,9 @@ describe('Examples', function () {
             }
         };
         const expected = {
-            openapi: '3.0.0',
-            info: {
-                title: 'OData CSDL document',
-                description: '',
-                version: ''
-            },
             paths: {
                 '/Set': { get: {}, post: {} },
                 '/$batch': { post: {} }
-            },
-            components: {
-                schemas: {
-                    'ReuseTypes.FirstName': { title: 'FirstName', type: 'string' }
-                }
             }
         };
         const actual = lib.csdl2openapi(csdl, {});
@@ -217,21 +184,29 @@ describe('Examples', function () {
             }
         };
         const expected = {
-            openapi: '3.0.0',
-            info: {
-                title: 'OData CSDL document',
-                description: '',
-                version: ''
-            },
             paths: {
                 '/Set': { get: {}, post: {} },
                 "/Set('{key}')": { parameters: [], get: {}, patch: {}, delete: {} },
                 '/$batch': { post: {} }
-            },
-            components: {
-                schemas: {
-                    'ReuseTypes.FirstName': { title: 'FirstName', type: 'string' }
-                }
+            }
+        };
+        const actual = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(Object.keys(actual.paths).sort(), Object.keys(expected.paths).sort(), 'Paths');
+        assert.deepStrictEqual(operations(actual.paths), operations(expected.paths), 'Operations');
+    })
+
+    it('function without parameters', function () {
+        const csdl = {
+            $EntityContainer: 'this.Container',
+            this: {
+                NoParameters: [{ $Kind: 'Function', $ReturnType: {} }],
+                Container: { fun: { $Function: 'this.NoParameters' } }
+            }
+        };
+        const expected = {
+            paths: {
+                '/fun()': { get: {} },
+                '/$batch': { post: {} }
             }
         };
         const actual = lib.csdl2openapi(csdl, {});
