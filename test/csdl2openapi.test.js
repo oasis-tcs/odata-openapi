@@ -77,7 +77,7 @@ describe('Examples', function () {
         check(openapi, result6);
     })
 
-    it('next', function () {
+    it('authorization', function () {
         const openapi = lib.csdl2openapi(example7, { diagram: true });
         check(openapi, result7);
     })
