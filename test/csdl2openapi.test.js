@@ -1,7 +1,16 @@
 const assert = require('assert');
 const fs = require('fs');
 
-//TODO: document without entity container, similar to csdl-16.2.xml, but with types
+//TODO:
+// key-as-segment
+// key-aliases
+// navigation to entity type with key inherited from base type
+// navigation properties inherited from base type A.n1 -> B.n2 -> C.n3 
+// collection-navigation to entity type without key or unknown entity type: suppress path item
+// document without entity container, similar to csdl-16.2.xml, but with types
+// remaining Edm types, especially Geo* - see odata-definitions.json
+// (external) annotations on actions, functions, parameters, returntype
+// control mapping of reference URLs 
 
 const csdl = require('odata-csdl');
 const lib = require('../lib/csdl2openapi');
@@ -24,53 +33,62 @@ const result5 = require('../examples/annotations.openapi3.json');
 const example6 = csdl.xml2json(fs.readFileSync('examples/containment.xml'));
 const result6 = require('../examples/containment.openapi3.json');
 
-//TODO: People, Products
+const example7 = csdl.xml2json(fs.readFileSync('examples/authorization.xml'));
+const result7 = require('../examples/authorization.openapi3.json');
+
 
 describe('Examples', function () {
 
     it('csdl-16.1', function () {
-        let openapi = lib.csdl2openapi(example1, { diagram: true });
-        assert.deepStrictEqual(openapi, result1, 'CSDL specification example');
+        const openapi = lib.csdl2openapi(example1, { diagram: true });
+        check(openapi, result1);
     })
 
     it('TripPin', function () {
-        let openapi = lib.csdl2openapi(example2, {
+        const openapi = lib.csdl2openapi(example2, {
             host: 'services.odata.org',
             basePath: '/V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW',
             diagram: true
         });
-        assert.deepStrictEqual(openapi, result2, 'TripPin reference service');
+        check(openapi, result2);
     })
 
     it('miscellaneous', function () {
-        let openapi = lib.csdl2openapi(example3, { scheme: 'http', diagram: true });
-        assert.deepStrictEqual(openapi, result3, 'miscellaneus');
+        const openapi = lib.csdl2openapi(example3, { scheme: 'http', diagram: true });
+        check(openapi, result3);
     })
 
     it('example', function () {
-        let openapi = lib.csdl2openapi(example4, {
+        const openapi = lib.csdl2openapi(example4, {
             host: 'services.odata.org',
             basePath: '/V4/OData/(S(nsga2k1tyctb0cn0ofcgcn4o))/OData.svc',
             diagram: true
         });
-        assert.deepStrictEqual(openapi, result4, 'read/write example service');
+        check(openapi, result4);
     })
 
     it('annotations', function () {
-        let openapi = lib.csdl2openapi(example5, { diagram: true });
-        assert.deepStrictEqual(Object.keys(openapi.paths).sort(), Object.keys(result5.paths).sort(), 'Paths');
-        assert.deepStrictEqual(operations(openapi.paths), operations(result5.paths), 'Paths');
-        assert.deepStrictEqual(openapi, result5, 'Annotations');
+        const openapi = lib.csdl2openapi(example5, { diagram: true });
+        check(openapi, result5);
     })
 
     it('containment', function () {
-        let openapi = lib.csdl2openapi(example6, { diagram: true });
-        assert.deepStrictEqual(Object.keys(openapi.paths).sort(), Object.keys(result6.paths).sort(), 'Paths');
-        assert.deepStrictEqual(operations(openapi.paths), operations(result6.paths), 'Paths');
-        assert.deepStrictEqual(openapi, result6, 'Annotations');
+        const openapi = lib.csdl2openapi(example6, { diagram: true });
+        check(openapi, result6);
+    })
+
+    it('next', function () {
+        const openapi = lib.csdl2openapi(example7, { diagram: true });
+        check(openapi, result7);
     })
 
 })
+
+function check(actual, expected) {
+    assert.deepStrictEqual(Object.keys(actual.paths).sort(), Object.keys(expected.paths).sort(), 'Paths');
+    assert.deepStrictEqual(operations(actual.paths), operations(expected.paths), 'Operations');
+    assert.deepStrictEqual(actual, expected, 'OpenAPI document');
+}
 
 function operations(paths) {
     const p = {};
