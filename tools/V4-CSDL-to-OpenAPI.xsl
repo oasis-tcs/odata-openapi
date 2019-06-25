@@ -2381,39 +2381,33 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:variable name="type-description">
-          <xsl:choose>
-            <xsl:when test="local-name()='EntitySet'">
-              <xsl:variable name="qualifier">
-                <xsl:call-template name="substring-before-last">
-                  <xsl:with-param name="input" select="@EntityType" />
-                  <xsl:with-param name="marker" select="'.'" />
-                </xsl:call-template>
-              </xsl:variable>
-              <xsl:variable name="namespace">
-                <xsl:choose>
-                  <xsl:when test="//edm:Schema[@Alias=$qualifier]">
-                    <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:value-of select="$qualifier" />
-                  </xsl:otherwise>
-                </xsl:choose>
-              </xsl:variable>
-              <xsl:variable name="type">
-                <xsl:call-template name="substring-after-last">
-                  <xsl:with-param name="input" select="@EntityType" />
-                  <xsl:with-param name="marker" select="'.'" />
-                </xsl:call-template>
-              </xsl:variable>
-              <xsl:variable name="entityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" />
-              <xsl:call-template name="Core.Description">
-                <xsl:with-param name="node" select="$entityType" />
-              </xsl:call-template>
-            </xsl:when>
-            <xsl:otherwise>
-              <!-- TODO: fall back to type text for singleton -->
-            </xsl:otherwise>
-          </xsl:choose>
+          <xsl:variable name="typename" select="@EntityType|@Type" />
+          <xsl:variable name="qualifier">
+            <xsl:call-template name="substring-before-last">
+              <xsl:with-param name="input" select="$typename" />
+              <xsl:with-param name="marker" select="'.'" />
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:variable name="namespace">
+            <xsl:choose>
+              <xsl:when test="//edm:Schema[@Alias=$qualifier]">
+                <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$qualifier" />
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+          <xsl:variable name="type">
+            <xsl:call-template name="substring-after-last">
+              <xsl:with-param name="input" select="$typename" />
+              <xsl:with-param name="marker" select="'.'" />
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:variable name="entityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" />
+          <xsl:call-template name="Core.Description">
+            <xsl:with-param name="node" select="$entityType" />
+          </xsl:call-template>
         </xsl:variable>
         <xsl:if test="$type-description!=''">
           <xsl:text>","description":"</xsl:text>
