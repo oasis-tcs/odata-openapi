@@ -61,7 +61,9 @@ Options:
  -p, --pretty            pretty-print JSON result
  -r, --references        include references to other files
  --scheme                scheme (default: http)
-```
+ -t, --target            target file (only useful with a single source file)
+ -u, --used-schemas-only produce only schemas that are actually used in operation objects
+ ```
 
 If you installed the script locally, start it via
 ```sh
