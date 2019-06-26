@@ -2,11 +2,16 @@ const assert = require('assert');
 const fs = require('fs');
 
 //TODO:
-// descriptions on path parameters for keys
-// descriptions on entity types for POST and PATCH request bodies
-// descriptions on entity types as fallback for description on entity set?
-// key-as-segment
-// key-aliases
+// description on action/function (import) 
+// description on path parameters for keys
+// description on entity types for POST and PATCH request bodies
+// tags: descriptions on entity type as fallback for description on entity set/singleton
+// -- remove TM1 test case after doing the above
+// @JSON.Schema
+// @Core.Example
+// reference undefined type: silent for included schema, warning for local schema
+// key-as-segment: single-part and multi-part key
+// key-aliases: one and more segments
 // navigation properties inherited from base type A.n1 -> B.n2 -> C.n3 
 // collection-navigation to entity type without key or unknown entity type: suppress path item with key segment
 // remaining Edm types, especially Geo* - see odata-definitions.json
@@ -37,6 +42,7 @@ const result6 = require('../examples/containment.openapi3.json');
 const example7 = csdl.xml2json(fs.readFileSync('examples/authorization.xml'));
 const result7 = require('../examples/authorization.openapi3.json');
 
+//TODO: remove
 const example8 = csdl.xml2json(fs.readFileSync('examples/TM1.xml'));
 const result8 = require('../examples/TM1.openapi3.json');
 
@@ -86,12 +92,6 @@ describe('Examples', function () {
         check(openapi, result7);
     })
 
-    //TODO: remove after extracting specialized test cases
-    it('TM1', function () {
-        const openapi = lib.csdl2openapi(example8, { scheme: 'http', diagram: true });
-        check(openapi, result8);
-    })
-
     it('empty input', function () {
         const csdl = {};
         const expected = {
@@ -109,7 +109,16 @@ describe('Examples', function () {
     })
 
     it('only types', function () {
-        const csdl = { ReuseTypes: { FirstName: { $Kind: 'TypeDefinition' } } };
+        const csdl = {
+            $Reference: { dummy: { "$Include": [{ "$Namespace": "Org.OData.Core.V1", "$Alias": "Core" }] } },
+            ReuseTypes: {
+                entityType: {
+                    '@Core.Description': 'Core.Description',
+                    $Kind: 'EntityType', $Key: ['key'], key: {}
+                },
+                typeDefinition: { $Kind: 'TypeDefinition' }
+            }
+        };
         const expected = {
             openapi: '3.0.0',
             info: {
@@ -120,7 +129,22 @@ describe('Examples', function () {
             paths: {},
             components: {
                 schemas: {
-                    'ReuseTypes.FirstName': { title: 'FirstName', type: 'string' }
+                    'ReuseTypes.entityType': {
+                        type: 'object',
+                        title: 'Core.Description',
+                        properties: { key: { type: 'string' } }
+                    },
+                    'ReuseTypes.entityType-create': {
+                        type: 'object',
+                        title: 'Core.Description (for create)',
+                        properties: { key: { type: 'string' } },
+                        required: ['key']
+                    },
+                    'ReuseTypes.entityType-update': {
+                        type: 'object',
+                        title: 'Core.Description (for update)'
+                    },
+                    'ReuseTypes.typeDefinition': { title: 'typeDefinition', type: 'string' }
                 }
             }
         };
@@ -143,8 +167,8 @@ describe('Examples', function () {
             }
         };
         const actual = lib.csdl2openapi(csdl, {});
-        assert.deepStrictEqual(Object.keys(actual.paths).sort(), Object.keys(expected.paths).sort(), 'Paths');
-        assert.deepStrictEqual(operations(actual.paths), operations(expected.paths), 'Operations');
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
     })
 
     it('base type not found', function () {
@@ -162,8 +186,8 @@ describe('Examples', function () {
             }
         };
         const actual = lib.csdl2openapi(csdl, {});
-        assert.deepStrictEqual(Object.keys(actual.paths).sort(), Object.keys(expected.paths).sort(), 'Paths');
-        assert.deepStrictEqual(operations(actual.paths), operations(expected.paths), 'Operations');
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
     })
 
     it('no inherited key', function () {
@@ -182,8 +206,8 @@ describe('Examples', function () {
             }
         };
         const actual = lib.csdl2openapi(csdl, {});
-        assert.deepStrictEqual(Object.keys(actual.paths).sort(), Object.keys(expected.paths).sort(), 'Paths');
-        assert.deepStrictEqual(operations(actual.paths), operations(expected.paths), 'Operations');
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
     })
 
     it('inherited key', function () {
@@ -198,13 +222,13 @@ describe('Examples', function () {
         const expected = {
             paths: {
                 '/Set': { get: {}, post: {} },
-                "/Set('{key}')": { parameters: [], get: {}, patch: {}, delete: {} },
+                "/Set('{key}')": { get: {}, patch: {}, delete: {} },
                 '/$batch': { post: {} }
             }
         };
         const actual = lib.csdl2openapi(csdl, {});
-        assert.deepStrictEqual(Object.keys(actual.paths).sort(), Object.keys(expected.paths).sort(), 'Paths');
-        assert.deepStrictEqual(operations(actual.paths), operations(expected.paths), 'Operations');
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
     })
 
     it('function without parameters', function () {
@@ -222,8 +246,8 @@ describe('Examples', function () {
             }
         };
         const actual = lib.csdl2openapi(csdl, {});
-        assert.deepStrictEqual(Object.keys(actual.paths).sort(), Object.keys(expected.paths).sort(), 'Paths');
-        assert.deepStrictEqual(operations(actual.paths), operations(expected.paths), 'Operations');
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
     })
 
     it('return type with facets', function () {
@@ -239,7 +263,7 @@ describe('Examples', function () {
         };
         const expected = {
             paths: {
-                '/fun()': {
+                "/fun()": {
                     get: {
                         responses: {
                             200: {
@@ -284,12 +308,12 @@ describe('Examples', function () {
                         }
                     }
                 },
-                '/$batch': { post: {} }
+                "/$batch": { post: {} }
             }
         };
         const actual = lib.csdl2openapi(csdl, {});
-        assert.deepStrictEqual(Object.keys(actual.paths).sort(), Object.keys(expected.paths).sort(), 'Paths');
-        assert.deepStrictEqual(operations(actual.paths), operations(expected.paths), 'Operations');
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
         assert.deepStrictEqual(
             actual.paths['/fun()'].get.responses[200],
             expected.paths['/fun()'].get.responses[200], 'fun');
@@ -298,18 +322,74 @@ describe('Examples', function () {
             expected.paths["/fun(in='{in}')"].get.responses[200], 'fun(in)');
     })
 
+    it('delta link, no $batch', function () {
+        const csdl = {
+            $Reference: { dummy: { "$Include": [{ "$Namespace": "Org.OData.Capabilities.V1", "$Alias": "Capa" }] } },
+            $EntityContainer: 'this.Container',
+            this: {
+                ET: { $Kind: 'EntityType', $Key: ['key'], key: {} },
+                Container: {
+                    Set: {
+                        $Type: 'this.ET', $Collection: true,
+                        '@Capa.ChangeTracking': { Supported: true }
+                    },
+                    '@Capa.BatchSupported': false
+                }
+            }
+        };
+        const expected = {
+            paths: {
+                "/Set": {
+                    get: {},
+                    post: {}
+                },
+                "/Set('{key}')": { get: {}, patch: {}, delete: {} }
+            }
+        };
+        const expectedGetResponseProperties = {
+            value: {
+                type: 'array',
+                items: {
+                    $ref: '#/components/schemas/this.ET'
+                    //TODO:delta
+                }
+            },
+            "@odata.deltaLink": {
+                example: "/service-root/Set?$deltatoken=opaque server-generated token for fetching the delta",
+                type: "string"
+            }
+        };
+        const actual = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
+        assert.deepStrictEqual(
+            actual.paths['/Set'].get.responses[200].content['application/json'].schema.properties,
+            expectedGetResponseProperties, 'get list with delta');
+    })
+
+    //TODO: remove after extracting specialized test cases
+    it('TODO: TM1', function () {
+        const openapi = lib.csdl2openapi(example8, { scheme: 'http', diagram: true });
+        lib.deleteUnreferencedSchemas(openapi);
+        check(openapi, result8);
+    })
+
 })
 
 function check(actual, expected) {
-    assert.deepStrictEqual(Object.keys(actual.paths).sort(), Object.keys(expected.paths).sort(), 'Paths');
-    assert.deepStrictEqual(operations(actual.paths), operations(expected.paths), 'Operations');
+    assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+    assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
     assert.deepStrictEqual(actual, expected, 'OpenAPI document');
 }
 
-function operations(paths) {
+function paths(openapi) {
+    return Object.keys(openapi.paths).sort();
+}
+
+function operations(openapi) {
     const p = {};
-    Object.keys(paths).forEach(template => {
-        p[template] = Object.keys(paths[template])
+    Object.keys(openapi.paths).forEach(template => {
+        p[template] = Object.keys(openapi.paths[template]).filter(op => op != 'parameters');
     });
     return p;
 }
