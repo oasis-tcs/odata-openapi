@@ -8,8 +8,7 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - action parameter with title: need anyOf wrapper if type is $ref (openapi3 only)
-    - title/description in schema of action/function return type
+    - title/description in schema of action/function return type, with anyOf wrapper if type is $ref (openapi3 only)
     - delta: headers Prefer and Preference-Applied
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -4325,11 +4324,23 @@
   </xsl:template>
 
   <xsl:template match="edm:Action/edm:Parameter" mode="hashvalue">
-    <xsl:call-template name="type">
-      <xsl:with-param name="type" select="@Type" />
-      <xsl:with-param name="nullableFacet" select="@Nullable" />
-    </xsl:call-template>
-    <xsl:call-template name="title-description" />
+    <xsl:variable name="type">
+      <xsl:call-template name="type">
+        <xsl:with-param name="type" select="@Type" />
+        <xsl:with-param name="nullableFacet" select="@Nullable" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="text">
+      <xsl:call-template name="title-description" />
+    </xsl:variable>
+    <xsl:if test="$openapi-version!='2.0' and ($type!='' and $text!='') and starts-with($type,'&quot;$ref&quot;')">
+      <xsl:text>"anyOf":[{</xsl:text>
+    </xsl:if>
+    <xsl:value-of select="$type" />
+    <xsl:if test="$openapi-version!='2.0' and ($type!='' and $text!='') and starts-with($type,'&quot;$ref&quot;')">
+      <xsl:text>}]</xsl:text>
+    </xsl:if>
+    <xsl:value-of select="$text" />
   </xsl:template>
 
   <xsl:template match="edm:Action/edm:Parameter|edm:Function/edm:Parameter" mode="parameter">
