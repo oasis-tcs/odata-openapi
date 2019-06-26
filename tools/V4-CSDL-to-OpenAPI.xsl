@@ -4089,7 +4089,7 @@
     <xsl:param name="code" select="'200'" />
     <xsl:param name="type" select="null" />
     <xsl:param name="nullableFacet" select="'false'" />
-    <xsl:param name="target" select="." />
+    <xsl:param name="target" select="null" />
     <xsl:param name="delta" select="'false'" />
     <xsl:param name="description" select="'Success'" />
 
@@ -4146,12 +4146,27 @@
         <xsl:if test="$delta='true' and not($collection)">
           <xsl:text>"allOf":[{</xsl:text>
         </xsl:if>
-        <xsl:call-template name="type">
-          <xsl:with-param name="type" select="$type" />
-          <xsl:with-param name="nullableFacet" select="$nullableFacet" />
-          <xsl:with-param name="target" select="$target" />
-          <xsl:with-param name="inResponse" select="true()" />
-        </xsl:call-template>
+        <xsl:variable name="schema">
+          <xsl:call-template name="type">
+            <xsl:with-param name="type" select="$type" />
+            <xsl:with-param name="nullableFacet" select="$nullableFacet" />
+            <xsl:with-param name="target" select="$target" />
+            <xsl:with-param name="inResponse" select="true()" />
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="text">
+          <xsl:call-template name="title-description">
+            <xsl:with-param name="target" select="$target" />
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:if test="$openapi-version!='2.0' and $text!='' and starts-with($schema,'&quot;$ref&quot;')">
+          <xsl:text>"anyOf":[{</xsl:text>
+        </xsl:if>
+        <xsl:value-of select="$schema" />
+        <xsl:if test="$openapi-version!='2.0' and $text!='' and starts-with($schema,'&quot;$ref&quot;')">
+          <xsl:text>}]</xsl:text>
+        </xsl:if>
+        <xsl:value-of select="$text" />
         <xsl:if test="$delta='true'">
           <xsl:text>},</xsl:text>
           <xsl:if test="not($collection)">
@@ -4333,11 +4348,11 @@
     <xsl:variable name="text">
       <xsl:call-template name="title-description" />
     </xsl:variable>
-    <xsl:if test="$openapi-version!='2.0' and ($type!='' and $text!='') and starts-with($type,'&quot;$ref&quot;')">
+    <xsl:if test="$openapi-version!='2.0' and $text!='' and starts-with($type,'&quot;$ref&quot;')">
       <xsl:text>"anyOf":[{</xsl:text>
     </xsl:if>
     <xsl:value-of select="$type" />
-    <xsl:if test="$openapi-version!='2.0' and ($type!='' and $text!='') and starts-with($type,'&quot;$ref&quot;')">
+    <xsl:if test="$openapi-version!='2.0' and $text!='' and starts-with($type,'&quot;$ref&quot;')">
       <xsl:text>}]</xsl:text>
     </xsl:if>
     <xsl:value-of select="$text" />
@@ -4599,29 +4614,30 @@
   <xsl:template name="title-description">
     <xsl:param name="fallback-title" select="null" />
     <xsl:param name="suffix" select="null" />
+    <xsl:param name="target" select="." />
 
     <xsl:variable name="label">
       <xsl:call-template name="Common.Label">
-        <xsl:with-param name="node" select="." />
+        <xsl:with-param name="node" select="$target" />
       </xsl:call-template>
     </xsl:variable>
 
     <xsl:variable name="quickinfo">
       <xsl:call-template name="Common.QuickInfo">
-        <xsl:with-param name="node" select="." />
+        <xsl:with-param name="node" select="$target" />
       </xsl:call-template>
     </xsl:variable>
 
     <xsl:variable name="description">
       <xsl:call-template name="Core.Description">
-        <xsl:with-param name="node" select="." />
+        <xsl:with-param name="node" select="$target" />
       </xsl:call-template>
     </xsl:variable>
 
     <xsl:variable name="longdescription">
       <xsl:if test="$property-longDescription">
         <xsl:call-template name="Core.LongDescription">
-          <xsl:with-param name="node" select="." />
+          <xsl:with-param name="node" select="$target" />
         </xsl:call-template>
       </xsl:if>
     </xsl:variable>

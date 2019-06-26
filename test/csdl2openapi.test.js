@@ -8,7 +8,6 @@ const fs = require('fs');
 // title/description on entity types for POST and PATCH request bodies
 // tags: Core.Description on entity type as fallback for description on entity set/singleton
 // Nullable on action/function return type
-// -- remove TM1 test case after doing the above
 // deleteUnreferencedSchemas
 // @JSON.Schema
 // @Core.Example
@@ -44,10 +43,6 @@ const result6 = require('../examples/containment.openapi3.json');
 
 const example7 = csdl.xml2json(fs.readFileSync('examples/authorization.xml'));
 const result7 = require('../examples/authorization.openapi3.json');
-
-//TODO: remove
-const example8 = csdl.xml2json(fs.readFileSync('examples/TM1.xml'));
-const result8 = require('../examples/TM1.openapi3.json');
 
 
 describe('Examples', function () {
@@ -368,12 +363,6 @@ describe('Examples', function () {
         assert.deepStrictEqual(
             actual.paths['/Set'].get.responses[200].content['application/json'].schema.properties,
             expectedGetResponseProperties, 'get list with delta');
-    })
-
-    //TODO: remove after extracting specialized test cases
-    it('TODO: TM1', function () {
-        const openapi = lib.csdl2openapi(example8, { scheme: 'http', diagram: true });
-        check(openapi, result8);
     })
 
 })
