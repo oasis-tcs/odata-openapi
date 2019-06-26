@@ -8,6 +8,7 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
+    - action parameter with title: need anyOf wrapper if type is $ref (openapi3 only)
     - title/description in schema of action/function return type
     - delta: headers Prefer and Preference-Applied
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
@@ -2576,7 +2577,6 @@
     <!-- NavigationRestrictions on root for this navigation property -->
     <xsl:variable name="restrictedProperties"
       select="$navigationRestrictions/edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection" />
-    <xsl:variable name="navPropPath" select="concat($navigation-prefix,@Name)" />
     <xsl:variable name="navigationPropertyRestriction"
       select="$restrictedProperties/edm:Record[edm:PropertyValue[@Property='NavigationProperty']/@NavigationPropertyPath=$navPropPath]" />
     <!-- navigability -->
@@ -3824,7 +3824,8 @@
 
     <xsl:call-template name="responses">
       <xsl:with-param name="type" select="$action/edm:ReturnType/@Type" />
-      <xsl:with-param name="nullableFacet" select="edm:ReturnType/@Nullable" />
+      <xsl:with-param name="nullableFacet" select="$action/edm:ReturnType/@Nullable" />
+      <xsl:with-param name="target" select="$action/edm:ReturnType" />
     </xsl:call-template>
     <xsl:text>}}</xsl:text>
   </xsl:template>
@@ -3899,6 +3900,7 @@
     <xsl:call-template name="responses">
       <xsl:with-param name="type" select="edm:ReturnType/@Type" />
       <xsl:with-param name="nullableFacet" select="edm:ReturnType/@Nullable" />
+      <xsl:with-param name="target" select="edm:ReturnType" />
     </xsl:call-template>
     <xsl:text>}}</xsl:text>
   </xsl:template>
@@ -4088,6 +4090,7 @@
     <xsl:param name="code" select="'200'" />
     <xsl:param name="type" select="null" />
     <xsl:param name="nullableFacet" select="'false'" />
+    <xsl:param name="target" select="." />
     <xsl:param name="delta" select="'false'" />
     <xsl:param name="description" select="'Success'" />
 
@@ -4147,6 +4150,7 @@
         <xsl:call-template name="type">
           <xsl:with-param name="type" select="$type" />
           <xsl:with-param name="nullableFacet" select="$nullableFacet" />
+          <xsl:with-param name="target" select="$target" />
           <xsl:with-param name="inResponse" select="true()" />
         </xsl:call-template>
         <xsl:if test="$delta='true'">
@@ -4255,6 +4259,7 @@
     <xsl:call-template name="responses">
       <xsl:with-param name="type" select="edm:ReturnType/@Type" />
       <xsl:with-param name="nullableFacet" select="edm:ReturnType/@Nullable" />
+      <xsl:with-param name="target" select="edm:ReturnType" />
     </xsl:call-template>
     <xsl:text>}}</xsl:text>
   </xsl:template>
@@ -4314,6 +4319,7 @@
     <xsl:call-template name="responses">
       <xsl:with-param name="type" select="edm:ReturnType/@Type" />
       <xsl:with-param name="nullableFacet" select="edm:ReturnType/@Nullable" />
+      <xsl:with-param name="target" select="edm:ReturnType" />
     </xsl:call-template>
     <xsl:text>}}</xsl:text>
   </xsl:template>
