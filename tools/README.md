@@ -14,6 +14,8 @@ This script transforms one or more OData CSDL (`$metadata`) XML documents into O
 
 It uses [`xslt4node`](https://www.npmjs.com/package/xslt4node), which in turn needs [`node-gyp`](https://www.npmjs.com/package/node-gyp) and a [Java SE JDK](http://jdk.java.net).
 
+_Note: if you run into installation problems and only want to transform OData V4 into OpenAPI 3.0.x, you might want to try out its [pure Node.js-based counterpart](../lib)._
+
 ### Installation
 
 Install a [Java SE JDK](http://jdk.java.net) and make sure it is in the `PATH`

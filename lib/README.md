@@ -4,7 +4,7 @@ This script transforms an OData (`$metadata`) [CSDL XML](http://docs.oasis-open.
 
 It's a pure JavaScript implementation, depending only on [`odata-csdl`](https://github.com/oasis-tcs/odata-csdl-schemas/tree/master/lib), which in turn depends on [`sax js`](https://www.npmjs.com/package/sax).
 
-_Note: This is work-in-progress and currently has less features than its [XSLT-based counterpart](https://github.com/oasis-tcs/odata-openapi/tree/master/tools#transformjs-for-nodejs)._
+_Note: This is work-in-progress and currently has less features than its [XSLT-based counterpart](../tools#transformjs-for-nodejs)._
 
 
 ## Installation
