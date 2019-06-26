@@ -2,11 +2,14 @@ const assert = require('assert');
 const fs = require('fs');
 
 //TODO:
-// description on action/function (import) 
-// description on path parameters for keys
-// description on entity types for POST and PATCH request bodies
-// tags: descriptions on entity type as fallback for description on entity set/singleton
+// title/description on action/function (import), with fallback from import to action/function
+// title/description on action/function return type 
+// title/description on path parameters for keys
+// title/description on entity types for POST and PATCH request bodies
+// tags: Core.Description on entity type as fallback for description on entity set/singleton
+// Nullable on action/function return type
 // -- remove TM1 test case after doing the above
+// deleteUnreferencedSchemas
 // @JSON.Schema
 // @Core.Example
 // reference undefined type: silent for included schema, warning for local schema
@@ -370,7 +373,6 @@ describe('Examples', function () {
     //TODO: remove after extracting specialized test cases
     it('TODO: TM1', function () {
         const openapi = lib.csdl2openapi(example8, { scheme: 'http', diagram: true });
-        lib.deleteUnreferencedSchemas(openapi);
         check(openapi, result8);
     })
 
