@@ -481,8 +481,16 @@
       <xsl:text>,"parameters":{</xsl:text>
       <xsl:text>"top":{"name":"</xsl:text>
       <xsl:value-of select="$option-prefix" />
-      <xsl:text>top","in":"query","description":"Show only the first n items</xsl:text>
-      <xsl:text>, see [Paging - Top](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptiontop)",</xsl:text>
+      <xsl:text>top","in":"query","description":"Show only the first n items, see [Paging - Top](</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$odata-version='2.0'">
+          <xsl:text>https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=66</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptiontop</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:text>)",</xsl:text>
       <xsl:call-template name="parameter-type">
         <xsl:with-param name="type" select="'integer'" />
         <xsl:with-param name="plus" select="',&quot;minimum&quot;:0'" />
@@ -494,31 +502,39 @@
       <xsl:text>},</xsl:text>
       <xsl:text>"skip":{"name":"</xsl:text>
       <xsl:value-of select="$option-prefix" />
-      <xsl:text>skip","in":"query","description":"Skip the first n items</xsl:text>
-      <xsl:text>, see [Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionskip)",</xsl:text>
+      <xsl:text>skip","in":"query","description":"Skip the first n items, see [Paging - Skip](</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$odata-version='2.0'">
+          <xsl:text>https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=65</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionskip</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:text>)",</xsl:text>
       <xsl:call-template name="parameter-type">
         <xsl:with-param name="type" select="'integer'" />
         <xsl:with-param name="plus" select="',&quot;minimum&quot;:0'" />
       </xsl:call-template>
       <xsl:text>},</xsl:text>
       <xsl:choose>
-        <xsl:when test="substring($odata-version,1,3)='4.0'">
+        <xsl:when test="$odata-version='2.0'">
+          <xsl:text>"count":{"name": "$inlinecount","in":"query","description":"Include count of items</xsl:text>
+          <xsl:text>, see [Inlinecount](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=67)",</xsl:text>
+          <xsl:call-template name="parameter-type">
+            <xsl:with-param name="type" select="'string'" />
+            <xsl:with-param name="plus">
+              <xsl:text>,"enum":["allpages","none"]</xsl:text>
+            </xsl:with-param>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
           <xsl:text>"count":{"name":"</xsl:text>
           <xsl:value-of select="$option-prefix" />
           <xsl:text>count","in":"query","description":"Include count of items</xsl:text>
           <xsl:text>, see [Count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount)",</xsl:text>
           <xsl:call-template name="parameter-type">
             <xsl:with-param name="type" select="'boolean'" />
-          </xsl:call-template>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>"count":{"name": "$inlinecount","in":"query","description":"Include count of items</xsl:text>
-          <xsl:text>, see [Count](http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#InlinecountSystemQueryOption)",</xsl:text>
-          <xsl:call-template name="parameter-type">
-            <xsl:with-param name="type" select="'string'" />
-            <xsl:with-param name="plus">
-              <xsl:text>,"enum":["allpages","none"]</xsl:text>
-            </xsl:with-param>
           </xsl:call-template>
         </xsl:otherwise>
       </xsl:choose>
@@ -2301,8 +2317,16 @@
     <xsl:if test="edm:EntitySet|edm:Singleton|edm:FunctionImport|edm:ActionImport">
       <xsl:text>,</xsl:text>
     </xsl:if>
-    <xsl:text>"/$batch":{"post":{"summary": "Send a group of requests","description": "Group multiple requests into a single request payload</xsl:text>
-    <xsl:text>, see [Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).</xsl:text>
+    <xsl:text>"/$batch":{"post":{"summary": "Send a group of requests","description": "Group multiple requests into a single request payload, see [Batch Requests](</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$odata-version='2.0'">
+        <xsl:text>https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=152</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>).</xsl:text>
     <xsl:if test="$openapi-version!='2.0'">
       <xsl:text>\n\n*Please note that \"Try it out\" is not supported for this request.*</xsl:text>
     </xsl:if>
@@ -2697,8 +2721,16 @@
       </xsl:if>
       <xsl:text>{"name":"</xsl:text>
       <xsl:value-of select="$option-prefix" />
-      <xsl:text>orderby","in":"query","description":"Order items by property values</xsl:text>
-      <xsl:text>, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",</xsl:text>
+      <xsl:text>orderby","in":"query","description":"Order items by property values, see [Sorting](</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$odata-version='2.0'">
+          <xsl:text>https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=65</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:text>)",</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>"explode":false,"schema":{</xsl:text>
       </xsl:if>
@@ -2728,8 +2760,16 @@
       </xsl:if>
       <xsl:text>{"name":"</xsl:text>
       <xsl:value-of select="$option-prefix" />
-      <xsl:text>select","in":"query","description":"Select properties to be returned</xsl:text>
-      <xsl:text>, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",</xsl:text>
+      <xsl:text>select","in":"query","description":"Select properties to be returned, see [Select](</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$odata-version='2.0'">
+          <xsl:text>https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=68</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:text>)",</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>"explode":false,"schema":{</xsl:text>
       </xsl:if>
@@ -2757,8 +2797,16 @@
       </xsl:if>
       <xsl:text>{"name":"</xsl:text>
       <xsl:value-of select="$option-prefix" />
-      <xsl:text>expand","in":"query","description":"Expand related entities</xsl:text>
-      <xsl:text>, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",</xsl:text>
+      <xsl:text>expand","in":"query","description":"Expand related entities, see [Expand](</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$odata-version='2.0'">
+          <xsl:text>https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=63</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:text>)",</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>"explode":false,"schema":{</xsl:text>
       </xsl:if>
@@ -3970,12 +4018,19 @@
         </xsl:if>
         <xsl:text>{"name":"</xsl:text>
         <xsl:value-of select="$option-prefix" />
-        <xsl:text>filter","in":"query","description":"Filter items by property values</xsl:text>
-        <xsl:text>, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)</xsl:text>
+        <xsl:text>filter","in":"query","description":"Filter items by property values, see [Filtering](</xsl:text>
+        <xsl:choose>
+          <xsl:when test="$odata-version='2.0'">
+            <xsl:text>https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=64</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:call-template name="filter-RequiredProperties">
           <xsl:with-param name="target" select="$target" />
         </xsl:call-template>
-        <xsl:text>",</xsl:text>
+        <xsl:text>)",</xsl:text>
         <xsl:call-template name="parameter-type">
           <xsl:with-param name="type" select="'string'" />
         </xsl:call-template>
