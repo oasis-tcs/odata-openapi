@@ -400,7 +400,13 @@
       </xsl:when>
     </xsl:choose>
     <xsl:if test="$diagram">
-      <xsl:apply-templates select="//edm:EntityType|//edm:ComplexType" mode="description" />
+      <xsl:variable name="content" select="//edm:EntitySet|//edm:Singleton|//edm:EntityType|//edm:ComplexType" />
+      <xsl:if test="$content">
+        <xsl:text>\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/</xsl:text>
+        <xsl:apply-templates select="$content" mode="description" />
+        <xsl:text>)</xsl:text>
+        <xsl:text>\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet_or_Singleton{bg:dodgerblue}])</xsl:text>
+      </xsl:if>
     </xsl:if>
     <xsl:if test="$references">
       <xsl:apply-templates select="//edmx:Include" mode="description" />
@@ -909,10 +915,38 @@
     <xsl:text>,"innererror":{"type":"object","description":"The structure of this object is service-specific"}}}}}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:EntityType|edm:ComplexType" mode="description">
-    <xsl:if test="position() = 1">
-      <xsl:text>\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/</xsl:text>
+  <xsl:template match="edm:EntitySet|edm:Singleton" mode="description">
+    <xsl:variable name="type">
+      <xsl:call-template name="substring-after-last">
+        <xsl:with-param name="input" select="@EntityType|@Type" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:if test="position() > 1">
+      <xsl:text>,</xsl:text>
     </xsl:if>
+    <xsl:text>[</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>{bg:dodgerblue}</xsl:text>
+    <xsl:text>]++-</xsl:text>
+    <xsl:choose>
+      <xsl:when test="local-name()='EntitySet'">
+        <xsl:text>*</xsl:text>
+      </xsl:when>
+      <xsl:when test="@Nullable='true'">
+        <xsl:text>0..1</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>1</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>>[</xsl:text>
+    <xsl:value-of select="$type" />
+    <xsl:text>]</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:EntityType|edm:ComplexType" mode="description">
     <xsl:if test="position() > 1">
       <xsl:text>,</xsl:text>
     </xsl:if>
@@ -924,9 +958,6 @@
     </xsl:if>
     <xsl:text>]</xsl:text>
     <xsl:apply-templates select="edm:NavigationProperty|edm:Property" mode="description" />
-    <xsl:if test="position() = last()">
-      <xsl:text>)</xsl:text>
-    </xsl:if>
   </xsl:template>
 
   <xsl:template match="@BaseType" mode="description">
