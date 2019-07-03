@@ -72,10 +72,8 @@
           <Annotation Term="Core.Description" String="Action Import - Description" />
           <Annotation Term="Core.LongDescription" String="Action Import - LongDescription" />
         </ActionImport>
-        
         <ActionImport Action="self.action" Name="actionimport_ext" />
-        
-        <ActionImport Action="self.action" Name="actionimport_nodescr" />
+        <ActionImport Action="self.action" Name="actionimport_no_descriptions" />
         
       </EntityContainer>
       
@@ -90,12 +88,25 @@
       </EntityType>
       
       <Action Name="action">
-        <Annotation Term="Core.LongDescription" String="Action Unbound Overload - LongDescription" />
+        <Annotation Term="Core.Description" String="Action Unbound Overload - Description" />
         <Parameter Name="nonbinding" Type="Edm.String">
           <Annotation Term="Core.Description" String="Action Unbound Overload Parameter - Description" />
         </Parameter>
         <ReturnType Type="Edm.String">
           <Annotation Term="Core.Description" String="Action Unbound Overload Return Type - Description" />
+        </ReturnType>
+      </Action>
+      
+      <Action Name="action" IsBound="true">
+        <Annotation Term="Core.LongDescription" String="Action Bound Overload - LongDescription" />
+        <Parameter Name="binding" Type="self.entity">
+          <Annotation Term="Core.LongDescription" String="Action Bound Overload Binding Parameter - LongDescription" />
+        </Parameter>
+        <Parameter Name="nonbinding" Type="Edm.String">
+          <Annotation Term="Core.LongDescription" String="Action Bound Overload Non-Binding Parameter - LongDescription" />
+        </Parameter>
+        <ReturnType Type="Edm.String">
+          <Annotation Term="Core.LongDescription" String="Action Bound Overload Return Type - LongDescription" />
         </ReturnType>
       </Action>
       
@@ -108,7 +119,7 @@
       </Annotations>
       
       <Annotations Target="self.action()">
-        <Annotation Term="Core.Description" String="Action Unbound Overload Ext - Description" />
+        <Annotation Term="Core.LongDescription" String="Action Unbound Overload Ext - LongDescription" />
       </Annotations>
       
       <Annotations Target="self.action()/nonbinding">
@@ -117,6 +128,18 @@
       
       <Annotations Target="self.action()/$ReturnType">
         <Annotation Term="Core.LongDescription" String="Action Unbound Overload Return Type Ext - LongDescription" />
+      </Annotations>
+      
+      <Annotations Target="self.action(self.entity)">
+        <Annotation Term="Core.Description" String="Action Bound Overload Ext - Description" />
+      </Annotations>
+      
+      <Annotations Target="self.action(self.entity)/nonbinding">
+        <Annotation Term="Core.Description" String="Action Unbound Overload Parameter Ext - Description" />
+      </Annotations>
+      
+      <Annotations Target="self.action(self.entity)/$ReturnType">
+        <Annotation Term="Core.Description" String="Action Unbound Overload Return Type Ext - Description" />
       </Annotations>
       
       <Annotations Target="self.Default">
