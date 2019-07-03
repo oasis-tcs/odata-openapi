@@ -8,7 +8,6 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - BUG: function with both bound and unbound overloads
     - delta: headers Prefer and Preference-Applied
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -3898,8 +3897,9 @@
       </xsl:call-template>
     </xsl:variable>
 
-    <!-- need to apply templates for all function overloads that match the function name -->
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:Function[@Name=$function]" mode="import">
+    <xsl:apply-templates
+      select="//edm:Schema[@Namespace=$namespace]/edm:Function[@Name=$function and not(@IsBound='true')]" mode="import"
+    >
       <xsl:with-param name="functionImport" select="." />
     </xsl:apply-templates>
   </xsl:template>
