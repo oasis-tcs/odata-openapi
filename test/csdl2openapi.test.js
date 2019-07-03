@@ -44,6 +44,9 @@ const result6 = require('../examples/containment.openapi3.json');
 const example7 = csdl.xml2json(fs.readFileSync('examples/authorization.xml'));
 const result7 = require('../examples/authorization.openapi3.json');
 
+const example8 = csdl.xml2json(fs.readFileSync('examples/descriptions.xml'));
+const result8 = require('../examples/descriptions.openapi3.json');
+
 
 describe('Examples', function () {
 
@@ -90,6 +93,13 @@ describe('Examples', function () {
     it('authorization', function () {
         const openapi = lib.csdl2openapi(example7, { diagram: true });
         check(openapi, result7);
+    })
+
+    it('descriptions', function () {
+        const openapi = lib.csdl2openapi(example8, { scheme: 'http' });
+        // ER diagram doesn't match due to different sequence of types and container children
+        result8.info.description = 'Container - LongDescription';
+        check(openapi, result8);
     })
 
     it('empty input', function () {
