@@ -68,6 +68,11 @@
         </Singleton>
         <Singleton Name="single_ext" Type="self.entity" />
         
+        <ActionImport Action="self.action" Name="actionimport">
+          <Annotation Term="Core.Description" String="Action Import - Description" />          
+            <Annotation Term="Core.LongDescription" String="Action Import - LongDescription" />          
+        </ActionImport>
+        
       </EntityContainer>
       
       <EntityType Name="entity">
@@ -80,12 +85,23 @@
         </Property>
       </EntityType>
       
+      <Action Name="action">
+        <Annotation Term="Core.Description" String="Action Unbound Overload - Description" />
+          <Annotation Term="Core.LongDescription" String="Action Unbound Overload - LongDescription" />
+        <Parameter Name="nonbinding" Type="Edm.String" />
+        <ReturnType Type="Edm.String" />
+      </Action>
+      
       <Annotations Target="self.entity">
         <Annotation Term="Core.Description" String="Entity Type - Description" />
       </Annotations>
       
       <Annotations Target="self.entity/id">
         <Annotation Term="Core.LongDescription" String="Property - LongDescription" />
+      </Annotations>
+      
+      <Annotations Target="self.action()">
+        <Annotation Term="Core.Description" String="Action Unbound Overload - Description" />
       </Annotations>
       
       <Annotations Target="self.Default">
@@ -143,6 +159,11 @@
             <PropertyValue Property="LongDescription" String="Update Singleton Ext - LongDescription" />
           </Record>
         </Annotation>
+      </Annotations>
+      
+      <Annotations Target="self.Default/actionimport_ext">
+        <Annotation Term="Core.Description" String="Action Import Ext - Description" />
+        <Annotation Term="Core.LongDescription" String="Action Import - LongDescription" />
       </Annotations>
       
     </Schema>
