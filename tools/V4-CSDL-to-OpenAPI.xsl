@@ -8,6 +8,7 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
+    - BUG: function with both bound and unbound overloads
     - delta: headers Prefer and Preference-Applied
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -3907,7 +3908,7 @@
     <xsl:param name="functionImport" />
 
     <xsl:text>"/</xsl:text>
-    <xsl:value-of select="@Name" />
+    <xsl:value-of select="$functionImport/@Name" />
     <xsl:if test="$odata-version!='2.0'">
       <xsl:text>(</xsl:text>
       <xsl:apply-templates select="edm:Parameter" mode="path" />
