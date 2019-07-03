@@ -8,7 +8,6 @@
     Latest version: https://github.com/oasis-tcs/odata-openapi/blob/master/tools/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - title/description in schema of action/function return type, with anyOf wrapper if type is $ref (openapi3 only)
     - delta: headers Prefer and Preference-Applied
     - custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
@@ -228,6 +227,7 @@
       >
         <xsl:value-of select="concat($qualifier,'.',$node/../@Name,'/',$node/@Name)" />
       </xsl:when>
+      <!-- TODO: extract template for overload signature, call it three times -->
       <xsl:when test="local-name($node)='Parameter'">
         <xsl:value-of select="concat($qualifier,'.',$node/../@Name)" />
         <xsl:text>(</xsl:text>
@@ -241,6 +241,19 @@
         </xsl:for-each>
         <xsl:text>)</xsl:text>
         <xsl:value-of select="concat('/',$node/@Name)" />
+      </xsl:when>
+      <xsl:when test="local-name($node)='ReturnType'">
+        <xsl:value-of select="concat($qualifier,'.',$node/../@Name)" />
+        <xsl:text>(</xsl:text>
+        <xsl:for-each
+          select="$node/../edm:Parameter[local-name($node/..)='Function' or ($node/../@IsBound='true' and position()=1)]"
+        >
+          <xsl:if test="position()>1">
+            <xsl:text>,</xsl:text>
+          </xsl:if>
+          <xsl:value-of select="@Type" />
+        </xsl:for-each>
+        <xsl:text>)/$ReturnType</xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="concat($qualifier,'.',$node/@Name)" />
