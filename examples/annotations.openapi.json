@@ -3,7 +3,7 @@
     "info": {
         "title": "Service for namespace Supported.Annotations",
         "version": "",
-        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[SinglePartKey{bg:orange}],[SinglePartKey]-0..1>[TwoPartKey],[SinglePartKey]-*>[TwoPartKey],[SinglePartKey]-0..1>[TwoPartKey],[SinglePartKey]-*>[TwoPartKey],[SinglePartKey]-0..1>[TwoPartKey],[SinglePartKey]-*>[TwoPartKey],[TwoPartKey{bg:orange}],[AllSet{bg:dodgerblue}]++-*>[SinglePartKey],[NoNavigationSet{bg:dodgerblue}]++-*>[SinglePartKey],[ReadListOnlySet{bg:dodgerblue}]++-*>[SinglePartKey],[AllSingleton{bg:dodgerblue}]++-1>[SinglePartKey],[ReadOnlySingleton{bg:dodgerblue}]++-1>[SinglePartKey],[TwoAllSet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoReadOnlySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoReadOnlyByKeySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoWriteOnlySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoNothingSet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoWriteOnlySingleton{bg:dodgerblue}]++-1>[TwoPartKey],[TwoNothingSingleton{bg:dodgerblue}]++-1>[TwoPartKey])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet_or_Singleton{bg:dodgerblue}])"
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[SinglePartKey{bg:orange}],[SinglePartKey]-0..1>[TwoPartKey],[SinglePartKey]-*>[TwoPartKey],[SinglePartKey]-0..1>[TwoPartKey],[SinglePartKey]-*>[TwoPartKey],[SinglePartKey]-0..1>[TwoPartKey],[SinglePartKey]-*>[TwoPartKey],[TwoPartKey{bg:orange}],[AllSet{bg:dodgerblue}]++-*>[SinglePartKey],[NoNavigationSet{bg:dodgerblue}]++-*>[SinglePartKey],[OneNavigationSet{bg:dodgerblue}]++-*>[SinglePartKey],[ReadListOnlySet{bg:dodgerblue}]++-*>[SinglePartKey],[AllSingleton{bg:dodgerblue}]++-1>[SinglePartKey],[ReadOnlySingleton{bg:dodgerblue}]++-1>[SinglePartKey],[TwoAllSet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoReadOnlySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoReadOnlyByKeySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoWriteOnlySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoNothingSet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoWriteOnlySingleton{bg:dodgerblue}]++-1>[TwoPartKey],[TwoNothingSingleton{bg:dodgerblue}]++-1>[TwoPartKey])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet_or_Singleton{bg:dodgerblue}])"
     },
     "schemes": [
         "https"
@@ -22,6 +22,9 @@
         },
         {
             "name": "NoNavigationSet"
+        },
+        {
+            "name": "OneNavigationSet"
         },
         {
             "name": "ReadListOnlySet"
@@ -855,6 +858,218 @@
                 "responses": {
                     "204": {
                         "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/OneNavigationSet": {
+            "get": {
+                "summary": "Get entities from OneNavigationSet",
+                "tags": [
+                    "OneNavigationSet"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "ID desc",
+                                "Pattern",
+                                "Pattern desc",
+                                "PatternExt",
+                                "PatternExt desc",
+                                "AllowedValues",
+                                "AllowedValues desc",
+                                "AllowedValuesExt",
+                                "AllowedValuesExt desc",
+                                "Maximum",
+                                "Maximum desc",
+                                "MaximumExt",
+                                "MaximumExt desc",
+                                "Minimum",
+                                "Minimum desc",
+                                "MinimumExt",
+                                "MinimumExt desc",
+                                "Example",
+                                "Example desc",
+                                "ExampleExt",
+                                "ExampleExt desc",
+                                "Computed",
+                                "Computed desc",
+                                "ComputedExt",
+                                "ComputedExt desc",
+                                "Immutable",
+                                "Immutable desc",
+                                "ImmutableExt",
+                                "ImmutableExt desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "Pattern",
+                                "PatternExt",
+                                "AllowedValues",
+                                "AllowedValuesExt",
+                                "Maximum",
+                                "MaximumExt",
+                                "Minimum",
+                                "MinimumExt",
+                                "Example",
+                                "ExampleExt",
+                                "Computed",
+                                "ComputedExt",
+                                "Immutable",
+                                "ImmutableExt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "AllOne",
+                                "AllMany",
+                                "ReadOnlyOne",
+                                "ReadOnlyMany",
+                                "NothingOne",
+                                "NothingMany"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of SinglePartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/OneNavigationSet('{ID}')": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Get entity from OneNavigationSet by key",
+                "tags": [
+                    "OneNavigationSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "Pattern",
+                                "PatternExt",
+                                "AllowedValues",
+                                "AllowedValuesExt",
+                                "Maximum",
+                                "MaximumExt",
+                                "Minimum",
+                                "MinimumExt",
+                                "Example",
+                                "ExampleExt",
+                                "Computed",
+                                "ComputedExt",
+                                "Immutable",
+                                "ImmutableExt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "AllOne",
+                                "AllMany",
+                                "ReadOnlyOne",
+                                "ReadOnlyMany",
+                                "NothingOne",
+                                "NothingMany"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                        }
                     },
                     "default": {
                         "$ref": "#/responses/error"
