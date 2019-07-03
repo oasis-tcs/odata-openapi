@@ -10,9 +10,11 @@
     <Schema Namespace="descriptions" Alias="self">
       <Annotation Term="Core.SchemaVersion" String="0.0.1" />
       
+      <!-- TODO: actions, functions, parameters, return types, imports -->
+      
       <EntityContainer Name="Default">
         
-        <EntitySet Name="entities" EntityType="self.Entity">
+        <EntitySet Name="entities" EntityType="self.entity">
           <Annotation Term="Core.Description" String="Entity Set - Description" />
           <Annotation Term="Core.LongDescription" String="Entity Set - LongDescription" />
           <Annotation Term="Capabilities.ReadRestrictions">
@@ -46,9 +48,9 @@
             </Record>
           </Annotation>
         </EntitySet>
-        <EntitySet Name="entities_ext" EntityType="self.Entity" />
+        <EntitySet Name="entities_ext" EntityType="self.entity" />
         
-        <Singleton Name="single" Type="self.Entity">
+        <Singleton Name="single" Type="self.entity">
           <Annotation Term="Core.Description" String="Singleton - Description" />
           <Annotation Term="Core.LongDescription" String="Singleton - LongDescription" />
           <Annotation Term="Capabilities.ReadRestrictions">
@@ -64,21 +66,27 @@
             </Record>
           </Annotation>
         </Singleton>
-        <Singleton Name="single_ext" Type="self.Entity" />
+        <Singleton Name="single_ext" Type="self.entity" />
         
       </EntityContainer>
       
-      <EntityType Name="Entity">
-        <Annotation Term="Core.Description" String="Entity Type - Description" />
+      <EntityType Name="entity">
         <Annotation Term="Core.LongDescription" String="Entity Type - LongDescription" />
         <Key>
           <PropertyRef Name="id" />
         </Key>
         <Property Name="id" Type="Edm.String" Nullable="false" MaxLength="70">
           <Annotation Term="Core.Description" String="Property - Description" />
-          <Annotation Term="Core.LongDescription" String="Property - LongDescription" />
         </Property>
       </EntityType>
+      
+      <Annotations Target="self.entity">
+        <Annotation Term="Core.Description" String="Entity Type - Description" />
+      </Annotations>
+      
+      <Annotations Target="self.entity/id">
+        <Annotation Term="Core.LongDescription" String="Property - LongDescription" />
+      </Annotations>
       
       <Annotations Target="self.Default">
         <Annotation Term="Core.Description" String="Container - Description" />
