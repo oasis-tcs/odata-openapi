@@ -196,17 +196,17 @@ Term | Annotation Target | OpenAPI field
 &emsp;`/Description` | EntitySet | `summary` of Operation Object
 &emsp;`/LongDescription` | EntitySet | `description` of Operation Object
 `ReadRestrictions`<br>&emsp;`/Readable` | EntitySet, Singleton | `GET` operation for reading an entity set or singleton
-&emsp;`/Description` | EntitySet | `summary` of Operation Object
-&emsp;`/LongDescription` | EntitySet | `description` of Operation Object
+&emsp;`/Description` | EntitySet, Singleton | `summary` of Operation Object
+&emsp;`/LongDescription` | EntitySet, Singleton | `description` of Operation Object
 `SearchRestrictions`<br>&emsp;`/Searchable` | EntitySet | `$search` system query option for `GET` operation
-`SelectSupport`<br>&emsp;`/Supported` | EntitySet | `$select` system query option for `GET` operation
+`SelectSupport`<br>&emsp;`/Supported` | EntitySet, Singleton | `$select` system query option for `GET` operation
 `SkipSupported` | EntitySet | `$skip` system query option for `GET` operation
 `SortRestrictions`<br>&emsp;`/NonSortableProperties` | EntitySet | properties not listed in `$orderby` system query option for `GET` operation
 &emsp;`/Sortable` | EntitySet | `$orderby` system query option for `GET` operation
 `TopSupported` | EntitySet | `$top` system query option for `GET` operation
 `UpdateRestrictions`<br>&emsp;`/Updatable` | EntitySet, Singleton | `PATCH` operation for modifying an existing entity
-&emsp;`/Description` | EntitySet | `summary` of Operation Object
-&emsp;`/LongDescription` | EntitySet | `description` of Operation Object
+&emsp;`/Description` | EntitySet, Singleton | `summary` of Operation Object
+&emsp;`/LongDescription` | EntitySet, Singleton | `description` of Operation Object
 
 
 ## [Common](https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common)
