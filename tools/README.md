@@ -168,9 +168,9 @@ Term | Annotation Target | OpenAPI field
 Term | Annotation Target | OpenAPI field
 -----|-------------------|--------------
 `CountRestrictions`<br>&emsp;`/Countable` | EntitySet | `$count` system query option for `GET` operation
-`DeleteRestrictions`<br>&emsp;`/Deletable` | EntitySet | `DELETE` operation for deleting an existing entity
-&emsp;`/Description` | EntitySet | `summary` of Operation Object
-&emsp;`/LongDescription` | EntitySet | `description` of Operation Object
+`DeleteRestrictions`<br>&emsp;`/Deletable` | EntitySet, Singleton | `DELETE` operation for deleting an existing entity
+&emsp;`/Description` | EntitySet, Singleton | `summary` of Operation Object
+&emsp;`/LongDescription` | EntitySet, Singleton | `description` of Operation Object
 `ExpandRestrictions`<br>&emsp;`/Expandable` | EntitySet, Singleton | `$expand` system query option for `GET` operations
 `FilterRestrictions`<br>&emsp;`/Filterable` | EntitySet | `$filter` system query option for `GET` operation
 &emsp;`/RequiredProperties` | EntitySet | required properties in `$filter` system query option for `GET` operation (parameter description only)
