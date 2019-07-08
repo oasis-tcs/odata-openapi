@@ -1,10 +1,10 @@
 # Convert OData 4.0x CSDL JSON or XML to OpenAPI 3.0.x
 
-This script transforms an OData Version 4.0 or 4.01 (`$metadata`) [CSDL XML](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html) or [CSDL JSON](http://docs.oasis-open.org/odata/odata-csdl-json/v4.01/odata-csdl-json-v4.01.html) document into an [OpenAPI 3.0.x](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md) JSON document. 
+This script transforms an OData Version 3.0, 4.0, or 4.01 (`$metadata`) [CSDL XML](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html) or [CSDL JSON](http://docs.oasis-open.org/odata/odata-csdl-json/v4.01/odata-csdl-json-v4.01.html) document into an [OpenAPI 3.0.x](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md) JSON document. 
 
 It's a pure JavaScript implementation, depending only on [`odata-csdl`](https://github.com/oasis-tcs/odata-csdl-schemas/tree/master/lib), which in turn depends on [`sax js`](https://www.npmjs.com/package/sax).
 
-_Note: this is work-in-progress and currently has less features than its [XSLT-based counterpart](../tools#transformjs-for-nodejs). Especially it does not support OData 2.0 or 3.0_
+_Note: this tool does not support OData 2.0, and it does not produce Swagger 2.0. If you need any of the 2.0 versions, use the [XSLT-based tools](../tools#transformjs-for-nodejs)._
 
 
 ## Installation
