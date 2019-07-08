@@ -47,6 +47,9 @@ const result7 = require('../examples/authorization.openapi3.json');
 const example8 = csdl.xml2json(fs.readFileSync('examples/descriptions.xml'));
 const result8 = require('../examples/descriptions.openapi3.json');
 
+const example9 = csdl.xml2json(fs.readFileSync('examples/odata-rw-v3.xml'));
+const result9 = require('../examples/odata-rw-v3.openapi3.json');
+
 
 describe('Examples', function () {
 
@@ -100,6 +103,11 @@ describe('Examples', function () {
         // ER diagram doesn't match due to different sequence of types and container children
         result8.info.description = 'Container - LongDescription';
         check(openapi, result8);
+    })
+
+    it('odata-rw-v3', function () {
+        const openapi = lib.csdl2openapi(example9, { host: 'services.odata.org', basePath: '/V3/(S(1urrjxgkuh4r30yqim0hqrtj))/OData/OData.svc', diagram: true });
+        check(openapi, result9);
     })
 
     it('empty input', function () {
