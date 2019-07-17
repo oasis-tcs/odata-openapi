@@ -422,7 +422,9 @@
       </xsl:if>
     </xsl:if>
     <xsl:if test="$references">
-      <xsl:apply-templates select="//edmx:Include" mode="description" />
+      <xsl:apply-templates
+        select="//edmx:Include[substring(@Namespace,1,10)!='Org.OData.' and substring(@Namespace,1,21)!='com.sap.vocabularies.']"
+        mode="description" />
     </xsl:if>
     <xsl:text>"}</xsl:text>
 
@@ -1074,30 +1076,17 @@
     <xsl:text>\n- [</xsl:text>
     <xsl:value-of select="@Namespace" />
     <xsl:text>](</xsl:text>
-    <xsl:choose>
-      <xsl:when test="substring(@Namespace,1,10)='Org.OData.'">
-        <xsl:text>https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/</xsl:text>
-        <xsl:value-of select="@Namespace" />
-        <xsl:text>.md</xsl:text>
-      </xsl:when>
-      <xsl:when test="substring(@Namespace,1,21)='com.sap.vocabularies.'">
-        <xsl:text>https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+</xsl:text>
-        <xsl:value-of select="substring(@Namespace,22,string-length(@Namespace)-24)" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>?url=</xsl:text>
-        <xsl:call-template name="replace-all">
-          <xsl:with-param name="string">
-            <xsl:call-template name="json-url">
-              <xsl:with-param name="url" select="../@Uri" />
-              <xsl:with-param name="root" select="$openapi-root" />
-            </xsl:call-template>
-          </xsl:with-param>
-          <xsl:with-param name="old" select="')'" />
-          <xsl:with-param name="new" select="'%29'" />
+    <xsl:text>?url=</xsl:text>
+    <xsl:call-template name="replace-all">
+      <xsl:with-param name="string">
+        <xsl:call-template name="json-url">
+          <xsl:with-param name="url" select="../@Uri" />
+          <xsl:with-param name="root" select="$openapi-root" />
         </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
+      </xsl:with-param>
+      <xsl:with-param name="old" select="')'" />
+      <xsl:with-param name="new" select="'%29'" />
+    </xsl:call-template>
     <xsl:text>)</xsl:text>
   </xsl:template>
 
