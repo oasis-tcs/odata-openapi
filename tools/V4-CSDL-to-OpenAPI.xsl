@@ -4063,10 +4063,11 @@
             <xsl:text>http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
+        <xsl:text>)</xsl:text>
         <xsl:call-template name="filter-RequiredProperties">
           <xsl:with-param name="target" select="$target" />
         </xsl:call-template>
-        <xsl:text>)",</xsl:text>
+        <xsl:text>",</xsl:text>
         <xsl:call-template name="parameter-type">
           <xsl:with-param name="type" select="'string'" />
         </xsl:call-template>
