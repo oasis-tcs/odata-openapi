@@ -143,6 +143,7 @@ transform
 
 The [`V4-CSDL-to-OpenAPI.xsl`](V4-CSDL-to-OpenAPI.xsl) transformation can be fine-tuned via annotations in the CSDL (`$metadata`) XML documents.
 
+
 ## [Core](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Core.V1.md)
 
 Term | Annotation Target | OpenAPI field
@@ -207,17 +208,6 @@ Term | Annotation Target | OpenAPI field
 `UpdateRestrictions`<br>&emsp;`/Updatable` | EntitySet, Singleton | `PATCH` operation for modifying an existing entity
 &emsp;`/Description` | EntitySet, Singleton | `summary` of Operation Object
 &emsp;`/LongDescription` | EntitySet, Singleton | `description` of Operation Object
-
-
-## [Common](https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common)
-
-Term | Annotation Target | OpenAPI field
------|-------------------|--------------
-`FieldControl:Mandatory` | Property | require in Create structure
-`Label` | Action, ActionImport, Function, FunctionImport | `title` of Operation Object
-`Label` | ComplexType, EntityType, EnumerationType, Property, TypeDefinition | `title` of Schema Object
-`QuickInfo` | Action, ActionImport, Function, FunctionImport | `description` of Operation Object
-`QuickInfo` | ComplexType, EntityType, EnumerationType, Parameter, Property, TypeDefinition | `description` of Schema Object
 
 
 ## [Validation](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Validation.V1.md)
