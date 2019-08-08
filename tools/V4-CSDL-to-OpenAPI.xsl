@@ -419,7 +419,8 @@
         <xsl:text>\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/</xsl:text>
         <xsl:apply-templates select="$content" mode="description" />
         <xsl:text>)</xsl:text>
-        <xsl:text>\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet_or_Singleton{bg:dodgerblue}])</xsl:text>
+        <xsl:text>\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/</xsl:text>
+        <xsl:text>[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])</xsl:text>
       </xsl:if>
     </xsl:if>
     <xsl:if test="$references">
