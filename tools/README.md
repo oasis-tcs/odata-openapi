@@ -1,4 +1,4 @@
-# Tools
+# XSLT-Based Tools
 
 Tools for transforming [OData](http://www.odata.org) CSDL (`$metadata`) XML documents into [OpenAPI](https://github.com/OAI/OpenAPI-Specification) documents.
 
@@ -141,7 +141,7 @@ transform
 
 # Supported Annotations
 
-The [`V4-CSDL-to-OpenAPI.xsl`](V4-CSDL-to-OpenAPI.xsl) transformation can be fine-tuned via annotations in the CSDL (`$metadata`) XML documents.
+The mapping can be fine-tuned via annotations in the CSDL (`$metadata`) XML documents.
 
 
 ## [Core](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Core.V1.md)
