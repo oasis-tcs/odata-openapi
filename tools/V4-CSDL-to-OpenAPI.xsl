@@ -996,7 +996,7 @@
     <xsl:text>{bg:dodgerblue}</xsl:text>
     <xsl:text>]</xsl:text>
 
-    <!-- TODO: arrow to type of $action/edm:ReturnType/@Type -->
+    <xsl:apply-templates select="$action/edm:ReturnType" mode="description" />
   </xsl:template>
 
   <xsl:template match="edm:FunctionImport" mode="description">
@@ -1031,24 +1031,21 @@
     <xsl:text>{bg:dodgerblue}</xsl:text>
     <xsl:text>]</xsl:text>
 
-    <!-- TODO: deal with multiple unbound overloads -->
+    <!-- TODO: deal with multiple unbound overloads, remove [1] -->
     <xsl:apply-templates
-      select="//edm:Schema[@Namespace=$namespace]/edm:Function[@Name=$function and not(@IsBound='true')][1]" mode="description"
-    >
-      <xsl:with-param name="functionImport" select="." />
-    </xsl:apply-templates>
+      select="//edm:Schema[@Namespace=$namespace]/edm:Function[@Name=$function and not(@IsBound='true')][1]/edm:ReturnType"
+      mode="description" />
   </xsl:template>
 
-  <xsl:template match="edm:Function" mode="description">
-    <xsl:variable name="returntype" select="edm:ReturnType" />
-    <xsl:variable name="collection" select="starts-with($returntype/@Type,'Collection(')" />
+  <xsl:template match="edm:ReturnType" mode="description">
+    <xsl:variable name="collection" select="starts-with(@Type,'Collection(')" />
     <xsl:variable name="singleType">
       <xsl:choose>
         <xsl:when test="$collection">
-          <xsl:value-of select="substring-before(substring-after($returntype/@Type,'('),')')" />
+          <xsl:value-of select="substring-before(substring-after(@Type,'('),')')" />
         </xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select="$returntype/@Type" />
+          <xsl:value-of select="@Type" />
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -1066,8 +1063,8 @@
     </xsl:variable>
     <xsl:variable name="nullable">
       <xsl:call-template name="nullableFacetValue">
-        <xsl:with-param name="type" select="$returntype/@Type" />
-        <xsl:with-param name="nullableFacet" select="$returntype/@Nullable" />
+        <xsl:with-param name="type" select="@Type" />
+        <xsl:with-param name="nullableFacet" select="@Nullable" />
       </xsl:call-template>
     </xsl:variable>
 
@@ -1078,7 +1075,7 @@
         <xsl:when test="$collection">
           <xsl:text>*</xsl:text>
         </xsl:when>
-        <xsl:when test="$nullable">
+        <xsl:when test="$nullable='true'">
           <xsl:text>0..1</xsl:text>
         </xsl:when>
         <xsl:otherwise>
