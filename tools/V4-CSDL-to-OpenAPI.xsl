@@ -413,7 +413,8 @@
       </xsl:when>
     </xsl:choose>
     <xsl:if test="$diagram">
-      <xsl:variable name="content" select="//edm:EntitySet|//edm:Singleton|//edm:EntityType|//edm:ComplexType" />
+      <xsl:variable name="content"
+        select="//edm:EntitySet|//edm:Singleton|//edm:ActionImport|//edm:FunctionImport|//edm:EntityType|//edm:ComplexType" />
       <xsl:if test="$content">
         <xsl:text>\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/</xsl:text>
         <xsl:apply-templates select="$content" mode="description" />
@@ -959,6 +960,135 @@
     <xsl:text>>[</xsl:text>
     <xsl:value-of select="$type" />
     <xsl:text>]</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:ActionImport" mode="description">
+    <xsl:variable name="qualifier">
+      <xsl:call-template name="substring-before-last">
+        <xsl:with-param name="input" select="@Action" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="namespace">
+      <xsl:choose>
+        <xsl:when test="//edm:Schema[@Alias=$qualifier]">
+          <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$qualifier" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="actionName">
+      <xsl:call-template name="substring-after-last">
+        <xsl:with-param name="input" select="@Action" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="action"
+      select="//edm:Schema[@Namespace=$namespace]/edm:Action[@Name=$actionName and not(@IsBound='true')]" />
+
+    <xsl:if test="position() > 1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:text>[</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>{bg:dodgerblue}</xsl:text>
+    <xsl:text>]</xsl:text>
+
+    <!-- TODO: arrow to type of $action/edm:ReturnType/@Type -->
+  </xsl:template>
+
+  <xsl:template match="edm:FunctionImport" mode="description">
+    <xsl:variable name="qualifier">
+      <xsl:call-template name="substring-before-last">
+        <xsl:with-param name="input" select="@Function" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="namespace">
+      <xsl:choose>
+        <xsl:when test="//edm:Schema[@Alias=$qualifier]">
+          <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$qualifier" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="function">
+      <xsl:call-template name="substring-after-last">
+        <xsl:with-param name="input" select="@Function" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:if test="position() > 1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:text>[</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>{bg:dodgerblue}</xsl:text>
+    <xsl:text>]</xsl:text>
+
+    <!-- TODO: deal with multiple unbound overloads -->
+    <xsl:apply-templates
+      select="//edm:Schema[@Namespace=$namespace]/edm:Function[@Name=$function and not(@IsBound='true')][1]" mode="description"
+    >
+      <xsl:with-param name="functionImport" select="." />
+    </xsl:apply-templates>
+  </xsl:template>
+
+  <xsl:template match="edm:Function" mode="description">
+    <xsl:variable name="returntype" select="edm:ReturnType" />
+    <xsl:variable name="collection" select="starts-with($returntype/@Type,'Collection(')" />
+    <xsl:variable name="singleType">
+      <xsl:choose>
+        <xsl:when test="$collection">
+          <xsl:value-of select="substring-before(substring-after($returntype/@Type,'('),')')" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$returntype/@Type" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="qualifier">
+      <xsl:call-template name="substring-before-last">
+        <xsl:with-param name="input" select="$singleType" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="type">
+      <xsl:call-template name="substring-after-last">
+        <xsl:with-param name="input" select="$singleType" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="nullable">
+      <xsl:call-template name="nullableFacetValue">
+        <xsl:with-param name="type" select="$returntype/@Type" />
+        <xsl:with-param name="nullableFacet" select="$returntype/@Nullable" />
+      </xsl:call-template>
+    </xsl:variable>
+
+    <!-- TODO: deal with external return type -->
+    <xsl:if test="$qualifier!='Edm'">
+      <xsl:text>-</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$collection">
+          <xsl:text>*</xsl:text>
+        </xsl:when>
+        <xsl:when test="$nullable">
+          <xsl:text>0..1</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>1</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:text>>[</xsl:text>
+      <xsl:value-of select="$type" />
+      <xsl:text>]</xsl:text>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="description">
