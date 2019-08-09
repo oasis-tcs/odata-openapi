@@ -268,6 +268,47 @@ describe('Examples', function () {
         assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
     })
 
+    it('function with complex and collection parameter', function () {
+        const csdl = {
+            $Reference: { dummy: { "$Include": [{ "$Namespace": "Org.OData.Core.V1", "$Alias": "Core" }] } },
+            $EntityContainer: 'this.Container',
+            this: {
+                Complex: { $Kind: 'ComplexType', $OpenType: true },
+                ComplexParameters: [{
+                    $Kind: 'Function',
+                    $Parameter: [
+                        { $Name: 'complex', $Type: 'this.Complex', '@Core.Description': 'param description' },
+                        { $Name: 'collection', $Collection: true }
+                    ],
+                    $ReturnType: {}
+                }],
+                Container: { fun: { $Function: 'this.ComplexParameters' } }
+            }
+        };
+        const expected = { paths: { '/$batch': { post: {} } } };
+        const path = '/fun(complex=@complex,collection=@collection)';
+        expected.paths[path] = {
+            get: {
+                parameters: [
+                    {
+                        name: '@complex', in: 'query', required: true, schema: { type: 'string' },
+                        example: '{}',
+                        description: 'param description  \nThis is a URL-encoded JSON object of type this.Complex, see [Complex and Collection Literals](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_ComplexandCollectionLiterals)'
+                    },
+                    {
+                        name: '@collection', in: 'query', required: true, schema: { type: 'string' },
+                        example: '[]',
+                        description: 'This is a URL-encoded JSON array with items of type Edm.String, see [Complex and Collection Literals](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_ComplexandCollectionLiterals)'
+                    }
+                ]
+            }
+        };
+        const actual = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
+        assert.deepStrictEqual(actual.paths[path].get.parameters, expected.paths[path].get.parameters, 'function parameters');
+    })
+
     it('return type with facets', function () {
         const csdl = {
             $EntityContainer: 'this.Container',
