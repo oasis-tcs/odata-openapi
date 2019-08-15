@@ -293,7 +293,7 @@ describe('Examples', function () {
                     {
                         name: '@complex', in: 'query', required: true, schema: { type: 'string' },
                         example: '{}',
-                        description: 'param description  \nThis is a URL-encoded JSON object of type this.Complex, see [Complex and Collection Literals](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_ComplexandCollectionLiterals)'
+                        description: 'param description  \nThis is URL-encoded JSON of type this.Complex, see [Complex and Collection Literals](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_ComplexandCollectionLiterals)'
                     },
                     {
                         name: '@collection', in: 'query', required: true, schema: { type: 'string' },
