@@ -1,5 +1,9 @@
 # Frequently Asked Questions
 
+Examples for typical questions on how to fine-tune the generated OpenAPI descriptions.
+
+The examples here do not cover the full list of [supported annotions](Annotations.md).
+
 ## How do I suppress GET (list and by-key) on an entity set?
 
 To suppress both types of GET requests to an entity set, annotate it with
