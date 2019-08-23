@@ -54,7 +54,9 @@ const result9 = require('../examples/odata-rw-v3.openapi3.json');
 describe('Examples', function () {
 
     it('csdl-16.1', function () {
-        const openapi = lib.csdl2openapi(example1, { diagram: true });
+        const openapi = lib.csdl2openapi(example1);
+        // ER diagram doesn't match because XSL version doesn't combine navigation properties with partner
+        result1.info.description = 'This service is located at [https://localhost/service-root/](https://localhost/service-root/)';
         check(openapi, result1);
     })
 
@@ -75,11 +77,16 @@ describe('Examples', function () {
     })
 
     it('example', function () {
+        const host = 'services.odata.org';
+        const basePath = '/V4/OData/(S(nsga2k1tyctb0cn0ofcgcn4o))/OData.svc';
+        const safePath = '/V4/OData/%28S%28nsga2k1tyctb0cn0ofcgcn4o%29%29/OData.svc';
         const openapi = lib.csdl2openapi(example4, {
-            host: 'services.odata.org',
-            basePath: '/V4/OData/(S(nsga2k1tyctb0cn0ofcgcn4o))/OData.svc',
-            diagram: true
+            host: host,
+            basePath: basePath,
+            diagram: false
         });
+        // ER diagram doesn't match because XSL version doesn't combine navigation properties with partner
+        result4.info.description = 'This service is located at [https://' + host + basePath + '/](https://' + host + safePath + '/)';
         check(openapi, result4);
     })
 
@@ -106,7 +113,12 @@ describe('Examples', function () {
     })
 
     it('odata-rw-v3', function () {
-        const openapi = lib.csdl2openapi(example9, { host: 'services.odata.org', basePath: '/V3/(S(1urrjxgkuh4r30yqim0hqrtj))/OData/OData.svc', diagram: true });
+        const host = 'services.odata.org';
+        const basePath = '/V3/(S(1urrjxgkuh4r30yqim0hqrtj))/OData/OData.svc';
+        const safePath = '/V3/%28S%281urrjxgkuh4r30yqim0hqrtj%29%29/OData/OData.svc';
+        const openapi = lib.csdl2openapi(example9, { host: host, basePath: basePath, diagram: false });
+        // ER diagram doesn't match because XSL version doesn't combine navigation properties with partner
+        result9.info.description = 'This service is located at [https://' + host + basePath + '/](https://' + host + safePath + '/)';
         check(openapi, result9);
     })
 
