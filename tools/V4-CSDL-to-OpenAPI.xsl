@@ -2545,6 +2545,7 @@
     <xsl:if test="position()>1">
       <xsl:text>,</xsl:text>
     </xsl:if>
+
     <xsl:text>{"name":"</xsl:text>
     <xsl:value-of select="@Name" />
 
@@ -2607,6 +2608,7 @@
     </xsl:choose>
 
     <xsl:text>"}</xsl:text>
+
     <xsl:if test="position() = last()">
       <xsl:text>]</xsl:text>
     </xsl:if>
@@ -2615,8 +2617,16 @@
   <xsl:template name="operation-tag">
     <xsl:param name="sourceSet" />
     <xsl:param name="targetSet" select="null" />
+    <xsl:param name="fallback" select="null" />
     <xsl:text>,"tags":["</xsl:text>
-    <xsl:value-of select="$sourceSet/@Name" />
+    <xsl:choose>
+      <xsl:when test="$sourceSet">
+        <xsl:value-of select="$sourceSet/@Name" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$fallback" />
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:if test="$targetSet and $targetSet/@Name!=$sourceSet/@Name">
       <xsl:text>","</xsl:text>
       <xsl:value-of select="$targetSet/@Name" />
@@ -3215,7 +3225,7 @@
       select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$bindingType or edm:Parameter[1]/@Type=$bindingTypeAliased)]"
       mode="bound"
     >
-      <xsl:with-param name="tag" select="$root/@Name" />
+      <xsl:with-param name="root" select="$root" />
       <xsl:with-param name="path-prefix" select="$path-prefix" />
       <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
     </xsl:apply-templates>
@@ -3223,7 +3233,7 @@
       select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$bindingType or edm:Parameter[1]/@Type=$bindingTypeAliased)]"
       mode="bound"
     >
-      <xsl:with-param name="tag" select="$root/@Name" />
+      <xsl:with-param name="root" select="$root" />
       <xsl:with-param name="path-prefix" select="$path-prefix" />
       <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
     </xsl:apply-templates>
@@ -3526,7 +3536,7 @@
         select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
         mode="bound"
       >
-        <xsl:with-param name="tag" select="$root/@Name" />
+        <xsl:with-param name="root" select="$root" />
         <xsl:with-param name="path-prefix" select="$path-template" />
         <xsl:with-param name="prefix-parameters" select="$path-parameters" />
       </xsl:apply-templates>
@@ -3534,7 +3544,7 @@
         select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
         mode="bound"
       >
-        <xsl:with-param name="tag" select="$root/@Name" />
+        <xsl:with-param name="root" select="$root" />
         <xsl:with-param name="path-prefix" select="$path-template" />
         <xsl:with-param name="prefix-parameters" select="$path-parameters" />
       </xsl:apply-templates>
@@ -3944,20 +3954,23 @@
         <xsl:value-of select="$action/@Name" />
       </xsl:with-param>
     </xsl:call-template>
-    <xsl:text>,"tags":["</xsl:text>
+
     <xsl:variable name="action-for" select="edm:Annotation[@Term='SAP.ActionFor']/@String" />
-    <xsl:choose>
-      <xsl:when test="@EntitySet">
-        <xsl:value-of select="@EntitySet" />
-      </xsl:when>
-      <xsl:when test="//edm:EntitySet[@EntityType=$action-for]">
-        <xsl:value-of select="//edm:EntitySet[@EntityType=$action-for]/@Name" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>Service Operations</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>"]</xsl:text>
+    <xsl:variable name="entitySetName">
+      <xsl:choose>
+        <xsl:when test="@EntitySet">
+          <xsl:value-of select="@EntitySet" />
+        </xsl:when>
+        <xsl:when test="//edm:EntitySet[@EntityType=$action-for]">
+          <xsl:value-of select="//edm:EntitySet[@EntityType=$action-for]/@Name" />
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:call-template name="operation-tag">
+      <xsl:with-param name="sourceSet" select="//edm:EntitySet[@Name=$entitySetName]" />
+      <xsl:with-param name="fallback" select="'Service Operations'" />
+    </xsl:call-template>
+
     <xsl:if test="$action/edm:Parameter">
       <xsl:choose>
         <xsl:when test="$odata-version='2.0'">
@@ -4052,21 +4065,24 @@
         <xsl:value-of select="@Name" />
       </xsl:with-param>
     </xsl:call-template>
-    <xsl:text>,"tags":["</xsl:text>
-    <xsl:variable name="action-for" select="$functionImport/edm:Annotation[@Term='SAP.ActionFor']/@String" />
-    <xsl:choose>
-      <xsl:when test="$functionImport/@EntitySet">
-        <xsl:value-of select="$functionImport/@EntitySet" />
-      </xsl:when>
-      <xsl:when test="//edm:EntitySet[@EntityType=$action-for]">
-        <xsl:value-of select="//edm:EntitySet[@EntityType=$action-for]/@Name" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>Service Operations</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
 
-    <xsl:text>"],"parameters":[</xsl:text>
+    <xsl:variable name="action-for" select="$functionImport/edm:Annotation[@Term='SAP.ActionFor']/@String" />
+    <xsl:variable name="entitySetName">
+      <xsl:choose>
+        <xsl:when test="$functionImport/@EntitySet">
+          <xsl:value-of select="$functionImport/@EntitySet" />
+        </xsl:when>
+        <xsl:when test="//edm:EntitySet[@EntityType=$action-for]">
+          <xsl:value-of select="//edm:EntitySet[@EntityType=$action-for]/@Name" />
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:call-template name="operation-tag">
+      <xsl:with-param name="sourceSet" select="//edm:EntitySet[@Name=$entitySetName]" />
+      <xsl:with-param name="fallback" select="'Service Operations'" />
+    </xsl:call-template>
+
+    <xsl:text>,"parameters":[</xsl:text>
     <xsl:apply-templates select="edm:Parameter" mode="parameter" />
     <xsl:text>]</xsl:text>
 
@@ -4376,7 +4392,7 @@
   </xsl:template>
 
   <xsl:template match="edm:Action" mode="bound">
-    <xsl:param name="tag" />
+    <xsl:param name="root" />
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
 
@@ -4403,9 +4419,10 @@
         <xsl:value-of select="@Name" />
       </xsl:with-param>
     </xsl:call-template>
-    <xsl:text>,"tags":["</xsl:text>
-    <xsl:value-of select="$tag" />
-    <xsl:text>"]</xsl:text>
+
+    <xsl:call-template name="operation-tag">
+      <xsl:with-param name="sourceSet" select="$root" />
+    </xsl:call-template>
 
     <xsl:if test="$prefix-parameters!='' or $openapi-version='2.0'">
       <xsl:text>,"parameters":[</xsl:text>
@@ -4454,7 +4471,7 @@
   </xsl:template>
 
   <xsl:template match="edm:Function" mode="bound">
-    <xsl:param name="tag" />
+    <xsl:param name="root" />
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
 
@@ -4496,9 +4513,11 @@
       </xsl:with-param>
     </xsl:call-template>
 
-    <xsl:text>,"tags":["</xsl:text>
-    <xsl:value-of select="$tag" />
-    <xsl:text>"],"parameters":[</xsl:text>
+    <xsl:call-template name="operation-tag">
+      <xsl:with-param name="sourceSet" select="$root" />
+    </xsl:call-template>
+
+    <xsl:text>,"parameters":[</xsl:text>
     <xsl:value-of select="$prefix-parameters" />
     <xsl:apply-templates select="edm:Parameter[position()>1]" mode="parameter">
       <xsl:with-param name="after" select="$prefix-parameters!=''" />
