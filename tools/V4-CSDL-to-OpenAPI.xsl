@@ -41,6 +41,7 @@
   <xsl:param name="externalDocs-description" select="null" />
 
   <xsl:param name="property-longDescription" select="true()" />
+  <xsl:param name="label-as-tag" select="false()" />
 
   <xsl:param name="x-tensions" select="null" />
 
@@ -2547,20 +2548,55 @@
     </xsl:if>
 
     <xsl:text>{"name":"</xsl:text>
-    <xsl:value-of select="@Name" />
+    <xsl:call-template name="entityset-label">
+      <xsl:with-param name="set" select="." />
+    </xsl:call-template>
 
     <xsl:variable name="description">
       <xsl:call-template name="Core.Description">
         <xsl:with-param name="node" select="." />
       </xsl:call-template>
     </xsl:variable>
+    <xsl:if test="$description!=''">
+      <xsl:text>","description":"</xsl:text>
+      <xsl:value-of select="$description" />
+    </xsl:if>
+    <xsl:text>"}</xsl:text>
+
+    <xsl:if test="position() = last()">
+      <xsl:text>]</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="operation-tag">
+    <xsl:param name="sourceSet" />
+    <xsl:param name="targetSet" select="null" />
+    <xsl:param name="fallback" select="null" />
+    <xsl:text>,"tags":["</xsl:text>
     <xsl:choose>
-      <xsl:when test="$description!=''">
-        <xsl:text>","description":"</xsl:text>
-        <xsl:value-of select="$description" />
+      <xsl:when test="$sourceSet">
+        <xsl:call-template name="entityset-label">
+          <xsl:with-param name="set" select="$sourceSet" />
+        </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:variable name="typename" select="@EntityType|@Type" />
+        <xsl:value-of select="$fallback" />
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:if test="$targetSet and $targetSet/@Name!=$sourceSet/@Name">
+      <xsl:text>","</xsl:text>
+      <xsl:call-template name="entityset-label">
+        <xsl:with-param name="set" select="$targetSet" />
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:text>"]</xsl:text>
+  </xsl:template>
+
+  <xsl:template name="entityset-label">
+    <xsl:param name="set" />
+    <xsl:choose>
+      <xsl:when test="$label-as-tag">
+        <xsl:variable name="typename" select="$set/@EntityType|$set/@Type" />
         <xsl:variable name="qualifier">
           <xsl:call-template name="substring-before-last">
             <xsl:with-param name="input" select="$typename" />
@@ -2584,54 +2620,24 @@
           </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="entityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" />
-        <xsl:variable name="type-description">
-          <xsl:call-template name="Core.Description">
-            <xsl:with-param name="node" select="$entityType" />
-          </xsl:call-template>
-        </xsl:variable>
-        <xsl:variable name="type-label">
+        <xsl:variable name="label">
           <xsl:call-template name="Common.Label">
             <xsl:with-param name="node" select="$entityType" />
           </xsl:call-template>
         </xsl:variable>
         <xsl:choose>
-          <xsl:when test="$type-description!=''">
-            <xsl:text>","description":"</xsl:text>
-            <xsl:value-of select="$type-description" />
+          <xsl:when test="$label!=''">
+            <xsl:value-of select="$label" />
           </xsl:when>
-          <xsl:when test="$type-label!=''">
-            <xsl:text>","description":"</xsl:text>
-            <xsl:value-of select="$type-label" />
-          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$set/@Name" />
+          </xsl:otherwise>
         </xsl:choose>
-      </xsl:otherwise>
-    </xsl:choose>
-
-    <xsl:text>"}</xsl:text>
-
-    <xsl:if test="position() = last()">
-      <xsl:text>]</xsl:text>
-    </xsl:if>
-  </xsl:template>
-
-  <xsl:template name="operation-tag">
-    <xsl:param name="sourceSet" />
-    <xsl:param name="targetSet" select="null" />
-    <xsl:param name="fallback" select="null" />
-    <xsl:text>,"tags":["</xsl:text>
-    <xsl:choose>
-      <xsl:when test="$sourceSet">
-        <xsl:value-of select="$sourceSet/@Name" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$fallback" />
+        <xsl:value-of select="$set/@Name" />
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:if test="$targetSet and $targetSet/@Name!=$sourceSet/@Name">
-      <xsl:text>","</xsl:text>
-      <xsl:value-of select="$targetSet/@Name" />
-    </xsl:if>
-    <xsl:text>"]</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:EntitySet">
