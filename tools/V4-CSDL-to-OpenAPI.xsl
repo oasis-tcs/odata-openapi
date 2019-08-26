@@ -417,7 +417,7 @@
         select="//edm:EntitySet|//edm:Singleton|//edm:ActionImport|//edm:FunctionImport|//edm:EntityType|//edm:ComplexType" />
       <xsl:if test="$content">
         <xsl:text>\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/</xsl:text>
-        <xsl:apply-templates select="$content" mode="description" />
+        <xsl:apply-templates select="$content" mode="diagram" />
         <xsl:text>)</xsl:text>
         <xsl:text>\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/</xsl:text>
         <xsl:text>[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])</xsl:text>
@@ -426,7 +426,7 @@
     <xsl:if test="$references">
       <xsl:apply-templates
         select="//edmx:Include[substring(@Namespace,1,10)!='Org.OData.' and substring(@Namespace,1,21)!='com.sap.vocabularies.']"
-        mode="description" />
+        mode="references" />
     </xsl:if>
     <xsl:text>"}</xsl:text>
 
@@ -932,7 +932,7 @@
     <xsl:text>,"innererror":{"type":"object","description":"The structure of this object is service-specific"}}}}}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:EntitySet|edm:Singleton" mode="description">
+  <xsl:template match="edm:EntitySet|edm:Singleton" mode="diagram">
     <xsl:variable name="type">
       <xsl:call-template name="substring-after-last">
         <xsl:with-param name="input" select="@EntityType|@Type" />
@@ -954,16 +954,13 @@
       <xsl:when test="@Nullable='true'">
         <xsl:text>0..1</xsl:text>
       </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>1</xsl:text>
-      </xsl:otherwise>
     </xsl:choose>
     <xsl:text>>[</xsl:text>
     <xsl:value-of select="$type" />
     <xsl:text>]</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:ActionImport" mode="description">
+  <xsl:template match="edm:ActionImport" mode="diagram">
     <xsl:variable name="qualifier">
       <xsl:call-template name="substring-before-last">
         <xsl:with-param name="input" select="@Action" />
@@ -997,10 +994,10 @@
     <xsl:text>{bg:dodgerblue}</xsl:text>
     <xsl:text>]</xsl:text>
 
-    <xsl:apply-templates select="$action/edm:ReturnType" mode="description" />
+    <xsl:apply-templates select="$action/edm:ReturnType" mode="diagram" />
   </xsl:template>
 
-  <xsl:template match="edm:FunctionImport" mode="description">
+  <xsl:template match="edm:FunctionImport" mode="diagram">
     <xsl:variable name="qualifier">
       <xsl:call-template name="substring-before-last">
         <xsl:with-param name="input" select="@Function" />
@@ -1035,10 +1032,10 @@
     <!-- TODO: deal with multiple unbound overloads, remove [1] -->
     <xsl:apply-templates
       select="//edm:Schema[@Namespace=$namespace]/edm:Function[@Name=$function and not(@IsBound='true')][1]/edm:ReturnType"
-      mode="description" />
+      mode="diagram" />
   </xsl:template>
 
-  <xsl:template match="edm:ReturnType" mode="description">
+  <xsl:template match="edm:ReturnType" mode="diagram">
     <xsl:variable name="collection" select="starts-with(@Type,'Collection(')" />
     <xsl:variable name="singleType">
       <xsl:choose>
@@ -1079,9 +1076,6 @@
         <xsl:when test="$nullable='true'">
           <xsl:text>0..1</xsl:text>
         </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>1</xsl:text>
-        </xsl:otherwise>
       </xsl:choose>
       <xsl:text>>[</xsl:text>
       <xsl:value-of select="$type" />
@@ -1089,21 +1083,21 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="edm:EntityType|edm:ComplexType" mode="description">
+  <xsl:template match="edm:EntityType|edm:ComplexType" mode="diagram">
     <xsl:if test="position() > 1">
       <xsl:text>,</xsl:text>
     </xsl:if>
-    <xsl:apply-templates select="@BaseType" mode="description" />
+    <xsl:apply-templates select="@BaseType" mode="diagram" />
     <xsl:text>[</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:if test="local-name()='EntityType'">
       <xsl:text>{bg:orange}</xsl:text>
     </xsl:if>
     <xsl:text>]</xsl:text>
-    <xsl:apply-templates select="edm:NavigationProperty|edm:Property" mode="description" />
+    <xsl:apply-templates select="edm:NavigationProperty|edm:Property" mode="diagram" />
   </xsl:template>
 
-  <xsl:template match="@BaseType" mode="description">
+  <xsl:template match="@BaseType" mode="diagram">
     <xsl:variable name="qualifier">
       <xsl:call-template name="substring-before-last">
         <xsl:with-param name="input" select="." />
@@ -1131,7 +1125,7 @@
     <xsl:text>]^</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:NavigationProperty|edm:Property" mode="description">
+  <xsl:template match="edm:NavigationProperty|edm:Property" mode="diagram">
     <xsl:variable name="collection" select="starts-with(@Type,'Collection(')" />
     <xsl:variable name="singleType">
       <xsl:choose>
@@ -1197,7 +1191,7 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="edmx:Include" mode="description">
+  <xsl:template match="edmx:Include" mode="references">
     <xsl:if test="position() = 1">
       <xsl:text>\n\n## References</xsl:text>
     </xsl:if>
