@@ -1031,8 +1031,7 @@
 
     <!-- TODO: deal with multiple unbound overloads, remove [1] -->
     <xsl:apply-templates
-      select="//edm:Schema[@Namespace=$namespace]/edm:Function[@Name=$function and not(@IsBound='true')][1]/edm:ReturnType"
-      mode="diagram" />
+      select="//edm:Schema[@Namespace=$namespace]/edm:Function[@Name=$function and not(@IsBound='true')][1]/edm:ReturnType" mode="diagram" />
   </xsl:template>
 
   <xsl:template match="edm:ReturnType" mode="diagram">
@@ -2613,6 +2612,18 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template name="operation-tag">
+    <xsl:param name="sourceSet" />
+    <xsl:param name="targetSet" select="null" />
+    <xsl:text>,"tags":["</xsl:text>
+    <xsl:value-of select="$sourceSet/@Name" />
+    <xsl:if test="$targetSet and $targetSet/@Name!=$sourceSet/@Name">
+      <xsl:text>","</xsl:text>
+      <xsl:value-of select="$targetSet/@Name" />
+    </xsl:if>
+    <xsl:text>"]</xsl:text>
+  </xsl:template>
+
   <xsl:template match="edm:EntitySet">
     <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
     <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
@@ -3094,13 +3105,10 @@
         </xsl:with-param>
       </xsl:call-template>
 
-      <xsl:text>,"tags":["</xsl:text>
-      <xsl:value-of select="$root/@Name" />
-      <xsl:if test="$targetSet and $targetSet/@Name!=$root/@Name">
-        <xsl:text>","</xsl:text>
-        <xsl:value-of select="$targetSet/@Name" />
-      </xsl:if>
-      <xsl:text>"]</xsl:text>
+      <xsl:call-template name="operation-tag">
+        <xsl:with-param name="sourceSet" select="$root" />
+        <xsl:with-param name="targetSet" select="$targetSet" />
+      </xsl:call-template>
 
       <xsl:text>,"parameters":[</xsl:text>
       <xsl:call-template name="query-options">
@@ -3155,13 +3163,10 @@
         </xsl:with-param>
       </xsl:call-template>
 
-      <xsl:text>,"tags":["</xsl:text>
-      <xsl:value-of select="$root/@Name" />
-      <xsl:if test="$targetSet and $targetSet/@Name!=$root/@Name">
-        <xsl:text>","</xsl:text>
-        <xsl:value-of select="$targetSet/@Name" />
-      </xsl:if>
-      <xsl:text>"]</xsl:text>
+      <xsl:call-template name="operation-tag">
+        <xsl:with-param name="sourceSet" select="$root" />
+        <xsl:with-param name="targetSet" select="$targetSet" />
+      </xsl:call-template>
 
       <xsl:choose>
         <xsl:when test="$openapi-version='2.0'">
@@ -3351,9 +3356,10 @@
           </xsl:with-param>
         </xsl:call-template>
 
-        <xsl:text>,"tags":["</xsl:text>
-        <xsl:value-of select="$root/@Name" />
-        <xsl:text>"]</xsl:text>
+        <xsl:call-template name="operation-tag">
+          <xsl:with-param name="sourceSet" select="$root" />
+        </xsl:call-template>
+
         <xsl:text>,"parameters":[</xsl:text>
 
         <xsl:variable name="delta">
@@ -3426,10 +3432,11 @@
           </xsl:with-param>
         </xsl:call-template>
 
-        <xsl:text>,"tags":["</xsl:text>
-        <xsl:value-of select="$root/@Name" />
-        <xsl:text>"],</xsl:text>
+        <xsl:call-template name="operation-tag">
+          <xsl:with-param name="sourceSet" select="$root" />
+        </xsl:call-template>
 
+        <xsl:text>,</xsl:text>
         <xsl:choose>
           <xsl:when test="$openapi-version='2.0'">
             <xsl:text>"parameters":[{"name":"</xsl:text>
@@ -3498,9 +3505,9 @@
             </xsl:with-param>
           </xsl:call-template>
 
-          <xsl:text>,"tags":["</xsl:text>
-          <xsl:value-of select="$root/@Name" />
-          <xsl:text>"]</xsl:text>
+          <xsl:call-template name="operation-tag">
+            <xsl:with-param name="sourceSet" select="$root" />
+          </xsl:call-template>
           <!-- TODO: depends on Core.OptimisticConcurrency
             <xsl:text>,"parameters":[</xsl:text>
             <xsl:call-template name="if-match">
