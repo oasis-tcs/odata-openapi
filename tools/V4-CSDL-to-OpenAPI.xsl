@@ -1163,7 +1163,7 @@
       <xsl:text>,[</xsl:text>
       <xsl:value-of select="../@Name" />
       <xsl:text>]</xsl:text>
-      <xsl:if test="@ContainsTarget='true'">
+      <xsl:if test="local-name()='Property' or @ContainsTarget='true'">
         <xsl:text>++</xsl:text>
       </xsl:if>
       <xsl:text>-</xsl:text>
@@ -1175,7 +1175,10 @@
           <xsl:text>0..1</xsl:text>
         </xsl:when>
       </xsl:choose>
-      <xsl:text>>[</xsl:text>
+      <xsl:if test="local-name()='NavigationProperty'">
+        <xsl:text>></xsl:text>
+      </xsl:if>
+      <xsl:text>[</xsl:text>
       <xsl:choose>
         <xsl:when test="$qualifier=//edm:Schema/@Namespace or $qualifier=//edm:Schema/@Alias">
           <xsl:value-of select="$type" />
