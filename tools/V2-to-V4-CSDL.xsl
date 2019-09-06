@@ -1191,7 +1191,7 @@
   <!-- ignore -->
   <xsl:template match="@sap:content-version|@sap:display-format[.='Date']" />
   <xsl:template match="@sap:is-annotation|@sap:is-extension-field|@sap:is-thing-type" />
-  <xsl:template match="@sap:supported-formats" />
+  <xsl:template match="@sap:supported-formats|@sap:message-scope-supported" />
   <xsl:template match="@sap:value-list" />
   <xsl:template match="@sap:unicode" />
   <xsl:template match="edm2:Association|edm2:AssociationSet|edm2:Using" />

@@ -144,8 +144,20 @@
     <xsl:param name="term" />
     <xsl:param name="property" select="false()" />
     <xsl:param name="target" select="." />
-    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',$target/@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',$target/@Name)" />
+
+    <xsl:variable name="target-path">
+      <xsl:call-template name="annotation-target">
+        <xsl:with-param name="node" select="$target" />
+        <xsl:with-param name="qualifier" select="$target/ancestor::edm:Schema/@Namespace" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="target-path-aliased">
+      <xsl:call-template name="annotation-target">
+        <xsl:with-param name="node" select="$target" />
+        <xsl:with-param name="qualifier" select="$target/ancestor::edm:Schema/@Alias" />
+      </xsl:call-template>
+    </xsl:variable>
+
     <xsl:variable name="anno"
       select="//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]
                                                                                |$target/edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]" />
