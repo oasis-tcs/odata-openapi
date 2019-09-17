@@ -2728,7 +2728,7 @@
     <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
     <xsl:variable name="annotations"
       select="edm:Annotation|//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation" />
-
+      
     <xsl:call-template name="pathItem-single-entity">
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="with-key" select="false()" />
@@ -3310,7 +3310,9 @@
       <xsl:value-of select="$typename" />
     </xsl:variable>
     <xsl:variable name="entityType" select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$typename]" />
-    <xsl:if test="$entityType">
+
+    <!-- for singleton first level we don't need the key -->
+    <xsl:if test="$entityType or ($level=0 and not($with-key))">
       <xsl:if test="$level>0 or $with-key">
         <xsl:text>,</xsl:text>
       </xsl:if>
