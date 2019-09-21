@@ -438,13 +438,13 @@ describe('Examples', function () {
             expectedGetResponseProperties, 'get list with delta');
     })
 
-    it('entity set with non-existing type', function () {
+    it('entity set and singleton with non-existing type', function () {
         const csdl = {
             $EntityContainer: 'this.Container',
             this: {
                 Container: {
-                    set: { $Type: 'self.type_does_not_exist', $Collection: true }//,
-                    // single: { $Type: 'self.type_does_not_exist' }
+                    set: { $Type: 'self.type_does_not_exist', $Collection: true },
+                    single: { $Type: 'self.type_does_not_exist' }
                 }
             }
         };
@@ -521,6 +521,51 @@ describe('Examples', function () {
                         }
                     }
                 },
+                "/single": {
+                    get: {
+                        summary: 'Get single',
+                        tags: ['single'],
+                        parameters: [],
+                        responses: {
+                            200: {
+                                description: 'Retrieved entity',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            $ref: "#/components/schemas/undefined.type_does_not_exist"
+                                        }
+                                    }
+                                }
+                            },
+                            default: {
+                                $ref: '#/components/responses/error'
+                            }
+                        }
+                    },
+                    patch: {
+                        summary: 'Update single',
+                        tags: ['single'],
+                        requestBody: {
+                            description: 'New property values',
+                            required: true,
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: "#/components/schemas/undefined.type_does_not_exist-update"
+                                    }
+                                }
+                            }
+                        },
+                        responses: {
+                            204: {
+                                description: 'Success'
+                            },
+                            default: {
+                                $ref: '#/components/responses/error'
+                            }
+                        }
+                    }
+                },
                 "/$batch": { post: {} }
             }
         };
@@ -529,6 +574,8 @@ describe('Examples', function () {
         assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
         assert.deepStrictEqual(actual.paths['/set'].get, expected.paths['/set'].get, 'GET set');
         assert.deepStrictEqual(actual.paths['/set'].post, expected.paths['/set'].post, 'POST set');
+        assert.deepStrictEqual(actual.paths['/single'].get, expected.paths['/single'].get, 'GET single');
+        assert.deepStrictEqual(actual.paths['/single'].patch, expected.paths['/single'].patch, 'PATCH single');
     })
 
 })
