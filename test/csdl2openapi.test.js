@@ -438,6 +438,60 @@ describe('Examples', function () {
             expectedGetResponseProperties, 'get list with delta');
     })
 
+    it('entity set with non-existing type', function () {
+        const csdl = {
+            $EntityContainer: 'this.Container',
+            this: {
+                Container: {
+                    set: { $Type: 'self.type_does_not_exist', $Collection: true }
+                }
+            }
+        };
+        const expected = {
+            paths: {
+                "/set": {
+                    get: {
+                        responses: {
+                            200: {
+                                description: 'Retrieved entities',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            type: 'object',
+                                            properties: {
+                                                value: {
+                                                    type: 'array',
+                                                    items: {
+                                                        $ref: ''
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            default: {}
+                        }
+                    },
+                    post: {
+
+                    }
+                },
+                "/$batch": { post: {} }
+            }
+        };
+        const actual = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
+        assert.deepStrictEqual(actual.paths['/set'].get.responses[200], expected.paths['/set'].get.responses[200], 'GET set');
+        // assert.deepStrictEqual(
+        //     actual.paths['/fun()'].get.responses[200],
+        //     expected.paths['/fun()'].get.responses[200], 'fun');
+        // assert.deepStrictEqual(
+        //     actual.paths["/fun(in='{in}')"].get.responses[200],
+        //     expected.paths["/fun(in='{in}')"].get.responses[200], 'fun(in)');
+    })
+
 })
 
 function check(actual, expected) {
