@@ -443,7 +443,8 @@ describe('Examples', function () {
             $EntityContainer: 'this.Container',
             this: {
                 Container: {
-                    set: { $Type: 'self.type_does_not_exist', $Collection: true }
+                    set: { $Type: 'self.type_does_not_exist', $Collection: true }//,
+                    // single: { $Type: 'self.type_does_not_exist' }
                 }
             }
         };
@@ -451,6 +452,19 @@ describe('Examples', function () {
             paths: {
                 "/set": {
                     get: {
+                        summary: 'Get entities from set',
+                        tags: ['set'],
+                        parameters: [
+                            { $ref: "#/components/parameters/top" },
+                            { $ref: "#/components/parameters/skip" },
+                            {
+                                in: 'query',
+                                name: 'filter',
+                                schema: { type: 'string' },
+                                description: "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)"
+                            },
+                            { $ref: "#/components/parameters/count" }
+                        ],
                         responses: {
                             200: {
                                 description: 'Retrieved entities',
@@ -458,11 +472,12 @@ describe('Examples', function () {
                                     'application/json': {
                                         schema: {
                                             type: 'object',
+                                            title: 'Collection of type_does_not_exist',
                                             properties: {
                                                 value: {
                                                     type: 'array',
                                                     items: {
-                                                        $ref: ''
+                                                        $ref: "#/components/schemas/undefined.type_does_not_exist"
                                                     }
                                                 }
                                             }
@@ -470,11 +485,40 @@ describe('Examples', function () {
                                     }
                                 }
                             },
-                            default: {}
+                            default: {
+                                $ref: '#/components/responses/error'
+                            }
                         }
                     },
                     post: {
-
+                        summary: 'Add new entity to set',
+                        tags: ['set'],
+                        requestBody: {
+                            description: 'New entity',
+                            required: true,
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: "#/components/schemas/undefined.type_does_not_exist-create"
+                                    }
+                                }
+                            }
+                        },
+                        responses: {
+                            201: {
+                                description: 'Created entity',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            $ref: "#/components/schemas/undefined.type_does_not_exist"
+                                        }
+                                    }
+                                }
+                            },
+                            default: {
+                                $ref: '#/components/responses/error'
+                            }
+                        }
                     }
                 },
                 "/$batch": { post: {} }
@@ -483,13 +527,8 @@ describe('Examples', function () {
         const actual = lib.csdl2openapi(csdl, {});
         assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
         assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
-        assert.deepStrictEqual(actual.paths['/set'].get.responses[200], expected.paths['/set'].get.responses[200], 'GET set');
-        // assert.deepStrictEqual(
-        //     actual.paths['/fun()'].get.responses[200],
-        //     expected.paths['/fun()'].get.responses[200], 'fun');
-        // assert.deepStrictEqual(
-        //     actual.paths["/fun(in='{in}')"].get.responses[200],
-        //     expected.paths["/fun(in='{in}')"].get.responses[200], 'fun(in)');
+        assert.deepStrictEqual(actual.paths['/set'].get, expected.paths['/set'].get, 'GET set');
+        assert.deepStrictEqual(actual.paths['/set'].post, expected.paths['/set'].post, 'POST set');
     })
 
 })
