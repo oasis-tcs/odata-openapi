@@ -11,10 +11,10 @@ Term | Annotation Target | OpenAPI field
 -----|-------------------|--------------
 `Computed` | Property | omit from Create and Update structures
 `DefaultNamespace` | Schema | path templates for actions and functions without namespace prefix
-`Description` | Action, ActionImport, Function, FunctionImport | `description` of Operation Object
+`Description` | Action, ActionImport, Function, FunctionImport | `summary` of Operation Object
 `Description` | EntitySet, Singleton | `description` of Tag Object
 `Description` | EntityType | `description` of Request Body Object
-`Description` | ComplexType, EntityType, EnumerationType, Parameter, Property, TypeDefinition | `description` of Schema Object
+`Description` | ComplexType, EntityType, EnumerationType, Parameter, Property, TypeDefinition | `title` of Schema Object
 `Description` | Schema, EntityContainer | `info.title`
 `Example`   | Property | `example` of Schema Object
 `Immutable` | Property | omit from Update structure
