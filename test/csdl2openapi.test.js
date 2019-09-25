@@ -347,8 +347,7 @@ describe('Examples', function () {
                                         }
                                     }
                                 }
-                            },
-                            default: {}
+                            }
                         }
                     }
                 },
@@ -374,8 +373,7 @@ describe('Examples', function () {
                                         }
                                     }
                                 }
-                            },
-                            default: {}
+                            }
                         }
                     }
                 },
@@ -485,7 +483,7 @@ describe('Examples', function () {
                                     }
                                 }
                             },
-                            default: {
+                            '4XX': {
                                 $ref: '#/components/responses/error'
                             }
                         }
@@ -515,7 +513,7 @@ describe('Examples', function () {
                                     }
                                 }
                             },
-                            default: {
+                            '4XX': {
                                 $ref: '#/components/responses/error'
                             }
                         }
@@ -537,7 +535,7 @@ describe('Examples', function () {
                                     }
                                 }
                             },
-                            default: {
+                            '4XX': {
                                 $ref: '#/components/responses/error'
                             }
                         }
@@ -560,7 +558,7 @@ describe('Examples', function () {
                             204: {
                                 description: 'Success'
                             },
-                            default: {
+                            '4XX': {
                                 $ref: '#/components/responses/error'
                             }
                         }

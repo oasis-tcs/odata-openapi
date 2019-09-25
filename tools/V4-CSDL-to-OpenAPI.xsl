@@ -129,7 +129,16 @@
   <xsl:variable name="commonQuickInfoAliased" select="concat($commonAlias,'.QuickInfo')" />
 
   <xsl:variable name="defaultResponse">
-    <xsl:text>"default":{"$ref":"#/</xsl:text>
+    <xsl:text>"</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$openapi-version!='2.0'">
+        <xsl:text>4XX</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>400</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>":{"$ref":"#/</xsl:text>
     <xsl:if test="$openapi-version!='2.0'">
       <xsl:text>components/</xsl:text>
     </xsl:if>
@@ -2728,7 +2737,7 @@
     <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
     <xsl:variable name="annotations"
       select="edm:Annotation|//edm:Annotations[(@Target=$target-path or @Target=$target-path-aliased)]/edm:Annotation" />
-      
+
     <xsl:call-template name="pathItem-single-entity">
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="with-key" select="false()" />
