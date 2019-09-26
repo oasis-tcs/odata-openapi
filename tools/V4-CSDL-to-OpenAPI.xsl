@@ -2546,7 +2546,17 @@
       </xsl:otherwise>
     </xsl:choose>
 
-    <xsl:text>,"responses":{"202":{"description":"Batch response",</xsl:text>
+    <xsl:text>,"responses":{"</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$odata-version='2.0' or $odata-version='3.0'">
+        <xsl:text>202</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>200</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>":{"description":"Batch response",</xsl:text>
+
     <xsl:if test="$openapi-version!='2.0'">
       <xsl:text>"content":{"multipart/mixed":{</xsl:text>
     </xsl:if>
