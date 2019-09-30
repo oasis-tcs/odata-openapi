@@ -576,6 +576,213 @@ describe('Examples', function () {
         assert.deepStrictEqual(actual.paths['/single'].patch, expected.paths['/single'].patch, 'PATCH single');
     })
 
+    it('entity set and singleton with external type', function () {
+        const csdl = {
+            $EntityContainer: 'this.Container',
+            $Reference: {
+                "https://other.document": {
+                    "$Include": [
+                        {
+                            "$Namespace": "external"
+                        }
+                    ]
+                }
+            },
+            this: {
+                Container: {
+                    set: { $Type: 'external.entityType', $Collection: true },
+                    single: { $Type: 'external.entityType' }
+                }
+            }
+        };
+        const csdl_ext = {
+            external: {
+                entityType: { $Kind: 'EntityType', $Key: ['key'], key: {} },
+            }
+        };
+        const expected = {
+            paths: {
+                "/set": {
+                    get: {
+                        summary: 'Get entities from set',
+                        tags: ['set'],
+                        parameters: [
+                            { $ref: "#/components/parameters/top" },
+                            { $ref: "#/components/parameters/skip" },
+                            {
+                                in: 'query',
+                                name: 'filter',
+                                schema: { type: 'string' },
+                                description: "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)"
+                            },
+                            { $ref: "#/components/parameters/count" },
+                            {
+                                description: "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                                in: 'query',
+                                name: 'orderby',
+                                explode: false,
+                                schema: {
+                                    type: 'array',
+                                    uniqueItems: true,
+                                    items: {
+                                        type: 'string',
+                                        enum: ['key', 'key desc']
+                                    }
+                                }
+                            },
+                            {
+                                description: "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                                in: 'query',
+                                name: 'select',
+                                explode: false,
+                                schema: {
+                                    type: 'array',
+                                    uniqueItems: true,
+                                    items: {
+                                        type: 'string',
+                                        enum: ['key']
+                                    }
+                                }
+                            }
+                        ],
+                        responses: {
+                            200: {
+                                description: 'Retrieved entities',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            type: 'object',
+                                            title: 'Collection of entityType',
+                                            properties: {
+                                                value: {
+                                                    type: 'array',
+                                                    items: {
+                                                        $ref: "#/components/schemas/external.entityType"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            '4XX': {
+                                $ref: '#/components/responses/error'
+                            }
+                        }
+                    },
+                    post: {
+                        summary: 'Add new entity to set',
+                        tags: ['set'],
+                        requestBody: {
+                            description: 'New entity',
+                            required: true,
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: "#/components/schemas/external.entityType-create"
+                                    }
+                                }
+                            }
+                        },
+                        responses: {
+                            201: {
+                                description: 'Created entity',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            $ref: "#/components/schemas/external.entityType"
+                                        }
+                                    }
+                                }
+                            },
+                            '4XX': {
+                                $ref: '#/components/responses/error'
+                            }
+                        }
+                    }
+                },
+                "/set('{key}')": {
+                    get: {
+                    },
+                    patch: {
+
+                    },
+                    delete: {
+
+                    }
+                },
+                "/single": {
+                    get: {
+                        summary: 'Get single',
+                        tags: ['single'],
+                        parameters: [
+                            {
+                                description: "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                                in: 'query',
+                                name: 'select',
+                                explode: false,
+                                schema: {
+                                    type: 'array',
+                                    uniqueItems: true,
+                                    items: {
+                                        type: 'string',
+                                        enum: ['key']
+                                    }
+                                }
+                            }
+                        ],
+                        responses: {
+                            200: {
+                                description: 'Retrieved entity',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            $ref: "#/components/schemas/external.entityType"
+                                        }
+                                    }
+                                }
+                            },
+                            '4XX': {
+                                $ref: '#/components/responses/error'
+                            }
+                        }
+                    },
+                    patch: {
+                        summary: 'Update single',
+                        tags: ['single'],
+                        requestBody: {
+                            description: 'New property values',
+                            required: true,
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: "#/components/schemas/external.entityType-update"
+                                    }
+                                }
+                            }
+                        },
+                        responses: {
+                            204: {
+                                description: 'Success'
+                            },
+                            '4XX': {
+                                $ref: '#/components/responses/error'
+                            }
+                        }
+                    }
+                },
+                "/$batch": { post: {} }
+            }
+        };
+        const actual = lib.csdl2openapi(csdl, {}, [csdl_ext]);
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
+        assert.deepStrictEqual(actual.paths['/set'].get, expected.paths['/set'].get, 'GET set');
+        assert.deepStrictEqual(actual.paths['/set'].post, expected.paths['/set'].post, 'POST set');
+        assert.deepStrictEqual(actual.paths['/single'].get, expected.paths['/single'].get, 'GET single');
+        assert.deepStrictEqual(actual.paths['/single'].patch, expected.paths['/single'].patch, 'PATCH single');
+    })
+
 })
 
 function check(actual, expected) {
