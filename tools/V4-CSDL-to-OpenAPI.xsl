@@ -484,14 +484,14 @@
           <xsl:text>,"consumes":["application/json"]</xsl:text>
           <xsl:text>,"produces":["application/json"]</xsl:text>
         </xsl:when>
-        <xsl:otherwise>
+        <xsl:when test="not(contains($x-tensions, '&quot;servers&quot;:'))">
           <xsl:text>,"servers":[{"url":"</xsl:text>
           <xsl:value-of select="$scheme" />
           <xsl:text>://</xsl:text>
           <xsl:value-of select="$host" />
           <xsl:value-of select="$basePath" />
           <xsl:text>"}]</xsl:text>
-        </xsl:otherwise>
+        </xsl:when>
       </xsl:choose>
 
     </xsl:if>
