@@ -144,9 +144,12 @@ describe('Examples', function () {
             ReuseTypes: {
                 entityType: {
                     '@Core.Description': 'Core.Description',
-                    $Kind: 'EntityType', $Key: ['key'], key: {}
+                    $Kind: 'EntityType',
+                    $Key: ['key'],
+                    key: {}
                 },
-                typeDefinition: { $Kind: 'TypeDefinition' }
+                typeDefinition: { $Kind: 'TypeDefinition', $Type: 'Edm.DateTimeOffset' },
+                typeDefinition3: { $Kind: 'TypeDefinition', $Type: 'Edm.DateTimeOffset', $Scale: 3 }
             }
         };
         const expected = {
@@ -162,19 +165,28 @@ describe('Examples', function () {
                     'ReuseTypes.entityType': {
                         type: 'object',
                         title: 'Core.Description',
-                        properties: { key: { type: 'string' } }
+                        properties: {
+                            key: { type: 'string' }
+                        }
                     },
                     'ReuseTypes.entityType-create': {
                         type: 'object',
                         title: 'Core.Description (for create)',
-                        properties: { key: { type: 'string' } },
+                        properties: {
+                            key: { type: 'string' }
+                        },
                         required: ['key']
                     },
                     'ReuseTypes.entityType-update': {
                         type: 'object',
                         title: 'Core.Description (for update)'
                     },
-                    'ReuseTypes.typeDefinition': { title: 'typeDefinition', type: 'string' }
+                    'ReuseTypes.typeDefinition': {
+                        title: 'typeDefinition', type: 'string', format: 'date-time', example: '2017-04-13T15:51:04Z'
+                    },
+                    'ReuseTypes.typeDefinition3': {
+                        title: 'typeDefinition3', type: 'string', format: 'date-time', example: '2017-04-13T15:51:04.000Z'
+                    }
                 }
             }
         };
