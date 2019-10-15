@@ -13,11 +13,11 @@ The mapping can be fine-tuned via [annotations](../doc/Annotations.md) in the CS
 
 ## `transform.js` for Node.js
 
+_Note: if you want to transform OData V3, V4, or V4.01 into OpenAPI 3.0.x, you better use the [pure Node.js-based tool](../lib)._
+
 This script transforms one or more OData CSDL (`$metadata`) XML documents into OpenAPI JSON documents. 
 
 It uses [`xslt4node`](https://www.npmjs.com/package/xslt4node), which in turn needs [`node-gyp`](https://www.npmjs.com/package/node-gyp) and a [Java SE JDK](http://jdk.java.net).
-
-_Note: if you run into installation problems and want to transform OData V3, V4, or V4.01 into OpenAPI 3.0.x, you can use its [pure Node.js-based counterpart](../lib)._
 
 ### Installation
 
