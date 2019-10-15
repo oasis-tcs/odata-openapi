@@ -2,12 +2,12 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Service for namespace PeopleService",
-        "version": "",
-        "description": "This service is located at [http://localhost/People.svc/](http://localhost/People.svc/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[Supplier{bg:orange}],[Supplier]++-0..1[Address],[Supplier]-*>[ProductService.Product{bg:whitesmoke}],[Address],[Person{bg:orange}],[Person]-0..1>[PersonDetail],[Person]^[Customer{bg:orange}],[Person]^[Employee{bg:orange}],[PersonDetail{bg:orange}],[PersonDetail]++-0..1[Address],[PersonDetail]-0..1>[Person],[Suppliers{bg:dodgerblue}]++-*>[Supplier],[People{bg:dodgerblue}]++-*>[Person],[PersonDetails{bg:dodgerblue}]++-*>[PersonDetail])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])\n\n## References\n- [ProductService](?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/Products.openapi3.json)"
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[Supplier{bg:orange}],[Supplier]++-0..1[Address],[Supplier]-*>[ProductService.Product{bg:whitesmoke}],[Address],[Person{bg:orange}],[Person]^[Customer{bg:orange}],[Person]^[Employee{bg:orange}],[PersonDetail{bg:orange}],[PersonDetail]++-0..1[Address],[PersonDetail]0..1-0..1[Person],[Suppliers{bg:dodgerblue}]++-*>[Supplier],[People{bg:dodgerblue}]++-*>[Person],[PersonDetails{bg:dodgerblue}]++-*>[PersonDetail])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])",
+        "version": ""
     },
     "servers": [
         {
-            "url": "http://localhost/People.svc"
+            "url": "https://localhost/service-root"
         }
     ],
     "tags": [
@@ -40,8 +40,8 @@
                     },
                     {
                         "name": "$filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -51,8 +51,8 @@
                     },
                     {
                         "name": "$orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -76,8 +76,8 @@
                     },
                     {
                         "name": "$select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -96,8 +96,8 @@
                     },
                     {
                         "name": "$expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -118,8 +118,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of Supplier",
                                     "type": "object",
+                                    "title": "Collection of Supplier",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -143,8 +143,8 @@
                     "Suppliers"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -173,10 +173,10 @@
         "/Suppliers({ID})": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -191,8 +191,8 @@
                 "parameters": [
                     {
                         "name": "$select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -211,8 +211,8 @@
                     },
                     {
                         "name": "$expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -249,8 +249,8 @@
                     "Suppliers"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -286,10 +286,10 @@
         "/Suppliers({ID})/Products": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -313,8 +313,8 @@
                     },
                     {
                         "name": "$filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -329,8 +329,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of Product",
                                     "type": "object",
+                                    "title": "Collection of Product",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -367,8 +367,8 @@
                     },
                     {
                         "name": "$filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -378,8 +378,8 @@
                     },
                     {
                         "name": "$orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -397,8 +397,8 @@
                     },
                     {
                         "name": "$select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -414,8 +414,8 @@
                     },
                     {
                         "name": "$expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -436,8 +436,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of Person",
                                     "type": "object",
+                                    "title": "Collection of Person",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -461,8 +461,8 @@
                     "People"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -491,10 +491,10 @@
         "/People({ID})": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -509,8 +509,8 @@
                 "parameters": [
                     {
                         "name": "$select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -526,8 +526,8 @@
                     },
                     {
                         "name": "$expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -564,8 +564,8 @@
                     "People"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -601,10 +601,10 @@
         "/People({ID})/PersonDetail": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -620,8 +620,8 @@
                 "parameters": [
                     {
                         "name": "$select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -641,8 +641,8 @@
                     },
                     {
                         "name": "$expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -692,8 +692,8 @@
                     },
                     {
                         "name": "$filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -703,8 +703,8 @@
                     },
                     {
                         "name": "$orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -730,8 +730,8 @@
                     },
                     {
                         "name": "$select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -751,8 +751,8 @@
                     },
                     {
                         "name": "$expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -773,8 +773,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of PersonDetail",
                                     "type": "object",
+                                    "title": "Collection of PersonDetail",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -798,8 +798,8 @@
                     "PersonDetails"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -828,10 +828,10 @@
         "/PersonDetails({PersonID})": {
             "parameters": [
                 {
-                    "name": "PersonID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: PersonID",
+                    "in": "path",
+                    "name": "PersonID",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -846,8 +846,8 @@
                 "parameters": [
                     {
                         "name": "$select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -867,8 +867,8 @@
                     },
                     {
                         "name": "$expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -905,8 +905,8 @@
                     "PersonDetails"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -942,10 +942,10 @@
         "/PersonDetails({PersonID})/Person": {
             "parameters": [
                 {
-                    "name": "PersonID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: PersonID",
+                    "in": "path",
+                    "name": "PersonID",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -960,8 +960,8 @@
                 "parameters": [
                     {
                         "name": "$select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -977,8 +977,8 @@
                     },
                     {
                         "name": "$expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -1051,6 +1051,7 @@
     "components": {
         "schemas": {
             "PeopleService.Supplier": {
+                "title": "Supplier",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -1062,20 +1063,20 @@
                         "nullable": true
                     },
                     "Address": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/PeopleService.Address"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "Location": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/geoPoint"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "Concurrency": {
                         "type": "integer",
@@ -1087,10 +1088,10 @@
                             "$ref": "./Products.openapi3.json#/components/schemas/ProductService.Product"
                         }
                     }
-                },
-                "title": "Supplier"
+                }
             },
             "PeopleService.Supplier-create": {
+                "title": "Supplier (for create)",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -1102,20 +1103,20 @@
                         "nullable": true
                     },
                     "Address": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/PeopleService.Address-create"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "Location": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/geoPoint"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "Concurrency": {
                         "type": "integer",
@@ -1130,10 +1131,10 @@
                 },
                 "required": [
                     "ID"
-                ],
-                "title": "Supplier (for create)"
+                ]
             },
             "PeopleService.Supplier-update": {
+                "title": "Supplier (for update)",
                 "type": "object",
                 "properties": {
                     "Name": {
@@ -1141,29 +1142,29 @@
                         "nullable": true
                     },
                     "Address": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/PeopleService.Address-update"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "Location": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/geoPoint"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "Concurrency": {
                         "type": "integer",
                         "format": "int32"
                     }
-                },
-                "title": "Supplier (for update)"
+                }
             },
             "PeopleService.Address": {
+                "title": "Address",
                 "type": "object",
                 "properties": {
                     "Street": {
@@ -1186,10 +1187,10 @@
                         "type": "string",
                         "nullable": true
                     }
-                },
-                "title": "Address"
+                }
             },
             "PeopleService.Address-create": {
+                "title": "Address (for create)",
                 "type": "object",
                 "properties": {
                     "Street": {
@@ -1212,10 +1213,10 @@
                         "type": "string",
                         "nullable": true
                     }
-                },
-                "title": "Address (for create)"
+                }
             },
             "PeopleService.Address-update": {
+                "title": "Address (for update)",
                 "type": "object",
                 "properties": {
                     "Street": {
@@ -1238,10 +1239,10 @@
                         "type": "string",
                         "nullable": true
                     }
-                },
-                "title": "Address (for update)"
+                }
             },
             "PeopleService.Person": {
+                "title": "Person",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -1253,12 +1254,12 @@
                         "nullable": true
                     },
                     "PersonDetail": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/PeopleService.PersonDetail"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     }
                 },
                 "anyOf": [
@@ -1268,13 +1269,11 @@
                     {
                         "$ref": "#/components/schemas/PeopleService.Employee"
                     },
-                    {
-
-                    }
-                ],
-                "title": "Person"
+                    {}
+                ]
             },
             "PeopleService.Person-create": {
+                "title": "Person (for create)",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -1286,12 +1285,12 @@
                         "nullable": true
                     },
                     "PersonDetail": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/PeopleService.PersonDetail-create"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     }
                 },
                 "required": [
@@ -1304,13 +1303,11 @@
                     {
                         "$ref": "#/components/schemas/PeopleService.Employee-create"
                     },
-                    {
-
-                    }
-                ],
-                "title": "Person (for create)"
+                    {}
+                ]
             },
             "PeopleService.Person-update": {
+                "title": "Person (for update)",
                 "type": "object",
                 "properties": {
                     "Name": {
@@ -1325,13 +1322,11 @@
                     {
                         "$ref": "#/components/schemas/PeopleService.Employee-update"
                     },
-                    {
-
-                    }
-                ],
-                "title": "Person (for update)"
+                    {}
+                ]
             },
             "PeopleService.Customer": {
+                "title": "Customer",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -1343,12 +1338,12 @@
                         "nullable": true
                     },
                     "PersonDetail": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/PeopleService.PersonDetail"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "TotalExpense": {
                         "anyOf": [
@@ -1360,13 +1355,13 @@
                             }
                         ],
                         "format": "decimal",
-                        "multipleOf": 1,
-                        "example": 0
+                        "example": 0,
+                        "multipleOf": 1
                     }
-                },
-                "title": "Customer"
+                }
             },
             "PeopleService.Customer-create": {
+                "title": "Customer (for create)",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -1378,12 +1373,12 @@
                         "nullable": true
                     },
                     "PersonDetail": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/PeopleService.PersonDetail-create"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "TotalExpense": {
                         "anyOf": [
@@ -1395,16 +1390,16 @@
                             }
                         ],
                         "format": "decimal",
-                        "multipleOf": 1,
-                        "example": 0
+                        "example": 0,
+                        "multipleOf": 1
                     }
                 },
                 "required": [
                     "ID"
-                ],
-                "title": "Customer (for create)"
+                ]
             },
             "PeopleService.Customer-update": {
+                "title": "Customer (for update)",
                 "type": "object",
                 "properties": {
                     "Name": {
@@ -1421,13 +1416,13 @@
                             }
                         ],
                         "format": "decimal",
-                        "multipleOf": 1,
-                        "example": 0
+                        "example": 0,
+                        "multipleOf": 1
                     }
-                },
-                "title": "Customer (for update)"
+                }
             },
             "PeopleService.Employee": {
+                "title": "Employee",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -1439,12 +1434,12 @@
                         "nullable": true
                     },
                     "PersonDetail": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/PeopleService.PersonDetail"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "EmployeeID": {
                         "anyOf": [
@@ -1475,10 +1470,10 @@
                         "format": "float",
                         "example": 3.14
                     }
-                },
-                "title": "Employee"
+                }
             },
             "PeopleService.Employee-create": {
+                "title": "Employee (for create)",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -1490,12 +1485,12 @@
                         "nullable": true
                     },
                     "PersonDetail": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/PeopleService.PersonDetail-create"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "EmployeeID": {
                         "anyOf": [
@@ -1529,10 +1524,10 @@
                 },
                 "required": [
                     "ID"
-                ],
-                "title": "Employee (for create)"
+                ]
             },
             "PeopleService.Employee-update": {
+                "title": "Employee (for update)",
                 "type": "object",
                 "properties": {
                     "Name": {
@@ -1568,10 +1563,10 @@
                         "format": "float",
                         "example": 3.14
                     }
-                },
-                "title": "Employee (for update)"
+                }
             },
             "PeopleService.PersonDetail": {
+                "title": "PersonDetail",
                 "type": "object",
                 "properties": {
                     "PersonID": {
@@ -1590,29 +1585,29 @@
                         "nullable": true
                     },
                     "Address": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/PeopleService.Address"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "Photo": {
                         "type": "string",
                         "format": "base64url"
                     },
                     "Person": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/PeopleService.Person"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     }
-                },
-                "title": "PersonDetail"
+                }
             },
             "PeopleService.PersonDetail-create": {
+                "title": "PersonDetail (for create)",
                 "type": "object",
                 "properties": {
                     "PersonID": {
@@ -1631,32 +1626,32 @@
                         "nullable": true
                     },
                     "Address": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/PeopleService.Address-create"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "Photo": {
                         "type": "string",
                         "format": "base64url"
                     },
                     "Person": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/PeopleService.Person-create"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     }
                 },
                 "required": [
                     "PersonID"
-                ],
-                "title": "PersonDetail (for create)"
+                ]
             },
             "PeopleService.PersonDetail-update": {
+                "title": "PersonDetail (for update)",
                 "type": "object",
                 "properties": {
                     "Age": {
@@ -1671,32 +1666,31 @@
                         "nullable": true
                     },
                     "Address": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/PeopleService.Address-update"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "Photo": {
                         "type": "string",
                         "format": "base64url"
                     }
-                },
-                "title": "PersonDetail (for update)"
+                }
             },
             "geoPoint": {
                 "type": "object",
                 "properties": {
+                    "coordinates": {
+                        "$ref": "#/components/schemas/geoPosition"
+                    },
                     "type": {
                         "type": "string",
                         "enum": [
                             "Point"
                         ],
                         "default": "Point"
-                    },
-                    "coordinates": {
-                        "$ref": "#/components/schemas/geoPosition"
                     }
                 },
                 "required": [
@@ -1706,10 +1700,10 @@
             },
             "geoPosition": {
                 "type": "array",
+                "minItems": 2,
                 "items": {
                     "type": "number"
-                },
-                "minItems": 2
+                }
             },
             "error": {
                 "type": "object",
