@@ -35,7 +35,7 @@
 
 The OData TC has published the [OData to OpenAPI Mapping Version 1.0](http://docs.oasis-open.org/odata/odata-openapi/v1.0/odata-openapi-v1.0.html), a recommendation on how to create OpenAPI descriptions for OData services. This project contains two proof-of-concept implementations of that mapping, [one using JavaScript](lib), and [one using XSLT](tools).
 
-The [`examples` folder](examples) contains OpenAPI/Swagger 2.0 and [OpenAPI 3.0.2](https://github.com/OAI/OpenAPI-Specification) descriptions that have been created from the XML `$metadata` documents of live and example OData services with these proof-of-concept implementations. 
+The [`examples` folder](examples) contains [OpenAPI 3.0.2](https://github.com/OAI/OpenAPI-Specification) descriptions that have been created from the XML `$metadata` documents of live and example OData services with these proof-of-concept implementations. 
 
 The entity-relationship diagrams visualizing the resource models of each service are generated on-the-fly with [yUML](http://yuml.me/).
 

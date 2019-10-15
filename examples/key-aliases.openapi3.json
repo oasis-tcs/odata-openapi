@@ -2,8 +2,8 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Service for namespace key.aliases",
-        "version": "",
-        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[Category{bg:orange}],[Category]++-[EntityInfo],[EntityInfo],[Categories{bg:dodgerblue}]++-*>[Category])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[Category{bg:orange}],[Category]++-[EntityInfo],[EntityInfo],[Categories{bg:dodgerblue}]++-*>[Category])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])",
+        "version": ""
     },
     "servers": [
         {
@@ -34,8 +34,8 @@
                     },
                     {
                         "name": "filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -45,8 +45,8 @@
                     },
                     {
                         "name": "orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -64,8 +64,8 @@
                     },
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -86,8 +86,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of Category",
                                     "type": "object",
+                                    "title": "Collection of Category",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -111,8 +111,8 @@
                     "Categories"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -138,13 +138,13 @@
                 }
             }
         },
-        "/Categories(EntityInfoID='{EntityInfoID}')": {
+        "/Categories({EntityInfoID})": {
             "parameters": [
                 {
-                    "name": "EntityInfoID",
-                    "in": "path",
-                    "required": true,
                     "description": "ID within EntityInfo",
+                    "in": "path",
+                    "name": "EntityInfoID",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -159,8 +159,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -197,8 +197,8 @@
                     "Categories"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -235,6 +235,7 @@
     "components": {
         "schemas": {
             "key.aliases.Category": {
+                "title": "Category",
                 "type": "object",
                 "properties": {
                     "Info": {
@@ -244,10 +245,10 @@
                         "type": "string",
                         "nullable": true
                     }
-                },
-                "title": "Category"
+                }
             },
             "key.aliases.Category-create": {
+                "title": "Category (for create)",
                 "type": "object",
                 "properties": {
                     "Info": {
@@ -257,10 +258,10 @@
                         "type": "string",
                         "nullable": true
                     }
-                },
-                "title": "Category (for create)"
+                }
             },
             "key.aliases.Category-update": {
+                "title": "Category (for update)",
                 "type": "object",
                 "properties": {
                     "Info": {
@@ -270,10 +271,10 @@
                         "type": "string",
                         "nullable": true
                     }
-                },
-                "title": "Category (for update)"
+                }
             },
             "key.aliases.EntityInfo": {
+                "title": "EntityInfo",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -283,14 +284,14 @@
                     },
                     "Created": {
                         "type": "string",
-                        "nullable": true,
                         "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z"
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
                     }
-                },
-                "title": "EntityInfo"
+                }
             },
             "key.aliases.EntityInfo-create": {
+                "title": "EntityInfo (for create)",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -300,14 +301,14 @@
                     },
                     "Created": {
                         "type": "string",
-                        "nullable": true,
                         "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z"
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
                     }
-                },
-                "title": "EntityInfo (for create)"
+                }
             },
             "key.aliases.EntityInfo-update": {
+                "title": "EntityInfo (for update)",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -317,12 +318,11 @@
                     },
                     "Created": {
                         "type": "string",
-                        "nullable": true,
                         "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z"
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
                     }
-                },
-                "title": "EntityInfo (for update)"
+                }
             },
             "error": {
                 "type": "object",

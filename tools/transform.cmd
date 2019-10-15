@@ -16,29 +16,15 @@ set CLASSPATH=xalan/xalan.jar;xalan/serializer.jar
 set SCHEMA_THREE=..\..\OpenAPI-Specification\schemas\v3.0\schema.json
 set SCHEMA_TWO=..\..\OpenAPI-Specification\schemas\v2.0\schema.json
 
-set done=false
-
-for /F "eol=# tokens=1,2,3,4,5,6" %%F in (%~n0.txt) do (
-	if /I [%~n1]==[%%~nF] (
-	  set done=true
-		call :process %%F %%G %%H %%I %%J %%K
-	) else if [%1]==[] (
-	  set done=true
-		call :process %%F %%G %%H %%I %%J %%K
-	)
-)
-
-if %done%==false (
-  if exist "%1" (
-    if /I [%2]==[V2] (
-		  call :process %1 http localhost /service-root V2
-    ) else (
-		  call :process %1 http localhost /service-root V4
-    )
+if exist "%1" (
+  if /I [%2]==[V2] (
+    call :process %1 http localhost /service-root V2
   ) else (
-    echo Don't know how to %~n0 %1
+    call :process %1 http localhost /service-root V4
   )
-) 
+) else (
+  echo Don't know how to %~n0 %1
+)
 
 endlocal
 exit /b

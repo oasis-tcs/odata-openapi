@@ -2,8 +2,8 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Service for namespace Containment",
-        "version": "",
-        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[Whole{bg:orange}],[Whole]++-0..1>[Part],[Whole]++-*>[Part],[Part{bg:orange}],[Part]++-0..1>[SubPart],[Part]++-*>[SubPart],[Part]++-*>[SubPart],[Part]++-*>[SubPart],[SubPart{bg:orange}],[Folder{bg:orange}],[Folder]++-*>[Folder],[Wholes{bg:dodgerblue}]++-*>[Whole],[TheWhole{bg:dodgerblue}]++->[Whole],[Folders{bg:dodgerblue}]++-*>[Folder])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[Whole{bg:orange}],[Whole]++-0..1>[Part],[Whole]++-*>[Part],[Part{bg:orange}],[Part]++-0..1>[SubPart],[Part]++-*>[SubPart],[Part]++-*>[SubPart],[Part]++-*>[SubPart],[SubPart{bg:orange}],[Folder{bg:orange}],[Folder]++-*>[Folder],[Wholes{bg:dodgerblue}]++-*>[Whole],[TheWhole{bg:dodgerblue}]++->[Whole],[Folders{bg:dodgerblue}]++-*>[Folder])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])",
+        "version": ""
     },
     "servers": [
         {
@@ -43,8 +43,8 @@
                     },
                     {
                         "name": "filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -54,8 +54,8 @@
                     },
                     {
                         "name": "orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -73,8 +73,8 @@
                     },
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -90,8 +90,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -113,8 +113,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of Whole",
                                     "type": "object",
+                                    "title": "Collection of Whole",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -138,8 +138,8 @@
                     "Wholes"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -155,34 +155,6 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Containment.Whole"
-                                }
-                            }
-                        }
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            }
-        },
-        "/Wholes/self.Likes()": {
-            "get": {
-                "summary": "How many like these wholes",
-                "tags": [
-                    "Wholes"
-                ],
-                "parameters": [
-
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "integer",
-                                    "nullable": true,
-                                    "format": "int32"
                                 }
                             }
                         }
@@ -209,13 +181,39 @@
                 }
             }
         },
+        "/Wholes/self.Likes()": {
+            "get": {
+                "summary": "How many like these wholes",
+                "tags": [
+                    "Wholes"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32",
+                                    "nullable": true
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
         "/Wholes('{ID}')": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
@@ -229,8 +227,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -246,8 +244,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -285,8 +283,8 @@
                     "Wholes"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -319,6 +317,33 @@
                 }
             }
         },
+        "/Wholes('{ID}')/self.Like": {
+            "post": {
+                "summary": "I like this whole",
+                "tags": [
+                    "Wholes"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "key: ID",
+                        "in": "path",
+                        "name": "ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
         "/Wholes('{ID}')/self.Likes()": {
             "get": {
                 "summary": "How many like this whole",
@@ -327,10 +352,10 @@
                 ],
                 "parameters": [
                     {
-                        "name": "ID",
-                        "in": "path",
-                        "required": true,
                         "description": "key: ID",
+                        "in": "path",
+                        "name": "ID",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -343,8 +368,8 @@
                             "application/json": {
                                 "schema": {
                                     "type": "integer",
-                                    "nullable": true,
-                                    "format": "int32"
+                                    "format": "int32",
+                                    "nullable": true
                                 }
                             }
                         }
@@ -355,40 +380,13 @@
                 }
             }
         },
-        "/Wholes('{ID}')/self.Like": {
-            "post": {
-                "summary": "I like this whole",
-                "tags": [
-                    "Wholes"
-                ],
-                "parameters": [
-                    {
-                        "name": "ID",
-                        "in": "path",
-                        "required": true,
-                        "description": "key: ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Success"
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            }
-        },
         "/Wholes('{ID}')/One": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
@@ -402,8 +400,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -418,8 +416,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -459,8 +457,8 @@
                     "Wholes"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -493,6 +491,33 @@
                 }
             }
         },
+        "/Wholes('{ID}')/One/self.Like": {
+            "post": {
+                "summary": "I like this part",
+                "tags": [
+                    "Wholes"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "key: ID",
+                        "in": "path",
+                        "name": "ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
         "/Wholes('{ID}')/One/self.Likes()": {
             "get": {
                 "summary": "How many like this part",
@@ -501,10 +526,10 @@
                 ],
                 "parameters": [
                     {
-                        "name": "ID",
-                        "in": "path",
-                        "required": true,
                         "description": "key: ID",
+                        "in": "path",
+                        "name": "ID",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -517,8 +542,8 @@
                             "application/json": {
                                 "schema": {
                                     "type": "integer",
-                                    "nullable": true,
-                                    "format": "int32"
+                                    "format": "int32",
+                                    "nullable": true
                                 }
                             }
                         }
@@ -529,40 +554,13 @@
                 }
             }
         },
-        "/Wholes('{ID}')/One/self.Like": {
-            "post": {
-                "summary": "I like this part",
-                "tags": [
-                    "Wholes"
-                ],
-                "parameters": [
-                    {
-                        "name": "ID",
-                        "in": "path",
-                        "required": true,
-                        "description": "key: ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Success"
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            }
-        },
         "/Wholes('{ID}')/One/One": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
@@ -576,8 +574,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -614,8 +612,8 @@
                     "Wholes"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -651,10 +649,10 @@
         "/Wholes('{ID}')/One/Many": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
@@ -677,8 +675,8 @@
                     },
                     {
                         "name": "filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -688,8 +686,8 @@
                     },
                     {
                         "name": "orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -707,8 +705,8 @@
                     },
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -729,8 +727,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of SubPart",
                                     "type": "object",
+                                    "title": "Collection of SubPart",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -754,8 +752,8 @@
                     "Wholes"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -784,29 +782,29 @@
         "/Wholes('{ID}')/One/Many(One={One-2},Two={Two-2})": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "One-2",
-                    "in": "path",
-                    "required": true,
                     "description": "key: One",
+                    "in": "path",
+                    "name": "One-2",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
                     }
                 },
                 {
-                    "name": "Two-2",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Two",
+                    "in": "path",
+                    "name": "Two-2",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -821,8 +819,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -859,8 +857,8 @@
                     "Wholes"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -896,10 +894,10 @@
         "/Wholes('{ID}')/Many": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
@@ -922,8 +920,8 @@
                     },
                     {
                         "name": "filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -933,8 +931,8 @@
                     },
                     {
                         "name": "orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -950,8 +948,8 @@
                     },
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -966,8 +964,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -991,8 +989,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of Part",
                                     "type": "object",
+                                    "title": "Collection of Part",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -1016,8 +1014,8 @@
                     "Wholes"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -1043,6 +1041,33 @@
                 }
             }
         },
+        "/Wholes('{ID}')/Many/self.Like": {
+            "post": {
+                "summary": "I like all of these parts",
+                "tags": [
+                    "Wholes"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "key: ID",
+                        "in": "path",
+                        "name": "ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
         "/Wholes('{ID}')/Many/self.Likes()": {
             "get": {
                 "summary": "How many like these parts",
@@ -1051,10 +1076,10 @@
                 ],
                 "parameters": [
                     {
-                        "name": "ID",
-                        "in": "path",
-                        "required": true,
                         "description": "key: ID",
+                        "in": "path",
+                        "name": "ID",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1067,8 +1092,8 @@
                             "application/json": {
                                 "schema": {
                                     "type": "integer",
-                                    "nullable": true,
-                                    "format": "int32"
+                                    "format": "int32",
+                                    "nullable": true
                                 }
                             }
                         }
@@ -1079,49 +1104,22 @@
                 }
             }
         },
-        "/Wholes('{ID}')/Many/self.Like": {
-            "post": {
-                "summary": "I like all of these parts",
-                "tags": [
-                    "Wholes"
-                ],
-                "parameters": [
-                    {
-                        "name": "ID",
-                        "in": "path",
-                        "required": true,
-                        "description": "key: ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Success"
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            }
-        },
         "/Wholes('{ID}')/Many({index-1})": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "index-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: index",
+                    "in": "path",
+                    "name": "index-1",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -1136,8 +1134,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -1152,8 +1150,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -1193,8 +1191,8 @@
                     "Wholes"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -1227,6 +1225,43 @@
                 }
             }
         },
+        "/Wholes('{ID}')/Many({index-1})/self.Like": {
+            "post": {
+                "summary": "I like this part",
+                "tags": [
+                    "Wholes"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "key: ID",
+                        "in": "path",
+                        "name": "ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "key: index",
+                        "in": "path",
+                        "name": "index-1",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ]
+            }
+        },
         "/Wholes('{ID}')/Many({index-1})/self.Likes()": {
             "get": {
                 "summary": "How many like this part",
@@ -1235,19 +1270,19 @@
                 ],
                 "parameters": [
                     {
-                        "name": "ID",
-                        "in": "path",
-                        "required": true,
                         "description": "key: ID",
+                        "in": "path",
+                        "name": "ID",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "index-1",
-                        "in": "path",
-                        "required": true,
                         "description": "key: index",
+                        "in": "path",
+                        "name": "index-1",
+                        "required": true,
                         "schema": {
                             "type": "integer",
                             "format": "int32"
@@ -1261,8 +1296,8 @@
                             "application/json": {
                                 "schema": {
                                     "type": "integer",
-                                    "nullable": true,
-                                    "format": "int32"
+                                    "format": "int32",
+                                    "nullable": true
                                 }
                             }
                         }
@@ -1273,59 +1308,22 @@
                 }
             }
         },
-        "/Wholes('{ID}')/Many({index-1})/self.Like": {
-            "post": {
-                "summary": "I like this part",
-                "tags": [
-                    "Wholes"
-                ],
-                "parameters": [
-                    {
-                        "name": "ID",
-                        "in": "path",
-                        "required": true,
-                        "description": "key: ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "index-1",
-                        "in": "path",
-                        "required": true,
-                        "description": "key: index",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Success"
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            }
-        },
         "/Wholes('{ID}')/Many({index-1})/One": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "index-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: index",
+                    "in": "path",
+                    "name": "index-1",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -1340,8 +1338,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -1378,8 +1376,8 @@
                     "Wholes"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -1415,19 +1413,19 @@
         "/Wholes('{ID}')/Many({index-1})/Many": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "index-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: index",
+                    "in": "path",
+                    "name": "index-1",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -1451,8 +1449,8 @@
                     },
                     {
                         "name": "filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -1462,8 +1460,8 @@
                     },
                     {
                         "name": "orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -1481,8 +1479,8 @@
                     },
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -1503,8 +1501,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of SubPart",
                                     "type": "object",
+                                    "title": "Collection of SubPart",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -1528,8 +1526,8 @@
                     "Wholes"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -1558,39 +1556,39 @@
         "/Wholes('{ID}')/Many({index-1})/Many(One={One-2},Two={Two-2})": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "index-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: index",
+                    "in": "path",
+                    "name": "index-1",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
                     }
                 },
                 {
-                    "name": "One-2",
-                    "in": "path",
-                    "required": true,
                     "description": "key: One",
+                    "in": "path",
+                    "name": "One-2",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
                     }
                 },
                 {
-                    "name": "Two-2",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Two",
+                    "in": "path",
+                    "name": "Two-2",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -1605,8 +1603,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -1643,8 +1641,8 @@
                     "Wholes"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -1680,19 +1678,19 @@
         "/Wholes('{ID}')/Many({index-1})/ManyReadListOnly": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "index-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: index",
+                    "in": "path",
+                    "name": "index-1",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -1716,8 +1714,8 @@
                     },
                     {
                         "name": "filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -1727,8 +1725,8 @@
                     },
                     {
                         "name": "orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -1746,8 +1744,8 @@
                     },
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -1768,8 +1766,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of SubPart",
                                     "type": "object",
+                                    "title": "Collection of SubPart",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -1791,19 +1789,19 @@
         "/Wholes('{ID}')/Many({index-1})/ManyReadByKeyOnly": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "index-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: index",
+                    "in": "path",
+                    "name": "index-1",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -1814,39 +1812,39 @@
         "/Wholes('{ID}')/Many({index-1})/ManyReadByKeyOnly(One={One-2},Two={Two-2})": {
             "parameters": [
                 {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
                     "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "index-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: index",
+                    "in": "path",
+                    "name": "index-1",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
                     }
                 },
                 {
-                    "name": "One-2",
-                    "in": "path",
-                    "required": true,
                     "description": "key: One",
+                    "in": "path",
+                    "name": "One-2",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
                     }
                 },
                 {
-                    "name": "Two-2",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Two",
+                    "in": "path",
+                    "name": "Two-2",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -1858,9 +1856,7 @@
                 "tags": [
                     "Wholes"
                 ],
-                "parameters": [
-
-                ],
+                "parameters": [],
                 "responses": {
                     "200": {
                         "description": "Retrieved entity",
@@ -1887,8 +1883,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -1904,8 +1900,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -1943,8 +1939,8 @@
                     "TheWhole"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -1956,34 +1952,6 @@
                 "responses": {
                     "204": {
                         "description": "Success"
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            }
-        },
-        "/TheWhole/self.Likes()": {
-            "get": {
-                "summary": "How many like this whole",
-                "tags": [
-                    "TheWhole"
-                ],
-                "parameters": [
-
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "integer",
-                                    "nullable": true,
-                                    "format": "int32"
-                                }
-                            }
-                        }
                     },
                     "4XX": {
                         "$ref": "#/components/responses/error"
@@ -2007,6 +1975,32 @@
                 }
             }
         },
+        "/TheWhole/self.Likes()": {
+            "get": {
+                "summary": "How many like this whole",
+                "tags": [
+                    "TheWhole"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32",
+                                    "nullable": true
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
         "/TheWhole/One": {
             "get": {
                 "summary": "Get related One",
@@ -2016,8 +2010,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -2032,8 +2026,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -2073,8 +2067,8 @@
                     "TheWhole"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -2107,34 +2101,6 @@
                 }
             }
         },
-        "/TheWhole/One/self.Likes()": {
-            "get": {
-                "summary": "How many like this part",
-                "tags": [
-                    "TheWhole"
-                ],
-                "parameters": [
-
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "integer",
-                                    "nullable": true,
-                                    "format": "int32"
-                                }
-                            }
-                        }
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            }
-        },
         "/TheWhole/One/self.Like": {
             "post": {
                 "summary": "I like this part",
@@ -2151,6 +2117,32 @@
                 }
             }
         },
+        "/TheWhole/One/self.Likes()": {
+            "get": {
+                "summary": "How many like this part",
+                "tags": [
+                    "TheWhole"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32",
+                                    "nullable": true
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
         "/TheWhole/One/One": {
             "get": {
                 "summary": "Get related One",
@@ -2160,8 +2152,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -2198,8 +2190,8 @@
                     "TheWhole"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -2250,8 +2242,8 @@
                     },
                     {
                         "name": "filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -2261,8 +2253,8 @@
                     },
                     {
                         "name": "orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -2280,8 +2272,8 @@
                     },
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -2302,8 +2294,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of SubPart",
                                     "type": "object",
+                                    "title": "Collection of SubPart",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -2327,8 +2319,8 @@
                     "TheWhole"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -2357,20 +2349,20 @@
         "/TheWhole/One/Many(One={One-2},Two={Two-2})": {
             "parameters": [
                 {
-                    "name": "One-2",
-                    "in": "path",
-                    "required": true,
                     "description": "key: One",
+                    "in": "path",
+                    "name": "One-2",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
                     }
                 },
                 {
-                    "name": "Two-2",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Two",
+                    "in": "path",
+                    "name": "Two-2",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -2385,8 +2377,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -2423,8 +2415,8 @@
                     "TheWhole"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -2475,8 +2467,8 @@
                     },
                     {
                         "name": "filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -2486,8 +2478,8 @@
                     },
                     {
                         "name": "orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -2503,8 +2495,8 @@
                     },
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -2519,8 +2511,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -2544,8 +2536,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of Part",
                                     "type": "object",
+                                    "title": "Collection of Part",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -2569,8 +2561,8 @@
                     "TheWhole"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -2586,34 +2578,6 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Containment.Part"
-                                }
-                            }
-                        }
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            }
-        },
-        "/TheWhole/Many/self.Likes()": {
-            "get": {
-                "summary": "How many like these parts",
-                "tags": [
-                    "TheWhole"
-                ],
-                "parameters": [
-
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "integer",
-                                    "nullable": true,
-                                    "format": "int32"
                                 }
                             }
                         }
@@ -2640,13 +2604,39 @@
                 }
             }
         },
+        "/TheWhole/Many/self.Likes()": {
+            "get": {
+                "summary": "How many like these parts",
+                "tags": [
+                    "TheWhole"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32",
+                                    "nullable": true
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
         "/TheWhole/Many({index-1})": {
             "parameters": [
                 {
-                    "name": "index-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: index",
+                    "in": "path",
+                    "name": "index-1",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -2661,8 +2651,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -2677,8 +2667,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -2718,8 +2708,8 @@
                     "TheWhole"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -2752,6 +2742,34 @@
                 }
             }
         },
+        "/TheWhole/Many({index-1})/self.Like": {
+            "post": {
+                "summary": "I like this part",
+                "tags": [
+                    "TheWhole"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "key: index",
+                        "in": "path",
+                        "name": "index-1",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ]
+            }
+        },
         "/TheWhole/Many({index-1})/self.Likes()": {
             "get": {
                 "summary": "How many like this part",
@@ -2760,10 +2778,10 @@
                 ],
                 "parameters": [
                     {
-                        "name": "index-1",
-                        "in": "path",
-                        "required": true,
                         "description": "key: index",
+                        "in": "path",
+                        "name": "index-1",
+                        "required": true,
                         "schema": {
                             "type": "integer",
                             "format": "int32"
@@ -2777,8 +2795,8 @@
                             "application/json": {
                                 "schema": {
                                     "type": "integer",
-                                    "nullable": true,
-                                    "format": "int32"
+                                    "format": "int32",
+                                    "nullable": true
                                 }
                             }
                         }
@@ -2789,41 +2807,13 @@
                 }
             }
         },
-        "/TheWhole/Many({index-1})/self.Like": {
-            "post": {
-                "summary": "I like this part",
-                "tags": [
-                    "TheWhole"
-                ],
-                "parameters": [
-                    {
-                        "name": "index-1",
-                        "in": "path",
-                        "required": true,
-                        "description": "key: index",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Success"
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            }
-        },
         "/TheWhole/Many({index-1})/One": {
             "parameters": [
                 {
-                    "name": "index-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: index",
+                    "in": "path",
+                    "name": "index-1",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -2838,8 +2828,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -2876,8 +2866,8 @@
                     "TheWhole"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -2913,10 +2903,10 @@
         "/TheWhole/Many({index-1})/Many": {
             "parameters": [
                 {
-                    "name": "index-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: index",
+                    "in": "path",
+                    "name": "index-1",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -2940,8 +2930,8 @@
                     },
                     {
                         "name": "filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -2951,8 +2941,8 @@
                     },
                     {
                         "name": "orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -2970,8 +2960,8 @@
                     },
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -2992,8 +2982,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of SubPart",
                                     "type": "object",
+                                    "title": "Collection of SubPart",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -3017,8 +3007,8 @@
                     "TheWhole"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -3047,30 +3037,30 @@
         "/TheWhole/Many({index-1})/Many(One={One-2},Two={Two-2})": {
             "parameters": [
                 {
-                    "name": "index-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: index",
+                    "in": "path",
+                    "name": "index-1",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
                     }
                 },
                 {
-                    "name": "One-2",
-                    "in": "path",
-                    "required": true,
                     "description": "key: One",
+                    "in": "path",
+                    "name": "One-2",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
                     }
                 },
                 {
-                    "name": "Two-2",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Two",
+                    "in": "path",
+                    "name": "Two-2",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -3085,8 +3075,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -3123,8 +3113,8 @@
                     "TheWhole"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -3160,10 +3150,10 @@
         "/TheWhole/Many({index-1})/ManyReadListOnly": {
             "parameters": [
                 {
-                    "name": "index-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: index",
+                    "in": "path",
+                    "name": "index-1",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -3172,7 +3162,6 @@
             ],
             "get": {
                 "summary": "Supports only read-list",
-                "description": "Does not support any system query options",
                 "tags": [
                     "TheWhole"
                 ],
@@ -3187,8 +3176,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of SubPart",
                                     "type": "object",
+                                    "title": "Collection of SubPart",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -3204,16 +3193,17 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                }
+                },
+                "description": "Does not support any system query options"
             }
         },
         "/TheWhole/Many({index-1})/ManyReadByKeyOnly": {
             "parameters": [
                 {
-                    "name": "index-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: index",
+                    "in": "path",
+                    "name": "index-1",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -3224,30 +3214,30 @@
         "/TheWhole/Many({index-1})/ManyReadByKeyOnly(One={One-2},Two={Two-2})": {
             "parameters": [
                 {
-                    "name": "index-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: index",
+                    "in": "path",
+                    "name": "index-1",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
                     }
                 },
                 {
-                    "name": "One-2",
-                    "in": "path",
-                    "required": true,
                     "description": "key: One",
+                    "in": "path",
+                    "name": "One-2",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
                     }
                 },
                 {
-                    "name": "Two-2",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Two",
+                    "in": "path",
+                    "name": "Two-2",
+                    "required": true,
                     "schema": {
                         "type": "integer",
                         "format": "int32"
@@ -3256,13 +3246,10 @@
             ],
             "get": {
                 "summary": "Supports only read-by-key",
-                "description": "Does not support `$select`",
                 "tags": [
                     "TheWhole"
                 ],
-                "parameters": [
-
-                ],
+                "parameters": [],
                 "responses": {
                     "200": {
                         "description": "Retrieved entity",
@@ -3277,7 +3264,8 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                }
+                },
+                "description": "Does not support `$select`"
             }
         },
         "/Folders": {
@@ -3298,8 +3286,8 @@
                     },
                     {
                         "name": "filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -3309,8 +3297,8 @@
                     },
                     {
                         "name": "orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -3328,8 +3316,8 @@
                     },
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -3345,8 +3333,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -3367,8 +3355,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of Folder",
                                     "type": "object",
+                                    "title": "Collection of Folder",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -3392,8 +3380,8 @@
                     "Folders"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -3422,10 +3410,10 @@
         "/Folders('{Name}')": {
             "parameters": [
                 {
-                    "name": "Name",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Name",
+                    "in": "path",
+                    "name": "Name",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
@@ -3439,8 +3427,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -3456,8 +3444,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -3494,8 +3482,8 @@
                     "Folders"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -3531,10 +3519,10 @@
         "/Folders('{Name}')/Folders": {
             "parameters": [
                 {
-                    "name": "Name",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Name",
+                    "in": "path",
+                    "name": "Name",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
@@ -3557,8 +3545,8 @@
                     },
                     {
                         "name": "filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -3568,8 +3556,8 @@
                     },
                     {
                         "name": "orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -3587,8 +3575,8 @@
                     },
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -3604,8 +3592,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -3626,8 +3614,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of Folder",
                                     "type": "object",
+                                    "title": "Collection of Folder",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -3651,8 +3639,8 @@
                     "Folders"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -3681,19 +3669,19 @@
         "/Folders('{Name}')/Folders('{Name-1}')": {
             "parameters": [
                 {
-                    "name": "Name",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Name",
+                    "in": "path",
+                    "name": "Name",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "Name-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Name",
+                    "in": "path",
+                    "name": "Name-1",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
@@ -3707,8 +3695,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -3724,8 +3712,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -3762,8 +3750,8 @@
                     "Folders"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -3799,19 +3787,19 @@
         "/Folders('{Name}')/Folders('{Name-1}')/Folders": {
             "parameters": [
                 {
-                    "name": "Name",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Name",
+                    "in": "path",
+                    "name": "Name",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "Name-1",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Name",
+                    "in": "path",
+                    "name": "Name-1",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
@@ -3834,8 +3822,8 @@
                     },
                     {
                         "name": "filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -3845,8 +3833,8 @@
                     },
                     {
                         "name": "orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -3864,8 +3852,8 @@
                     },
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -3881,8 +3869,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -3903,8 +3891,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of Folder",
                                     "type": "object",
+                                    "title": "Collection of Folder",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -3928,8 +3916,8 @@
                     "Folders"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -3958,28 +3946,28 @@
         "/Folders('{Name}')/Folders('{Name-1}')/Folders('{Name-2}')": {
             "parameters": [
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name-1",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "Name-2",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Name",
+                    "in": "path",
+                    "name": "Name-2",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
@@ -3993,8 +3981,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -4010,8 +3998,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -4048,8 +4036,8 @@
                     "Folders"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -4085,28 +4073,28 @@
         "/Folders('{Name}')/Folders('{Name-1}')/Folders('{Name-2}')/Folders": {
             "parameters": [
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name-1",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "Name-2",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Name",
+                    "in": "path",
+                    "name": "Name-2",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
@@ -4129,8 +4117,8 @@
                     },
                     {
                         "name": "filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -4140,8 +4128,8 @@
                     },
                     {
                         "name": "orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -4159,8 +4147,8 @@
                     },
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -4176,8 +4164,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -4198,8 +4186,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of Folder",
                                     "type": "object",
+                                    "title": "Collection of Folder",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -4223,8 +4211,8 @@
                     "Folders"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -4253,37 +4241,37 @@
         "/Folders('{Name}')/Folders('{Name-1}')/Folders('{Name-2}')/Folders('{Name-3}')": {
             "parameters": [
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name-1",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name-2",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "Name-3",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Name",
+                    "in": "path",
+                    "name": "Name-3",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
@@ -4297,8 +4285,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -4314,8 +4302,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -4352,8 +4340,8 @@
                     "Folders"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -4389,37 +4377,37 @@
         "/Folders('{Name}')/Folders('{Name-1}')/Folders('{Name-2}')/Folders('{Name-3}')/Folders": {
             "parameters": [
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name-1",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name-2",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "Name-3",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Name",
+                    "in": "path",
+                    "name": "Name-3",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
@@ -4442,8 +4430,8 @@
                     },
                     {
                         "name": "filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -4453,8 +4441,8 @@
                     },
                     {
                         "name": "orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -4472,8 +4460,8 @@
                     },
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -4489,8 +4477,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -4511,8 +4499,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of Folder",
                                     "type": "object",
+                                    "title": "Collection of Folder",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -4536,8 +4524,8 @@
                     "Folders"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -4566,46 +4554,46 @@
         "/Folders('{Name}')/Folders('{Name-1}')/Folders('{Name-2}')/Folders('{Name-3}')/Folders('{Name-4}')": {
             "parameters": [
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name-1",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name-2",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name-3",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "Name-4",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Name",
+                    "in": "path",
+                    "name": "Name-4",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
@@ -4619,8 +4607,8 @@
                 "parameters": [
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -4636,8 +4624,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -4674,8 +4662,8 @@
                     "Folders"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New property values",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -4711,46 +4699,46 @@
         "/Folders('{Name}')/Folders('{Name-1}')/Folders('{Name-2}')/Folders('{Name-3}')/Folders('{Name-4}')/Folders": {
             "parameters": [
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name-1",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name-2",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
+                    "description": "key: Name",
+                    "in": "path",
                     "name": "Name-3",
-                    "in": "path",
                     "required": true,
-                    "description": "key: Name",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
-                    "name": "Name-4",
-                    "in": "path",
-                    "required": true,
                     "description": "key: Name",
+                    "in": "path",
+                    "name": "Name-4",
+                    "required": true,
                     "schema": {
                         "type": "string"
                     }
@@ -4773,8 +4761,8 @@
                     },
                     {
                         "name": "filter",
-                        "in": "query",
                         "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -4784,8 +4772,8 @@
                     },
                     {
                         "name": "orderby",
-                        "in": "query",
                         "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -4803,8 +4791,8 @@
                     },
                     {
                         "name": "select",
-                        "in": "query",
                         "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -4820,8 +4808,8 @@
                     },
                     {
                         "name": "expand",
-                        "in": "query",
                         "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -4842,8 +4830,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of Folder",
                                     "type": "object",
+                                    "title": "Collection of Folder",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -4867,8 +4855,8 @@
                     "Folders"
                 ],
                 "requestBody": {
-                    "required": true,
                     "description": "New entity",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -4898,6 +4886,7 @@
     "components": {
         "schemas": {
             "Containment.Whole": {
+                "title": "Whole",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -4908,12 +4897,12 @@
                         "nullable": true
                     },
                     "One": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/Containment.Part"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "Many": {
                         "type": "array",
@@ -4921,10 +4910,10 @@
                             "$ref": "#/components/schemas/Containment.Part"
                         }
                     }
-                },
-                "title": "Whole"
+                }
             },
             "Containment.Whole-create": {
+                "title": "Whole (for create)",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -4935,12 +4924,12 @@
                         "nullable": true
                     },
                     "One": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/Containment.Part-create"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "Many": {
                         "type": "array",
@@ -4951,20 +4940,20 @@
                 },
                 "required": [
                     "ID"
-                ],
-                "title": "Whole (for create)"
+                ]
             },
             "Containment.Whole-update": {
+                "title": "Whole (for update)",
                 "type": "object",
                 "properties": {
                     "Description": {
                         "type": "string",
                         "nullable": true
                     }
-                },
-                "title": "Whole (for update)"
+                }
             },
             "Containment.Part": {
+                "title": "Part",
                 "type": "object",
                 "properties": {
                     "index": {
@@ -4972,12 +4961,12 @@
                         "format": "int32"
                     },
                     "One": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/Containment.SubPart"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "Many": {
                         "type": "array",
@@ -4997,10 +4986,10 @@
                             "$ref": "#/components/schemas/Containment.SubPart"
                         }
                     }
-                },
-                "title": "Part"
+                }
             },
             "Containment.Part-create": {
+                "title": "Part (for create)",
                 "type": "object",
                 "properties": {
                     "index": {
@@ -5008,12 +4997,12 @@
                         "format": "int32"
                     },
                     "One": {
-                        "nullable": true,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/Containment.SubPart-create"
                             }
-                        ]
+                        ],
+                        "nullable": true
                     },
                     "Many": {
                         "type": "array",
@@ -5036,14 +5025,14 @@
                 },
                 "required": [
                     "index"
-                ],
-                "title": "Part (for create)"
+                ]
             },
             "Containment.Part-update": {
-                "type": "object",
-                "title": "Part (for update)"
+                "title": "Part (for update)",
+                "type": "object"
             },
             "Containment.SubPart": {
+                "title": "SubPart",
                 "type": "object",
                 "properties": {
                     "One": {
@@ -5054,10 +5043,10 @@
                         "type": "integer",
                         "format": "int32"
                     }
-                },
-                "title": "SubPart"
+                }
             },
             "Containment.SubPart-create": {
+                "title": "SubPart (for create)",
                 "type": "object",
                 "properties": {
                     "One": {
@@ -5072,14 +5061,14 @@
                 "required": [
                     "One",
                     "Two"
-                ],
-                "title": "SubPart (for create)"
+                ]
             },
             "Containment.SubPart-update": {
-                "type": "object",
-                "title": "SubPart (for update)"
+                "title": "SubPart (for update)",
+                "type": "object"
             },
             "Containment.Folder": {
+                "title": "Folder",
                 "type": "object",
                 "properties": {
                     "Name": {
@@ -5095,10 +5084,10 @@
                             "$ref": "#/components/schemas/Containment.Folder"
                         }
                     }
-                },
-                "title": "Folder"
+                }
             },
             "Containment.Folder-create": {
+                "title": "Folder (for create)",
                 "type": "object",
                 "properties": {
                     "Name": {
@@ -5117,18 +5106,17 @@
                 },
                 "required": [
                     "Name"
-                ],
-                "title": "Folder (for create)"
+                ]
             },
             "Containment.Folder-update": {
+                "title": "Folder (for update)",
                 "type": "object",
                 "properties": {
                     "Description": {
                         "type": "string",
                         "nullable": true
                     }
-                },
-                "title": "Folder (for update)"
+                }
             },
             "error": {
                 "type": "object",
