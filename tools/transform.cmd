@@ -23,7 +23,11 @@ if exist "%1" (
     call :process %1 http localhost /service-root V4
   )
 ) else (
-  echo Don't know how to %~n0 %1
+  echo Usage: transform source [V2]
+  echo.
+  echo   source       Specifies the file to be transformed.
+  echo   V2           Indicates that source is OData V2 or OData V3
+
 )
 
 endlocal
