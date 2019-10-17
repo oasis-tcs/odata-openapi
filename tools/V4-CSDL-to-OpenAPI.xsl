@@ -3918,9 +3918,7 @@
       <xsl:with-param name="type" select="$action/edm:ReturnType/@Type" />
       <xsl:with-param name="nullableFacet" select="$action/edm:ReturnType/@Nullable" />
       <xsl:with-param name="target" select="$action/edm:ReturnType" />
-      <!--
-      <xsl:with-param name="functionImport" select="$functionImport" />
-      -->
+      <xsl:with-param name="functionImport" select="." />
     </xsl:call-template>
     <xsl:text>}}</xsl:text>
   </xsl:template>
