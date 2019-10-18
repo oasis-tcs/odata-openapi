@@ -55,21 +55,12 @@ exit /b
   json_reformat.exe < ..\examples\%~n1.tmp3.json > ..\examples\%~n1.openapi3.json
   if not errorlevel 1 (
     del ..\examples\%~n1.tmp3.json
+    if [%5]==[V2] del ..\examples\%~n1.V4.xml
+    if [%5]==[V3] del ..\examples\%~n1.V4.xml
+
     git.exe --no-pager diff ..\examples\%~n1.openapi3.json
 
     if exist %SCHEMA_THREE% call ajv validate -s %SCHEMA_THREE% -d ..\examples\%~n1.openapi3.json > nul
-  )
-
-  java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %VERSION% -PARAM diagram YES -PARAM references "%6" -PARAM openapi-root "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/" -IN %INPUT% -OUT ..\examples\%~n1.tmp.json
-
-  json_reformat.exe < ..\examples\%~n1.tmp.json > ..\examples\%~n1.openapi.json
-  if not errorlevel 1 (
-    del ..\examples\%~n1.tmp.json
-    if [%5]==[V2] del ..\examples\%~n1.V4.xml
-    if [%5]==[V3] del ..\examples\%~n1.V4.xml
-    git.exe --no-pager diff ..\examples\%~n1.openapi.json
-    
-    if exist %SCHEMA_TWO% call ajv -s %SCHEMA_TWO% -d ..\examples\%~n1.openapi.json > nul
   )
 
 exit /b

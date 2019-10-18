@@ -77,7 +77,7 @@ node path_to_tools/transform.js ...
 
 ## `transform.cmd` for Windows Command
 
-This script transforms a single OData CSDL (`$metadata`) XML documents into OpenAPI 2.0 and 3.0.0 JSON documents. 
+This script transforms a single OData CSDL (`$metadata`) XML documents into OpenAPI 3.0.0 JSON documents. 
 
 ### Installation
 

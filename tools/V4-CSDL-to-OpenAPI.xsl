@@ -53,7 +53,7 @@
   <xsl:param name="update-verb" select="'patch'" />
 
   <xsl:param name="openapi-formatoption" select="''" />
-  <xsl:param name="openapi-version" select="'2.0'" />
+  <xsl:param name="openapi-version" select="'3.0.0'" />
   <xsl:param name="openapi-root" select="''" />
 
 
