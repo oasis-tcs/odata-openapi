@@ -104,7 +104,7 @@ describe('Examples', function () {
     it('odata-rw-v3', function () {
         const openapi = lib.csdl2openapi(example9, {
             host: 'services.odata.org',
-            basePath: '/V3/(S(1urrjxgkuh4r30yqim0hqrtj))/OData/OData.svc', 
+            basePath: '/V3/(S(1urrjxgkuh4r30yqim0hqrtj))/OData/OData.svc',
             diagram: true
         });
         check(openapi, result9);
@@ -128,7 +128,7 @@ describe('Examples', function () {
 
     it('only types', function () {
         const csdl = {
-            $Reference: { dummy: { "$Include": [{ "$Namespace": "Org.OData.Core.V1", "$Alias": "Core" }] } },
+            $Reference: { dummy: { '$Include': [{ '$Namespace': 'Org.OData.Core.V1', '$Alias': 'Core' }] } },
             ReuseTypes: {
                 entityType: {
                     '@Core.Description': 'Core.Description',
@@ -282,7 +282,7 @@ describe('Examples', function () {
 
     it('function with complex and collection parameter', function () {
         const csdl = {
-            $Reference: { dummy: { "$Include": [{ "$Namespace": "Org.OData.Core.V1", "$Alias": "Core" }] } },
+            $Reference: { dummy: { '$Include': [{ '$Namespace': 'Org.OData.Core.V1', '$Alias': 'Core' }] } },
             $EntityContainer: 'this.Container',
             this: {
                 Complex: { $Kind: 'ComplexType', $OpenType: true },
@@ -334,7 +334,7 @@ describe('Examples', function () {
         };
         const expected = {
             paths: {
-                "/fun()": {
+                '/fun()': {
                     get: {
                         responses: {
                             200: {
@@ -377,7 +377,7 @@ describe('Examples', function () {
                         }
                     }
                 },
-                "/$batch": { post: {} }
+                '/$batch': { post: {} }
             }
         };
         const actual = lib.csdl2openapi(csdl, {});
@@ -574,6 +574,174 @@ describe('Examples', function () {
         assert.deepStrictEqual(actual.paths['/set'].post, expected.paths['/set'].post, 'POST set');
         assert.deepStrictEqual(actual.paths['/single'].get, expected.paths['/single'].get, 'GET single');
         assert.deepStrictEqual(actual.paths['/single'].patch, expected.paths['/single'].patch, 'PATCH single');
+    })
+
+    it('inheritance', function () {
+        const csdl = {
+            $EntityContainer: 'this.Container',
+            this: {
+                base: {
+                    $Kind: 'EntityType', $Abstract: true, baseProp: {},
+                    baseNav: { $Kind: 'NavigationProperty', $Type: 'this.other', $ContainsTarget: true }
+                },
+                derived: {
+                    $Kind: 'EntityType', $BaseType: 'this.base', $Key: ['key'], key: {}, derivedProp: {},
+                    derivedNav: { $Kind: 'NavigationProperty', $Type: 'this.other' }
+                },
+                Container: {
+                    set: { $Type: 'this.derived', $Collection: true }
+                }
+            }
+        };
+        const expected = {
+            paths: {
+                "/set": {
+                    get: {
+                        summary: 'Get entities from set',
+                        tags: ['set'],
+                        parameters: [
+                            { $ref: "#/components/parameters/top" },
+                            { $ref: "#/components/parameters/skip" },
+                            {
+                                in: 'query',
+                                name: 'filter',
+                                schema: { type: 'string' },
+                                description: 'Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)'
+                            },
+                            { $ref: '#/components/parameters/count' },
+                            {
+                                in: 'query',
+                                name: 'orderby',
+                                description: 'Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)',
+                                explode: false,
+                                schema: {
+                                    type: 'array',
+                                    uniqueItems: true,
+                                    items: {
+                                        type: 'string',
+                                        enum: [
+                                            'baseProp',
+                                            'baseProp desc',
+                                            'key',
+                                            'key desc',
+                                            'derivedProp',
+                                            'derivedProp desc'
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                in: 'query',
+                                name: 'select',
+                                description: 'Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)',
+                                explode: false,
+                                schema: {
+                                    type: 'array',
+                                    uniqueItems: true,
+                                    items: {
+                                        type: 'string',
+                                        enum: [
+                                            'baseProp',
+                                            'key',
+                                            'derivedProp'
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                in: 'query',
+                                name: 'expand',
+                                description: 'Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)',
+                                explode: false,
+                                schema: {
+                                    type: 'array',
+                                    uniqueItems: true,
+                                    items: {
+                                        type: 'string',
+                                        enum: [
+                                            '*',
+                                            'baseNav',
+                                            'derivedNav'
+                                        ]
+                                    }
+                                }
+                            }
+                        ],
+                        responses: {
+                            200: {
+                                description: 'Retrieved entities',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            type: 'object',
+                                            title: 'Collection of derived',
+                                            properties: {
+                                                value: {
+                                                    type: 'array',
+                                                    items: {
+                                                        $ref: '#/components/schemas/this.derived'
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            '4XX': {
+                                $ref: '#/components/responses/error'
+                            }
+                        }
+                    },
+                    post: {
+                        summary: 'Add new entity to set',
+                        tags: ['set'],
+                        requestBody: {
+                            description: 'New entity',
+                            required: true,
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: '#/components/schemas/this.derived'
+                                    }
+                                }
+                            }
+                        },
+                        responses: {
+                            201: {
+                                description: 'Created entity',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            $ref: '#/components/schemas/undefined.type_does_not_exist'
+                                        }
+                                    }
+                                }
+                            },
+                            '4XX': {
+                                $ref: '#/components/responses/error'
+                            }
+                        }
+                    }
+                },
+                "/set('{key}')": {
+                    get: {},
+                    patch: {},
+                    delete: {}
+                },
+                "/set('{key}')/baseNav": {
+                    get: {},
+                    patch: {}
+                },
+                "/set('{key}')/derivedNav": {
+                    get: {}
+                },
+                '/$batch': { post: {} }
+            }
+        };
+        const actual = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
+        assert.deepStrictEqual(actual.paths['/set'].get, expected.paths['/set'].get, 'GET set');
     })
 
 })
