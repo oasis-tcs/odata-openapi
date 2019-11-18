@@ -794,8 +794,8 @@ describe('Examples', function () {
                                         enum: [
                                             's_id',
                                             's_id desc',
-                                            'complexProp',
-                                            'complexProp desc'
+                                            'complexProp/primProp',
+                                            'complexProp/primProp desc'
                                         ]
                                     }
                                 }
