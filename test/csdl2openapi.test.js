@@ -744,6 +744,176 @@ describe('Examples', function () {
         assert.deepStrictEqual(actual.paths['/set'].get, expected.paths['/set'].get, 'GET set');
     })
 
+    it('navigation property in complex type', function () {
+        const csdl = {
+            $EntityContainer: 'this.Container',
+            this: {
+                source: {
+                    $Kind: 'EntityType', $Key: ['s_id'], s_id: {}, complexProp: { $Type: 'this.complex' },
+                },
+                complex: {
+                    $Kind: 'ComplexType',
+                    primProp: {},
+                    navProp: { $Kind: 'NavigationProperty', $Type: 'this.target', $Collection: true }
+                },
+                target: {
+                    $Kind: 'EntityType', $BaseType: 'this.base', $Key: ['t_id'], t_id: {}
+                },
+                Container: {
+                    sources: { $Type: 'this.source', $Collection: true },
+                    targets: { $Type: 'this.target', $Collection: true }
+                }
+            }
+        };
+        const expected = {
+            paths: {
+                "/sources": {
+                    get: {
+                        summary: 'Get entities from sources',
+                        tags: ['sources'],
+                        parameters: [
+                            { $ref: "#/components/parameters/top" },
+                            { $ref: "#/components/parameters/skip" },
+                            {
+                                in: 'query',
+                                name: 'filter',
+                                schema: { type: 'string' },
+                                description: 'Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)'
+                            },
+                            { $ref: '#/components/parameters/count' },
+                            {
+                                in: 'query',
+                                name: 'orderby',
+                                description: 'Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)',
+                                explode: false,
+                                schema: {
+                                    type: 'array',
+                                    uniqueItems: true,
+                                    items: {
+                                        type: 'string',
+                                        enum: [
+                                            's_id',
+                                            's_id desc',
+                                            'complexProp/primProp',
+                                            'complexProp/primProp desc'
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                in: 'query',
+                                name: 'select',
+                                description: 'Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)',
+                                explode: false,
+                                schema: {
+                                    type: 'array',
+                                    uniqueItems: true,
+                                    items: {
+                                        type: 'string',
+                                        enum: [
+                                            's_id',
+                                            'complexProp'
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                in: 'query',
+                                name: 'expand',
+                                description: 'Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)',
+                                explode: false,
+                                schema: {
+                                    type: 'array',
+                                    uniqueItems: true,
+                                    items: {
+                                        type: 'string',
+                                        enum: [
+                                            '*',
+                                            'complexProp/navProp'
+                                        ]
+                                    }
+                                }
+                            }
+                        ],
+                        responses: {
+                            200: {
+                                description: 'Retrieved entities',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            type: 'object',
+                                            title: 'Collection of source',
+                                            properties: {
+                                                value: {
+                                                    type: 'array',
+                                                    items: {
+                                                        $ref: '#/components/schemas/this.source'
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            '4XX': {
+                                $ref: '#/components/responses/error'
+                            }
+                        }
+                    },
+                    post: {
+                        summary: 'Add new entity to set',
+                        tags: ['set'],
+                        requestBody: {
+                            description: 'New entity',
+                            required: true,
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: '#/components/schemas/this.derived'
+                                    }
+                                }
+                            }
+                        },
+                        responses: {
+                            201: {
+                                description: 'Created entity',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            $ref: '#/components/schemas/undefined.type_does_not_exist'
+                                        }
+                                    }
+                                }
+                            },
+                            '4XX': {
+                                $ref: '#/components/responses/error'
+                            }
+                        }
+                    }
+                },
+                "/sources('{s_id}')": {
+                    get: {},
+                    patch: {},
+                    delete: {}
+                },
+                "/targets": {
+                    get: {},
+                    post: {}
+                },
+                "/targets('{t_id}')": {
+                    get: {},
+                    patch: {},
+                    delete: {}
+                },
+                '/$batch': { post: {} }
+            }
+        };
+        const actual = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
+        assert.deepStrictEqual(actual.paths['/sources'].get, expected.paths['/sources'].get, 'GET sources');
+    })
+
 })
 
 function check(actual, expected) {
