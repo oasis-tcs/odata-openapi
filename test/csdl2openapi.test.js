@@ -749,7 +749,7 @@ describe('Examples', function () {
             $EntityContainer: 'this.Container',
             this: {
                 source: {
-                    $Kind: 'EntityType', $Key: ['s_id'], s_id: {}, complexProp: { $Type: 'this.complex' },
+                    $Kind: 'EntityType', $Key: ['s_id'], s_id: {}, complexProp: { $Type: 'this.complex', $Collection: true },
                 },
                 complex: {
                     $Kind: 'ComplexType',
