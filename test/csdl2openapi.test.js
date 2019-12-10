@@ -109,11 +109,14 @@ describe('Examples', function () {
         });
         check(openapi, result9);
     })
+})
+
+describe('Edge cases', function () {
 
     it('empty input', function () {
         const csdl = {};
         const expected = {
-            openapi: '3.0.0',
+            openapi: '3.0.2',
             info: {
                 title: 'OData CSDL document',
                 description: '',
@@ -141,7 +144,7 @@ describe('Examples', function () {
             }
         };
         const expected = {
-            openapi: '3.0.0',
+            openapi: '3.0.2',
             info: {
                 title: 'OData CSDL document',
                 description: '',
@@ -912,6 +915,300 @@ describe('Examples', function () {
         assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
         assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
         assert.deepStrictEqual(actual.paths['/sources'].get, expected.paths['/sources'].get, 'GET sources');
+    })
+
+    it('key aliases', function () {
+        const csdl = {
+            $EntityContainer: 'this.Container',
+            this: {
+                Category: {
+                    $Kind: 'EntityType', $Key: [{ EntityInfoID: 'Info/ID' }],
+                    Info: { $Type: 'this.EntityInfo' },
+                    Name: { $Nullable: true }
+                },
+                EntityInfo: {
+                    $Kind: 'ComplexType',
+                    ID: { $Type: 'Edm.Int32' },
+                    Created: { $Type: 'Edm.DateTimeOffset' }
+                },
+                Container: {
+                    $Kind: 'EntityContainer',
+                    Categories: { $Type: 'this.Category', $Collection: true }
+                }
+            }
+        };
+        const expected = {
+            paths: {
+                "/Categories": {
+                    get: {
+                        summary: 'Get entities from Categories',
+                        tags: ['Categories'],
+                        parameters: [
+                            { $ref: "#/components/parameters/top" },
+                            { $ref: "#/components/parameters/skip" },
+                            {
+                                in: 'query',
+                                name: 'filter',
+                                schema: { type: 'string' },
+                                description: 'Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)'
+                            },
+                            { $ref: '#/components/parameters/count' },
+                            {
+                                in: 'query',
+                                name: 'orderby',
+                                description: 'Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)',
+                                explode: false,
+                                schema: {
+                                    type: 'array',
+                                    uniqueItems: true,
+                                    items: {
+                                        type: 'string',
+                                        enum: [
+                                            'Info/ID',
+                                            'Info/ID desc',
+                                            'Info/Created',
+                                            'Info/Created desc',
+                                            'Name',
+                                            'Name desc'
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                in: 'query',
+                                name: 'select',
+                                description: 'Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)',
+                                explode: false,
+                                schema: {
+                                    type: 'array',
+                                    uniqueItems: true,
+                                    items: {
+                                        type: 'string',
+                                        enum: [
+                                            'Info',
+                                            'Name'
+                                        ]
+                                    }
+                                }
+                            }
+                        ],
+                        responses: {
+                            200: {
+                                description: 'Retrieved entities',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            type: 'object',
+                                            title: 'Collection of Category',
+                                            properties: {
+                                                value: {
+                                                    type: 'array',
+                                                    items: {
+                                                        $ref: '#/components/schemas/this.Category'
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            '4XX': {
+                                $ref: '#/components/responses/error'
+                            }
+                        }
+                    },
+                    post: {
+                        summary: 'Add new entity to set',
+                        tags: ['set'],
+                        requestBody: {
+                            description: 'New entity',
+                            required: true,
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: '#/components/schemas/this.derived'
+                                    }
+                                }
+                            }
+                        },
+                        responses: {
+                            201: {
+                                description: 'Created entity',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            $ref: '#/components/schemas/undefined.type_does_not_exist'
+                                        }
+                                    }
+                                }
+                            },
+                            '4XX': {
+                                $ref: '#/components/responses/error'
+                            }
+                        }
+                    }
+                },
+                "/Categories({EntityInfoID})": {
+                    get: {},
+                    patch: {},
+                    delete: {}
+                },
+                '/$batch': { post: {} }
+            }
+        };
+        const actual = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
+        assert.deepStrictEqual(actual.paths['/Categories'].get, expected.paths['/Categories'].get, 'GET Categories');
+    })
+
+    it('FilterRestrictions, NavigationRestrictions, and SortRestrictions', function () {
+        const csdl = {
+            $Reference: { dummy: { "$Include": [{ "$Namespace": "Org.OData.Capabilities.V1", "$Alias": "Capabilities" }] } },
+            $EntityContainer: 'this.Container',
+            this: {
+                thing: {
+                    $Kind: 'EntityType', $Key: ['key'],
+                    key: {},
+                    one: {},
+                    two: {},
+                    nav: { $Type: 'this.thing', $Kind: 'NavigationProperty', $ContainsTarget: true }
+                },
+                Container: {
+                    things: {
+                        $Type: 'this.thing', $Collection: true,
+                        "@Capabilities.FilterRestrictions": {
+                            "RequiredProperties": ["two"]
+                        },
+                        "@Capabilities.NavigationRestrictions": {
+                            "RestrictedProperties": [
+                                {
+                                    "NavigationProperty": "nav",
+                                    "Navigability": "Single"
+                                }
+                            ]
+                        },
+                        "@Capabilities.SortRestrictions": {
+                            "NonSortableProperties": ["one"]
+                        }
+                    }
+                }
+            }
+        };
+        const expected = {
+            paths: {
+                "/things": {
+                    get: {
+                        summary: 'Get entities from things',
+                        tags: ['things'],
+                        parameters: [
+                            { $ref: "#/components/parameters/top" },
+                            { $ref: "#/components/parameters/skip" },
+                            {
+                                in: 'query',
+                                name: 'filter',
+                                schema: { type: 'string' },
+                                description: 'Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)\n\nRequired filter properties:\n- two'
+                            },
+                            { $ref: '#/components/parameters/count' },
+                            {
+                                in: 'query',
+                                name: 'orderby',
+                                description: 'Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)',
+                                explode: false,
+                                schema: {
+                                    type: 'array',
+                                    uniqueItems: true,
+                                    items: {
+                                        type: 'string',
+                                        enum: [
+                                            'key',
+                                            'key desc',
+                                            'two',
+                                            'two desc'
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                in: 'query',
+                                name: 'select',
+                                description: 'Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)',
+                                explode: false,
+                                schema: {
+                                    type: 'array',
+                                    uniqueItems: true,
+                                    items: {
+                                        type: 'string',
+                                        enum: [
+                                            'key',
+                                            'one',
+                                            'two'
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                in: 'query',
+                                name: 'expand',
+                                description: 'Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)',
+                                explode: false,
+                                schema: {
+                                    type: 'array',
+                                    uniqueItems: true,
+                                    items: {
+                                        type: 'string',
+                                        enum: [
+                                            '*',
+                                            'nav'
+                                        ]
+                                    }
+                                }
+                            }
+                        ],
+                        responses: {
+                            200: {
+                                description: 'Retrieved entities',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            type: 'object',
+                                            title: 'Collection of thing',
+                                            properties: {
+                                                value: {
+                                                    type: 'array',
+                                                    items: {
+                                                        $ref: '#/components/schemas/this.thing'
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            '4XX': {
+                                $ref: '#/components/responses/error'
+                            }
+                        }
+                    },
+                    post: {}
+                },
+                "/things('{key}')": {
+                    get: {},
+                    patch: {},
+                    delete: {}
+                },
+                "/things('{key}')/nav": {
+                    get: {},
+                    patch: {}
+                },
+                '/$batch': { post: {} }
+            }
+        };
+        const actual = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
+        assert.deepStrictEqual(actual.paths['/things'].get, expected.paths['/things'].get, 'GET things');
     })
 
 })

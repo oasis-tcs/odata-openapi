@@ -1,6 +1,6 @@
 # Examples
 
-Description | CSDL XML |OpenAPI 3.0.0
+Description | CSDL XML |OpenAPI 3.0.x
 ------------|----------|-------------
 The [Products and Categories Example](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/cs01/odata-csdl-xml-v4.01-cs01.html#sec_ProductsandCategoriesExample) from the [OData CSDL XML specification](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html) | [csdl-16.1.xml](csdl-16.1.xml) | [csdl-16.1.openapi3.json](csdl-16.1.openapi3.json) 
 The [TripPin reference service](http://services.odata.org/TripPinRESTierService/(S(g1oafwlrmrrsxbqyul33p15y))/) from www.odata.org | [TripPin.xml](TripPin.xml) | [TripPin.openapi3.json](TripPin.openapi3.json)
