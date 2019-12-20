@@ -139,8 +139,8 @@ describe('Edge cases', function () {
                     $Key: ['key'],
                     key: {}
                 },
-                typeDefinition: { $Kind: 'TypeDefinition', $Type: 'Edm.DateTimeOffset' },
-                typeDefinition3: { $Kind: 'TypeDefinition', $Type: 'Edm.DateTimeOffset', $Scale: 3 }
+                typeDefinition: { $Kind: 'TypeDefinition', $UnderlyingType: 'Edm.DateTimeOffset' },
+                typeDefinition3: { $Kind: 'TypeDefinition', $UnderlyingType: 'Edm.DateTimeOffset', $Scale: 3 }
             }
         };
         const expected = {
@@ -177,6 +177,66 @@ describe('Edge cases', function () {
                     },
                     'ReuseTypes.typeDefinition3': {
                         title: 'typeDefinition3', type: 'string', format: 'date-time', example: '2017-04-13T15:51:04.000Z'
+                    }
+                }
+            }
+        };
+        const openapi = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(openapi, expected, 'Empty CSDL document');
+    })
+
+    it('type definition with @JSON.Schema', function () {
+        const csdl = {
+            $Reference: {
+                dummy: {
+                    '$Include': [
+                        { '$Namespace': 'Org.OData.Core.V1', '$Alias': 'Core' },
+                        { '$Namespace': 'Org.OData.JSON.V1', '$Alias': 'JSON' }
+                    ]
+                }
+            },
+            jsonExamples: {
+                typeDefinitionOld: {
+                    $Kind: 'TypeDefinition',
+                    $UnderlyingType: 'Edm.Stream',
+                    "@JSON.Schema": "{\"type\":\"object\",\"additionalProperties\":false,\"patternProperties\":{\"^[\\\\w\\\\.\\\\-\\\\/]+$\":{\"type\":\"string\"}}}"
+                },
+                typeDefinitionNew: {
+                    $Kind: 'TypeDefinition',
+                    $UnderlyingType: 'Edm.Stream',
+                    "@JSON.Schema": {
+                        type: 'object',
+                        additionalProperties: false,
+                        patternProperties: { "^[\\w\\.\\-\\/]+$": { type: 'string' } }
+                    }
+                }
+            }
+        };
+        const expected = {
+            openapi: '3.0.2',
+            info: {
+                title: 'OData CSDL document',
+                description: '',
+                version: ''
+            },
+            paths: {},
+            components: {
+                schemas: {
+                    'jsonExamples.typeDefinitionOld': {
+                        title: 'typeDefinitionOld',
+                        type: 'object',
+                        additionalProperties: false,
+                        patternProperties: {
+                            "^[\\w\\.\\-\\/]+$": { type: 'string' }
+                        }
+                    },
+                    'jsonExamples.typeDefinitionNew': {
+                        title: 'typeDefinitionNew',
+                        type: 'object',
+                        additionalProperties: false,
+                        patternProperties: {
+                            "^[\\w\\.\\-\\/]+$": { type: 'string' }
+                        }
                     }
                 }
             }
