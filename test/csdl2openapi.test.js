@@ -12,7 +12,6 @@ const fs = require('fs');
 // @JSON.Schema
 // @Core.Example
 // reference undefined type: silent for included schema, warning for local schema
-// key-as-segment: single-part and multi-part key
 // key-aliases: one and more segments
 // navigation properties inherited from base type A.n1 -> B.n2 -> C.n3 
 // collection-navigation to entity type without key or unknown entity type: suppress path item with key segment
@@ -324,7 +323,35 @@ describe('Edge cases', function () {
         assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
     })
 
-    it('function without parameters', function () {
+    it('key-as-segment', function () {
+        const csdl = {
+          $Reference: { dummy: { $Include: [{ $Namespace: 'Org.OData.Capabilities.V1', $Alias: 'Capabilities' }] } },
+          $EntityContainer: 'this.Container',
+          this: {
+            Type: { $Kind: 'EntityType', $Key: ['key'], key: {} },
+            Type2: { $Kind: 'EntityType', $Key: ['key1', 'key2'], key1: {}, key2: {} },
+            Container: {
+              '@Capabilities.KeyAsSegmentSupported': true,
+              Set: { $Collection: true, $Type: 'this.Type' },
+              Set2: { $Collection: true, $Type: 'this.Type2' }
+            }
+          }
+        }
+        const expected = {
+          paths: {
+            '/Set': { get: {}, post: {} },
+            '/Set/{key}': { get: {}, patch: {}, delete: {} },
+            '/Set2': { get: {}, post: {} },
+            '/Set2/{key1}/{key2}': { get: {}, patch: {}, delete: {} },
+            '/$batch': { post: {} }
+          }
+        }
+        const actual = lib.csdl2openapi(csdl);
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
+      })
+      
+      it('function without parameters', function () {
         const csdl = {
             $EntityContainer: 'this.Container',
             this: {
