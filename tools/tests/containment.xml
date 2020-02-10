@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.01">
+  <!-- TODO:
+    containment
+    - multi-level containment
+    - containment with multi-part key
+    - recursive containment - limit depth
+    - NavigationRestrictions and containment
+  -->
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core">
+      <Annotation Term="Core.DefaultNamespace" />
+    </edmx:Include>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+    <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="Containment" Alias="self">
+      
+      <EntityType Name="Whole">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" />
+        <NavigationProperty Name="One" Type="self.Part" ContainsTarget="true" />
+        <NavigationProperty Name="Many" Type="Collection(self.Part)" ContainsTarget="true" />
+      </EntityType>
+      
+      <EntityType Name="Part">
+        <Key>
+          <PropertyRef Name="index" />
+        </Key>
+        <Property Name="index" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="One" Type="self.SubPart" ContainsTarget="true" />
+        <NavigationProperty Name="Many" Type="Collection(self.SubPart)" ContainsTarget="true" />
+        <NavigationProperty Name="ManyReadListOnly" Type="Collection(self.SubPart)" ContainsTarget="true" />
+        <NavigationProperty Name="ManyReadByKeyOnly" Type="Collection(self.SubPart)" ContainsTarget="true" />
+      </EntityType>
+      
+      <EntityType Name="SubPart">
+        <Key>
+          <PropertyRef Name="One" />
+          <PropertyRef Name="Two" />
+        </Key>
+        <Property Name="One" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Two" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+      
+      <Action Name="Like" IsBound="true">
+        <Annotation Term="Core.Description" String="I like this whole" />
+        <Parameter Name="__it" Type="self.Whole" />
+      </Action>
+      
+      <Action Name="Like" IsBound="true">
+        <Annotation Term="Core.Description" String="I like all of these wholes" />
+        <Parameter Name="__it" Type="Collection(self.Whole)" />
+      </Action>
+      
+      <Action Name="Like" IsBound="true">
+        <Annotation Term="Core.Description" String="I like this part" />
+        <Parameter Name="__it" Type="self.Part" />
+      </Action>
+      
+      <Action Name="Like" IsBound="true">
+        <Annotation Term="Core.Description" String="I like all of these parts" />
+        <Parameter Name="__it" Type="Collection(self.Part)" />
+      </Action>
+      
+      <Function Name="Likes" IsBound="true">
+        <Annotation Term="Core.Description" String="How many like this whole" />
+        <Parameter Name="__it" Type="self.Whole" />
+        <ReturnType Type="Edm.Int32" />
+      </Function>
+      
+      <Function Name="Likes" IsBound="true">
+        <Annotation Term="Core.Description" String="How many like these wholes" />
+        <Parameter Name="__it" Type="Collection(self.Whole)" />
+        <ReturnType Type="Edm.Int32" />
+      </Function>
+      
+      <Function Name="Likes" IsBound="true">
+        <Annotation Term="Core.Description" String="How many like this part" />
+        <Parameter Name="__it" Type="self.Part" />
+        <ReturnType Type="Edm.Int32" />
+      </Function>
+      
+      <Function Name="Likes" IsBound="true">
+        <Annotation Term="Core.Description" String="How many like these parts" />
+        <Parameter Name="__it" Type="Collection(self.Part)" />
+        <ReturnType Type="Edm.Int32" />
+      </Function>
+      
+      <EntityType Name="Folder">
+        <Key>
+          <PropertyRef Name="Name" />
+        </Key>
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" />
+        <NavigationProperty Name="Folders" Type="Collection(self.Folder)" ContainsTarget="true" />
+      </EntityType>
+      
+      
+      <EntityContainer Name="Container">
+        <Annotation Term="Capabilities.BatchSupported" Bool="false" />
+        
+        <EntitySet Name="Wholes" EntityType="self.Whole">
+          <Annotation Term="Core.Description" String="List of containers" />
+        </EntitySet>
+        <Singleton Name="TheWhole" Type="self.Whole">
+          <Annotation Term="Core.Description" String="Special container" />
+          <Annotation Term="Capabilities.NavigationRestrictions">
+            <Record>
+              <PropertyValue Property="RestrictedProperties">
+                <Collection>
+                  <Record>
+                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="One/Many" />
+                    <PropertyValue Property="InsertRestrictions">
+                      <Record>
+                        <PropertyValue Property="Description" String="Supports insert" />
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="UpdateRestrictions">
+                      <Record>
+                        <PropertyValue Property="Description" String="Supports update" />
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="DeleteRestrictions">
+                      <Record>
+                        <PropertyValue Property="Description" String="Supports delete" />
+                      </Record>
+                    </PropertyValue>
+                  </Record>
+                  <Record>
+                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="One/ManyReadListOnly" />
+                    <PropertyValue Property="Navigability" EnumMember="Capabilities.NavigationType/None" />
+                  </Record>
+                  <Record>
+                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="One/ManyReadByKeyOnly" />
+                    <PropertyValue Property="Navigability" EnumMember="Capabilities.NavigationType/None" />
+                    <!-- TOD: this is odd, remove Navigability above or set it to Single -->
+                    <PropertyValue Property="SelectSupport">
+                      <Record>
+                        <PropertyValue Property="Supported" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                  </Record>
+                  <Record>
+                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Many/ManyReadListOnly" />
+                    <PropertyValue Property="ReadRestrictions">
+                      <Record>
+                        <PropertyValue Property="Description" String="Supports only read-list" />
+                        <PropertyValue Property="LongDescription" String="Does not support any system query options" />
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="FilterRestrictions">
+                      <Record>
+                        <PropertyValue Property="Filterable" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="SearchRestrictions">
+                      <Record>
+                        <PropertyValue Property="Searchable" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="SortRestrictions">
+                      <Record>
+                        <PropertyValue Property="Sortable" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="TopSupported" Bool="false" />
+                    <PropertyValue Property="SkipSupported" Bool="false" />
+                    <PropertyValue Property="SelectSupport">
+                      <Record>
+                        <PropertyValue Property="Supported" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="IndexableByKey" Bool="false" />
+                    <PropertyValue Property="InsertRestrictions">
+                      <Record>
+                        <PropertyValue Property="Insertable" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                    <!-- TODO: turn off query options for GET collection -->
+                  </Record>
+                  <Record>
+                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Many/ManyReadByKeyOnly" />
+                    <PropertyValue Property="InsertRestrictions">
+                      <Record>
+                        <PropertyValue Property="Insertable" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="ReadRestrictions">
+                      <Record>
+                        <PropertyValue Property="Readable" Bool="false" />
+                        <PropertyValue Property="ReadByKeyRestrictions">
+                          <Record>
+                            <PropertyValue Property="Readable" Bool="true" />
+                            <PropertyValue Property="Description" String="Supports only read-by-key" />
+                            <PropertyValue Property="LongDescription" String="Does not support `$select`" />
+                          </Record>
+                        </PropertyValue>
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="SelectSupport">
+                      <Record>
+                        <PropertyValue Property="Supported" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="UpdateRestrictions">
+                      <Record>
+                        <PropertyValue Property="Updatable" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="DeleteRestrictions">
+                      <Record>
+                        <PropertyValue Property="Deletable" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                  </Record>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+        </Singleton>
+        <EntitySet Name="Folders" EntityType="self.Folder">
+          <Annotation Term="Core.Description" String="List of folders" />
+        </EntitySet>
+      </EntityContainer>
+      
+      <Annotations Target="self.Container/Wholes">
+        <Annotation Term="Capabilities.NavigationRestrictions">
+          <Record>
+            <PropertyValue Property="RestrictedProperties">
+              <Collection>
+                <Record>
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="One/ManyReadListOnly" />
+                  <PropertyValue Property="Navigability" EnumMember="Capabilities.NavigationType/None" />
+                  <!-- TOD: this is odd, remove Navigability above or set it to Single -->                  
+                  <PropertyValue Property="SelectSupport">
+                    <Record>
+                      <PropertyValue Property="Supported">
+                        <Bool>false</Bool>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="One/ManyReadByKeyOnly" />
+                  <PropertyValue Property="Navigability" EnumMember="Capabilities.NavigationType/None" />
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Many/ManyReadListOnly" />
+                  <PropertyValue Property="IndexableByKey">
+                    <Bool>false</Bool>
+                  </PropertyValue>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Insertable">
+                        <Bool>false</Bool>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <!-- TODO: turn off query options for GET collection -->
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Many/ManyReadByKeyOnly" />
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Insertable">
+                        <Bool>false</Bool>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Readable">
+                        <Bool>false</Bool>
+                      </PropertyValue>
+                      <PropertyValue Property="ReadByKeyRestrictions">
+                        <Record>
+                          <PropertyValue Property="Readable">
+                            <Bool>true</Bool>
+                          </PropertyValue>
+                        </Record>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SelectSupport">
+                    <Record>
+                      <PropertyValue Property="Supported">
+                        <Bool>false</Bool>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="UpdateRestrictions">
+                    <Record>
+                      <PropertyValue Property="Updatable">
+                        <Bool>false</Bool>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="DeleteRestrictions">
+                    <Record>
+                      <PropertyValue Property="Deletable">
+                        <Bool>false</Bool>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+      
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

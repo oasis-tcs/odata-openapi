@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.01">
+  <!-- TODO:
+    minimum, maximum, exclusive, example, and multipleOf interact
+    - inclusive maximum: take as example
+    - inclusive minimum: take as example
+    - exclusive maximum and no minimum: subtract 1 for example
+    - exclusive minimum and no maximum: add 1 for example
+    - both exclusive minimum and maximum: take average, round to multipleOf if present
+  -->
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core">
+      <Annotation Term="Core.DefaultNamespace" />
+    </edmx:Include>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+    <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="Supported.Annotations" Alias="self">
+      <EntityType Name="SinglePartKey">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+        <Property Name="Pattern" Type="Edm.String">
+          <Annotation Term="Validation.Pattern" String="^.+$" />
+        </Property>
+        <Property Name="PatternExt" Type="Edm.String" />
+        <Property Name="AllowedValues" Type="Edm.String">
+          <Annotation Term="Validation.AllowedValues">
+            <Collection>
+              <Record>
+                <PropertyValue Property="Value" String="red" />
+              </Record>
+              <Record>
+                <PropertyValue Property="Value" String="green" />
+              </Record>
+              <Record>
+                <PropertyValue Property="Value" String="blue" />
+              </Record>
+            </Collection>
+          </Annotation>
+        </Property>
+        <Property Name="AllowedValuesExt" Type="Edm.String" />
+        <Property Name="Maximum" Type="Edm.Decimal" Precision="5" Scale="variable">
+          <Annotation Term="Validation.Maximum" Decimal="0">
+            <Annotation Term="Validation.Exclusive" Bool="true" />
+          </Annotation>
+        </Property>
+        <Property Name="MaximumExt" Type="Edm.Decimal" Scale="variable" />
+        <Property Name="Minimum" Type="Edm.Decimal" Precision="5" Scale="2">
+          <Annotation Term="Validation.Minimum" Decimal="1" />
+        </Property>
+        <Property Name="MinimumExt" Type="Edm.Decimal" Scale="5" Nullable="false" />
+        <Property Name="Example" Type="Edm.String">
+          <Annotation Term="Core.Example">
+            <Record Type="Core.PrimitiveExampleValue">
+              <PropertyValue Property="Description" String="Primitive example value" />
+              <PropertyValue Property="Value" String="Hello World" />
+            </Record>
+          </Annotation>
+        </Property>
+        <Property Name="ExampleExt" Type="Edm.String" />
+        <Property Name="Computed" Type="Edm.String">
+          <Annotation Term="Core.Computed" />
+        </Property>
+        <Property Name="ComputedExt" Type="Edm.String" />
+        <Property Name="Immutable" Type="Edm.String">
+          <Annotation Term="Core.Immutable" />
+        </Property>
+        <Property Name="RequiredInFilter" Type="Edm.String" />
+        <Property Name="ImmutableExt" Type="Edm.String" />
+        <NavigationProperty Name="AllOne" Type="self.TwoPartKey" />
+        <NavigationProperty Name="AllMany" Type="Collection(self.TwoPartKey)" />
+        <NavigationProperty Name="ReadOnlyOne" Type="self.TwoPartKey" />
+        <NavigationProperty Name="ReadOnlyMany" Type="Collection(self.TwoPartKey)" />
+        <NavigationProperty Name="NothingOne" Type="self.TwoPartKey" />
+        <NavigationProperty Name="NothingMany" Type="Collection(self.TwoPartKey)" />
+      </EntityType>
+
+      <EntityType Name="TwoPartKey">
+        <Key>
+          <PropertyRef Name="One" />
+          <PropertyRef Name="Two" />
+        </Key>
+        <Property Name="One" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Two" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+
+      <EntityContainer Name="Container">
+        <Annotation Term="Capabilities.BatchSupported" Bool="false" />
+
+        <EntitySet Name="AllSet" EntityType="self.SinglePartKey">
+          <NavigationPropertyBinding Path="AllOne" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="AllMany" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="ReadOnlyOne" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="ReadOnlyMany" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="NothingOne" Target="TwoNothingSet" />
+          <NavigationPropertyBinding Path="NothingMany" Target="TwoNothingSet" />
+          <Annotation Term="Capabilities.FilterRestrictions">
+            <Record>
+              <PropertyValue Property="RequiresFilter" Bool="true" />
+              <PropertyValue Property="RequiredProperties">
+                <Collection>
+                  <PropertyPath>RequiredInFilter</PropertyPath>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.SortRestrictions">
+            <Record>
+              <PropertyValue Property="NonSortableProperties">
+                <Collection>
+                  <PropertyPath>Example</PropertyPath>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+        </EntitySet>
+        <EntitySet Name="NoNavigationSet" EntityType="self.SinglePartKey">
+          <Annotation Term="Capabilities.NavigationRestrictions">
+            <Record>
+              <PropertyValue Property="Navigability" EnumMember="Capabilities.NavigationType/None" />
+            </Record>
+          </Annotation>
+        </EntitySet>
+        <EntitySet Name="OneNavigationSet" EntityType="self.SinglePartKey">
+          <Annotation Term="Capabilities.NavigationRestrictions">
+            <Record>
+              <PropertyValue Property="Navigability" EnumMember="Capabilities.NavigationType/None" />
+              <PropertyValue Property="RestrictedProperties">
+                <Collection>
+                  <Record>
+                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="AllMany" />
+                    <PropertyValue Property="Navigability" EnumMember="Capabilities.NavigationType/Recursive" />
+                  </Record>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.InsertRestrictions">
+            <Record>
+              <PropertyValue Bool="false" Property="Insertable" />
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.UpdateRestrictions">
+            <Record>
+              <PropertyValue Bool="false" Property="Updatable" />
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.DeleteRestrictions">
+            <Record>
+              <PropertyValue Bool="false" Property="Deletable" />
+            </Record>
+          </Annotation>
+        </EntitySet>
+        <EntitySet Name="ReadListOnlySet" EntityType="self.SinglePartKey">
+          <NavigationPropertyBinding Path="AllOne" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="AllMany" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="ReadOnlyOne" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="ReadOnlyMany" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="NothingOne" Target="TwoNothingSet" />
+          <NavigationPropertyBinding Path="NothingMany" Target="TwoNothingSet" />
+          <Annotation Term="Capabilities.InsertRestrictions">
+            <Record>
+              <PropertyValue Bool="false" Property="Insertable" />
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.ReadRestrictions">
+            <Record>
+              <PropertyValue Property="Description" String="Supports only read-list" />
+              <PropertyValue Property="LongDescription" String="Does not support any query options" />
+            </Record>
+          </Annotation>
+          <!-- Note: "not indexable by key" implies "no update, no delete" -->
+          <Annotation Term="Capabilities.IndexableByKey" Bool="false" />
+          <Annotation Term="Capabilities.SkipSupported" Bool="false" />
+          <Annotation Term="Capabilities.TopSupported" Bool="false" />
+          <Annotation Term="Capabilities.CountRestrictions">
+            <Record>
+              <PropertyValue Bool="false" Property="Countable" />
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.FilterRestrictions">
+            <Record>
+              <PropertyValue Bool="false" Property="Filterable" />
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.SearchRestrictions">
+            <Record>
+              <PropertyValue Bool="false" Property="Searchable" />
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.SortRestrictions">
+            <Record>
+              <PropertyValue Bool="false" Property="Sortable" />
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.SelectSupport">
+            <Record>
+              <PropertyValue Bool="false" Property="Supported" />
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.ExpandRestrictions">
+            <Record>
+              <PropertyValue Bool="false" Property="Expandable" />
+            </Record>
+          </Annotation>
+        </EntitySet>
+        <Singleton Name="AllSingleton" Type="self.SinglePartKey">
+          <Annotation Term="Core.Description" String="First Singleton" />
+          <NavigationPropertyBinding Path="AllOne" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="AllMany" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="ReadOnlyOne" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="ReadOnlyMany" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="NothingOne" Target="TwoNothingSet" />
+          <NavigationPropertyBinding Path="NothingMany" Target="TwoNothingSet" />
+        </Singleton>
+        <Singleton Name="ReadOnlySingleton" Type="self.SinglePartKey">
+          <NavigationPropertyBinding Path="AllOne" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="AllMany" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="ReadOnlyOne" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="ReadOnlyMany" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="NothingOne" Target="TwoNothingSet" />
+          <NavigationPropertyBinding Path="NothingMany" Target="TwoNothingSet" />
+          <Annotation Term="Capabilities.UpdateRestrictions">
+            <Record>
+              <PropertyValue Bool="false" Property="Updatable" />
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.ExpandRestrictions">
+            <Record>
+              <PropertyValue Bool="false" Property="Expandable" />
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.ReadRestrictions">
+            <Record>
+              <PropertyValue Property="Description" String="Supports only read" />
+              <PropertyValue Property="LongDescription" String="Does not support `$select` and `$expand`" />
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.SelectSupport">
+            <Record>
+              <PropertyValue Bool="false" Property="Supported" />
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.NavigationRestrictions">
+            <Record>
+              <PropertyValue Property="RestrictedProperties">
+                <Collection>
+                  <Record>
+                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="AllMany" />
+                    <PropertyValue Property="InsertRestrictions">
+                      <Record>
+                        <PropertyValue Property="Insertable" Bool="false" />
+                      </Record>
+                    </PropertyValue>
+                    <PropertyValue Property="SortRestrictions">
+                      <Record>
+                        <PropertyValue Property="NonSortableProperties">
+                          <Collection>
+                            <PropertyPath>One</PropertyPath>
+                          </Collection>
+                        </PropertyValue>
+                      </Record>
+                    </PropertyValue>
+                  </Record>
+                  <Record>
+                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="ReadOnlyMany" />
+                    <PropertyValue Property="InsertRestrictions">
+                      <Record>
+                        <PropertyValue Property="Insertable" Bool="true" />
+                      </Record>
+                    </PropertyValue>
+                  </Record>
+                  <Record>
+                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="NothingMany" />
+                    <PropertyValue Property="ReadRestrictions">
+                      <Record>
+                        <PropertyValue Property="Readable" Bool="true" />
+                      </Record>
+                    </PropertyValue>
+                  </Record>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+        </Singleton>
+        <EntitySet Name="TwoAllSet" EntityType="self.TwoPartKey" />
+        <EntitySet Name="TwoReadOnlySet" EntityType="self.TwoPartKey" />
+        <EntitySet Name="TwoReadOnlyByKeySet" EntityType="self.TwoPartKey" />
+        <EntitySet Name="TwoWriteOnlySet" EntityType="self.TwoPartKey" />
+        <EntitySet Name="TwoNothingSet" EntityType="self.TwoPartKey" />
+        <Singleton Name="TwoWriteOnlySingleton" Type="self.TwoPartKey" />
+        <Singleton Name="TwoNothingSingleton" Type="self.TwoPartKey" />
+      </EntityContainer>
+
+      <Annotations Target="self.SinglePartKey/PatternExt">
+        <Annotation Term="Validation.Pattern" String="^.+$" />
+      </Annotations>
+
+      <Annotations Target="self.SinglePartKey/AllowedValuesExt">
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record>
+              <PropertyValue Property="Value" String="red" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="green" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="blue" />
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.SinglePartKey/MaximumExt">
+        <Annotation Term="Validation.Maximum" Decimal="-1" />
+        <Annotation Term="Core.Example">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" Decimal="-1" />
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.SinglePartKey/MinimumExt">
+        <Annotation Term="Validation.Minimum" Decimal="0">
+          <Annotation Term="Validation.Exclusive" Bool="true" />
+        </Annotation>
+        <Annotation Term="Core.Example">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" Decimal="1" />
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.SinglePartKey/ExampleExt">
+        <Annotation Term="Core.Example">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Description" String="Primitive example value" />
+            <PropertyValue Property="Value" String="Hello external World" />
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.SinglePartKey/ComputedExt">
+        <Annotation Term="Core.Computed" />
+      </Annotations>
+
+      <Annotations Target="self.SinglePartKey/ImmutableExt">
+        <Annotation Term="Core.Immutable" />
+      </Annotations>
+
+      <Annotations Target="self.Container/TwoAllSet">
+        <Annotation Term="Capabilities.SortRestrictions">
+          <Record>
+            <PropertyValue Property="NonSortableProperties">
+              <Collection>
+                <PropertyPath>Two</PropertyPath>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <!-- redundant, just to test the conditional logic -->
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record>
+            <PropertyValue Bool="true" Property="Insertable" />
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.Container/TwoReadOnlySet">
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Insertable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Updatable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Deletable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record>
+            <PropertyValue Property="Description" String="Supports read-list" />
+            <PropertyValue Property="LongDescription" String="Does not support any query options" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.SkipSupported" Bool="false" />
+        <Annotation Term="Capabilities.TopSupported" Bool="false" />
+        <Annotation Term="Capabilities.CountRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Countable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.FilterRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Filterable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.SortRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Sortable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.SearchRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Searchable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.SelectSupport">
+          <Record>
+            <PropertyValue Bool="false" Property="Supported" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.ExpandRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Expandable" />
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.Container/TwoReadOnlyByKeySet">
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Insertable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Updatable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Deletable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record>
+            <PropertyValue Property="Readable" Bool="false" />
+            <PropertyValue Property="ReadByKeyRestrictions">
+              <Record>
+                <PropertyValue Property="Readable" Bool="true" />
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.Container/TwoWriteOnlySet">
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Readable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record>
+            <PropertyValue Property="Description" String="Supports insert" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record>
+            <PropertyValue Property="Description" String="Supports update" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record>
+            <PropertyValue Property="Description" String="Supports delete" />
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.Container/TwoNothingSet">
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Insertable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Readable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.IndexableByKey" Bool="false" />
+      </Annotations>
+
+      <Annotations Target="self.Container/TwoWriteOnlySingleton">
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Readable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record>
+            <PropertyValue Property="Description" String="Supports update" />
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.Container/TwoNothingSingleton">
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Readable" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Updatable" />
+          </Record>
+        </Annotation>
+      </Annotations>
+
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
