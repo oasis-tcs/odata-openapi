@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+  xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml"
+    xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+  >
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml"
+    xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+  >
+    <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation" />
+  </edmx:Reference>
+  <edmx:DataServices m:DataServiceVersion="2.0">
+    <Schema Namespace="Supported.Annotations" Alias="self" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+      <EntityType Name="SinglePartKey">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+        <Property Name="Pattern" Type="Edm.String" />
+        <Property Name="AllowedValues" Type="Edm.String" />
+        <Property Name="Maximum" Type="Edm.Decimal" />
+        <Property Name="Minimum" Type="Edm.Decimal" Scale="5" Nullable="false" />
+        <Property Name="Example" Type="Edm.String" />
+      </EntityType>
+
+      <EntityContainer Name="Container">
+        <EntitySet Name="AllSet" EntityType="self.SinglePartKey" />
+      </EntityContainer>
+
+      <Annotations Target="self.SinglePartKey/Pattern" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Annotation Term="Validation.Pattern" String="^.+$" />
+      </Annotations>
+
+      <Annotations Target="self.SinglePartKey/AllowedValues" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record>
+              <PropertyValue Property="Value" String="red" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="green" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="blue" />
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.SinglePartKey/Maximum" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Annotation Term="Validation.Maximum" Decimal="-1" />
+        <Annotation Term="Core.Example">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" Decimal="-1" />
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.SinglePartKey/Minimum" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Annotation Term="Validation.Minimum" Decimal="0">
+          <Annotation Term="Validation.Exclusive" Bool="true" />
+        </Annotation>
+        <Annotation Term="Core.Example">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" Decimal="1" />
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.SinglePartKey/Example" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Annotation Term="Core.Example">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Description" String="Primitive example value" />
+            <PropertyValue Property="Value" String="Hello World" />
+          </Record>
+        </Annotation>
+      </Annotations>
+
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

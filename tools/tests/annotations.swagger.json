@@ -1,0 +1,2815 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Service for namespace Supported.Annotations",
+        "version": "",
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[SinglePartKey{bg:orange}],[SinglePartKey]-0..1>[TwoPartKey],[SinglePartKey]-*>[TwoPartKey],[SinglePartKey]-0..1>[TwoPartKey],[SinglePartKey]-*>[TwoPartKey],[SinglePartKey]-0..1>[TwoPartKey],[SinglePartKey]-*>[TwoPartKey],[TwoPartKey{bg:orange}],[AllSet{bg:dodgerblue}]++-*>[SinglePartKey],[NoNavigationSet{bg:dodgerblue}]++-*>[SinglePartKey],[OneNavigationSet{bg:dodgerblue}]++-*>[SinglePartKey],[ReadListOnlySet{bg:dodgerblue}]++-*>[SinglePartKey],[AllSingleton{bg:dodgerblue}]++->[SinglePartKey],[ReadOnlySingleton{bg:dodgerblue}]++->[SinglePartKey],[TwoAllSet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoReadOnlySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoReadOnlyByKeySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoWriteOnlySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoNothingSet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoWriteOnlySingleton{bg:dodgerblue}]++->[TwoPartKey],[TwoNothingSingleton{bg:dodgerblue}]++->[TwoPartKey])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
+    },
+    "schemes": [
+        "https"
+    ],
+    "host": "localhost",
+    "basePath": "/service-root",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "AllSet"
+        },
+        {
+            "name": "NoNavigationSet"
+        },
+        {
+            "name": "OneNavigationSet"
+        },
+        {
+            "name": "ReadListOnlySet"
+        },
+        {
+            "name": "AllSingleton",
+            "description": "First Singleton"
+        },
+        {
+            "name": "ReadOnlySingleton"
+        },
+        {
+            "name": "TwoAllSet"
+        },
+        {
+            "name": "TwoReadOnlySet"
+        },
+        {
+            "name": "TwoReadOnlyByKeySet"
+        },
+        {
+            "name": "TwoWriteOnlySet"
+        },
+        {
+            "name": "TwoNothingSet"
+        },
+        {
+            "name": "TwoWriteOnlySingleton"
+        },
+        {
+            "name": "TwoNothingSingleton"
+        }
+    ],
+    "paths": {
+        "/AllSet": {
+            "get": {
+                "summary": "Get entities from AllSet",
+                "tags": [
+                    "AllSet"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)\n\nRequired filter properties:\n- RequiredInFilter",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "ID desc",
+                                "Pattern",
+                                "Pattern desc",
+                                "PatternExt",
+                                "PatternExt desc",
+                                "AllowedValues",
+                                "AllowedValues desc",
+                                "AllowedValuesExt",
+                                "AllowedValuesExt desc",
+                                "Maximum",
+                                "Maximum desc",
+                                "MaximumExt",
+                                "MaximumExt desc",
+                                "Minimum",
+                                "Minimum desc",
+                                "MinimumExt",
+                                "MinimumExt desc",
+                                "ExampleExt",
+                                "ExampleExt desc",
+                                "Computed",
+                                "Computed desc",
+                                "ComputedExt",
+                                "ComputedExt desc",
+                                "Immutable",
+                                "Immutable desc",
+                                "RequiredInFilter",
+                                "RequiredInFilter desc",
+                                "ImmutableExt",
+                                "ImmutableExt desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "Pattern",
+                                "PatternExt",
+                                "AllowedValues",
+                                "AllowedValuesExt",
+                                "Maximum",
+                                "MaximumExt",
+                                "Minimum",
+                                "MinimumExt",
+                                "Example",
+                                "ExampleExt",
+                                "Computed",
+                                "ComputedExt",
+                                "Immutable",
+                                "RequiredInFilter",
+                                "ImmutableExt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "AllOne",
+                                "AllMany",
+                                "ReadOnlyOne",
+                                "ReadOnlyMany",
+                                "NothingOne",
+                                "NothingMany"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of SinglePartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to AllSet",
+                "tags": [
+                    "AllSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "SinglePartKey",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/AllSet('{ID}')": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Get entity from AllSet by key",
+                "tags": [
+                    "AllSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "Pattern",
+                                "PatternExt",
+                                "AllowedValues",
+                                "AllowedValuesExt",
+                                "Maximum",
+                                "MaximumExt",
+                                "Minimum",
+                                "MinimumExt",
+                                "Example",
+                                "ExampleExt",
+                                "Computed",
+                                "ComputedExt",
+                                "Immutable",
+                                "RequiredInFilter",
+                                "ImmutableExt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "AllOne",
+                                "AllMany",
+                                "ReadOnlyOne",
+                                "ReadOnlyMany",
+                                "NothingOne",
+                                "NothingMany"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in AllSet",
+                "tags": [
+                    "AllSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "SinglePartKey",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from AllSet",
+                "tags": [
+                    "AllSet"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/AllSet('{ID}')/AllOne": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Get related AllOne",
+                "tags": [
+                    "AllSet",
+                    "TwoAllSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/AllSet('{ID}')/AllMany": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Get entities from related AllMany",
+                "tags": [
+                    "AllSet",
+                    "TwoAllSet"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "One desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of TwoPartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to related AllMany",
+                "tags": [
+                    "AllSet",
+                    "TwoAllSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "TwoPartKey",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/AllSet('{ID}')/ReadOnlyOne": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Get related ReadOnlyOne",
+                "tags": [
+                    "AllSet",
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/AllSet('{ID}')/ReadOnlyMany": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Get entities from related ReadOnlyMany",
+                "tags": [
+                    "AllSet",
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of TwoPartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/AllSet('{ID}')/NothingOne": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "string"
+                }
+            ]
+        },
+        "/AllSet('{ID}')/NothingMany": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "string"
+                }
+            ]
+        },
+        "/NoNavigationSet": {
+            "get": {
+                "summary": "Get entities from NoNavigationSet",
+                "tags": [
+                    "NoNavigationSet"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "ID desc",
+                                "Pattern",
+                                "Pattern desc",
+                                "PatternExt",
+                                "PatternExt desc",
+                                "AllowedValues",
+                                "AllowedValues desc",
+                                "AllowedValuesExt",
+                                "AllowedValuesExt desc",
+                                "Maximum",
+                                "Maximum desc",
+                                "MaximumExt",
+                                "MaximumExt desc",
+                                "Minimum",
+                                "Minimum desc",
+                                "MinimumExt",
+                                "MinimumExt desc",
+                                "Example",
+                                "Example desc",
+                                "ExampleExt",
+                                "ExampleExt desc",
+                                "Computed",
+                                "Computed desc",
+                                "ComputedExt",
+                                "ComputedExt desc",
+                                "Immutable",
+                                "Immutable desc",
+                                "RequiredInFilter",
+                                "RequiredInFilter desc",
+                                "ImmutableExt",
+                                "ImmutableExt desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "Pattern",
+                                "PatternExt",
+                                "AllowedValues",
+                                "AllowedValuesExt",
+                                "Maximum",
+                                "MaximumExt",
+                                "Minimum",
+                                "MinimumExt",
+                                "Example",
+                                "ExampleExt",
+                                "Computed",
+                                "ComputedExt",
+                                "Immutable",
+                                "RequiredInFilter",
+                                "ImmutableExt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "AllOne",
+                                "AllMany",
+                                "ReadOnlyOne",
+                                "ReadOnlyMany",
+                                "NothingOne",
+                                "NothingMany"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of SinglePartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to NoNavigationSet",
+                "tags": [
+                    "NoNavigationSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "SinglePartKey",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/NoNavigationSet('{ID}')": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Get entity from NoNavigationSet by key",
+                "tags": [
+                    "NoNavigationSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "Pattern",
+                                "PatternExt",
+                                "AllowedValues",
+                                "AllowedValuesExt",
+                                "Maximum",
+                                "MaximumExt",
+                                "Minimum",
+                                "MinimumExt",
+                                "Example",
+                                "ExampleExt",
+                                "Computed",
+                                "ComputedExt",
+                                "Immutable",
+                                "RequiredInFilter",
+                                "ImmutableExt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "AllOne",
+                                "AllMany",
+                                "ReadOnlyOne",
+                                "ReadOnlyMany",
+                                "NothingOne",
+                                "NothingMany"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in NoNavigationSet",
+                "tags": [
+                    "NoNavigationSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "SinglePartKey",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from NoNavigationSet",
+                "tags": [
+                    "NoNavigationSet"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/OneNavigationSet": {
+            "get": {
+                "summary": "Get entities from OneNavigationSet",
+                "tags": [
+                    "OneNavigationSet"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "ID desc",
+                                "Pattern",
+                                "Pattern desc",
+                                "PatternExt",
+                                "PatternExt desc",
+                                "AllowedValues",
+                                "AllowedValues desc",
+                                "AllowedValuesExt",
+                                "AllowedValuesExt desc",
+                                "Maximum",
+                                "Maximum desc",
+                                "MaximumExt",
+                                "MaximumExt desc",
+                                "Minimum",
+                                "Minimum desc",
+                                "MinimumExt",
+                                "MinimumExt desc",
+                                "Example",
+                                "Example desc",
+                                "ExampleExt",
+                                "ExampleExt desc",
+                                "Computed",
+                                "Computed desc",
+                                "ComputedExt",
+                                "ComputedExt desc",
+                                "Immutable",
+                                "Immutable desc",
+                                "RequiredInFilter",
+                                "RequiredInFilter desc",
+                                "ImmutableExt",
+                                "ImmutableExt desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "Pattern",
+                                "PatternExt",
+                                "AllowedValues",
+                                "AllowedValuesExt",
+                                "Maximum",
+                                "MaximumExt",
+                                "Minimum",
+                                "MinimumExt",
+                                "Example",
+                                "ExampleExt",
+                                "Computed",
+                                "ComputedExt",
+                                "Immutable",
+                                "RequiredInFilter",
+                                "ImmutableExt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "AllOne",
+                                "AllMany",
+                                "ReadOnlyOne",
+                                "ReadOnlyMany",
+                                "NothingOne",
+                                "NothingMany"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of SinglePartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/OneNavigationSet('{ID}')": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Get entity from OneNavigationSet by key",
+                "tags": [
+                    "OneNavigationSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "Pattern",
+                                "PatternExt",
+                                "AllowedValues",
+                                "AllowedValuesExt",
+                                "Maximum",
+                                "MaximumExt",
+                                "Minimum",
+                                "MinimumExt",
+                                "Example",
+                                "ExampleExt",
+                                "Computed",
+                                "ComputedExt",
+                                "Immutable",
+                                "RequiredInFilter",
+                                "ImmutableExt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "AllOne",
+                                "AllMany",
+                                "ReadOnlyOne",
+                                "ReadOnlyMany",
+                                "NothingOne",
+                                "NothingMany"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/OneNavigationSet('{ID}')/AllMany": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Get entities from related AllMany",
+                "tags": [
+                    "OneNavigationSet"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "One desc",
+                                "Two",
+                                "Two desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of TwoPartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/ReadListOnlySet": {
+            "get": {
+                "summary": "Supports only read-list",
+                "description": "Does not support any query options",
+                "tags": [
+                    "ReadListOnlySet"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of SinglePartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/AllSingleton": {
+            "get": {
+                "summary": "Get AllSingleton",
+                "tags": [
+                    "AllSingleton"
+                ],
+                "parameters": [
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "Pattern",
+                                "PatternExt",
+                                "AllowedValues",
+                                "AllowedValuesExt",
+                                "Maximum",
+                                "MaximumExt",
+                                "Minimum",
+                                "MinimumExt",
+                                "Example",
+                                "ExampleExt",
+                                "Computed",
+                                "ComputedExt",
+                                "Immutable",
+                                "RequiredInFilter",
+                                "ImmutableExt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "AllOne",
+                                "AllMany",
+                                "ReadOnlyOne",
+                                "ReadOnlyMany",
+                                "NothingOne",
+                                "NothingMany"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update AllSingleton",
+                "tags": [
+                    "AllSingleton"
+                ],
+                "parameters": [
+                    {
+                        "name": "SinglePartKey",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/AllSingleton/AllOne": {
+            "get": {
+                "summary": "Get related AllOne",
+                "tags": [
+                    "AllSingleton",
+                    "TwoAllSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/AllSingleton/AllMany": {
+            "get": {
+                "summary": "Get entities from related AllMany",
+                "tags": [
+                    "AllSingleton",
+                    "TwoAllSet"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "One desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of TwoPartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to related AllMany",
+                "tags": [
+                    "AllSingleton",
+                    "TwoAllSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "TwoPartKey",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/AllSingleton/ReadOnlyOne": {
+            "get": {
+                "summary": "Get related ReadOnlyOne",
+                "tags": [
+                    "AllSingleton",
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/AllSingleton/ReadOnlyMany": {
+            "get": {
+                "summary": "Get entities from related ReadOnlyMany",
+                "tags": [
+                    "AllSingleton",
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of TwoPartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/AllSingleton/NothingOne": {
+
+        },
+        "/AllSingleton/NothingMany": {
+
+        },
+        "/ReadOnlySingleton": {
+            "get": {
+                "summary": "Supports only read",
+                "description": "Does not support `$select` and `$expand`",
+                "tags": [
+                    "ReadOnlySingleton"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/ReadOnlySingleton/AllOne": {
+            "get": {
+                "summary": "Get related AllOne",
+                "tags": [
+                    "ReadOnlySingleton",
+                    "TwoAllSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/ReadOnlySingleton/AllMany": {
+            "get": {
+                "summary": "Get entities from related AllMany",
+                "tags": [
+                    "ReadOnlySingleton",
+                    "TwoAllSet"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Two",
+                                "Two desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of TwoPartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/ReadOnlySingleton/ReadOnlyOne": {
+            "get": {
+                "summary": "Get related ReadOnlyOne",
+                "tags": [
+                    "ReadOnlySingleton",
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/ReadOnlySingleton/ReadOnlyMany": {
+            "get": {
+                "summary": "Get entities from related ReadOnlyMany",
+                "tags": [
+                    "ReadOnlySingleton",
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of TwoPartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to related ReadOnlyMany",
+                "tags": [
+                    "ReadOnlySingleton",
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "TwoPartKey",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/ReadOnlySingleton/NothingOne": {
+
+        },
+        "/ReadOnlySingleton/NothingMany": {
+            "get": {
+                "summary": "Get entities from related NothingMany",
+                "tags": [
+                    "ReadOnlySingleton",
+                    "TwoNothingSet"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "One desc",
+                                "Two",
+                                "Two desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of TwoPartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TwoAllSet": {
+            "get": {
+                "summary": "Get entities from TwoAllSet",
+                "tags": [
+                    "TwoAllSet"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "One desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of TwoPartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to TwoAllSet",
+                "tags": [
+                    "TwoAllSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "TwoPartKey",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TwoAllSet(One={One},Two={Two})": {
+            "parameters": [
+                {
+                    "name": "One",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: One",
+                    "type": "integer",
+                    "format": "int32"
+                },
+                {
+                    "name": "Two",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: Two",
+                    "type": "integer",
+                    "format": "int32"
+                }
+            ],
+            "get": {
+                "summary": "Get entity from TwoAllSet by key",
+                "tags": [
+                    "TwoAllSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in TwoAllSet",
+                "tags": [
+                    "TwoAllSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "TwoPartKey",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from TwoAllSet",
+                "tags": [
+                    "TwoAllSet"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TwoReadOnlySet": {
+            "get": {
+                "summary": "Supports read-list",
+                "description": "Does not support any query options",
+                "tags": [
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of TwoPartKey",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TwoReadOnlySet(One={One},Two={Two})": {
+            "parameters": [
+                {
+                    "name": "One",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: One",
+                    "type": "integer",
+                    "format": "int32"
+                },
+                {
+                    "name": "Two",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: Two",
+                    "type": "integer",
+                    "format": "int32"
+                }
+            ],
+            "get": {
+                "summary": "Get entity from TwoReadOnlySet by key",
+                "tags": [
+                    "TwoReadOnlySet"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TwoReadOnlyByKeySet": {
+
+        },
+        "/TwoReadOnlyByKeySet(One={One},Two={Two})": {
+            "parameters": [
+                {
+                    "name": "One",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: One",
+                    "type": "integer",
+                    "format": "int32"
+                },
+                {
+                    "name": "Two",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: Two",
+                    "type": "integer",
+                    "format": "int32"
+                }
+            ],
+            "get": {
+                "summary": "Get entity from TwoReadOnlyByKeySet by key",
+                "tags": [
+                    "TwoReadOnlyByKeySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "One",
+                                "Two"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TwoWriteOnlySet": {
+            "post": {
+                "summary": "Supports insert",
+                "tags": [
+                    "TwoWriteOnlySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "TwoPartKey",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TwoWriteOnlySet(One={One},Two={Two})": {
+            "parameters": [
+                {
+                    "name": "One",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: One",
+                    "type": "integer",
+                    "format": "int32"
+                },
+                {
+                    "name": "Two",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: Two",
+                    "type": "integer",
+                    "format": "int32"
+                }
+            ],
+            "patch": {
+                "summary": "Supports update",
+                "tags": [
+                    "TwoWriteOnlySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "TwoPartKey",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Supports delete",
+                "tags": [
+                    "TwoWriteOnlySet"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TwoNothingSet": {
+
+        },
+        "/TwoWriteOnlySingleton": {
+            "patch": {
+                "summary": "Supports update",
+                "tags": [
+                    "TwoWriteOnlySingleton"
+                ],
+                "parameters": [
+                    {
+                        "name": "TwoPartKey",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/TwoNothingSingleton": {
+
+        }
+    },
+    "definitions": {
+        "Supported.Annotations.SinglePartKey": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "Pattern": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "^.+$",
+                    "example": "string"
+                },
+                "PatternExt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "^.+$",
+                    "example": "string"
+                },
+                "AllowedValues": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "red",
+                        "green",
+                        "blue"
+                    ],
+                    "example": "string"
+                },
+                "AllowedValuesExt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "red",
+                        "green",
+                        "blue"
+                    ],
+                    "example": "string"
+                },
+                "Maximum": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "minimum": -99999,
+                    "maximum": 0,
+                    "exclusiveMaximum": true,
+                    "example": 0
+                },
+                "MaximumExt": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "maximum": -1,
+                    "example": -1
+                },
+                "Minimum": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1.0e-2,
+                    "minimum": 1,
+                    "maximum": 999.99,
+                    "example": 0
+                },
+                "MinimumExt": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1.0e-5,
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "example": 1
+                },
+                "Example": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "Hello World"
+                },
+                "ExampleExt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "Hello external World"
+                },
+                "Computed": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "string"
+                },
+                "ComputedExt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "string"
+                },
+                "Immutable": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "string"
+                },
+                "RequiredInFilter": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "string"
+                },
+                "ImmutableExt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "string"
+                },
+                "AllOne": {
+                    "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                },
+                "AllMany": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                    }
+                },
+                "ReadOnlyOne": {
+                    "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                },
+                "ReadOnlyMany": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                    }
+                },
+                "NothingOne": {
+                    "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                },
+                "NothingMany": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                    }
+                }
+            },
+            "title": "SinglePartKey"
+        },
+        "Supported.Annotations.SinglePartKey-create": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "Pattern": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "^.+$",
+                    "example": "string"
+                },
+                "PatternExt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "^.+$",
+                    "example": "string"
+                },
+                "AllowedValues": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "red",
+                        "green",
+                        "blue"
+                    ],
+                    "example": "string"
+                },
+                "AllowedValuesExt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "red",
+                        "green",
+                        "blue"
+                    ],
+                    "example": "string"
+                },
+                "Maximum": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "minimum": -99999,
+                    "maximum": 0,
+                    "exclusiveMaximum": true,
+                    "example": 0
+                },
+                "MaximumExt": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "maximum": -1,
+                    "example": -1
+                },
+                "Minimum": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1.0e-2,
+                    "minimum": 1,
+                    "maximum": 999.99,
+                    "example": 0
+                },
+                "MinimumExt": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1.0e-5,
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "example": 1
+                },
+                "Example": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "Hello World"
+                },
+                "ExampleExt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "Hello external World"
+                },
+                "Immutable": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "string"
+                },
+                "RequiredInFilter": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "string"
+                },
+                "ImmutableExt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "string"
+                },
+                "AllOne": {
+                    "$ref": "#/definitions/Supported.Annotations.TwoPartKey-create"
+                },
+                "AllMany": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey-create"
+                    }
+                },
+                "ReadOnlyOne": {
+                    "$ref": "#/definitions/Supported.Annotations.TwoPartKey-create"
+                },
+                "ReadOnlyMany": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey-create"
+                    }
+                },
+                "NothingOne": {
+                    "$ref": "#/definitions/Supported.Annotations.TwoPartKey-create"
+                },
+                "NothingMany": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey-create"
+                    }
+                }
+            },
+            "required": [
+                "ID"
+            ],
+            "title": "SinglePartKey (for create)"
+        },
+        "Supported.Annotations.SinglePartKey-update": {
+            "type": "object",
+            "properties": {
+                "Pattern": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "^.+$",
+                    "example": "string"
+                },
+                "PatternExt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "^.+$",
+                    "example": "string"
+                },
+                "AllowedValues": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "red",
+                        "green",
+                        "blue"
+                    ],
+                    "example": "string"
+                },
+                "AllowedValuesExt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "red",
+                        "green",
+                        "blue"
+                    ],
+                    "example": "string"
+                },
+                "Maximum": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "minimum": -99999,
+                    "maximum": 0,
+                    "exclusiveMaximum": true,
+                    "example": 0
+                },
+                "MaximumExt": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "maximum": -1,
+                    "example": -1
+                },
+                "Minimum": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1.0e-2,
+                    "minimum": 1,
+                    "maximum": 999.99,
+                    "example": 0
+                },
+                "MinimumExt": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1.0e-5,
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "example": 1
+                },
+                "Example": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "Hello World"
+                },
+                "ExampleExt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "Hello external World"
+                },
+                "RequiredInFilter": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "example": "string"
+                }
+            },
+            "title": "SinglePartKey (for update)"
+        },
+        "Supported.Annotations.TwoPartKey": {
+            "type": "object",
+            "properties": {
+                "One": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Two": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "title": "TwoPartKey"
+        },
+        "Supported.Annotations.TwoPartKey-create": {
+            "type": "object",
+            "properties": {
+                "One": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Two": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "required": [
+                "One",
+                "Two"
+            ],
+            "title": "TwoPartKey (for create)"
+        },
+        "Supported.Annotations.TwoPartKey-update": {
+            "type": "object",
+            "title": "TwoPartKey (for update)"
+        },
+        "error": {
+            "type": "object",
+            "required": [
+                "error"
+            ],
+            "properties": {
+                "error": {
+                    "type": "object",
+                    "required": [
+                        "code",
+                        "message"
+                    ],
+                    "properties": {
+                        "code": {
+                            "type": "string"
+                        },
+                        "message": {
+                            "type": "string"
+                        },
+                        "target": {
+                            "type": "string"
+                        },
+                        "details": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "code",
+                                    "message"
+                                ],
+                                "properties": {
+                                    "code": {
+                                        "type": "string"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "target": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "innererror": {
+                            "type": "object",
+                            "description": "The structure of this object is service-specific"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "top": {
+            "name": "top",
+            "in": "query",
+            "description": "Show only the first n items, see [Paging - Top](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptiontop)",
+            "type": "integer",
+            "minimum": 0
+        },
+        "skip": {
+            "name": "skip",
+            "in": "query",
+            "description": "Skip the first n items, see [Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionskip)",
+            "type": "integer",
+            "minimum": 0
+        },
+        "count": {
+            "name": "count",
+            "in": "query",
+            "description": "Include count of items, see [Count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount)",
+            "type": "boolean"
+        },
+        "search": {
+            "name": "search",
+            "in": "query",
+            "description": "Search items by search phrases, see [Searching](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionsearch)",
+            "type": "string"
+        }
+    },
+    "responses": {
+        "error": {
+            "description": "Error",
+            "schema": {
+                "$ref": "#/definitions/error"
+            }
+        }
+    }
+}

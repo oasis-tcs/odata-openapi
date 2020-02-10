@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Authorization.V1.xml">
+    <edmx:Include Namespace="Org.OData.Authorization.V1" Alias="Auth" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="auth.example" Alias="self">
+
+      <EntityType Name="Person">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" />
+      </EntityType>
+
+      <EntityContainer Name="Container">
+        <EntitySet Name="People" EntityType="self.Person" />
+
+        <Annotation Term="Auth.SecuritySchemes">
+          <Collection>
+            <Record>
+              <PropertyValue Property="Authorization" String="api_key" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Authorization" String="petstore_auth" />
+              <PropertyValue Property="RequiredScopes">
+                <Collection>
+                  <String>write:pets</String>
+                  <String>read:pets</String>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Collection>
+        </Annotation>
+
+        <Annotation Term="Auth.Authorizations">
+          <Collection>
+            <Record Type="Auth.ApiKey">
+              <PropertyValue Property="Name" String="api_key" />
+              <PropertyValue Property="Description" String="Authentication via API key" />
+              <PropertyValue Property="KeyName" String="x-api-key" />
+              <PropertyValue Property="Location" EnumMember="Auth.KeyLocation/Header" />
+            </Record>
+            <Record Type="Auth.Http">
+              <PropertyValue Property="Name" String="http_bearer" />
+              <PropertyValue Property="Description" String="HTTP authentication with bearer token" />
+              <PropertyValue Property="Scheme" String="bearer" />
+              <PropertyValue Property="BearerFormat" String="JWT" />
+            </Record>
+            <Record Type="Auth.OAuth2AuthCode">
+              <PropertyValue Property="Name" String="oauth_authcode" />
+              <PropertyValue Property="Description" String="Authentication via OAuth2 with authorization code flow" />
+              <PropertyValue Property="Scopes">
+                <Collection>
+                  <Record>
+                    <PropertyValue Property="Scope" String="do:something" />
+                    <PropertyValue Property="Description" String="do something" />
+                  </Record>
+                </Collection>
+              </PropertyValue>
+              <PropertyValue Property="RefreshUrl" String="https://example.com/api/oauth/refresh" />
+              <PropertyValue Property="AuthorizationUrl" String="https://example.com/api/oauth/dialog" />
+              <PropertyValue Property="TokenUrl" String="https://example.com/api/oauth/token" />
+            </Record>
+            <Record Type="Auth.OAuth2ClientCredentials">
+              <PropertyValue Property="Name" String="oauth_clientcredentials" />
+              <PropertyValue Property="Description" String="Authentication via OAuth2 with client credentials flow" />
+              <PropertyValue Property="Scopes">
+                <Collection>
+                  <Record>
+                    <PropertyValue Property="Scope" String="do:something" />
+                    <PropertyValue Property="Description" String="do something" />
+                  </Record>
+                </Collection>
+              </PropertyValue>
+              <PropertyValue Property="RefreshUrl" String="https://example.com/api/oauth/refresh" />
+              <PropertyValue Property="TokenUrl" String="https://example.com/api/oauth/token" />
+            </Record>
+            <Record Type="Auth.OAuth2Implicit">
+              <PropertyValue Property="Name" String="oauth_implicit" />
+              <PropertyValue Property="Description" String="Authentication via OAuth2 with implicit flow" />
+              <PropertyValue Property="Scopes">
+                <Collection>
+                  <Record>
+                    <PropertyValue Property="Scope" String="write:foo" />
+                    <PropertyValue Property="Description" String="modify foo" />
+                  </Record>
+                  <Record>
+                    <PropertyValue Property="Scope" String="read:foo" />
+                    <PropertyValue Property="Description" String="read foo" />
+                  </Record>
+                </Collection>
+              </PropertyValue>
+              <PropertyValue Property="RefreshUrl" String="https://example.com/api/oauth/refresh" />
+              <PropertyValue Property="AuthorizationUrl" String="https://example.com/api/oauth/dialog" />
+            </Record>
+            <Record Type="Auth.OAuth2Password">
+              <PropertyValue Property="Name" String="oauth_password" />
+              <PropertyValue Property="Description" String="Authentication via OAuth2 with resource owner password flow" />
+              <PropertyValue Property="Scopes">
+                <Collection>
+                  <Record>
+                    <PropertyValue Property="Scope" String="do:something" />
+                    <PropertyValue Property="Description" String="do something" />
+                  </Record>
+                </Collection>
+              </PropertyValue>
+              <PropertyValue Property="RefreshUrl" String="https://example.com/api/oauth/refresh" />
+              <PropertyValue Property="TokenUrl" String="https://example.com/api/oauth/token" />
+            </Record>
+            <Record Type="Auth.OpenIDConnect">
+              <PropertyValue Property="Name" String="open_id" />
+              <PropertyValue Property="Description" String="Authentication via OpenID Connect" />
+              <PropertyValue Property="IssuerUrl" String="https://example.com/openid/issuer/location" />
+            </Record>
+          </Collection>
+        </Annotation>
+      </EntityContainer>
+
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
