@@ -18,13 +18,12 @@ set SCHEMA_THREE=%here..\..\OpenAPI-Specification\schemas\v3.0\schema.json
 set SCHEMA_TWO=%here..\..\OpenAPI-Specification\schemas\v2.0\schema.json
 
 if exist "%1" (
-  call :process %1 http localhost /service-root %2
+  call :process %1 https localhost /service-root %2
 ) else (
   echo Usage: transform source [/swagger]
   echo.
   echo   source       Specifies the file to be transformed.
   echo   /swagger     Output Swagger 2.0 in addition to OpenAPI 3.0.0
-
 )
 
 endlocal

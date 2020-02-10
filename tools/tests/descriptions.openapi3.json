@@ -1,9 +1,9 @@
 {
-    "openapi": "3.0.2",
+    "openapi": "3.0.0",
     "info": {
         "title": "Container - Description",
-        "description": "Container - LongDescription\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[entity{bg:lightslategray}],[functionimport_no_descriptions{bg:lawngreen}],[functionimport_ext{bg:lawngreen}],[functionimport{bg:lawngreen}],[actionimport_no_descriptions{bg:lawngreen}],[actionimport_ext{bg:lawngreen}],[actionimport{bg:lawngreen}],[single_ext%20{bg:lawngreen}]++->[entity],[single%20{bg:lawngreen}]++->[entity],[entities_ext%20{bg:lawngreen}]++-*>[entity],[entities%20{bg:lawngreen}]++-*>[entity])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
-        "version": "0.0.1"
+        "version": "0.0.1",
+        "description": "Container - LongDescription\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[entities{bg:dodgerblue}]++-*>[entity],[entities_ext{bg:dodgerblue}]++-*>[entity],[single{bg:dodgerblue}]++->[entity],[single_ext{bg:dodgerblue}]++->[entity],[actionimport{bg:dodgerblue}],[actionimport_ext{bg:dodgerblue}],[actionimport_no_descriptions{bg:dodgerblue}],[functionimport{bg:dodgerblue}],[functionimport_ext{bg:dodgerblue}],[functionimport_no_descriptions{bg:dodgerblue}],[entity{bg:orange}])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
     },
     "servers": [
         {
@@ -32,6 +32,7 @@
         "/entities": {
             "get": {
                 "summary": "Query Entity Set - Description",
+                "description": "Query Entity Set - LongDescription",
                 "tags": [
                     "entities"
                 ],
@@ -47,8 +48,8 @@
                     },
                     {
                         "name": "filter",
-                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
                         "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
                         "schema": {
                             "type": "string"
                         }
@@ -58,8 +59,8 @@
                     },
                     {
                         "name": "orderby",
-                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
                         "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -75,8 +76,8 @@
                     },
                     {
                         "name": "select",
-                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -96,8 +97,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
                                     "title": "Collection of entity",
+                                    "type": "object",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -113,17 +114,17 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Query Entity Set - LongDescription"
+                }
             },
             "post": {
                 "summary": "Create Entity - Description",
+                "description": "Create Entity - LongDescription",
                 "tags": [
                     "entities"
                 ],
                 "requestBody": {
-                    "description": "Entity Type - Description",
                     "required": true,
+                    "description": "Entity Type - Description",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -146,17 +147,16 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Create Entity - LongDescription"
+                }
             }
         },
         "/entities('{id}')": {
             "parameters": [
                 {
-                    "description": "Property - Description  \nProperty - LongDescription",
-                    "in": "path",
                     "name": "id",
+                    "in": "path",
                     "required": true,
+                    "description": "Property - Description  \nProperty - LongDescription",
                     "schema": {
                         "type": "string",
                         "maxLength": 70
@@ -165,14 +165,15 @@
             ],
             "get": {
                 "summary": "Read Entity by Key - Description",
+                "description": "Read Entity by Key - LongDescription",
                 "tags": [
                     "entities"
                 ],
                 "parameters": [
                     {
                         "name": "select",
-                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -200,17 +201,17 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Read Entity by Key - LongDescription"
+                }
             },
             "patch": {
                 "summary": "Update Entity - Description",
+                "description": "Update Entity - LongDescription",
                 "tags": [
                     "entities"
                 ],
                 "requestBody": {
-                    "description": "Entity Type - Description",
                     "required": true,
+                    "description": "Entity Type - Description",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -226,11 +227,11 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Update Entity - LongDescription"
+                }
             },
             "delete": {
                 "summary": "Delete Entity - Description",
+                "description": "Delete Entity - LongDescription",
                 "tags": [
                     "entities"
                 ],
@@ -241,89 +242,32 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Delete Entity - LongDescription"
-            }
-        },
-        "/entities('{id}')/self.action": {
-            "post": {
-                "summary": "Action Bound Overload Ext - Description",
-                "tags": [
-                    "entities"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "string",
-                                    "nullable": true,
-                                    "title": "Action Bound Overload Return Type Ext - Description",
-                                    "description": "Action Bound Overload Return Type - LongDescription"
-                                }
-                            }
-                        }
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                },
-                "description": "Action Bound Overload - LongDescription",
-                "parameters": [
-                    {
-                        "description": "Property - Description  \nProperty - LongDescription",
-                        "in": "path",
-                        "name": "id",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "maxLength": 70
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Action parameters",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "nonbinding": {
-                                        "type": "string",
-                                        "nullable": true,
-                                        "title": "Action Bound Overload Nonbinding Parameter Ext - Description",
-                                        "description": "Action Bound Overload Non-Binding Parameter - LongDescription"
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
         },
-        "/entities('{id}')/self.function": {
+        "/entities('{id}')/self.function(nonbinding='{nonbinding}')": {
             "get": {
                 "summary": "Function Bound Overload Ext - Description",
+                "description": "Function Bound Overload - LongDescription",
                 "tags": [
                     "entities"
                 ],
                 "parameters": [
                     {
-                        "description": "Property - Description  \nProperty - LongDescription",
-                        "in": "path",
                         "name": "id",
+                        "in": "path",
                         "required": true,
+                        "description": "Property - Description  \nProperty - LongDescription",
                         "schema": {
                             "type": "string",
                             "maxLength": 70
                         }
                     },
                     {
+                        "name": "nonbinding",
+                        "in": "path",
                         "required": true,
                         "description": "Function Bound Overload Nonbinding Parameter Ext - Description  \nFunction Bound Overload Nonbinding Parameter - LongDescription",
-                        "in": "query",
-                        "name": "nonbinding",
                         "schema": {
                             "type": "string",
                             "nullable": true
@@ -347,13 +291,70 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
+                }
+            }
+        },
+        "/entities('{id}')/self.action": {
+            "post": {
+                "summary": "Action Bound Overload Ext - Description",
+                "description": "Action Bound Overload - LongDescription",
+                "tags": [
+                    "entities"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Property - Description  \nProperty - LongDescription",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 70
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Action parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nonbinding": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "title": "Action Bound Overload Nonbinding Parameter Ext - Description",
+                                        "description": "Action Bound Overload Non-Binding Parameter - LongDescription"
+                                    }
+                                }
+                            }
+                        }
+                    }
                 },
-                "description": "Function Bound Overload - LongDescription"
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "nullable": true,
+                                    "title": "Action Bound Overload Return Type Ext - Description",
+                                    "description": "Action Bound Overload Return Type - LongDescription"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
             }
         },
         "/entities_ext": {
             "get": {
                 "summary": "Query Entity Set Ext - Description",
+                "description": "Query Entity Set Ext - LongDescription",
                 "tags": [
                     "entities_ext"
                 ],
@@ -369,8 +370,8 @@
                     },
                     {
                         "name": "filter",
-                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
                         "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
                         "schema": {
                             "type": "string"
                         }
@@ -380,8 +381,8 @@
                     },
                     {
                         "name": "orderby",
-                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
                         "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -397,8 +398,8 @@
                     },
                     {
                         "name": "select",
-                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -418,8 +419,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
                                     "title": "Collection of entity",
+                                    "type": "object",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -435,17 +436,17 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Query Entity Set Ext - LongDescription"
+                }
             },
             "post": {
                 "summary": "Create Entity Ext - Description",
+                "description": "Create Entity Ext - LongDescription",
                 "tags": [
                     "entities_ext"
                 ],
                 "requestBody": {
-                    "description": "Entity Type - Description",
                     "required": true,
+                    "description": "Entity Type - Description",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -468,17 +469,16 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Create Entity Ext - LongDescription"
+                }
             }
         },
         "/entities_ext('{id}')": {
             "parameters": [
                 {
-                    "description": "Property - Description  \nProperty - LongDescription",
-                    "in": "path",
                     "name": "id",
+                    "in": "path",
                     "required": true,
+                    "description": "Property - Description  \nProperty - LongDescription",
                     "schema": {
                         "type": "string",
                         "maxLength": 70
@@ -487,14 +487,15 @@
             ],
             "get": {
                 "summary": "Read Entity Set by Key Ext - Description",
+                "description": "Read Entity Set by Key Ext - LongDescription",
                 "tags": [
                     "entities_ext"
                 ],
                 "parameters": [
                     {
                         "name": "select",
-                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -522,17 +523,17 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Read Entity Set by Key Ext - LongDescription"
+                }
             },
             "patch": {
                 "summary": "Update Entity Ext - Description",
+                "description": "Update Entity Ext - LongDescription",
                 "tags": [
                     "entities_ext"
                 ],
                 "requestBody": {
-                    "description": "Entity Type - Description",
                     "required": true,
+                    "description": "Entity Type - Description",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -548,11 +549,11 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Update Entity Ext - LongDescription"
+                }
             },
             "delete": {
                 "summary": "Delete Entity Ext - Description",
+                "description": "Delete Entity Ext - LongDescription",
                 "tags": [
                     "entities_ext"
                 ],
@@ -563,41 +564,71 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Delete Entity Ext - LongDescription"
+                }
+            }
+        },
+        "/entities_ext('{id}')/self.function(nonbinding='{nonbinding}')": {
+            "get": {
+                "summary": "Function Bound Overload Ext - Description",
+                "description": "Function Bound Overload - LongDescription",
+                "tags": [
+                    "entities_ext"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Property - Description  \nProperty - LongDescription",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 70
+                        }
+                    },
+                    {
+                        "name": "nonbinding",
+                        "in": "path",
+                        "required": true,
+                        "description": "Function Bound Overload Nonbinding Parameter Ext - Description  \nFunction Bound Overload Nonbinding Parameter - LongDescription",
+                        "schema": {
+                            "type": "string",
+                            "nullable": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "nullable": true,
+                                    "title": "Function Bound Overload Return Type Ext - Description",
+                                    "description": "Function Bound Overload Return Type - LongDescription"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
             }
         },
         "/entities_ext('{id}')/self.action": {
             "post": {
                 "summary": "Action Bound Overload Ext - Description",
+                "description": "Action Bound Overload - LongDescription",
                 "tags": [
                     "entities_ext"
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "string",
-                                    "nullable": true,
-                                    "title": "Action Bound Overload Return Type Ext - Description",
-                                    "description": "Action Bound Overload Return Type - LongDescription"
-                                }
-                            }
-                        }
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                },
-                "description": "Action Bound Overload - LongDescription",
                 "parameters": [
                     {
-                        "description": "Property - Description  \nProperty - LongDescription",
-                        "in": "path",
                         "name": "id",
+                        "in": "path",
                         "required": true,
+                        "description": "Property - Description  \nProperty - LongDescription",
                         "schema": {
                             "type": "string",
                             "maxLength": 70
@@ -621,37 +652,7 @@
                             }
                         }
                     }
-                }
-            }
-        },
-        "/entities_ext('{id}')/self.function": {
-            "get": {
-                "summary": "Function Bound Overload Ext - Description",
-                "tags": [
-                    "entities_ext"
-                ],
-                "parameters": [
-                    {
-                        "description": "Property - Description  \nProperty - LongDescription",
-                        "in": "path",
-                        "name": "id",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "maxLength": 70
-                        }
-                    },
-                    {
-                        "required": true,
-                        "description": "Function Bound Overload Nonbinding Parameter Ext - Description  \nFunction Bound Overload Nonbinding Parameter - LongDescription",
-                        "in": "query",
-                        "name": "nonbinding",
-                        "schema": {
-                            "type": "string",
-                            "nullable": true
-                        }
-                    }
-                ],
+                },
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -660,8 +661,8 @@
                                 "schema": {
                                     "type": "string",
                                     "nullable": true,
-                                    "title": "Function Bound Overload Return Type Ext - Description",
-                                    "description": "Function Bound Overload Return Type - LongDescription"
+                                    "title": "Action Bound Overload Return Type Ext - Description",
+                                    "description": "Action Bound Overload Return Type - LongDescription"
                                 }
                             }
                         }
@@ -669,21 +670,21 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Function Bound Overload - LongDescription"
+                }
             }
         },
         "/single": {
             "get": {
                 "summary": "Read Singleton - Description",
+                "description": "Read Singleton - LongDescription",
                 "tags": [
                     "single"
                 ],
                 "parameters": [
                     {
                         "name": "select",
-                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -711,17 +712,17 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Read Singleton - LongDescription"
+                }
             },
             "patch": {
                 "summary": "Update Singleton - Description",
+                "description": "Update Singleton - LongDescription",
                 "tags": [
                     "single"
                 ],
                 "requestBody": {
-                    "description": "Entity Type - Description",
                     "required": true,
+                    "description": "Entity Type - Description",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -737,35 +738,55 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Update Singleton - LongDescription"
+                }
+            }
+        },
+        "/single/self.function(nonbinding='{nonbinding}')": {
+            "get": {
+                "summary": "Function Bound Overload Ext - Description",
+                "description": "Function Bound Overload - LongDescription",
+                "tags": [
+                    "single"
+                ],
+                "parameters": [
+                    {
+                        "name": "nonbinding",
+                        "in": "path",
+                        "required": true,
+                        "description": "Function Bound Overload Nonbinding Parameter Ext - Description  \nFunction Bound Overload Nonbinding Parameter - LongDescription",
+                        "schema": {
+                            "type": "string",
+                            "nullable": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "nullable": true,
+                                    "title": "Function Bound Overload Return Type Ext - Description",
+                                    "description": "Function Bound Overload Return Type - LongDescription"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
             }
         },
         "/single/self.action": {
             "post": {
                 "summary": "Action Bound Overload Ext - Description",
+                "description": "Action Bound Overload - LongDescription",
                 "tags": [
                     "single"
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "string",
-                                    "nullable": true,
-                                    "title": "Action Bound Overload Return Type Ext - Description",
-                                    "description": "Action Bound Overload Return Type - LongDescription"
-                                }
-                            }
-                        }
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                },
-                "description": "Action Bound Overload - LongDescription",
                 "requestBody": {
                     "description": "Action parameters",
                     "content": {
@@ -783,27 +804,7 @@
                             }
                         }
                     }
-                }
-            }
-        },
-        "/single/self.function": {
-            "get": {
-                "summary": "Function Bound Overload Ext - Description",
-                "tags": [
-                    "single"
-                ],
-                "parameters": [
-                    {
-                        "required": true,
-                        "description": "Function Bound Overload Nonbinding Parameter Ext - Description  \nFunction Bound Overload Nonbinding Parameter - LongDescription",
-                        "in": "query",
-                        "name": "nonbinding",
-                        "schema": {
-                            "type": "string",
-                            "nullable": true
-                        }
-                    }
-                ],
+                },
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -812,8 +813,8 @@
                                 "schema": {
                                     "type": "string",
                                     "nullable": true,
-                                    "title": "Function Bound Overload Return Type Ext - Description",
-                                    "description": "Function Bound Overload Return Type - LongDescription"
+                                    "title": "Action Bound Overload Return Type Ext - Description",
+                                    "description": "Action Bound Overload Return Type - LongDescription"
                                 }
                             }
                         }
@@ -821,21 +822,21 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Function Bound Overload - LongDescription"
+                }
             }
         },
         "/single_ext": {
             "get": {
                 "summary": "Read Singleton Ext - Description",
+                "description": "Read Singleton Ext - LongDescription",
                 "tags": [
                     "single_ext"
                 ],
                 "parameters": [
                     {
                         "name": "select",
-                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -863,17 +864,17 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Read Singleton Ext - LongDescription"
+                }
             },
             "patch": {
                 "summary": "Update Singleton Ext - Description",
+                "description": "Update Singleton Ext - LongDescription",
                 "tags": [
                     "single_ext"
                 ],
                 "requestBody": {
-                    "description": "Entity Type - Description",
                     "required": true,
+                    "description": "Entity Type - Description",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -889,67 +890,22 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Update Singleton Ext - LongDescription"
-            }
-        },
-        "/single_ext/self.action": {
-            "post": {
-                "summary": "Action Bound Overload Ext - Description",
-                "tags": [
-                    "single_ext"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "string",
-                                    "nullable": true,
-                                    "title": "Action Bound Overload Return Type Ext - Description",
-                                    "description": "Action Bound Overload Return Type - LongDescription"
-                                }
-                            }
-                        }
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                },
-                "description": "Action Bound Overload - LongDescription",
-                "requestBody": {
-                    "description": "Action parameters",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "nonbinding": {
-                                        "type": "string",
-                                        "nullable": true,
-                                        "title": "Action Bound Overload Nonbinding Parameter Ext - Description",
-                                        "description": "Action Bound Overload Non-Binding Parameter - LongDescription"
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
         },
-        "/single_ext/self.function": {
+        "/single_ext/self.function(nonbinding='{nonbinding}')": {
             "get": {
                 "summary": "Function Bound Overload Ext - Description",
+                "description": "Function Bound Overload - LongDescription",
                 "tags": [
                     "single_ext"
                 ],
                 "parameters": [
                     {
+                        "name": "nonbinding",
+                        "in": "path",
                         "required": true,
                         "description": "Function Bound Overload Nonbinding Parameter Ext - Description  \nFunction Bound Overload Nonbinding Parameter - LongDescription",
-                        "in": "query",
-                        "name": "nonbinding",
                         "schema": {
                             "type": "string",
                             "nullable": true
@@ -973,16 +929,34 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Function Bound Overload - LongDescription"
+                }
             }
         },
-        "/actionimport": {
+        "/single_ext/self.action": {
             "post": {
-                "summary": "Action Import - Description",
+                "summary": "Action Bound Overload Ext - Description",
+                "description": "Action Bound Overload - LongDescription",
                 "tags": [
-                    "Service Operations"
+                    "single_ext"
                 ],
+                "requestBody": {
+                    "description": "Action parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nonbinding": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "title": "Action Bound Overload Nonbinding Parameter Ext - Description",
+                                        "description": "Action Bound Overload Non-Binding Parameter - LongDescription"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -991,8 +965,8 @@
                                 "schema": {
                                     "type": "string",
                                     "nullable": true,
-                                    "title": "Action Unbound Overload Return Type - Description",
-                                    "description": "Action Unbound Overload Return Type Ext - LongDescription"
+                                    "title": "Action Bound Overload Return Type Ext - Description",
+                                    "description": "Action Bound Overload Return Type - LongDescription"
                                 }
                             }
                         }
@@ -1000,8 +974,16 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
+                }
+            }
+        },
+        "/actionimport": {
+            "post": {
+                "summary": "Action Import - Description",
                 "description": "Action Import - LongDescription",
+                "tags": [
+                    "Service Operations"
+                ],
                 "requestBody": {
                     "description": "Action parameters",
                     "content": {
@@ -1018,6 +1000,24 @@
                                 }
                             }
                         }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "nullable": true,
+                                    "title": "Action Unbound Overload Return Type - Description",
+                                    "description": "Action Unbound Overload Return Type Ext - LongDescription"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
                     }
                 }
             }
@@ -1025,28 +1025,10 @@
         "/actionimport_ext": {
             "post": {
                 "summary": "Action Import Ext - Description",
+                "description": "Action Import Ext - LongDescription",
                 "tags": [
                     "Service Operations"
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "string",
-                                    "nullable": true,
-                                    "title": "Action Unbound Overload Return Type - Description",
-                                    "description": "Action Unbound Overload Return Type Ext - LongDescription"
-                                }
-                            }
-                        }
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                },
-                "description": "Action Import Ext - LongDescription",
                 "requestBody": {
                     "description": "Action parameters",
                     "content": {
@@ -1063,6 +1045,24 @@
                                 }
                             }
                         }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "nullable": true,
+                                    "title": "Action Unbound Overload Return Type - Description",
+                                    "description": "Action Unbound Overload Return Type Ext - LongDescription"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
                     }
                 }
             }
@@ -1070,28 +1070,10 @@
         "/actionimport_no_descriptions": {
             "post": {
                 "summary": "Action Unbound Overload - Description",
+                "description": "Action Unbound Overload Ext - LongDescription",
                 "tags": [
                     "Service Operations"
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "string",
-                                    "nullable": true,
-                                    "title": "Action Unbound Overload Return Type - Description",
-                                    "description": "Action Unbound Overload Return Type Ext - LongDescription"
-                                }
-                            }
-                        }
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                },
-                "description": "Action Unbound Overload Ext - LongDescription",
                 "requestBody": {
                     "description": "Action parameters",
                     "content": {
@@ -1109,21 +1091,40 @@
                             }
                         }
                     }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "nullable": true,
+                                    "title": "Action Unbound Overload Return Type - Description",
+                                    "description": "Action Unbound Overload Return Type Ext - LongDescription"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
                 }
             }
         },
-        "/functionimport": {
+        "/functionimport(nonbinding='{nonbinding}')": {
             "get": {
                 "summary": "Function Import - Description",
+                "description": "Function Import - LongDescription",
                 "tags": [
                     "Service Operations"
                 ],
                 "parameters": [
                     {
+                        "name": "nonbinding",
+                        "in": "path",
                         "required": true,
                         "description": "Function Unbound Overload Parameter - Description  \nFunction Unbound Overload Parameter Ext - LongDescription",
-                        "in": "query",
-                        "name": "nonbinding",
                         "schema": {
                             "type": "string",
                             "nullable": true
@@ -1147,22 +1148,22 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Function Import - LongDescription"
+                }
             }
         },
-        "/functionimport_ext": {
+        "/functionimport_ext(nonbinding='{nonbinding}')": {
             "get": {
                 "summary": "Function Import Ext - Description",
+                "description": "Function Import Ext - LongDescription",
                 "tags": [
                     "Service Operations"
                 ],
                 "parameters": [
                     {
+                        "name": "nonbinding",
+                        "in": "path",
                         "required": true,
                         "description": "Function Unbound Overload Parameter - Description  \nFunction Unbound Overload Parameter Ext - LongDescription",
-                        "in": "query",
-                        "name": "nonbinding",
                         "schema": {
                             "type": "string",
                             "nullable": true
@@ -1186,22 +1187,22 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Function Import Ext - LongDescription"
+                }
             }
         },
-        "/functionimport_no_descriptions": {
+        "/functionimport_no_descriptions(nonbinding='{nonbinding}')": {
             "get": {
                 "summary": "Function Unbound Overload - Description",
+                "description": "Function Unbound Overload Ext - LongDescription",
                 "tags": [
                     "Service Operations"
                 ],
                 "parameters": [
                     {
+                        "name": "nonbinding",
+                        "in": "path",
                         "required": true,
                         "description": "Function Unbound Overload Parameter - Description  \nFunction Unbound Overload Parameter Ext - LongDescription",
-                        "in": "query",
-                        "name": "nonbinding",
                         "schema": {
                             "type": "string",
                             "nullable": true
@@ -1225,8 +1226,7 @@
                     "4XX": {
                         "$ref": "#/components/responses/error"
                     }
-                },
-                "description": "Function Unbound Overload Ext - LongDescription"
+                }
             }
         },
         "/$batch": {
@@ -1269,40 +1269,6 @@
     },
     "components": {
         "schemas": {
-            "descriptions.entity": {
-                "title": "Entity Type - Description",
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "maxLength": 70,
-                        "title": "Property - Description",
-                        "description": "Property - LongDescription"
-                    }
-                },
-                "description": "Entity Type - LongDescription"
-            },
-            "descriptions.entity-create": {
-                "title": "Entity Type - Description (for create)",
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "maxLength": 70,
-                        "title": "Property - Description",
-                        "description": "Property - LongDescription"
-                    }
-                },
-                "required": [
-                    "id"
-                ],
-                "description": "Entity Type - LongDescription"
-            },
-            "descriptions.entity-update": {
-                "title": "Entity Type - Description (for update)",
-                "type": "object",
-                "description": "Entity Type - LongDescription"
-            },
             "error": {
                 "type": "object",
                 "required": [
@@ -1353,6 +1319,40 @@
                         }
                     }
                 }
+            },
+            "descriptions.entity": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "maxLength": 70,
+                        "title": "Property - Description",
+                        "description": "Property - LongDescription"
+                    }
+                },
+                "title": "Entity Type - Description",
+                "description": "Entity Type - LongDescription"
+            },
+            "descriptions.entity-create": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "maxLength": 70,
+                        "title": "Property - Description",
+                        "description": "Property - LongDescription"
+                    }
+                },
+                "required": [
+                    "id"
+                ],
+                "title": "Entity Type - Description (for create)",
+                "description": "Entity Type - LongDescription"
+            },
+            "descriptions.entity-update": {
+                "type": "object",
+                "title": "Entity Type - Description (for update)",
+                "description": "Entity Type - LongDescription"
             }
         },
         "parameters": {

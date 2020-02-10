@@ -1,9 +1,9 @@
 {
-    "openapi": "3.0.2",
+    "openapi": "3.0.0",
     "info": {
         "title": "Service for namespace auth.example",
-        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[Person{bg:lightslategray}],[People%20{bg:lawngreen}]++-*>[Person])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
-        "version": ""
+        "version": "",
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[Person{bg:orange}],[People{bg:dodgerblue}]++-*>[Person])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
     },
     "servers": [
         {
@@ -34,8 +34,8 @@
                     },
                     {
                         "name": "$filter",
-                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
                         "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
                         "schema": {
                             "type": "string"
                         }
@@ -45,8 +45,8 @@
                     },
                     {
                         "name": "$orderby",
-                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
                         "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -64,8 +64,8 @@
                     },
                     {
                         "name": "$select",
-                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -86,8 +86,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
                                     "title": "Collection of Person",
+                                    "type": "object",
                                     "properties": {
                                         "value": {
                                             "type": "array",
@@ -111,8 +111,8 @@
                     "People"
                 ],
                 "requestBody": {
-                    "description": "New entity",
                     "required": true,
+                    "description": "New entity",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -141,10 +141,10 @@
         "/People('{ID}')": {
             "parameters": [
                 {
-                    "description": "key: ID",
-                    "in": "path",
                     "name": "ID",
+                    "in": "path",
                     "required": true,
+                    "description": "key: ID",
                     "schema": {
                         "type": "string"
                     }
@@ -158,8 +158,8 @@
                 "parameters": [
                     {
                         "name": "$select",
-                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
                         "explode": false,
                         "schema": {
                             "type": "array",
@@ -196,8 +196,8 @@
                     "People"
                 ],
                 "requestBody": {
-                    "description": "New property values",
                     "required": true,
+                    "description": "New property values",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -271,7 +271,6 @@
     "components": {
         "schemas": {
             "auth.example.Person": {
-                "title": "Person",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -281,10 +280,10 @@
                         "type": "string",
                         "nullable": true
                     }
-                }
+                },
+                "title": "Person"
             },
             "auth.example.Person-create": {
-                "title": "Person (for create)",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -297,17 +296,18 @@
                 },
                 "required": [
                     "ID"
-                ]
+                ],
+                "title": "Person (for create)"
             },
             "auth.example.Person-update": {
-                "title": "Person (for update)",
                 "type": "object",
                 "properties": {
                     "Name": {
                         "type": "string",
                         "nullable": true
                     }
-                }
+                },
+                "title": "Person (for update)"
             },
             "error": {
                 "type": "object",
@@ -412,81 +412,83 @@
         },
         "securitySchemes": {
             "api_key": {
-                "description": "Authentication via API key",
                 "type": "apiKey",
                 "name": "x-api-key",
-                "in": "header"
+                "in": "header",
+                "description": "Authentication via API key"
             },
             "http_bearer": {
-                "description": "HTTP authentication with bearer token",
                 "type": "http",
                 "scheme": "bearer",
-                "bearerFormat": "JWT"
+                "bearerFormat": "JWT",
+                "description": "HTTP authentication with bearer token"
             },
             "oauth_authcode": {
-                "description": "Authentication via OAuth2 with authorization code flow",
                 "type": "oauth2",
                 "flows": {
                     "authorizationCode": {
-                        "authorizationUrl": "https://example.com/api/oauth/dialog",
-                        "tokenUrl": "https://example.com/api/oauth/token",
-                        "refreshUrl": "https://example.com/api/oauth/refresh",
                         "scopes": {
                             "do:something": "do something"
-                        }
+                        },
+                        "refreshUrl": "https://example.com/api/oauth/refresh",
+                        "authorizationUrl": "https://example.com/api/oauth/dialog",
+                        "tokenUrl": "https://example.com/api/oauth/token"
                     }
-                }
+                },
+                "description": "Authentication via OAuth2 with authorization code flow"
             },
             "oauth_clientcredentials": {
-                "description": "Authentication via OAuth2 with client credentials flow",
                 "type": "oauth2",
                 "flows": {
                     "clientCredentials": {
-                        "tokenUrl": "https://example.com/api/oauth/token",
-                        "refreshUrl": "https://example.com/api/oauth/refresh",
                         "scopes": {
                             "do:something": "do something"
-                        }
+                        },
+                        "refreshUrl": "https://example.com/api/oauth/refresh",
+                        "tokenUrl": "https://example.com/api/oauth/token"
                     }
-                }
+                },
+                "description": "Authentication via OAuth2 with client credentials flow"
             },
             "oauth_implicit": {
-                "description": "Authentication via OAuth2 with implicit flow",
                 "type": "oauth2",
                 "flows": {
                     "implicit": {
-                        "authorizationUrl": "https://example.com/api/oauth/dialog",
-                        "refreshUrl": "https://example.com/api/oauth/refresh",
                         "scopes": {
                             "write:foo": "modify foo",
                             "read:foo": "read foo"
-                        }
+                        },
+                        "refreshUrl": "https://example.com/api/oauth/refresh",
+                        "authorizationUrl": "https://example.com/api/oauth/dialog"
                     }
-                }
+                },
+                "description": "Authentication via OAuth2 with implicit flow"
             },
             "oauth_password": {
-                "description": "Authentication via OAuth2 with resource owner password flow",
                 "type": "oauth2",
                 "flows": {
                     "password": {
-                        "tokenUrl": "https://example.com/api/oauth/token",
-                        "refreshUrl": "https://example.com/api/oauth/refresh",
                         "scopes": {
                             "do:something": "do something"
-                        }
+                        },
+                        "refreshUrl": "https://example.com/api/oauth/refresh",
+                        "tokenUrl": "https://example.com/api/oauth/token"
                     }
-                }
+                },
+                "description": "Authentication via OAuth2 with resource owner password flow"
             },
             "open_id": {
-                "description": "Authentication via OpenID Connect",
                 "type": "openIdConnect",
-                "openIdConnectUrl": "https://example.com/openid/issuer/location"
+                "openIdConnectUrl": "https://example.com/openid/issuer/location",
+                "description": "Authentication via OpenID Connect"
             }
         }
     },
     "security": [
         {
-            "api_key": []
+            "api_key": [
+
+            ]
         },
         {
             "petstore_auth": [
