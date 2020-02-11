@@ -1358,7 +1358,6 @@ describe('Edge cases', function () {
         for (const [path, item] of Object.entries(actual.paths)) {
             const expand = item.get && item.get.parameters && item.get.parameters.find(param => param.name === 'expand')
             if (expand) {
-                // console.log(expand)
                 actualExpands[path] = expand.schema.items.enum
             }
         }
