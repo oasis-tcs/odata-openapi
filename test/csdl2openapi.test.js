@@ -325,33 +325,33 @@ describe('Edge cases', function () {
 
     it('key-as-segment', function () {
         const csdl = {
-          $Reference: { dummy: { $Include: [{ $Namespace: 'Org.OData.Capabilities.V1', $Alias: 'Capabilities' }] } },
-          $EntityContainer: 'this.Container',
-          this: {
-            Type: { $Kind: 'EntityType', $Key: ['key'], key: {} },
-            Type2: { $Kind: 'EntityType', $Key: ['key1', 'key2'], key1: {}, key2: {} },
-            Container: {
-              '@Capabilities.KeyAsSegmentSupported': true,
-              Set: { $Collection: true, $Type: 'this.Type' },
-              Set2: { $Collection: true, $Type: 'this.Type2' }
+            $Reference: { dummy: { $Include: [{ $Namespace: 'Org.OData.Capabilities.V1', $Alias: 'Capabilities' }] } },
+            $EntityContainer: 'this.Container',
+            this: {
+                Type: { $Kind: 'EntityType', $Key: ['key'], key: {} },
+                Type2: { $Kind: 'EntityType', $Key: ['key1', 'key2'], key1: {}, key2: {} },
+                Container: {
+                    '@Capabilities.KeyAsSegmentSupported': true,
+                    Set: { $Collection: true, $Type: 'this.Type' },
+                    Set2: { $Collection: true, $Type: 'this.Type2' }
+                }
             }
-          }
         }
         const expected = {
-          paths: {
-            '/Set': { get: {}, post: {} },
-            '/Set/{key}': { get: {}, patch: {}, delete: {} },
-            '/Set2': { get: {}, post: {} },
-            '/Set2/{key1}/{key2}': { get: {}, patch: {}, delete: {} },
-            '/$batch': { post: {} }
-          }
+            paths: {
+                '/Set': { get: {}, post: {} },
+                '/Set/{key}': { get: {}, patch: {}, delete: {} },
+                '/Set2': { get: {}, post: {} },
+                '/Set2/{key1}/{key2}': { get: {}, patch: {}, delete: {} },
+                '/$batch': { post: {} }
+            }
         }
         const actual = lib.csdl2openapi(csdl);
         assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
         assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
-      })
-      
-      it('function without parameters', function () {
+    })
+
+    it('function without parameters', function () {
         const csdl = {
             $EntityContainer: 'this.Container',
             this: {
@@ -1296,6 +1296,72 @@ describe('Edge cases', function () {
         assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
         assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
         assert.deepStrictEqual(actual.paths['/things'].get, expected.paths['/things'].get, 'GET things');
+    })
+
+    it('ExpandRestrictions', function () {
+        const csdl = {
+            $Reference: { dummy: { "$Include": [{ "$Namespace": "Org.OData.Capabilities.V1", "$Alias": "Capabilities" }] } },
+            $EntityContainer: 'this.Container',
+            this: {
+                root: {
+                    $Kind: 'EntityType', $Key: ['key'],
+                    key: {},
+                    one: {},
+                    two: {},
+                    nav: { $Type: 'this.child', $Kind: 'NavigationProperty', $ContainsTarget: true },
+                    no_expand: { $Type: 'this.child', $Kind: 'NavigationProperty', $ContainsTarget: true }
+                },
+                child: {
+                    $Kind: 'EntityType', $Key: ['key'],
+                    key: {},
+                    one: {},
+                    two: {},
+                    nav: { $Type: 'this.grandchild', $Kind: 'NavigationProperty', $ContainsTarget: true },
+                    no_expand: { $Type: 'this.grandchild', $Kind: 'NavigationProperty', $ContainsTarget: true }
+                },
+                grandchild: {
+                    $Kind: 'EntityType', $Key: ['key'],
+                    key: {}
+                },
+                Container: {
+                    roots: {
+                        $Type: 'this.root', $Collection: true,
+                        "@Capabilities.ExpandRestrictions": {
+                            "NonExpandableProperties": ["no_expand", "nav/no_expand", "no_expand/no_expand"]
+                        }
+                    }
+                }
+            }
+        };
+        const expectedExpands = {
+            "/roots": [
+                '*',
+                'nav'
+            ],
+            "/roots('{key}')": [
+                '*',
+                'nav'
+            ],
+            "/roots('{key}')/nav": [
+                '*',
+                'nav'
+            ],
+            "/roots('{key}')/no_expand": [
+                '*',
+                'nav'
+            ]
+        }
+
+        const actual = lib.csdl2openapi(csdl, {});
+
+        const actualExpands = {}
+        for (const [path, item] of Object.entries(actual.paths)) {
+            const expand = item.get && item.get.parameters && item.get.parameters.find(param => param.name === 'expand')
+            if (expand) {
+                actualExpands[path] = expand.schema.items.enum
+            }
+        }
+        assert.deepStrictEqual(actualExpands, expectedExpands, 'expands');
     })
 
 })
