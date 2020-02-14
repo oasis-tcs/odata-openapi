@@ -1364,6 +1364,91 @@ describe('Edge cases', function () {
         assert.deepStrictEqual(actualExpands, expectedExpands, 'expands');
     })
 
+    it('Default Namespace', function () {
+
+        const csdl = {
+            $Version: '4.01',
+            $Reference: {
+                dummy: {
+                    "$Include": [
+                        { "$Namespace": "Org.OData.Capabilities.V1", "$Alias": "Capabilities" },
+                        { "$Namespace": "Org.OData.Core.V1", "$Alias": "Core" }
+                    ]
+                }
+            },
+            $EntityContainer: 'this.Container',
+            this: {
+                '@Core.DefaultNamespace': true,
+                root: {
+                    $Kind: 'EntityType', $Key: ['key'], key: {}
+                },
+                act: [
+                    {
+                        $Kind: 'Action',
+                        $IsBound: true,
+                        $Parameter: [{ $Name: 'in', $Type: 'this.root' }]
+                    },
+                    {
+                        $Kind: 'Action',
+                        $IsBound: true,
+                        $Parameter: [{ $Name: 'in', $Type: 'this.root', $Collection: true }]
+                    }
+                ],
+                func: [
+                    {
+                        $Kind: 'Function',
+                        $IsBound: true,
+                        $Parameter: [{ $Name: 'in', $Type: 'this.root' }],
+                        $ReturnType: {}
+                    },
+                    {
+                        $Kind: 'Function',
+                        $IsBound: true,
+                        $Parameter: [{ $Name: 'in', $Type: 'this.root', $Collection: true }],
+                        $ReturnType: {}
+                    }
+                ],
+                Container: {
+                    '@Capabilities.KeyAsSegmentSupported': true,
+                    roots: {
+                        $Type: 'this.root', $Collection: true
+                    }
+                }
+            }
+        };
+
+        const expected = {
+            paths: {
+                "/$batch": { post: {} },
+                "/roots": { get: {}, post: {} },
+                "/roots/act": {
+                    post: {
+                        summary: 'Invoke action act',
+                        tags: ['roots'],
+                        responses: {
+                            204: {
+                                description: 'Success'
+                            },
+                            '4XX': {
+                                $ref: '#/components/responses/error'
+                            }
+                        }
+                    }
+                },
+                "/roots/func": { get: {} },
+                "/roots/{key}": { get: {}, patch: {}, delete: {} },
+                "/roots/{key}/act": { post: {} },
+                "/roots/{key}/func": { get: {} }
+            }
+        }
+
+        const actual = lib.csdl2openapi(csdl, {});
+
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
+        assert.deepStrictEqual(actual.paths['/roots/act'].post, expected.paths['/roots/act'].post, 'POST /roots/act');
+    })
+
 })
 
 function check(actual, expected) {
