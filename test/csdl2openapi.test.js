@@ -139,7 +139,7 @@ describe('Edge cases', function () {
                     key: {}
                 },
                 typeDefinition: { $Kind: 'TypeDefinition', $UnderlyingType: 'Edm.DateTimeOffset' },
-                typeDefinition3: { $Kind: 'TypeDefinition', $UnderlyingType: 'Edm.DateTimeOffset', $Scale: 3 }
+                typeDefinition3: { $Kind: 'TypeDefinition', $UnderlyingType: 'Edm.DateTimeOffset', $Precision: 3 }
             }
         };
         const expected = {
