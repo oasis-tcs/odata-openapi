@@ -1500,7 +1500,7 @@ describe('Edge cases', function () {
                         title: 'root (for update)',
                         properties: {
                             one: { type: 'string' }, two: { type: 'string' },
-                            children: { type: 'array', items: { $ref: '#/components/schemas/this.child-update' } }
+                            children: { type: 'array', items: { $ref: '#/components/schemas/this.child-create' } }
                         }
                     },
                     'this.child-update': {
@@ -1508,7 +1508,7 @@ describe('Edge cases', function () {
                         title: 'child (for update)',
                         properties: {
                             one: { type: 'string' }, two: { type: 'string' },
-                            nav: { $ref: '#/components/schemas/this.grandchild-update' }
+                            nav: { $ref: '#/components/schemas/this.grandchild-create' }
                         }
                     }
                 }
