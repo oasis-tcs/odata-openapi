@@ -1449,6 +1449,82 @@ describe('Edge cases', function () {
         assert.deepStrictEqual(actual.paths['/roots/act'].post, expected.paths['/roots/act'].post, 'POST /roots/act');
     })
 
+    it('Deep update on container level', function () {
+        const csdl = {
+            $Reference: { dummy: { "$Include": [{ "$Namespace": "Org.OData.Capabilities.V1", "$Alias": "Capabilities" }] } },
+            $EntityContainer: 'this.Container',
+            this: {
+                root: {
+                    $Kind: 'EntityType', $Key: ['key'],
+                    key: {},
+                    one: {},
+                    two: {},
+                    children: { $Type: 'this.child', $Kind: 'NavigationProperty', $ContainsTarget: true, $Collection: true },
+                },
+                child: {
+                    $Kind: 'EntityType', $Key: ['key'],
+                    key: {},
+                    one: {},
+                    two: {},
+                    nav: { $Type: 'this.grandchild', $Kind: 'NavigationProperty', $ContainsTarget: true },
+                },
+                grandchild: {
+                    $Kind: 'EntityType', $Key: ['key'],
+                    key: {},
+                    one: {},
+                    two: {}
+                },
+                Container: {
+                    '@Capabilities.KeyAsSegmentSupported': true,
+                    '@Capabilities.DeepUpdateSupport': { Supported: true },
+                    roots: {
+                        $Type: 'this.root', $Collection: true
+                    }
+                }
+            }
+        };
+
+        const expected = {
+            paths: {
+                "/$batch": { post: {} },
+                "/roots": { get: {}, post: {} },
+                "/roots/{key}": { get: {}, patch: {}, delete: {} },
+                "/roots/{key}/children": { get: {}, post: {} },
+                "/roots/{key}/children/{key-1}": { get: {}, patch: {}, delete: {} },
+                "/roots/{key}/children/{key-1}/nav": { get: {}, patch: {} },
+            },
+            components: {
+                schemas: {
+                    'this.root-update': {
+                        type: 'object',
+                        title: 'root (for update)',
+                        properties: {
+                            one: { type: 'string' }, two: { type: 'string' },
+                            children: { type: 'array', items: { $ref: '#/components/schemas/this.child-create' } }
+                        }
+                    },
+                    'this.child-update': {
+                        type: 'object',
+                        title: 'child (for update)',
+                        properties: {
+                            one: { type: 'string' }, two: { type: 'string' },
+                            nav: { $ref: '#/components/schemas/this.grandchild-create' }
+                        }
+                    }
+                }
+            }
+        }
+
+        const actual = lib.csdl2openapi(csdl, {});
+
+        assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
+        assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
+
+        //TODO: check components
+        assert.deepStrictEqual(actual.components.schemas['this.root-update'], expected.components.schemas['this.root-update'], 'root update structure')
+        assert.deepStrictEqual(actual.components.schemas['this.child-update'], expected.components.schemas['this.child-update'], 'child update structure')
+    })
+
 })
 
 function check(actual, expected) {
