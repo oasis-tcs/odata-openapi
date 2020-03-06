@@ -1151,7 +1151,14 @@ describe('Edge cases', function () {
 
     it('FilterRestrictions, NavigationRestrictions, and SortRestrictions', function () {
         const csdl = {
-            $Reference: { dummy: { "$Include": [{ "$Namespace": "Org.OData.Capabilities.V1", "$Alias": "Capabilities" }] } },
+            $Reference: {
+                dummy: {
+                    "$Include": [
+                        { "$Namespace": "Org.OData.Core.V1", "$Alias": "Core" },
+                        { "$Namespace": "Org.OData.Capabilities.V1", "$Alias": "Capabilities" }
+                    ]
+                }
+            },
             $EntityContainer: 'this.Container',
             this: {
                 thing: {
@@ -1165,6 +1172,7 @@ describe('Edge cases', function () {
                     things: {
                         $Type: 'this.thing', $Collection: true,
                         "@Capabilities.FilterRestrictions": {
+                            "@Core.Description": "Filtering has some restrictions here.",
                             "RequiredProperties": ["two"]
                         },
                         "@Capabilities.NavigationRestrictions": {
@@ -1176,6 +1184,7 @@ describe('Edge cases', function () {
                             ]
                         },
                         "@Capabilities.SortRestrictions": {
+                            "@Core.Description": "Sorting has some restrictions here.",
                             "NonSortableProperties": ["one"]
                         }
                     }
@@ -1195,13 +1204,13 @@ describe('Edge cases', function () {
                                 in: 'query',
                                 name: 'filter',
                                 schema: { type: 'string' },
-                                description: 'Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)\n\nRequired filter properties:\n- two'
+                                description: 'Filtering has some restrictions here.\n\nRequired filter properties:\n- two'
                             },
                             { $ref: '#/components/parameters/count' },
                             {
                                 in: 'query',
                                 name: 'orderby',
-                                description: 'Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)',
+                                description: 'Sorting has some restrictions here.',
                                 explode: false,
                                 schema: {
                                     type: 'array',
@@ -1300,7 +1309,10 @@ describe('Edge cases', function () {
 
     it('ExpandRestrictions', function () {
         const csdl = {
-            $Reference: { dummy: { "$Include": [{ "$Namespace": "Org.OData.Capabilities.V1", "$Alias": "Capabilities" }] } },
+            $Reference: { dummy: { "$Include": [
+                { "$Namespace": "Org.OData.Core.V1", "$Alias": "Core" },
+                { "$Namespace": "Org.OData.Capabilities.V1", "$Alias": "Capabilities" }
+            ] } },
             $EntityContainer: 'this.Container',
             this: {
                 root: {
@@ -1327,6 +1339,7 @@ describe('Edge cases', function () {
                     roots: {
                         $Type: 'this.root', $Collection: true,
                         "@Capabilities.ExpandRestrictions": {
+                            "@Core.Description": "Expanding has some restrictions here.",
                             "NonExpandableProperties": ["no_expand", "nav/no_expand", "no_expand/no_expand"]
                         }
                     }
@@ -1362,6 +1375,7 @@ describe('Edge cases', function () {
             }
         }
         assert.deepStrictEqual(actualExpands, expectedExpands, 'expands');
+        assert.equal(actual.paths['/roots'].get.parameters.find(item => item.name == 'expand').description, 'Expanding has some restrictions here.', 'expand description')
     })
 
     it('Default Namespace', function () {
