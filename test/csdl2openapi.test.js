@@ -302,20 +302,23 @@ describe('Edge cases', function () {
         assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
     })
 
-    it('inherited key', function () {
+    it('inherited key, BatchSupport/Supported:false', function () {
         const csdl = {
             $EntityContainer: 'this.Container',
+            $Reference: { dummy: { $Include: [{ $Namespace: 'Org.OData.Capabilities.V1', $Alias: 'Capabilities' }] } },
             this: {
                 Base: { $Kind: 'EntityType', $Key: ['key'], key: {} },
                 Derived: { $Kind: 'EntityType', $BaseType: 'this.Base' },
-                Container: { Set: { $Collection: true, $Type: 'this.Derived' } }
+                Container: {
+                    '@Capabilities.BatchSupport': { Supported: false },
+                    Set: { $Collection: true, $Type: 'this.Derived' }
+                }
             }
         };
         const expected = {
             paths: {
                 '/Set': { get: {}, post: {} },
-                "/Set('{key}')": { get: {}, patch: {}, delete: {} },
-                '/$batch': { post: {} }
+                "/Set('{key}')": { get: {}, patch: {}, delete: {} }
             }
         };
         const actual = lib.csdl2openapi(csdl, {});
@@ -325,12 +328,23 @@ describe('Edge cases', function () {
 
     it('key-as-segment', function () {
         const csdl = {
-            $Reference: { dummy: { $Include: [{ $Namespace: 'Org.OData.Capabilities.V1', $Alias: 'Capabilities' }] } },
+            $Reference: {
+                dummy: {
+                    '$Include': [
+                        { '$Namespace': 'Org.OData.Core.V1', '$Alias': 'Core' },
+                        { '$Namespace': 'Org.OData.Capabilities.V1', '$Alias': 'Capabilities' }
+                    ]
+                }
+            },
             $EntityContainer: 'this.Container',
             this: {
                 Type: { $Kind: 'EntityType', $Key: ['key'], key: {} },
                 Type2: { $Kind: 'EntityType', $Key: ['key1', 'key2'], key1: {}, key2: {} },
                 Container: {
+                    '@Capabilities.BatchSupport': {
+                        '@Core.Description': 'BatchSupport - Description',
+                        '@Core.LongDescription': 'BatchSupport - LongDescription'
+                    },
                     '@Capabilities.KeyAsSegmentSupported': true,
                     Set: { $Collection: true, $Type: 'this.Type' },
                     Set2: { $Collection: true, $Type: 'this.Type2' }
@@ -349,6 +363,8 @@ describe('Edge cases', function () {
         const actual = lib.csdl2openapi(csdl);
         assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
         assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
+        assert.equal(actual.paths['/$batch'].post.summary, 'BatchSupport - Description', 'Batch summary');
+        assert.equal(actual.paths['/$batch'].post.description, 'BatchSupport - LongDescription\n\n*Please note that "Try it out" is not supported for this request.*', 'Batch description');
     })
 
     it('function without parameters', function () {
