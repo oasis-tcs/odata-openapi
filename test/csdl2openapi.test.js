@@ -1149,8 +1149,9 @@ describe('Edge cases', function () {
         assert.deepStrictEqual(actual.paths['/Categories'].get, expected.paths['/Categories'].get, 'GET Categories');
     })
 
-    it('FilterRestrictions, NavigationRestrictions, and SortRestrictions', function () {
+    it('FilterRestrictions, NavigationRestrictions, SearchRestrictions, and SortRestrictions', function () {
         const csdl = {
+            $Version: '4.01',
             $Reference: {
                 dummy: {
                     "$Include": [
@@ -1183,6 +1184,10 @@ describe('Edge cases', function () {
                                 }
                             ]
                         },
+                        "@Capabilities.SearchRestrictions": {
+                            "@Core.Description": "Searching has some restrictions here.",
+                            "Searchable": true
+                        },
                         "@Capabilities.SortRestrictions": {
                             "@Core.Description": "Sorting has some restrictions here.",
                             "NonSortableProperties": ["one"]
@@ -1200,6 +1205,12 @@ describe('Edge cases', function () {
                         parameters: [
                             { $ref: "#/components/parameters/top" },
                             { $ref: "#/components/parameters/skip" },
+                            {
+                                in: 'query',
+                                name: 'search',
+                                schema: { type: 'string' },
+                                description: 'Searching has some restrictions here.'
+                            },
                             {
                                 in: 'query',
                                 name: 'filter',
@@ -1309,10 +1320,14 @@ describe('Edge cases', function () {
 
     it('ExpandRestrictions', function () {
         const csdl = {
-            $Reference: { dummy: { "$Include": [
-                { "$Namespace": "Org.OData.Core.V1", "$Alias": "Core" },
-                { "$Namespace": "Org.OData.Capabilities.V1", "$Alias": "Capabilities" }
-            ] } },
+            $Reference: {
+                dummy: {
+                    "$Include": [
+                        { "$Namespace": "Org.OData.Core.V1", "$Alias": "Core" },
+                        { "$Namespace": "Org.OData.Capabilities.V1", "$Alias": "Capabilities" }
+                    ]
+                }
+            },
             $EntityContainer: 'this.Container',
             this: {
                 root: {
