@@ -468,6 +468,10 @@ describe('Edge cases', function () {
                                             type: 'object',
                                             title: 'Collection of String',
                                             properties: {
+                                                '@odata.count': {
+                                                    type: 'number',
+                                                    description: 'The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option.',
+                                                },
                                                 value: {
                                                     type: 'array',
                                                     items: {
@@ -522,6 +526,10 @@ describe('Edge cases', function () {
             }
         };
         const expectedGetResponseProperties = {
+            '@odata.count': {
+                type: 'number',
+                description: 'The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option.',
+            },
             value: {
                 type: 'array',
                 items: {
@@ -578,6 +586,10 @@ describe('Edge cases', function () {
                                             type: 'object',
                                             title: 'Collection of type_does_not_exist',
                                             properties: {
+                                                '@odata.count': {
+                                                    type: 'number',
+                                                    description: 'The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option.',
+                                                },
                                                 value: {
                                                     type: 'array',
                                                     items: {
@@ -782,6 +794,10 @@ describe('Edge cases', function () {
                                             type: 'object',
                                             title: 'Collection of derived',
                                             properties: {
+                                                '@odata.count': {
+                                                    type: 'number',
+                                                    description: 'The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option.',
+                                                },
                                                 value: {
                                                     type: 'array',
                                                     items: {
@@ -950,6 +966,10 @@ describe('Edge cases', function () {
                                             type: 'object',
                                             title: 'Collection of source',
                                             properties: {
+                                                '@odata.count': {
+                                                    type: 'number',
+                                                    description: 'The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option.',
+                                                },
                                                 value: {
                                                     type: 'array',
                                                     items: {
@@ -1104,6 +1124,10 @@ describe('Edge cases', function () {
                                             type: 'object',
                                             title: 'Collection of Category',
                                             properties: {
+                                                '@odata.count': {
+                                                    type: 'number',
+                                                    description: 'The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option.',
+                                                },
                                                 value: {
                                                     type: 'array',
                                                     items: {
@@ -1298,6 +1322,10 @@ describe('Edge cases', function () {
                                             type: 'object',
                                             title: 'Collection of thing',
                                             properties: {
+                                                '@count': {
+                                                    type: 'number',
+                                                    description: 'The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option.',
+                                                },
                                                 value: {
                                                     type: 'array',
                                                     items: {
