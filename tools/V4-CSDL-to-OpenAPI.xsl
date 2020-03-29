@@ -1416,6 +1416,26 @@
 
     <xsl:if test="$direct and ($baseproperties!='' or $hereproperties!='')">
       <xsl:text>,"properties":{</xsl:text>
+      <!-- odata entity metadata properties -->
+      <xsl:if test="not($suffix) and local-name($structuredType)='EntityType'">
+        <xsl:choose>
+          <xsl:when test="$odata-version='2.0'">
+            <xsl:text>"__metadata":{
+                "type":"object",
+                "readOnly":true,
+                "description":"This name/value pair is not data, but instead, specifies the metadata for the EntityType instance that the JSON object represents.",
+                "properties":{"id":{"type":"string"},"uri":{"type":"string"},"type":{"type":"string"},"etag":{"type":"string","example":"W/\"X'000000000000D2F3'\""}}
+              },
+            </xsl:text>
+          </xsl:when>
+          <xsl:when test="$odata-version='4.0'">
+            <xsl:text>"@odata.id":{"type":"string","readOnly":true},"@odata.etag":{"type":"string","readOnly":true,"example":"W/\"08D7D40891852C76\""},"@odata.type":{"type":"string","readOnly":true},</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>"@id":{"type":"string","readOnly":true},"@etag":{"type":"string","readOnly":true,"example":"W/\"08D7D40891852C76\""},"@type":{"type":"string","readOnly":true},</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
     </xsl:if>
 
     <xsl:if test="not($direct)">

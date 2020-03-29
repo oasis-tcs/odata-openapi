@@ -156,6 +156,19 @@ describe('Edge cases', function () {
                         type: 'object',
                         title: 'Core.Description',
                         properties: {
+                            "@odata.etag": {
+                                example: "W/\"08D7D40891852C76\"",
+                                readOnly: true,
+                                type: "string",
+                            },
+                            "@odata.id": {
+                                readOnly: true,
+                                type: "string",
+                            },
+                            "@odata.type": {
+                                readOnly: true,
+                                type: "string",
+                            },
                             key: { type: 'string' }
                         }
                     },
