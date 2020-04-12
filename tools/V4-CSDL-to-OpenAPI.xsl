@@ -897,6 +897,16 @@
 
   <!-- definitions for standard error response - only needed if there's an entity container -->
   <xsl:template match="edm:EntityContainer" mode="hashpair">
+    <xsl:text>"count":</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$odata-version='2.0'">
+        <xsl:text>{"type":"string","description":"The number of entities in the collection. Available when using the [$inlinecount](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=67) query option."}</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>{"anyOf":[{"type":"number"},{"type": "string"}],"description":"The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option."}</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>,</xsl:text>
     <xsl:if test="//@Type[.='Edm.GeographyPoint' or .='Edm.GeometryPoint']">
       <xsl:text>"geoPoint":{"type":"object","properties":{"type":{"type":"string","enum":["Point"],"default":"Point"},"coordinates":{"$ref":"</xsl:text>
       <xsl:value-of select="$reuse-schemas" />
@@ -1586,7 +1596,9 @@
         </xsl:if>
         <xsl:text>"type":"object","properties":{</xsl:text>
         <xsl:if test="$inResponse">
-          <xsl:text>"__count":{"type":"string","description":"The number of entities in the collection. Available when using the [$inlinecount](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=67) query option."},</xsl:text>
+          <xsl:text>"__count":{"$ref":"</xsl:text>
+          <xsl:value-of select="$reuse-schemas" />
+          <xsl:text>count"},</xsl:text>
         </xsl:if>
         <xsl:text>"results":{</xsl:text>
       </xsl:if>
@@ -4248,15 +4260,13 @@
               </xsl:if>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:choose>
-                <xsl:when test="$odata-version='4.0'">
-                  <xsl:text>@odata.count":{"type":"number","description":"The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option."},"value</xsl:text>
-                </xsl:when>
-                <xsl:otherwise>
-                  <!-- $odata-version > '4.0' -->
-                  <xsl:text>@count":{"type":"number","description":"The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option."},"value</xsl:text>
-                </xsl:otherwise>
-              </xsl:choose>
+              <xsl:text>@</xsl:text>
+              <xsl:if test="$odata-version='4.0'">
+                <xsl:text>odata.</xsl:text>
+              </xsl:if>
+              <xsl:text>count":{"$ref":"</xsl:text>
+              <xsl:value-of select="$reuse-schemas" />
+              <xsl:text>count"},"value</xsl:text>
             </xsl:otherwise>
           </xsl:choose>
           <xsl:text>":{</xsl:text>
