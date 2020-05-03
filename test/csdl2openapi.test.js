@@ -481,6 +481,9 @@ describe('Edge cases', function () {
                                             type: 'object',
                                             title: 'Collection of String',
                                             properties: {
+                                                '@odata.count': {
+                                                    $ref: '#/components/schemas/count'
+                                                },
                                                 value: {
                                                     type: 'array',
                                                     items: {
@@ -535,6 +538,9 @@ describe('Edge cases', function () {
             }
         };
         const expectedGetResponseProperties = {
+            '@odata.count': {
+                $ref: '#/components/schemas/count'
+            },
             value: {
                 type: 'array',
                 items: {
@@ -591,6 +597,9 @@ describe('Edge cases', function () {
                                             type: 'object',
                                             title: 'Collection of type_does_not_exist',
                                             properties: {
+                                                '@odata.count': {
+                                                    $ref: '#/components/schemas/count'
+                                                },
                                                 value: {
                                                     type: 'array',
                                                     items: {
@@ -795,6 +804,9 @@ describe('Edge cases', function () {
                                             type: 'object',
                                             title: 'Collection of derived',
                                             properties: {
+                                                '@odata.count': {
+                                                    $ref: '#/components/schemas/count'
+                                                },
                                                 value: {
                                                     type: 'array',
                                                     items: {
@@ -963,6 +975,9 @@ describe('Edge cases', function () {
                                             type: 'object',
                                             title: 'Collection of source',
                                             properties: {
+                                                '@odata.count': {
+                                                    $ref: '#/components/schemas/count'
+                                                },
                                                 value: {
                                                     type: 'array',
                                                     items: {
@@ -1117,6 +1132,9 @@ describe('Edge cases', function () {
                                             type: 'object',
                                             title: 'Collection of Category',
                                             properties: {
+                                                '@odata.count': {
+                                                    $ref: '#/components/schemas/count'
+                                                },
                                                 value: {
                                                     type: 'array',
                                                     items: {
@@ -1311,6 +1329,9 @@ describe('Edge cases', function () {
                                             type: 'object',
                                             title: 'Collection of thing',
                                             properties: {
+                                                '@count': {
+                                                    $ref: '#/components/schemas/count'
+                                                },
                                                 value: {
                                                     type: 'array',
                                                     items: {
