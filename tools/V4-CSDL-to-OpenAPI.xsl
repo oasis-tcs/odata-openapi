@@ -899,16 +899,13 @@
   <xsl:template match="edm:EntityContainer" mode="hashpair">
     <xsl:choose>
       <xsl:when test="$odata-version='2.0'">
-        <xsl:text>"@OData.metadata":{
-            "type":"object",
-            "description":"This name/value pair is not data, but instead, specifies the metadata for the EntityType instance that the JSON object represents.",
-            "properties":{"id":{"type":"string"},"uri":{"type":"string"},"type":{"type":"string"},"etag":{"type":"string","example":"W/\"X'000000000000D2F3'\""}}
-          },
-        </xsl:text>
+        <xsl:text>"metadata":{"type":"object",</xsl:text>
+        <xsl:text>"description":"This name/value pair is not data, but instead, specifies the metadata for the EntityType instance that the JSON object represents.",</xsl:text>
+        <xsl:text>"properties":{"id":{"type":"string"},"uri":{"type":"string"},"type":{"type":"string"}}</xsl:text>
+        <xsl:text>},</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>"@OData.etag":{"type":"string","example":"W/\"08D7D40891852C76\""},</xsl:text>
-        <xsl:text>"@OData.type":{"type":"string"},</xsl:text>
+        <xsl:text>"type":{"type":"string"},</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>"count":</xsl:text>
@@ -1446,26 +1443,17 @@
           <xsl:when test="$odata-version='2.0'">
             <xsl:text>"__metadata":{"$ref":"</xsl:text>
             <xsl:value-of select="$reuse-schemas" />
-            <xsl:text>%40OData.metadata"},</xsl:text>
-          </xsl:when>
-          <xsl:when test="$odata-version='4.0'">
-            <xsl:text>"@odata.etag":{"$ref":"</xsl:text>
-            <xsl:value-of select="$reuse-schemas" />
-            <xsl:text>%40OData.etag"},</xsl:text>
-            <xsl:if test="$structuredType/@BaseType">
-              <xsl:text>"@odata.type":{"$ref":"</xsl:text>
-              <xsl:value-of select="$reuse-schemas" />
-              <xsl:text>%40OData.type"},</xsl:text>
-            </xsl:if>
+            <xsl:text>metadata"},</xsl:text>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:text>"@etag":{"$ref":"</xsl:text>
-            <xsl:value-of select="$reuse-schemas" />
-            <xsl:text>%40OData.etag"},</xsl:text>
             <xsl:if test="$structuredType/@BaseType">
-              <xsl:text>"@type":{"$ref":"</xsl:text>
+              <xsl:text>"@</xsl:text>
+              <xsl:if test="$odata-version='3.0' or $odata-version='4.0'">
+                <xsl:text>odata.</xsl:text>
+              </xsl:if>
+              <xsl:text>type":{"$ref":"</xsl:text>
               <xsl:value-of select="$reuse-schemas" />
-              <xsl:text>%40OData.type"},</xsl:text>
+              <xsl:text>type"},</xsl:text>
             </xsl:if>
           </xsl:otherwise>
         </xsl:choose>
@@ -4305,7 +4293,7 @@
             </xsl:when>
             <xsl:otherwise>
               <xsl:text>@</xsl:text>
-              <xsl:if test="$odata-version='4.0'">
+              <xsl:if test="$odata-version='3.0' or $odata-version='4.0'">
                 <xsl:text>odata.</xsl:text>
               </xsl:if>
               <xsl:text>count":{"$ref":"</xsl:text>
