@@ -897,6 +897,17 @@
 
   <!-- definitions for standard error response - only needed if there's an entity container -->
   <xsl:template match="edm:EntityContainer" mode="hashpair">
+    <xsl:choose>
+      <xsl:when test="$odata-version='2.0'">
+        <xsl:text>"metadata":{"type":"object",</xsl:text>
+        <xsl:text>"description":"This name/value pair is not data, but instead, specifies the metadata for the EntityType instance that the JSON object represents.",</xsl:text>
+        <xsl:text>"properties":{"id":{"type":"string"},"uri":{"type":"string"},"type":{"type":"string"}}</xsl:text>
+        <xsl:text>},</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>"type":{"type":"string"},</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>"count":</xsl:text>
     <xsl:choose>
       <xsl:when test="$odata-version='2.0'">
@@ -1426,6 +1437,27 @@
 
     <xsl:if test="$direct and ($baseproperties!='' or $hereproperties!='')">
       <xsl:text>,"properties":{</xsl:text>
+      <!-- odata entity metadata properties -->
+      <xsl:if test="not($suffix) and local-name($structuredType)='EntityType'">
+        <xsl:choose>
+          <xsl:when test="$odata-version='2.0'">
+            <xsl:text>"__metadata":{"$ref":"</xsl:text>
+            <xsl:value-of select="$reuse-schemas" />
+            <xsl:text>metadata"},</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:if test="$structuredType/@BaseType">
+              <xsl:text>"@</xsl:text>
+              <xsl:if test="$odata-version='3.0' or $odata-version='4.0'">
+                <xsl:text>odata.</xsl:text>
+              </xsl:if>
+              <xsl:text>type":{"$ref":"</xsl:text>
+              <xsl:value-of select="$reuse-schemas" />
+              <xsl:text>type"},</xsl:text>
+            </xsl:if>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
     </xsl:if>
 
     <xsl:if test="not($direct)">
@@ -4261,7 +4293,7 @@
             </xsl:when>
             <xsl:otherwise>
               <xsl:text>@</xsl:text>
-              <xsl:if test="$odata-version='4.0'">
+              <xsl:if test="$odata-version='3.0' or $odata-version='4.0'">
                 <xsl:text>odata.</xsl:text>
               </xsl:if>
               <xsl:text>count":{"$ref":"</xsl:text>
