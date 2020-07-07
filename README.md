@@ -12,7 +12,7 @@
 <p>The purpose of this repository is to support development of tools for producing <a href="https://github.com/OAI/OpenAPI-Specification">OpenAPI</a> descriptions for OData services.</p>
 <p>Planned work items include:
 <ul>
-<li>XSLT transformation from OData CSDL XML to OpenAPI JSON</li>
+<li>convert OData CSDL JSON or OData CSDL XML to OpenAPI JSON</li>
 <li>example XML files</li>
 <li>example openapi.json files</li>
 <li>example files for the live odata.org services</li>
