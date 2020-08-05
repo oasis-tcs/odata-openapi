@@ -6,6 +6,9 @@
   <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
     <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
   </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1" />
+  </edmx:Reference>
   <edmx:DataServices>
     <Schema Namespace="PeopleService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <EntityType Name="Supplier">
@@ -55,6 +58,7 @@
         <NavigationProperty Name="Person" Type="PeopleService.Person" Partner="PersonDetail" />
       </EntityType>
       <EntityContainer Name="Container">
+        <Annotation Term="Capabilities.KeyAsSegmentSupported" />
         <EntitySet Name="Suppliers" EntityType="PeopleService.Supplier">
           <NavigationPropertyBinding Path="Products" Target="ProductService.Container/Products" />
         </EntitySet>
