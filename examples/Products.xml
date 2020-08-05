@@ -3,6 +3,9 @@
   <edmx:Reference Uri="./People.xml">
     <edmx:Include Namespace="PeopleService" />
   </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1" />
+  </edmx:Reference>
   <edmx:DataServices>
     <Schema Namespace="ProductService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <EntityType Name="Product">
@@ -54,6 +57,7 @@
         <ReturnType Type="Edm.Double" Nullable="false" />
       </Action>
       <EntityContainer Name="Container">
+        <Annotation Term="Capabilities.KeyAsSegmentSupported" />
         <EntitySet Name="Products" EntityType="ProductService.Product">
           <NavigationPropertyBinding Path="ProductService.FeaturedProduct/Advertisement"
             Target="Advertisements" />
