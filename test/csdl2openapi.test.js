@@ -311,6 +311,66 @@ describe('Edge cases', function () {
         assert.deepStrictEqual(openapi, expected, 'Empty CSDL document');
     })
 
+    it('type definition with @Org.OData.JSON.V1.Schema', function () {
+        const csdl = {
+            $Reference: {
+                dummy: {
+                    '$Include': [
+                        { '$Namespace': 'Org.OData.Core.V1'},
+                        { '$Namespace': 'Org.OData.JSON.V1'}
+                    ]
+                }
+            },
+            jsonExamples: {
+                typeDefinitionOld: {
+                    $Kind: 'TypeDefinition',
+                    $UnderlyingType: 'Edm.Stream',
+                    "@Org.OData.JSON.V1.Schema": "{\"type\":\"object\",\"additionalProperties\":false,\"patternProperties\":{\"^[\\\\w\\\\.\\\\-\\\\/]+$\":{\"type\":\"string\"}}}"
+                },
+                typeDefinitionNew: {
+                    $Kind: 'TypeDefinition',
+                    $UnderlyingType: 'Edm.Stream',
+                    "@Org.OData.JSON.V1.Schema": {
+                        type: 'object',
+                        additionalProperties: false,
+                        patternProperties: { "^[\\w\\.\\-\\/]+$": { type: 'string' } }
+                    }
+                }
+            }
+        };
+        const expected = {
+            openapi: '3.0.2',
+            info: {
+                title: 'OData CSDL document',
+                description: '',
+                version: ''
+            },
+            paths: {},
+            components: {
+                schemas: {
+                    'jsonExamples.typeDefinitionOld': {
+                        title: 'typeDefinitionOld',
+                        type: 'object',
+                        additionalProperties: false,
+                        patternProperties: {
+                            "^[\\w\\.\\-\\/]+$": { type: 'string' }
+                        }
+                    },
+                    'jsonExamples.typeDefinitionNew': {
+                        title: 'typeDefinitionNew',
+                        type: 'object',
+                        additionalProperties: false,
+                        patternProperties: {
+                            "^[\\w\\.\\-\\/]+$": { type: 'string' }
+                        }
+                    }
+                }
+            }
+        };
+        const openapi = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(openapi, expected, 'Empty CSDL document');
+    })
+
     it('no key', function () {
         const csdl = {
             $EntityContainer: 'this.Container',
@@ -1236,7 +1296,7 @@ describe('Edge cases', function () {
                         }
                     }
                 },
-                "/Categories({Info-ID})": {
+                "/Categories({EntityInfoID})": {
                     get: {},
                     patch: {},
                     delete: {}
@@ -1623,8 +1683,8 @@ describe('Edge cases', function () {
                 "/roots": { get: {}, post: {} },
                 "/roots/{key}": { get: {}, patch: {}, delete: {} },
                 "/roots/{key}/children": { get: {}, post: {} },
-                "/roots/{key}/children/{key-1}": { get: {}, patch: {}, delete: {} },
-                "/roots/{key}/children/{key-1}/nav": { get: {}, patch: {} },
+                "/roots/{key}/children/{key_1}": { get: {}, patch: {}, delete: {} },
+                "/roots/{key}/children/{key_1}/nav": { get: {}, patch: {} },
             },
             components: {
                 schemas: {
