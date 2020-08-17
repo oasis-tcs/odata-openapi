@@ -1229,7 +1229,7 @@ describe('Edge cases', function () {
                         }
                     }
                 },
-                "/Categories({Info-ID})": {
+                "/Categories({EntityInfoID})": {
                     get: {},
                     patch: {},
                     delete: {}
