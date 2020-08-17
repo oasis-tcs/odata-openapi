@@ -184,6 +184,73 @@ describe('Edge cases', function () {
         assert.deepStrictEqual(openapi, expected, 'Empty CSDL document');
     })
 
+    it('circular reference on collect primitive paths', function () {
+        const csdl = {
+            $EntityContainer: 'this.Container',
+            this: {
+                source: {
+                    $Kind: 'EntityType',
+                    $Key: ['s_id'],
+                    s_id: {},
+                    complex1: { $Type: 'this.complex1' },
+                    complex2: { $Type: 'this.complex2' },
+                },
+                complex1: {
+                    $Kind: 'ComplexType',
+                    beforeComplex2: {},
+                    complex2: { $Type: 'this.complex2' },
+                    afterComplex2: {}
+                },
+                complex2: {
+                    $Kind: 'ComplexType',
+                    beforeComplex1: {},
+                    complex1: { $Type: 'this.complex1' },
+                    afterComplex1: {}
+                },                
+                Container: {
+                    sources: { $Type: 'this.source', $Collection: true },
+                }
+            }
+        };
+
+        expected_sources_get_param = {
+            description: 'Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)',
+            explode: false,
+            in: 'query',
+            name: 'orderby',
+            schema: {
+                items: {
+                    enum: [
+                        's_id',
+                        's_id desc',
+                        'complex1/beforeComplex2',
+                        'complex1/beforeComplex2 desc',
+                        'complex1/complex2/beforeComplex1',
+                        'complex1/complex2/beforeComplex1 desc',
+                        'complex1/complex2/afterComplex1',
+                        'complex1/complex2/afterComplex1 desc',
+                        'complex1/afterComplex2',
+                        'complex1/afterComplex2 desc',
+                        'complex2/beforeComplex1',
+                        'complex2/beforeComplex1 desc',
+                        'complex2/complex1/beforeComplex2',
+                        'complex2/complex1/beforeComplex2 desc',
+                        'complex2/complex1/afterComplex2',
+                        'complex2/complex1/afterComplex2 desc',
+                        'complex2/afterComplex1',
+                        'complex2/afterComplex1 desc'
+                    ],
+                    type: 'string'
+                },
+                type: 'array',
+                uniqueItems: true
+            }
+        }
+
+        const openapi = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(openapi.paths['/sources'].get.parameters[4], expected_sources_get_param);
+    })
+
     it('type definition with @JSON.Schema', function () {
         const csdl = {
             $Reference: {
