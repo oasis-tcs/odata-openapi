@@ -479,7 +479,7 @@
 
     </xsl:if>
 
-    <xsl:apply-templates select="//edm:EntitySet|//edm:Singleton" mode="tags" />
+    <xsl:apply-templates select="//edm:EntitySet[not(edm:Annotation[@Term='sap.parameters'])]|//edm:Singleton" mode="tags" />
 
     <!-- paths is required, so we need it also for documents that do not define an entity container -->
     <xsl:text>,"paths":{</xsl:text>
@@ -903,7 +903,15 @@
         <xsl:text>{"type":"string","description":"The number of entities in the collection. Available when using the [$inlinecount](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=67) query option."}</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>{"anyOf":[{"type":"number"},{"type": "string"}],"description":"The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option."}</xsl:text>
+        <xsl:text>{</xsl:text>
+        <xsl:if test="$openapi-version!='2.0'">
+          <xsl:text>"anyOf":[{"type":"number"},{</xsl:text>
+        </xsl:if>
+        <xsl:text>"type":"string"</xsl:text>
+        <xsl:if test="$openapi-version!='2.0'">
+          <xsl:text>}]</xsl:text>
+        </xsl:if>
+        <xsl:text>,"description":"The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option."}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>,</xsl:text>
@@ -2554,18 +2562,23 @@
     <xsl:param name="targetSet" select="null" />
     <xsl:param name="fallback" select="null" />
     <xsl:text>,"tags":["</xsl:text>
-    <xsl:choose>
-      <xsl:when test="$sourceSet">
-        <xsl:call-template name="entityset-label">
-          <xsl:with-param name="set" select="$sourceSet" />
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$fallback" />
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:variable name="parameters" select="$sourceSet/edm:Annotation[@Term='sap.parameters']" />
+    <xsl:if test="not($parameters)">
+      <xsl:choose>
+        <xsl:when test="$sourceSet">
+          <xsl:call-template name="entityset-label">
+            <xsl:with-param name="set" select="$sourceSet" />
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$fallback" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
     <xsl:if test="$targetSet and $targetSet/@Name!=$sourceSet/@Name">
-      <xsl:text>","</xsl:text>
+      <xsl:if test="not($parameters)">
+        <xsl:text>","</xsl:text>
+      </xsl:if>
       <xsl:call-template name="entityset-label">
         <xsl:with-param name="set" select="$targetSet" />
       </xsl:call-template>

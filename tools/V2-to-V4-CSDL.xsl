@@ -226,8 +226,8 @@
       <xsl:apply-templates />
       <xsl:apply-templates
         select="*[local-name()='EntityContainer' and @m:IsDefaultEntityContainer='true']/*[local-name()='FunctionImport']" mode="Schema" />
+      <xsl:apply-templates select="edm2:EntityType[@sap:semantics='parameters']" mode="readrestrictions" />
     </Schema>
-    <xsl:apply-templates select="edm2:EntityType[@sap:semantics='parameters']" mode="readrestrictions" />
   </xsl:template>
 
   <xsl:template match="edm3:Schema">
@@ -405,6 +405,11 @@
           </PropertyValue>
         </Record>
       </Annotation>
+
+      <!-- TODO: un-hack -->
+      <xsl:if test="$entityType/@sap:semantics = 'parameters'">
+        <Annotation Term="sap.parameters"/>
+      </xsl:if>
     </EntitySet>
   </xsl:template>
 
