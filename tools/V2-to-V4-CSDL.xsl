@@ -405,6 +405,11 @@
           </PropertyValue>
         </Record>
       </Annotation>
+
+      <!-- TODO: un-hack -->
+      <xsl:if test="$entityType/@sap:semantics = 'parameters'">
+        <Annotation Term="sap.parameters"/>
+      </xsl:if>
     </EntitySet>
   </xsl:template>
 
