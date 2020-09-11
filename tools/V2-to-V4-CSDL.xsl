@@ -1038,7 +1038,7 @@
     <xsl:if test="$required or $required-properties or $excluded-properties">
       <xsl:element name="Annotation">
         <xsl:attribute name="Term">
-          <xsl:value-of select="concat('Capabilities.',$capability,'Restrictions')" />
+          <xsl:value-of select="concat($Capabilities,'.',$capability,'Restrictions')" />
         </xsl:attribute>
         <Record>
           <xsl:if test="$required">
