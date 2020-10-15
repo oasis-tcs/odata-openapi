@@ -139,7 +139,9 @@ describe('Edge cases', function () {
                     key: {}
                 },
                 typeDefinition: { $Kind: 'TypeDefinition', $UnderlyingType: 'Edm.DateTimeOffset' },
-                typeDefinition3: { $Kind: 'TypeDefinition', $UnderlyingType: 'Edm.DateTimeOffset', $Precision: 3 }
+                typeDefinition2: { $Kind: 'TypeDefinition', $UnderlyingType: 'Edm.SByte' },
+                typeDefinition3: { $Kind: 'TypeDefinition', $UnderlyingType: 'Edm.DateTimeOffset', $Precision: 3 },
+                typeDefinition4: { $Kind: 'TypeDefinition', $UnderlyingType: 'Edm.Foo' }
             }
         };
         const expected = {
@@ -174,13 +176,51 @@ describe('Edge cases', function () {
                     'ReuseTypes.typeDefinition': {
                         title: 'typeDefinition', type: 'string', format: 'date-time', example: '2017-04-13T15:51:04Z'
                     },
+                    'ReuseTypes.typeDefinition2': {
+                        title: 'typeDefinition2', type: 'integer', format: 'int8'
+                    },
                     'ReuseTypes.typeDefinition3': {
                         title: 'typeDefinition3', type: 'string', format: 'date-time', example: '2017-04-13T15:51:04.000Z'
+                    },
+                    'ReuseTypes.typeDefinition4': {
+                        title: 'typeDefinition4'
                     }
                 }
             }
         };
         const openapi = lib.csdl2openapi(csdl, {});
+        assert.deepStrictEqual(openapi, expected, 'Empty CSDL document');
+    })
+
+    it('remove unused types', function () {
+        const csdl = {
+            $Reference: { dummy: { '$Include': [{ '$Namespace': 'Org.OData.Core.V1', '$Alias': 'Core' }] } },
+            ReuseTypes: {
+                entityType: {
+                    '@Core.Description': 'Core.Description',
+                    $Kind: 'EntityType',
+                    $Key: ['key'],
+                    key: {},
+                    val: { $Type: 'ReuseTypes.typeDefinition' }
+                },
+                typeDefinition: { $Kind: 'TypeDefinition', $UnderlyingType: 'Edm.DateTimeOffset' },
+                typeDefinition3: { $Kind: 'TypeDefinition', $UnderlyingType: 'Edm.DateTimeOffset', $Precision: 3 }
+            }
+        };
+        const expected = {
+            openapi: '3.0.2',
+            info: {
+                title: 'OData CSDL document',
+                description: '',
+                version: ''
+            },
+            paths: {},
+            components: {
+                schemas: {}
+            }
+        };
+        const openapi = lib.csdl2openapi(csdl, {});
+        lib.deleteUnreferencedSchemas(openapi)
         assert.deepStrictEqual(openapi, expected, 'Empty CSDL document');
     })
 
@@ -206,7 +246,7 @@ describe('Edge cases', function () {
                     beforeComplex1: {},
                     complex1: { $Type: 'this.complex1' },
                     afterComplex1: {}
-                },                
+                },
                 Container: {
                     sources: { $Type: 'this.source', $Collection: true },
                 }
@@ -316,8 +356,8 @@ describe('Edge cases', function () {
             $Reference: {
                 dummy: {
                     '$Include': [
-                        { '$Namespace': 'Org.OData.Core.V1'},
-                        { '$Namespace': 'Org.OData.JSON.V1'}
+                        { '$Namespace': 'Org.OData.Core.V1' },
+                        { '$Namespace': 'Org.OData.JSON.V1' }
                     ]
                 }
             },
@@ -680,17 +720,17 @@ describe('Edge cases', function () {
             $EntityContainer: 'this.Container',
             this: {
                 Container: {
-                    set: { $Type: 'self.type_does_not_exist', $Collection: true },
+                    stuff: { $Type: 'self.type_does_not_exist', $Collection: true },
                     single: { $Type: 'self.type_does_not_exist' }
                 }
             }
         };
         const expected = {
             paths: {
-                "/set": {
+                "/stuff": {
                     get: {
-                        summary: 'Get entities from set',
-                        tags: ['set'],
+                        summary: 'Get entities from stuff',
+                        tags: ['stuff'],
                         parameters: [
                             { $ref: "#/components/parameters/top" },
                             { $ref: "#/components/parameters/skip" },
@@ -731,8 +771,8 @@ describe('Edge cases', function () {
                         }
                     },
                     post: {
-                        summary: 'Add new entity to set',
-                        tags: ['set'],
+                        summary: 'Add new entity to stuff',
+                        tags: ['stuff'],
                         requestBody: {
                             description: 'New entity',
                             required: true,
@@ -812,8 +852,8 @@ describe('Edge cases', function () {
         const actual = lib.csdl2openapi(csdl, {});
         assert.deepStrictEqual(paths(actual), paths(expected), 'Paths');
         assert.deepStrictEqual(operations(actual), operations(expected), 'Operations');
-        assert.deepStrictEqual(actual.paths['/set'].get, expected.paths['/set'].get, 'GET set');
-        assert.deepStrictEqual(actual.paths['/set'].post, expected.paths['/set'].post, 'POST set');
+        assert.deepStrictEqual(actual.paths['/stuff'].get, expected.paths['/stuff'].get, 'GET set');
+        assert.deepStrictEqual(actual.paths['/stuff'].post, expected.paths['/stuff'].post, 'POST set');
         assert.deepStrictEqual(actual.paths['/single'].get, expected.paths['/single'].get, 'GET single');
         assert.deepStrictEqual(actual.paths['/single'].patch, expected.paths['/single'].patch, 'PATCH single');
     })
