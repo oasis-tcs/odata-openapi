@@ -2421,7 +2421,7 @@
         <xsl:value-of select="." />
       </xsl:when>
       <!-- FAKE: couldn't determine underlying primitive type, so guess from value -->
-      <xsl:when test="substring($type,4)!='Edm.' and (.='true' or .='false' or .='null' or (.=number(.) and string-length(.) &lt; 16))">
+      <xsl:when test="substring($type,1,4)!='Edm.' and (.='true' or .='false' or .='null' or (.=number(.) and string-length(.) &lt; 16))">
         <xsl:value-of select="." />
       </xsl:when>
       <xsl:otherwise>
