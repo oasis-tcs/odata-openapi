@@ -4301,7 +4301,7 @@
           </xsl:call-template>
         </xsl:variable>
         <xsl:if test="$openapi-version!='2.0' and $text!='' and starts-with($schema,'&quot;$ref&quot;')">
-          <xsl:text>"anyOf":[{</xsl:text>
+          <xsl:text>"allOf":[{</xsl:text>
         </xsl:if>
         <xsl:value-of select="$schema" />
         <xsl:if test="$openapi-version!='2.0' and $text!='' and starts-with($schema,'&quot;$ref&quot;')">
