@@ -1506,7 +1506,7 @@
     <xsl:value-of select="@Name" />
     <xsl:text>":{</xsl:text>
     <xsl:if test="not($openapi-version='2.0') and starts-with($type,'&quot;$ref&quot;:') and $title!=''">
-      <xsl:text>"anyOf":[{</xsl:text>
+      <xsl:text>"allOf":[{</xsl:text>
     </xsl:if>
     <xsl:value-of select="$type" />
     <xsl:if test="not($openapi-version='2.0') and starts-with($type,'&quot;$ref&quot;:') and $title!=''">
@@ -1531,7 +1531,7 @@
       <xsl:call-template name="title-description" />
     </xsl:variable>
     <xsl:if test="not($openapi-version='2.0') and starts-with($type,'&quot;$ref&quot;:') and $title!=''">
-      <xsl:text>"anyOf":[{</xsl:text>
+      <xsl:text>"allOf":[{</xsl:text>
     </xsl:if>
     <xsl:value-of select="$type" />
     <xsl:if test="not($openapi-version='2.0') and starts-with($type,'&quot;$ref&quot;:') and $title!=''">
@@ -2024,7 +2024,7 @@
           <xsl:if test="not($nullable='false')">
             <xsl:text>"nullable":true,</xsl:text>
           </xsl:if>
-          <xsl:text>"anyOf":[{</xsl:text>
+          <xsl:text>"allOf":[{</xsl:text>
         </xsl:if>
         <xsl:text>"$ref":"</xsl:text>
         <xsl:value-of select="$reuse-schemas" />
@@ -2047,7 +2047,7 @@
           <xsl:if test="not($nullable='false')">
             <xsl:text>"nullable":true,</xsl:text>
           </xsl:if>
-          <xsl:text>"anyOf":[{</xsl:text>
+          <xsl:text>"allOf":[{</xsl:text>
         </xsl:if>
         <xsl:text>"$ref":"</xsl:text>
         <xsl:value-of select="$odata-schema" />
@@ -2063,7 +2063,7 @@
           <xsl:if test="not($nullable='false')">
             <xsl:text>"nullable":true,</xsl:text>
           </xsl:if>
-          <xsl:text>"anyOf":[{</xsl:text>
+          <xsl:text>"allOf":[{</xsl:text>
         </xsl:if>
         <xsl:call-template name="ref">
           <xsl:with-param name="qualifier" select="$qualifier" />
@@ -4301,7 +4301,7 @@
           </xsl:call-template>
         </xsl:variable>
         <xsl:if test="$openapi-version!='2.0' and $text!='' and starts-with($schema,'&quot;$ref&quot;')">
-          <xsl:text>"anyOf":[{</xsl:text>
+          <xsl:text>"allOf":[{</xsl:text>
         </xsl:if>
         <xsl:value-of select="$schema" />
         <xsl:if test="$openapi-version!='2.0' and $text!='' and starts-with($schema,'&quot;$ref&quot;')">
@@ -4494,7 +4494,7 @@
       <xsl:call-template name="title-description" />
     </xsl:variable>
     <xsl:if test="$openapi-version!='2.0' and $text!='' and starts-with($type,'&quot;$ref&quot;')">
-      <xsl:text>"anyOf":[{</xsl:text>
+      <xsl:text>"allOf":[{</xsl:text>
     </xsl:if>
     <xsl:value-of select="$type" />
     <xsl:if test="$openapi-version!='2.0' and $text!='' and starts-with($type,'&quot;$ref&quot;')">
