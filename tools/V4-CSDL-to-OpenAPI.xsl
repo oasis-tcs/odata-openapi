@@ -2047,7 +2047,7 @@
           <xsl:if test="not($nullable='false')">
             <xsl:text>"nullable":true,</xsl:text>
           </xsl:if>
-          <xsl:text>"anyOf":[{</xsl:text>
+          <xsl:text>"allOf":[{</xsl:text>
         </xsl:if>
         <xsl:text>"$ref":"</xsl:text>
         <xsl:value-of select="$odata-schema" />
@@ -2063,7 +2063,7 @@
           <xsl:if test="not($nullable='false')">
             <xsl:text>"nullable":true,</xsl:text>
           </xsl:if>
-          <xsl:text>"anyOf":[{</xsl:text>
+          <xsl:text>"allOf":[{</xsl:text>
         </xsl:if>
         <xsl:call-template name="ref">
           <xsl:with-param name="qualifier" select="$qualifier" />
