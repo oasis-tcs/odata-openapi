@@ -1368,8 +1368,8 @@
     <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
     <xsl:variable name="read-only" select="$structuredType/edm:Property[edm:Annotation[@Term='Org.OData.Core.V1.Permissions' or @Term=concat($coreAlias,'.Permissions')]/edm:EnumMember='Org.OData.Core.V1.Permission/Read']/@Name" />
     <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
-    <xsl:variable name="mandatory" select="//edm:Annotations[edm:Annotation[@Term=concat($commonAlias,'.FieldControl') and @EnumMember=concat($commonAlias,'.FieldControlType/Mandatory')] and $qualifiedName=substring-before(@Target,'/')]/@Target" />
-
+    <xsl:variable name="mandatory" select="//edm:Annotations[edm:Annotation[@Term=concat($commonAlias,'.FieldControl') and @EnumMember=concat($commonAlias,'.FieldControlType/Mandatory')] 
+                                                                            and ($qualifiedName=substring-before(@Target,'/') or $aliasQualifiedName=substring-before(@Target,'/'))]/@Target" />
     <xsl:variable name="basetypeinfo">
       <xsl:if test="$structuredType/@BaseType">
         <xsl:variable name="qualifier">
@@ -1428,7 +1428,8 @@
         <xsl:apply-templates select="$structuredType/edm:Property[(@Name=../edm:Key/edm:PropertyRef/@Name 
                                                   and not(@Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext 
                                                or @Name=$read-only)) 
-                                               or concat($qualifiedName,'/',@Name)=$mandatory]" mode="required" />
+                                               or concat($qualifiedName,'/',@Name)=$mandatory
+                                               or concat($aliasQualifiedName,'/',@Name)=$mandatory]" mode="required" />
       </xsl:if>
     </xsl:variable>
 

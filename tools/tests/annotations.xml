@@ -19,6 +19,9 @@
   <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
     <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation" />
   </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common" />
+  </edmx:Reference>
   <edmx:DataServices>
     <Schema Namespace="Supported.Annotations" Alias="self">
       <EntityType Name="SinglePartKey">
@@ -299,8 +302,9 @@
         <Singleton Name="TwoNothingSingleton" Type="self.TwoPartKey" />
       </EntityContainer>
 
-      <Annotations Target="self.SinglePartKey/PatternExt">
+      <Annotations Target="Supported.Annotations.SinglePartKey/PatternExt">
         <Annotation Term="Validation.Pattern" String="^.+$" />
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory" />
       </Annotations>
 
       <Annotations Target="self.SinglePartKey/AllowedValuesExt">
@@ -317,6 +321,7 @@
             </Record>
           </Collection>
         </Annotation>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory" />
       </Annotations>
 
       <Annotations Target="self.SinglePartKey/MaximumExt">
