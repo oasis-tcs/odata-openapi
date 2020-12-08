@@ -1370,6 +1370,9 @@
     <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
     <xsl:variable name="mandatory" select="//edm:Annotations[edm:Annotation[@Term=concat($commonAlias,'.FieldControl') and @EnumMember=concat($commonAlias,'.FieldControlType/Mandatory')] 
                                                                             and ($qualifiedName=substring-before(@Target,'/') or $aliasQualifiedName=substring-before(@Target,'/'))]/@Target" />
+    <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
+    <xsl:variable name="navprop-read-only" select="//edm:Annotations[edm:Annotation[@Term=concat($coreAlias,'.Permissions') and @EnumMember=concat($coreAlias,'.Permissions/Read')] 
+                                                                            and ($qualifiedName=substring-before(@Target,'/') or $aliasQualifiedName=substring-before(@Target,'/'))]/@Target" />
     <xsl:variable name="basetypeinfo">
       <xsl:if test="$structuredType/@BaseType">
         <xsl:variable name="qualifier">
@@ -1410,7 +1413,9 @@
         <xsl:when test="$suffix='-create'">
           <!-- everything except computed and read-only properties -->
           <xsl:apply-templates select="$structuredType/edm:Property[not(@Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext 
-                                                  or @Name=$read-only)]|$structuredType/edm:NavigationProperty">
+                                                  or @Name=$read-only)]
+                                      |$structuredType/edm:NavigationProperty[not(concat($qualifiedName,'/',@Name)=$navprop-read-only
+                                                                           or concat($aliasQualifiedName,'/',@Name)=$navprop-read-only)]">
             <xsl:with-param name="name" select="'properties'" />
             <xsl:with-param name="suffix" select="'-create'" />
           </xsl:apply-templates>
