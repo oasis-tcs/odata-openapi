@@ -1371,7 +1371,7 @@
     <xsl:variable name="mandatory" select="//edm:Annotations[edm:Annotation[@Term=concat($commonAlias,'.FieldControl') and @EnumMember=concat($commonAlias,'.FieldControlType/Mandatory')] 
                                                                             and ($qualifiedName=substring-before(@Target,'/') or $aliasQualifiedName=substring-before(@Target,'/'))]/@Target" />
     <!-- TODO: make expression catch all alias variations in @Target, @Term, and @EnumMember -->
-    <xsl:variable name="navprop-read-only" select="//edm:Annotations[edm:Annotation[@Term=concat($coreAlias,'.Permissions') and @EnumMember=concat($coreAlias,'.Permissions/Read')] 
+    <xsl:variable name="navprop-read-only" select="//edm:Annotations[edm:Annotation[@Term=concat($coreAlias,'.Permissions') and @EnumMember=concat($coreAlias,'.Permission/Read')] 
                                                                             and ($qualifiedName=substring-before(@Target,'/') or $aliasQualifiedName=substring-before(@Target,'/'))]/@Target" />
     <xsl:variable name="basetypeinfo">
       <xsl:if test="$structuredType/@BaseType">
