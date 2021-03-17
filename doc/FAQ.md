@@ -75,3 +75,49 @@ To suppress only GET by-key requests to an entity set and still allow GET list, 
   </Record>
 </Annotation>
 ```
+
+## How to suppress GET along a specific navigation property?
+
+```xml
+<Annotation Term="Capabilities.NavigationRestrictions">
+  <Record>
+    <PropertyValue Property="RestrictedProperties">
+      <Collection>
+        <Record>
+          <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Foo" />
+          <PropertyValue Property="ReadRestrictions">
+            <Record>
+              <PropertyValue Property="Readable" Bool="false" />
+            </Record>
+          </PropertyValue>
+        </Record>
+      </Collection>
+    </PropertyValue>
+  </Record>
+</Annotation>
+```
+
+## How to suppress POST along a specific navigation property?
+
+```xml
+<Annotation Term="Capabilities.NavigationRestrictions">
+  <Record>
+    <PropertyValue Property="RestrictedProperties">
+      <Collection>
+        <Record>
+          <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Foo" />
+          <PropertyValue Property="InsertRestrictions">
+            <Record>
+              <PropertyValue Property="Insertable" Bool="false" />
+            </Record>
+          </PropertyValue>
+        </Record>
+      </Collection>
+    </PropertyValue>
+  </Record>
+</Annotation>
+```
+
+## Can I have multiple NavigationRestrictions annotations for the same entity set?
+
+No, you have to combine all restrictions for an entity set into a single annotation with term `Capabilities.NavigationRestrictions`.
