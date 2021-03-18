@@ -118,6 +118,11 @@ To suppress only GET by-key requests to an entity set and still allow GET list, 
 </Annotation>
 ```
 
-## Can I have multiple NavigationRestrictions annotations for the same entity set?
+## Can I have multiple `NavigationRestrictions` annotations for the same entity set?
 
 No, you have to combine all restrictions for an entity set into a single annotation with term `Capabilities.NavigationRestrictions`.
+
+
+## Can I have multiple records for the same navigation property in the `RestrictedProperties` collection?
+
+No, you have to combine all restrictions for a navigation proeprty into a single record.
