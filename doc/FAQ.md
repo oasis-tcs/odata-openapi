@@ -14,6 +14,7 @@ The examples here do not cover the full list of [supported annotions](Annotation
 - [How to suppress GET along a specific navigation property?](#how-to-suppress-get-along-a-specific-navigation-property)
 - [How to suppress POST along a specific navigation property?](#how-to-suppress-post-along-a-specific-navigation-property)
 - [Can I have multiple NavigationRestrictions annotations for the same entity set?](#can-i-have-multiple-navigationrestrictions-annotations-for-the-same-entity-set)
+- [Can I have multiple records for the same navigation property in the RestrictedProperties collection?](#can-i-have-multiple-records-for-the-same-navigation-property-in-the-restrictedproperties-collection)
 
 <!-- /TOC -->
 
@@ -134,7 +135,6 @@ To suppress only GET by-key requests to an entity set and still allow GET list, 
 ## Can I have multiple `NavigationRestrictions` annotations for the same entity set?
 
 No, you have to combine all restrictions for an entity set into a single annotation with term `Capabilities.NavigationRestrictions`.
-
 
 ## Can I have multiple records for the same navigation property in the `RestrictedProperties` collection?
 
