@@ -1,17 +1,18 @@
-@echo off 
-setlocal
-set here=%~dp0
-
 @rem  This script uses the Apache Xalan 2.7.2 XSLT processor
 @rem  For a description of Xalan command-line parameters see http://xalan.apache.org/xalan-j/commandline.html
 @rem
 @rem  Prerequisites
 @rem  - Java SE is installed and in the PATH - download from http://www.oracle.com/technetwork/java/javase/downloads/index.html 
 @rem  - git is installed and in the PATH - download from https://git-for-windows.github.io/
-set CLASSPATH=%here%xalan/xalan.jar;%here%xalan/serializer.jar
 @rem  - YAJL's json_reformat from https://github.com/lloyd/yajl has been compiled and is in the PATH
 @rem  - Node.js is installed and in the PATH - download from https://nodejs.org/
 @rem  - this package is installed - npm install
+
+@echo off 
+setlocal
+
+set here=%~dp0
+set CLASSPATH=%here%xalan/xalan.jar;%here%xalan/serializer.jar
 set SCHEMA_THREE=%here%node_modules/@apidevtools/openapi-schemas/schemas/v3.0/schema.json
 set SCHEMA_TWO=%here%node_modules/@apidevtools/openapi-schemas/schemas/v2.0/schema.json
 
