@@ -12,12 +12,17 @@
   "bin": {
     "odata-openapi": "transform.js"
   },
+  "devDependencies": {
+    "ajv-cli": "^3",
+    "@apidevtools/openapi-schemas": "*"
+  },
   "dependencies": {
     "minimist": "^1.2.5",
     "xslt4node": "^0.3.2"
   },
   "scripts": {
-    "test": "test.cmd"
+    "test": "test.cmd",
+    "validate": "ajv validate -s node_modules/@apidevtools/openapi-schemas/schemas/v3.0/schema.json -d tests/*.openapi3.json && ajv validate -s node_modules/@apidevtools/openapi-schemas/schemas/v2.0/schema.json -d tests/*.swagger.json"
   },
   "author": "",
   "license": "SEE LICENSE IN ../LICENSE.md"
