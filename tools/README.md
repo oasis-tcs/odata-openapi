@@ -10,12 +10,11 @@ The two files [`transform.js`](transform.js) and [`transform.cmd`](transform.cmd
 
 The mapping can be fine-tuned via [annotations](../doc/Annotations.md) in the CSDL (`$metadata`) XML documents.
 
-
 ## `transform.js` for Node.js
 
 _Note: if you want to transform OData V3, V4, or V4.01 into OpenAPI 3.0.x, you better use the [pure Node.js-based tool](../lib)._
 
-This script transforms one or more OData CSDL (`$metadata`) XML documents into OpenAPI JSON documents. 
+This script transforms one or more OData CSDL (`$metadata`) XML documents into OpenAPI JSON documents.
 
 It uses [`xslt4node`](https://www.npmjs.com/package/xslt4node), which in turn needs [`node-gyp`](https://www.npmjs.com/package/node-gyp) and a [Java SE JDK](http://jdk.java.net).
 
@@ -27,32 +26,38 @@ Install a [Java SE JDK](http://jdk.java.net) and make sure it is in the `PATH`
 javac -version
 ```
 
- Install `node-gyp` globally, following the [platform-specific installation instructions for `node-gyp`](https://github.com/nodejs/node-gyp/blob/master/README.md#installation).
-
+Install `node-gyp` globally, following the [platform-specific installation instructions for `node-gyp`](https://github.com/nodejs/node-gyp/blob/master/README.md#installation).
 
 Clone or download this repository, go to the `tools` folder and type
+
 ```sh
 npm install
 ```
 
 To install globally type
+
 ```sh
 npm install -g
 ```
+
 ### Usage
 
 Assuming you installed the script globally and your metadata file is `MyMetadata.xml`, then
+
 ```sh
 odata-openapi -dp MyMetadata.xml
 ```
-will transform it into `MyMetadata.openapi.json` with a nice [yUML](https://yuml.me/) diagram and pretty-printed JSON. 
 
+will transform it into `MyMetadata.openapi.json` with a nice [yUML](https://yuml.me/) diagram and pretty-printed JSON.
 
 Just type
+
 ```sh
 odata-openapi -h
 ```
+
 to get usage hints
+
 ```
 Usage: odata-openapi <options> <source files>
 Options:
@@ -66,37 +71,42 @@ Options:
  --scheme                scheme (default: http)
  -t, --target            target file (only useful with a single source file)
  -u, --used-schemas-only produce only schemas that are actually used in operation objects
- ```
+```
 
 If you installed the script locally, start it via
+
 ```sh
 node path_to_tools/transform.js ...
 ```
-(replace `path_to_tools` with your local installation path).
 
+(replace `path_to_tools` with your local installation path).
 
 ## `transform.cmd` for Windows Command
 
-This script transforms a single OData CSDL (`$metadata`) XML documents into OpenAPI 3.0.0 JSON documents. 
+This script transforms a single OData CSDL (`$metadata`) XML documents into OpenAPI 3.0.0 JSON documents.
 
 ### Installation
 
-The prerequisites are listed within [`transform.cmd`](transform.cmd). It's quite a lot:
-- [Java SE 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) is installed and in the `PATH`
+The prerequisites are listed within [`transform.cmd`](transform.cmd):
+
+- [Java SE](http://www.oracle.com/technetwork/java/javase/downloads/index.html) is installed and in the `PATH`
 - [git](https://git-for-windows.github.io/) is installed and in the `PATH`
-- [Xalan](http://xalan.apache.org/xalan-j/downloads.html) is installed and `CLASSPATH` contains `xalan.jar` and `serializer.jar`
 - [YAJL](https://github.com/lloyd/yajl)'s `json_reformat` has been compiled and is in the `PATH`
 - [Node.js](https://nodejs.org/) is installed
-- [ajv-cli](https://www.npmjs.com/package/ajv-cli) is installed
-- https://github.com/OAI/OpenAPI-Specification is cloned next to this project
 
 ### Usage
 
 In the `tools` folder execute
+
 ```sh
-transform
+npm install
 ```
 
+Then
+
+```sh
+transform path/to/XML-file
+```
 
 ## Supported Annotations
 
