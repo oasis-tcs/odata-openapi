@@ -7207,6 +7207,259 @@
                     {}
                 ]
             },
+            "OData.Demo.Order": {
+                "title": "Order",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.OrderItem"
+                        }
+                    },
+                    "Items@odata.count": {
+                        "$ref": "#/components/schemas/count"
+                    },
+                    "Completed": {
+                        "type": "boolean"
+                    },
+                    "Customer": {
+                        "$ref": "#/components/schemas/OData.Demo.Customer"
+                    },
+                    "ShippingAddress": {
+                        "$ref": "#/components/schemas/OData.Demo.Address"
+                    }
+                }
+            },
+            "OData.Demo.Order-create": {
+                "title": "Order (for create)",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.OrderItem-create"
+                        }
+                    },
+                    "Completed": {
+                        "type": "boolean"
+                    },
+                    "Customer": {
+                        "$ref": "#/components/schemas/OData.Demo.Customer-create"
+                    },
+                    "ShippingAddress": {
+                        "$ref": "#/components/schemas/OData.Demo.Address-create"
+                    }
+                },
+                "required": [
+                    "ID"
+                ]
+            },
+            "OData.Demo.Order-update": {
+                "title": "Order (for update)",
+                "type": "object",
+                "properties": {
+                    "Completed": {
+                        "type": "boolean"
+                    },
+                    "ShippingAddress": {
+                        "$ref": "#/components/schemas/OData.Demo.Address-update"
+                    }
+                }
+            },
+            "OData.Demo.Sales": {
+                "title": "Sales",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Amount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 1
+                    },
+                    "Time": {
+                        "$ref": "#/components/schemas/OData.Demo.Time"
+                    },
+                    "Currency": {
+                        "$ref": "#/components/schemas/OData.Demo.Currency"
+                    },
+                    "Customer": {
+                        "$ref": "#/components/schemas/OData.Demo.Customer"
+                    },
+                    "SalesOrganization": {
+                        "$ref": "#/components/schemas/OData.Demo.SalesOrganization"
+                    },
+                    "Product": {
+                        "$ref": "#/components/schemas/OData.Demo.Product"
+                    }
+                }
+            },
+            "OData.Demo.Sales-create": {
+                "title": "Sales (for create)",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Amount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 1
+                    },
+                    "Time": {
+                        "$ref": "#/components/schemas/OData.Demo.Time-create"
+                    },
+                    "Currency": {
+                        "$ref": "#/components/schemas/OData.Demo.Currency-create"
+                    },
+                    "Customer": {
+                        "$ref": "#/components/schemas/OData.Demo.Customer-create"
+                    },
+                    "SalesOrganization": {
+                        "$ref": "#/components/schemas/OData.Demo.SalesOrganization-create"
+                    },
+                    "Product": {
+                        "$ref": "#/components/schemas/OData.Demo.Product-create"
+                    }
+                },
+                "required": [
+                    "ID"
+                ]
+            },
+            "OData.Demo.Sales-update": {
+                "title": "Sales (for update)",
+                "type": "object",
+                "properties": {
+                    "Amount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 1
+                    }
+                }
+            },
+            "OData.Demo.Country": {
+                "title": "Country",
+                "type": "object",
+                "properties": {
+                    "Code": {
+                        "type": "string",
+                        "maxLength": 2
+                    },
+                    "Name": {
+                        "type": "string"
+                    },
+                    "Continent": {
+                        "type": "string"
+                    }
+                }
+            },
+            "OData.Demo.Country-create": {
+                "title": "Country (for create)",
+                "type": "object",
+                "properties": {
+                    "Code": {
+                        "type": "string",
+                        "maxLength": 2
+                    },
+                    "Name": {
+                        "type": "string"
+                    },
+                    "Continent": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "Code"
+                ]
+            },
+            "OData.Demo.Country-update": {
+                "title": "Country (for update)",
+                "type": "object",
+                "properties": {
+                    "Name": {
+                        "type": "string"
+                    },
+                    "Continent": {
+                        "type": "string"
+                    }
+                }
+            },
+            "OData.Demo.City": {
+                "title": "City",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    },
+                    "Name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "OData.Demo.City-create": {
+                "title": "City (for create)",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    },
+                    "Name": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "ID"
+                ]
+            },
+            "OData.Demo.City-update": {
+                "title": "City (for update)",
+                "type": "object",
+                "properties": {
+                    "Name": {
+                        "type": "string"
+                    }
+                }
+            },
             "OData.Demo.Supplier": {
                 "title": "Supplier",
                 "type": "object",
@@ -7539,236 +7792,6 @@
                     }
                 }
             },
-            "OData.Demo.Order": {
-                "title": "Order",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Items": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.OrderItem"
-                        }
-                    },
-                    "Items@odata.count": {
-                        "$ref": "#/components/schemas/count"
-                    },
-                    "Completed": {
-                        "type": "boolean"
-                    },
-                    "Customer": {
-                        "$ref": "#/components/schemas/OData.Demo.Customer"
-                    },
-                    "ShippingAddress": {
-                        "$ref": "#/components/schemas/OData.Demo.Address"
-                    }
-                }
-            },
-            "OData.Demo.Order-create": {
-                "title": "Order (for create)",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Items": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.OrderItem-create"
-                        }
-                    },
-                    "Completed": {
-                        "type": "boolean"
-                    },
-                    "Customer": {
-                        "$ref": "#/components/schemas/OData.Demo.Customer-create"
-                    },
-                    "ShippingAddress": {
-                        "$ref": "#/components/schemas/OData.Demo.Address-create"
-                    }
-                },
-                "required": [
-                    "ID"
-                ]
-            },
-            "OData.Demo.Order-update": {
-                "title": "Order (for update)",
-                "type": "object",
-                "properties": {
-                    "Completed": {
-                        "type": "boolean"
-                    },
-                    "ShippingAddress": {
-                        "$ref": "#/components/schemas/OData.Demo.Address-update"
-                    }
-                }
-            },
-            "OData.Demo.VipCustomer": {
-                "title": "VipCustomer",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "string"
-                    },
-                    "Orders": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.Order"
-                        }
-                    },
-                    "Orders@odata.count": {
-                        "$ref": "#/components/schemas/count"
-                    },
-                    "Name": {
-                        "type": "string"
-                    },
-                    "CompanyName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "BirthDate": {
-                        "type": "string"
-                    },
-                    "CountryName": {
-                        "type": "string",
-                        "title": "This is weird, given that we have a Country entity type"
-                    },
-                    "Sales": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.Sales"
-                        }
-                    },
-                    "Sales@odata.count": {
-                        "$ref": "#/components/schemas/count"
-                    },
-                    "ContactName": {
-                        "type": "string"
-                    },
-                    "ContactTitle": {
-                        "type": "string"
-                    },
-                    "Fax": {
-                        "type": "string"
-                    },
-                    "Address": {
-                        "$ref": "#/components/schemas/OData.Demo.Address"
-                    },
-                    "EmailAddresses": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "Phone": {
-                        "$ref": "#/components/schemas/OData.Demo.PhoneNumber"
-                    }
-                }
-            },
-            "OData.Demo.VipCustomer-create": {
-                "title": "VipCustomer (for create)",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "string"
-                    },
-                    "Orders": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.Order-create"
-                        }
-                    },
-                    "Name": {
-                        "type": "string"
-                    },
-                    "CompanyName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "BirthDate": {
-                        "type": "string"
-                    },
-                    "CountryName": {
-                        "type": "string",
-                        "title": "This is weird, given that we have a Country entity type"
-                    },
-                    "Sales": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.Sales-create"
-                        }
-                    },
-                    "ContactName": {
-                        "type": "string"
-                    },
-                    "ContactTitle": {
-                        "type": "string"
-                    },
-                    "Fax": {
-                        "type": "string"
-                    },
-                    "Address": {
-                        "$ref": "#/components/schemas/OData.Demo.Address-create"
-                    },
-                    "EmailAddresses": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "Phone": {
-                        "$ref": "#/components/schemas/OData.Demo.PhoneNumber-create"
-                    }
-                },
-                "required": [
-                    "ID"
-                ]
-            },
-            "OData.Demo.VipCustomer-update": {
-                "title": "VipCustomer (for update)",
-                "type": "object",
-                "properties": {
-                    "Name": {
-                        "type": "string"
-                    },
-                    "CompanyName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "BirthDate": {
-                        "type": "string"
-                    },
-                    "CountryName": {
-                        "type": "string",
-                        "title": "This is weird, given that we have a Country entity type"
-                    },
-                    "ContactName": {
-                        "type": "string"
-                    },
-                    "ContactTitle": {
-                        "type": "string"
-                    },
-                    "Fax": {
-                        "type": "string"
-                    },
-                    "Address": {
-                        "$ref": "#/components/schemas/OData.Demo.Address-update"
-                    },
-                    "EmailAddresses": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "Phone": {
-                        "$ref": "#/components/schemas/OData.Demo.PhoneNumber-update"
-                    }
-                }
-            },
             "OData.Demo.Category": {
                 "title": "Category",
                 "type": "object",
@@ -7972,666 +7995,77 @@
                     }
                 }
             },
-            "OData.Demo.Sales": {
-                "title": "Sales",
+            "OData.Demo.Currency": {
+                "title": "Currency",
                 "type": "object",
                 "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
+                    "Code": {
+                        "type": "string",
+                        "maxLength": 3
                     },
-                    "Amount": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 1
-                    },
-                    "Time": {
-                        "$ref": "#/components/schemas/OData.Demo.Time"
-                    },
-                    "Currency": {
-                        "$ref": "#/components/schemas/OData.Demo.Currency"
-                    },
-                    "Customer": {
-                        "$ref": "#/components/schemas/OData.Demo.Customer"
-                    },
-                    "SalesOrganization": {
-                        "$ref": "#/components/schemas/OData.Demo.SalesOrganization"
-                    },
-                    "Product": {
-                        "$ref": "#/components/schemas/OData.Demo.Product"
-                    }
-                }
-            },
-            "OData.Demo.Sales-create": {
-                "title": "Sales (for create)",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Amount": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 1
-                    },
-                    "Time": {
-                        "$ref": "#/components/schemas/OData.Demo.Time-create"
-                    },
-                    "Currency": {
-                        "$ref": "#/components/schemas/OData.Demo.Currency-create"
-                    },
-                    "Customer": {
-                        "$ref": "#/components/schemas/OData.Demo.Customer-create"
-                    },
-                    "SalesOrganization": {
-                        "$ref": "#/components/schemas/OData.Demo.SalesOrganization-create"
-                    },
-                    "Product": {
-                        "$ref": "#/components/schemas/OData.Demo.Product-create"
-                    }
-                },
-                "required": [
-                    "ID"
-                ]
-            },
-            "OData.Demo.Sales-update": {
-                "title": "Sales (for update)",
-                "type": "object",
-                "properties": {
-                    "Amount": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 1
-                    }
-                }
-            },
-            "OData.Demo.Employee": {
-                "title": "Employee",
-                "type": "object",
-                "properties": {
-                    "ID": {
+                    "Name": {
                         "type": "string"
                     },
-                    "FirstName": {
-                        "type": "string"
-                    },
-                    "LastName": {
-                        "type": "string"
-                    },
-                    "Title": {
-                        "type": "string"
-                    },
-                    "Manager": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/OData.Demo.Manager"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "LeaveRequests": {
+                    "Sales": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/OData.Demo.LeaveRequest"
+                            "$ref": "#/components/schemas/OData.Demo.Sales"
                         }
                     },
-                    "LeaveRequests@odata.count": {
+                    "Sales@odata.count": {
                         "$ref": "#/components/schemas/count"
-                    }
-                },
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/OData.Demo.Manager"
                     },
-                    {}
-                ]
+                    "Symbol": {
+                        "type": "string"
+                    },
+                    "FractionalDigits": {
+                        "type": "integer",
+                        "format": "uint8"
+                    }
+                }
             },
-            "OData.Demo.Employee-create": {
-                "title": "Employee (for create)",
+            "OData.Demo.Currency-create": {
+                "title": "Currency (for create)",
                 "type": "object",
                 "properties": {
-                    "ID": {
+                    "Code": {
+                        "type": "string",
+                        "maxLength": 3
+                    },
+                    "Name": {
                         "type": "string"
                     },
-                    "FirstName": {
-                        "type": "string"
-                    },
-                    "LastName": {
-                        "type": "string"
-                    },
-                    "Title": {
-                        "type": "string"
-                    },
-                    "Manager": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/OData.Demo.Manager-create"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "LeaveRequests": {
+                    "Sales": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/OData.Demo.LeaveRequest-create"
+                            "$ref": "#/components/schemas/OData.Demo.Sales-create"
                         }
-                    }
-                },
-                "required": [
-                    "ID"
-                ],
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/OData.Demo.Manager-create"
                     },
-                    {}
-                ]
-            },
-            "OData.Demo.Employee-update": {
-                "title": "Employee (for update)",
-                "type": "object",
-                "properties": {
-                    "FirstName": {
+                    "Symbol": {
                         "type": "string"
                     },
-                    "LastName": {
-                        "type": "string"
-                    },
-                    "Title": {
-                        "type": "string"
-                    }
-                },
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/OData.Demo.Manager-update"
-                    },
-                    {}
-                ]
-            },
-            "OData.Demo.LeaveRequest": {
-                "title": "LeaveRequest",
-                "type": "object",
-                "properties": {
-                    "ID": {
+                    "FractionalDigits": {
                         "type": "integer",
-                        "format": "int32"
-                    },
-                    "Manager": {
-                        "$ref": "#/components/schemas/OData.Demo.Manager"
-                    },
-                    "Employee": {
-                        "$ref": "#/components/schemas/OData.Demo.Employee"
-                    }
-                }
-            },
-            "OData.Demo.LeaveRequest-create": {
-                "title": "LeaveRequest (for create)",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Manager": {
-                        "$ref": "#/components/schemas/OData.Demo.Manager-create"
-                    },
-                    "Employee": {
-                        "$ref": "#/components/schemas/OData.Demo.Employee-create"
-                    }
-                },
-                "required": [
-                    "ID"
-                ]
-            },
-            "OData.Demo.LeaveRequest-update": {
-                "title": "LeaveRequest (for update)",
-                "type": "object"
-            },
-            "OData.Demo.Address": {
-                "title": "Address",
-                "type": "object",
-                "properties": {
-                    "Street": {
-                        "type": "string"
-                    },
-                    "Country": {
-                        "$ref": "#/components/schemas/OData.Demo.Country"
-                    },
-                    "City": {
-                        "$ref": "#/components/schemas/OData.Demo.City"
-                    },
-                    "Region": {
-                        "type": "string"
-                    },
-                    "PostalCode": {
-                        "type": "string"
-                    }
-                },
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/OData.Demo.AddressWithLocation"
-                    },
-                    {}
-                ]
-            },
-            "OData.Demo.Address-create": {
-                "title": "Address (for create)",
-                "type": "object",
-                "properties": {
-                    "Street": {
-                        "type": "string"
-                    },
-                    "Country": {
-                        "$ref": "#/components/schemas/OData.Demo.Country-create"
-                    },
-                    "City": {
-                        "$ref": "#/components/schemas/OData.Demo.City-create"
-                    },
-                    "Region": {
-                        "type": "string"
-                    },
-                    "PostalCode": {
-                        "type": "string"
-                    }
-                },
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/OData.Demo.AddressWithLocation-create"
-                    },
-                    {}
-                ]
-            },
-            "OData.Demo.Address-update": {
-                "title": "Address (for update)",
-                "type": "object",
-                "properties": {
-                    "Street": {
-                        "type": "string"
-                    },
-                    "Region": {
-                        "type": "string"
-                    },
-                    "PostalCode": {
-                        "type": "string"
-                    }
-                },
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/OData.Demo.AddressWithLocation-update"
-                    },
-                    {}
-                ]
-            },
-            "OData.Demo.AddressWithLocation": {
-                "title": "AddressWithLocation",
-                "type": "object",
-                "properties": {
-                    "Street": {
-                        "type": "string"
-                    },
-                    "Country": {
-                        "$ref": "#/components/schemas/OData.Demo.Country"
-                    },
-                    "City": {
-                        "$ref": "#/components/schemas/OData.Demo.City"
-                    },
-                    "Region": {
-                        "type": "string"
-                    },
-                    "PostalCode": {
-                        "type": "string"
-                    },
-                    "Location": {
-                        "$ref": "#/components/schemas/geoPoint"
-                    }
-                }
-            },
-            "OData.Demo.AddressWithLocation-create": {
-                "title": "AddressWithLocation (for create)",
-                "type": "object",
-                "properties": {
-                    "Street": {
-                        "type": "string"
-                    },
-                    "Country": {
-                        "$ref": "#/components/schemas/OData.Demo.Country-create"
-                    },
-                    "City": {
-                        "$ref": "#/components/schemas/OData.Demo.City-create"
-                    },
-                    "Region": {
-                        "type": "string"
-                    },
-                    "PostalCode": {
-                        "type": "string"
-                    },
-                    "Location": {
-                        "$ref": "#/components/schemas/geoPoint"
-                    }
-                }
-            },
-            "OData.Demo.AddressWithLocation-update": {
-                "title": "AddressWithLocation (for update)",
-                "type": "object",
-                "properties": {
-                    "Street": {
-                        "type": "string"
-                    },
-                    "Region": {
-                        "type": "string"
-                    },
-                    "PostalCode": {
-                        "type": "string"
-                    },
-                    "Location": {
-                        "$ref": "#/components/schemas/geoPoint"
-                    }
-                }
-            },
-            "OData.Demo.Country": {
-                "title": "Country",
-                "type": "object",
-                "properties": {
-                    "Code": {
-                        "type": "string",
-                        "maxLength": 2
-                    },
-                    "Name": {
-                        "type": "string"
-                    },
-                    "Continent": {
-                        "type": "string"
-                    }
-                }
-            },
-            "OData.Demo.Country-create": {
-                "title": "Country (for create)",
-                "type": "object",
-                "properties": {
-                    "Code": {
-                        "type": "string",
-                        "maxLength": 2
-                    },
-                    "Name": {
-                        "type": "string"
-                    },
-                    "Continent": {
-                        "type": "string"
+                        "format": "uint8"
                     }
                 },
                 "required": [
                     "Code"
                 ]
             },
-            "OData.Demo.Country-update": {
-                "title": "Country (for update)",
+            "OData.Demo.Currency-update": {
+                "title": "Currency (for update)",
                 "type": "object",
                 "properties": {
                     "Name": {
                         "type": "string"
                     },
-                    "Continent": {
-                        "type": "string"
-                    }
-                }
-            },
-            "OData.Demo.PreferredSupplier": {
-                "title": "PreferredSupplier",
-                "type": "object",
-                "properties": {
-                    "ID": {
+                    "Symbol": {
                         "type": "string"
                     },
-                    "Products": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.Product"
-                        }
-                    },
-                    "Products@odata.count": {
-                        "$ref": "#/components/schemas/count"
-                    },
-                    "Name": {
-                        "type": "string"
-                    },
-                    "EmailAddresses": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "Addresses": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.Address"
-                        }
-                    },
-                    "AccountRepresentative": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/OData.Demo.Employee"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "EmployeeID": {
-                        "type": "string"
-                    }
-                }
-            },
-            "OData.Demo.PreferredSupplier-create": {
-                "title": "PreferredSupplier (for create)",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "string"
-                    },
-                    "Products": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.Product-create"
-                        }
-                    },
-                    "Name": {
-                        "type": "string"
-                    },
-                    "EmailAddresses": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "Addresses": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.Address-create"
-                        }
-                    },
-                    "AccountRepresentative": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/OData.Demo.Employee-create"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "EmployeeID": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "ID"
-                ]
-            },
-            "OData.Demo.PreferredSupplier-update": {
-                "title": "PreferredSupplier (for update)",
-                "type": "object",
-                "properties": {
-                    "Name": {
-                        "type": "string"
-                    },
-                    "EmailAddresses": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "Addresses": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.Address-update"
-                        }
-                    },
-                    "EmployeeID": {
-                        "type": "string"
-                    }
-                }
-            },
-            "OData.Demo.Pattern": {
-                "type": "string",
-                "title": "Pattern",
-                "enum": [
-                    "Yellow",
-                    "Solid"
-                ]
-            },
-            "OData.Demo.Manager": {
-                "title": "Manager",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "string"
-                    },
-                    "FirstName": {
-                        "type": "string"
-                    },
-                    "LastName": {
-                        "type": "string"
-                    },
-                    "Title": {
-                        "type": "string"
-                    },
-                    "Manager": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/OData.Demo.Manager"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "LeaveRequests": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.LeaveRequest"
-                        }
-                    },
-                    "LeaveRequests@odata.count": {
-                        "$ref": "#/components/schemas/count"
-                    },
-                    "Employees": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.Employee"
-                        }
-                    },
-                    "Employees@odata.count": {
-                        "$ref": "#/components/schemas/count"
-                    },
-                    "Inbox": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.LeaveRequest"
-                        }
-                    },
-                    "Inbox@odata.count": {
-                        "$ref": "#/components/schemas/count"
-                    }
-                }
-            },
-            "OData.Demo.Manager-create": {
-                "title": "Manager (for create)",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "string"
-                    },
-                    "FirstName": {
-                        "type": "string"
-                    },
-                    "LastName": {
-                        "type": "string"
-                    },
-                    "Title": {
-                        "type": "string"
-                    },
-                    "Manager": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/OData.Demo.Manager-create"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "LeaveRequests": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.LeaveRequest-create"
-                        }
-                    },
-                    "Employees": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.Employee-create"
-                        }
-                    },
-                    "Inbox": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/OData.Demo.LeaveRequest-create"
-                        }
-                    }
-                },
-                "required": [
-                    "ID"
-                ]
-            },
-            "OData.Demo.Manager-update": {
-                "title": "Manager (for update)",
-                "type": "object",
-                "properties": {
-                    "FirstName": {
-                        "type": "string"
-                    },
-                    "LastName": {
-                        "type": "string"
-                    },
-                    "Title": {
-                        "type": "string"
+                    "FractionalDigits": {
+                        "type": "integer",
+                        "format": "uint8"
                     }
                 }
             },
@@ -8778,119 +8212,337 @@
                     }
                 }
             },
-            "OData.Demo.Currency": {
-                "title": "Currency",
+            "OData.Demo.Employee": {
+                "title": "Employee",
                 "type": "object",
                 "properties": {
-                    "Code": {
-                        "type": "string",
-                        "maxLength": 3
-                    },
-                    "Name": {
+                    "ID": {
                         "type": "string"
                     },
-                    "Sales": {
+                    "FirstName": {
+                        "type": "string"
+                    },
+                    "LastName": {
+                        "type": "string"
+                    },
+                    "Title": {
+                        "type": "string"
+                    },
+                    "Manager": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/OData.Demo.Manager"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "LeaveRequests": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/OData.Demo.Sales"
+                            "$ref": "#/components/schemas/OData.Demo.LeaveRequest"
                         }
                     },
-                    "Sales@odata.count": {
+                    "LeaveRequests@odata.count": {
                         "$ref": "#/components/schemas/count"
-                    },
-                    "Symbol": {
-                        "type": "string"
-                    },
-                    "FractionalDigits": {
-                        "type": "integer",
-                        "format": "uint8"
                     }
-                }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/OData.Demo.Manager"
+                    },
+                    {}
+                ]
             },
-            "OData.Demo.Currency-create": {
-                "title": "Currency (for create)",
+            "OData.Demo.Employee-create": {
+                "title": "Employee (for create)",
                 "type": "object",
                 "properties": {
-                    "Code": {
-                        "type": "string",
-                        "maxLength": 3
-                    },
-                    "Name": {
+                    "ID": {
                         "type": "string"
                     },
-                    "Sales": {
+                    "FirstName": {
+                        "type": "string"
+                    },
+                    "LastName": {
+                        "type": "string"
+                    },
+                    "Title": {
+                        "type": "string"
+                    },
+                    "Manager": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/OData.Demo.Manager-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "LeaveRequests": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/OData.Demo.Sales-create"
+                            "$ref": "#/components/schemas/OData.Demo.LeaveRequest-create"
                         }
-                    },
-                    "Symbol": {
-                        "type": "string"
-                    },
-                    "FractionalDigits": {
-                        "type": "integer",
-                        "format": "uint8"
                     }
                 },
                 "required": [
-                    "Code"
+                    "ID"
+                ],
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/OData.Demo.Manager-create"
+                    },
+                    {}
                 ]
             },
-            "OData.Demo.Currency-update": {
-                "title": "Currency (for update)",
+            "OData.Demo.Employee-update": {
+                "title": "Employee (for update)",
                 "type": "object",
                 "properties": {
-                    "Name": {
+                    "FirstName": {
                         "type": "string"
                     },
-                    "Symbol": {
+                    "LastName": {
                         "type": "string"
                     },
-                    "FractionalDigits": {
-                        "type": "integer",
-                        "format": "uint8"
+                    "Title": {
+                        "type": "string"
                     }
-                }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/OData.Demo.Manager-update"
+                    },
+                    {}
+                ]
             },
-            "OData.Demo.City": {
-                "title": "City",
+            "OData.Demo.Manager": {
+                "title": "Manager",
                 "type": "object",
                 "properties": {
                     "ID": {
-                        "type": "string",
-                        "format": "uuid",
-                        "example": "01234567-89ab-cdef-0123-456789abcdef"
-                    },
-                    "Name": {
                         "type": "string"
+                    },
+                    "FirstName": {
+                        "type": "string"
+                    },
+                    "LastName": {
+                        "type": "string"
+                    },
+                    "Title": {
+                        "type": "string"
+                    },
+                    "Manager": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/OData.Demo.Manager"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "LeaveRequests": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.LeaveRequest"
+                        }
+                    },
+                    "LeaveRequests@odata.count": {
+                        "$ref": "#/components/schemas/count"
+                    },
+                    "Employees": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.Employee"
+                        }
+                    },
+                    "Employees@odata.count": {
+                        "$ref": "#/components/schemas/count"
+                    },
+                    "Inbox": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.LeaveRequest"
+                        }
+                    },
+                    "Inbox@odata.count": {
+                        "$ref": "#/components/schemas/count"
                     }
                 }
             },
-            "OData.Demo.City-create": {
-                "title": "City (for create)",
+            "OData.Demo.Manager-create": {
+                "title": "Manager (for create)",
                 "type": "object",
                 "properties": {
                     "ID": {
-                        "type": "string",
-                        "format": "uuid",
-                        "example": "01234567-89ab-cdef-0123-456789abcdef"
-                    },
-                    "Name": {
                         "type": "string"
+                    },
+                    "FirstName": {
+                        "type": "string"
+                    },
+                    "LastName": {
+                        "type": "string"
+                    },
+                    "Title": {
+                        "type": "string"
+                    },
+                    "Manager": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/OData.Demo.Manager-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "LeaveRequests": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.LeaveRequest-create"
+                        }
+                    },
+                    "Employees": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.Employee-create"
+                        }
+                    },
+                    "Inbox": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.LeaveRequest-create"
+                        }
                     }
                 },
                 "required": [
                     "ID"
                 ]
             },
-            "OData.Demo.City-update": {
-                "title": "City (for update)",
+            "OData.Demo.Manager-update": {
+                "title": "Manager (for update)",
                 "type": "object",
                 "properties": {
-                    "Name": {
+                    "FirstName": {
+                        "type": "string"
+                    },
+                    "LastName": {
+                        "type": "string"
+                    },
+                    "Title": {
                         "type": "string"
                     }
                 }
+            },
+            "OData.Demo.LeaveRequest": {
+                "title": "LeaveRequest",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Manager": {
+                        "$ref": "#/components/schemas/OData.Demo.Manager"
+                    },
+                    "Employee": {
+                        "$ref": "#/components/schemas/OData.Demo.Employee"
+                    }
+                }
+            },
+            "OData.Demo.LeaveRequest-create": {
+                "title": "LeaveRequest (for create)",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Manager": {
+                        "$ref": "#/components/schemas/OData.Demo.Manager-create"
+                    },
+                    "Employee": {
+                        "$ref": "#/components/schemas/OData.Demo.Employee-create"
+                    }
+                },
+                "required": [
+                    "ID"
+                ]
+            },
+            "OData.Demo.LeaveRequest-update": {
+                "title": "LeaveRequest (for update)",
+                "type": "object"
+            },
+            "OData.Demo.Address": {
+                "title": "Address",
+                "type": "object",
+                "properties": {
+                    "Street": {
+                        "type": "string"
+                    },
+                    "Country": {
+                        "$ref": "#/components/schemas/OData.Demo.Country"
+                    },
+                    "City": {
+                        "$ref": "#/components/schemas/OData.Demo.City"
+                    },
+                    "Region": {
+                        "type": "string"
+                    },
+                    "PostalCode": {
+                        "type": "string"
+                    }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/OData.Demo.AddressWithLocation"
+                    },
+                    {}
+                ]
+            },
+            "OData.Demo.Address-create": {
+                "title": "Address (for create)",
+                "type": "object",
+                "properties": {
+                    "Street": {
+                        "type": "string"
+                    },
+                    "Country": {
+                        "$ref": "#/components/schemas/OData.Demo.Country-create"
+                    },
+                    "City": {
+                        "$ref": "#/components/schemas/OData.Demo.City-create"
+                    },
+                    "Region": {
+                        "type": "string"
+                    },
+                    "PostalCode": {
+                        "type": "string"
+                    }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/OData.Demo.AddressWithLocation-create"
+                    },
+                    {}
+                ]
+            },
+            "OData.Demo.Address-update": {
+                "title": "Address (for update)",
+                "type": "object",
+                "properties": {
+                    "Street": {
+                        "type": "string"
+                    },
+                    "Region": {
+                        "type": "string"
+                    },
+                    "PostalCode": {
+                        "type": "string"
+                    }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/OData.Demo.AddressWithLocation-update"
+                    },
+                    {}
+                ]
             },
             "OData.Demo.PhoneNumber": {
                 "title": "PhoneNumber",
@@ -8945,6 +8597,346 @@
                     },
                     {}
                 ]
+            },
+            "OData.Demo.VipCustomer": {
+                "title": "VipCustomer",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
+                    "Orders": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.Order"
+                        }
+                    },
+                    "Orders@odata.count": {
+                        "$ref": "#/components/schemas/count"
+                    },
+                    "Name": {
+                        "type": "string"
+                    },
+                    "CompanyName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "BirthDate": {
+                        "type": "string"
+                    },
+                    "CountryName": {
+                        "type": "string",
+                        "title": "This is weird, given that we have a Country entity type"
+                    },
+                    "Sales": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.Sales"
+                        }
+                    },
+                    "Sales@odata.count": {
+                        "$ref": "#/components/schemas/count"
+                    },
+                    "ContactName": {
+                        "type": "string"
+                    },
+                    "ContactTitle": {
+                        "type": "string"
+                    },
+                    "Fax": {
+                        "type": "string"
+                    },
+                    "Address": {
+                        "$ref": "#/components/schemas/OData.Demo.Address"
+                    },
+                    "EmailAddresses": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "Phone": {
+                        "$ref": "#/components/schemas/OData.Demo.PhoneNumber"
+                    }
+                }
+            },
+            "OData.Demo.VipCustomer-create": {
+                "title": "VipCustomer (for create)",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
+                    "Orders": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.Order-create"
+                        }
+                    },
+                    "Name": {
+                        "type": "string"
+                    },
+                    "CompanyName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "BirthDate": {
+                        "type": "string"
+                    },
+                    "CountryName": {
+                        "type": "string",
+                        "title": "This is weird, given that we have a Country entity type"
+                    },
+                    "Sales": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.Sales-create"
+                        }
+                    },
+                    "ContactName": {
+                        "type": "string"
+                    },
+                    "ContactTitle": {
+                        "type": "string"
+                    },
+                    "Fax": {
+                        "type": "string"
+                    },
+                    "Address": {
+                        "$ref": "#/components/schemas/OData.Demo.Address-create"
+                    },
+                    "EmailAddresses": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "Phone": {
+                        "$ref": "#/components/schemas/OData.Demo.PhoneNumber-create"
+                    }
+                },
+                "required": [
+                    "ID"
+                ]
+            },
+            "OData.Demo.VipCustomer-update": {
+                "title": "VipCustomer (for update)",
+                "type": "object",
+                "properties": {
+                    "Name": {
+                        "type": "string"
+                    },
+                    "CompanyName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "BirthDate": {
+                        "type": "string"
+                    },
+                    "CountryName": {
+                        "type": "string",
+                        "title": "This is weird, given that we have a Country entity type"
+                    },
+                    "ContactName": {
+                        "type": "string"
+                    },
+                    "ContactTitle": {
+                        "type": "string"
+                    },
+                    "Fax": {
+                        "type": "string"
+                    },
+                    "Address": {
+                        "$ref": "#/components/schemas/OData.Demo.Address-update"
+                    },
+                    "EmailAddresses": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "Phone": {
+                        "$ref": "#/components/schemas/OData.Demo.PhoneNumber-update"
+                    }
+                }
+            },
+            "OData.Demo.PreferredSupplier": {
+                "title": "PreferredSupplier",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
+                    "Products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.Product"
+                        }
+                    },
+                    "Products@odata.count": {
+                        "$ref": "#/components/schemas/count"
+                    },
+                    "Name": {
+                        "type": "string"
+                    },
+                    "EmailAddresses": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "Addresses": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.Address"
+                        }
+                    },
+                    "AccountRepresentative": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/OData.Demo.Employee"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "EmployeeID": {
+                        "type": "string"
+                    }
+                }
+            },
+            "OData.Demo.PreferredSupplier-create": {
+                "title": "PreferredSupplier (for create)",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
+                    "Products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.Product-create"
+                        }
+                    },
+                    "Name": {
+                        "type": "string"
+                    },
+                    "EmailAddresses": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "Addresses": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.Address-create"
+                        }
+                    },
+                    "AccountRepresentative": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/OData.Demo.Employee-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "EmployeeID": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "ID"
+                ]
+            },
+            "OData.Demo.PreferredSupplier-update": {
+                "title": "PreferredSupplier (for update)",
+                "type": "object",
+                "properties": {
+                    "Name": {
+                        "type": "string"
+                    },
+                    "EmailAddresses": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "Addresses": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OData.Demo.Address-update"
+                        }
+                    },
+                    "EmployeeID": {
+                        "type": "string"
+                    }
+                }
+            },
+            "OData.Demo.AddressWithLocation": {
+                "title": "AddressWithLocation",
+                "type": "object",
+                "properties": {
+                    "Street": {
+                        "type": "string"
+                    },
+                    "Country": {
+                        "$ref": "#/components/schemas/OData.Demo.Country"
+                    },
+                    "City": {
+                        "$ref": "#/components/schemas/OData.Demo.City"
+                    },
+                    "Region": {
+                        "type": "string"
+                    },
+                    "PostalCode": {
+                        "type": "string"
+                    },
+                    "Location": {
+                        "$ref": "#/components/schemas/geoPoint"
+                    }
+                }
+            },
+            "OData.Demo.AddressWithLocation-create": {
+                "title": "AddressWithLocation (for create)",
+                "type": "object",
+                "properties": {
+                    "Street": {
+                        "type": "string"
+                    },
+                    "Country": {
+                        "$ref": "#/components/schemas/OData.Demo.Country-create"
+                    },
+                    "City": {
+                        "$ref": "#/components/schemas/OData.Demo.City-create"
+                    },
+                    "Region": {
+                        "type": "string"
+                    },
+                    "PostalCode": {
+                        "type": "string"
+                    },
+                    "Location": {
+                        "$ref": "#/components/schemas/geoPoint"
+                    }
+                }
+            },
+            "OData.Demo.AddressWithLocation-update": {
+                "title": "AddressWithLocation (for update)",
+                "type": "object",
+                "properties": {
+                    "Street": {
+                        "type": "string"
+                    },
+                    "Region": {
+                        "type": "string"
+                    },
+                    "PostalCode": {
+                        "type": "string"
+                    },
+                    "Location": {
+                        "$ref": "#/components/schemas/geoPoint"
+                    }
+                }
             },
             "OData.Demo.CellPhoneNumber": {
                 "title": "CellPhoneNumber",

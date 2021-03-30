@@ -8,8 +8,6 @@ const fs = require("fs");
 // title/description on entity types for POST and PATCH request bodies
 // tags: Core.Description on entity type as fallback for description on entity set/singleton
 // Nullable on action/function return type
-// deleteUnreferencedSchemas
-// @JSON.Schema
 // @Core.Example
 // reference undefined type: silent for included schema, warning for local schema
 // key-aliases: one and more segments
@@ -27,12 +25,6 @@ const result1 = require("../examples/csdl-16.1.openapi3.json");
 
 const example2 = csdl.xml2json(fs.readFileSync("examples/TripPin.xml"));
 const result2 = require("../examples/TripPin.openapi3.json");
-
-const example3 = csdl.xml2json(fs.readFileSync("examples/miscellaneous.xml"));
-const result3 = require("../examples/miscellaneous.openapi3.json");
-
-const example4 = csdl.xml2json(fs.readFileSync("examples/example.xml"));
-const result4 = require("../examples/example.openapi3.json");
 
 const example5 = csdl.xml2json(fs.readFileSync("examples/annotations.xml"));
 const result5 = require("../examples/annotations.openapi3.json");
@@ -62,20 +54,6 @@ describe("Examples", function () {
       diagram: true,
     });
     check(openapi, result2);
-  });
-
-  it("miscellaneous", function () {
-    const openapi = lib.csdl2openapi(example3, { diagram: true });
-    check(openapi, result3);
-  });
-
-  it("example", function () {
-    const openapi = lib.csdl2openapi(example4, {
-      host: "services.odata.org",
-      basePath: "/V4/OData/(S(nsga2k1tyctb0cn0ofcgcn4o))/OData.svc",
-      diagram: true,
-    });
-    check(openapi, result4);
   });
 
   it("annotations", function () {
@@ -125,96 +103,7 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
   });
 
-  it("only types", function () {
-    const csdl = {
-      $Reference: {
-        dummy: {
-          $Include: [{ $Namespace: "Org.OData.Core.V1", $Alias: "Core" }],
-        },
-      },
-      ReuseTypes: {
-        entityType: {
-          "@Core.Description": "Core.Description",
-          $Kind: "EntityType",
-          $Key: ["key"],
-          key: {},
-        },
-        typeDefinition: {
-          $Kind: "TypeDefinition",
-          $UnderlyingType: "Edm.DateTimeOffset",
-        },
-        typeDefinition2: {
-          $Kind: "TypeDefinition",
-          $UnderlyingType: "Edm.SByte",
-        },
-        typeDefinition3: {
-          $Kind: "TypeDefinition",
-          $UnderlyingType: "Edm.DateTimeOffset",
-          $Precision: 3,
-        },
-        typeDefinition4: {
-          $Kind: "TypeDefinition",
-          $UnderlyingType: "Edm.Foo",
-        },
-      },
-    };
-    const expected = {
-      openapi: "3.0.2",
-      info: {
-        title: "OData CSDL document",
-        description: "",
-        version: "",
-      },
-      paths: {},
-      components: {
-        schemas: {
-          "ReuseTypes.entityType": {
-            type: "object",
-            title: "Core.Description",
-            properties: {
-              key: { type: "string" },
-            },
-          },
-          "ReuseTypes.entityType-create": {
-            type: "object",
-            title: "Core.Description (for create)",
-            properties: {
-              key: { type: "string" },
-            },
-            required: ["key"],
-          },
-          "ReuseTypes.entityType-update": {
-            type: "object",
-            title: "Core.Description (for update)",
-          },
-          "ReuseTypes.typeDefinition": {
-            title: "typeDefinition",
-            type: "string",
-            format: "date-time",
-            example: "2017-04-13T15:51:04Z",
-          },
-          "ReuseTypes.typeDefinition2": {
-            title: "typeDefinition2",
-            type: "integer",
-            format: "int8",
-          },
-          "ReuseTypes.typeDefinition3": {
-            title: "typeDefinition3",
-            type: "string",
-            format: "date-time",
-            example: "2017-04-13T15:51:04.000Z",
-          },
-          "ReuseTypes.typeDefinition4": {
-            title: "typeDefinition4",
-          },
-        },
-      },
-    };
-    const openapi = lib.csdl2openapi(csdl, {});
-    assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
-  });
-
-  it("remove unused types", function () {
+  it("omit unused types", function () {
     const csdl = {
       $Reference: {
         dummy: {
@@ -253,7 +142,46 @@ describe("Edge cases", function () {
       },
     };
     const openapi = lib.csdl2openapi(csdl, {});
-    lib.deleteUnreferencedSchemas(openapi);
+    assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
+  });
+
+  it("omit unused types with cyclic references", function () {
+    const csdl = {
+      $Reference: {
+        dummy: {
+          $Include: [{ $Namespace: "Org.OData.Core.V1", $Alias: "Core" }],
+        },
+      },
+      ReuseTypes: {
+        entityType: {
+          "@Core.Description": "Core.Description",
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          nav: { $Kind: "NavigationProperty", $Type: "ReuseTypes.otherType" },
+        },
+        otherType: {
+          "@Core.Description": "Core.Description",
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          nav: { $Kind: "NavigationProperty", $Type: "ReuseTypes.entityType" },
+        },
+      },
+    };
+    const expected = {
+      openapi: "3.0.2",
+      info: {
+        title: "OData CSDL document",
+        description: "",
+        version: "",
+      },
+      paths: {},
+      components: {
+        schemas: {},
+      },
+    };
+    const openapi = lib.csdl2openapi(csdl, {});
     assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
   });
 
@@ -330,6 +258,7 @@ describe("Edge cases", function () {
 
   it("type definition with @JSON.Schema", function () {
     const csdl = {
+      $EntityContainer: "jsonExamples.Container",
       $Reference: {
         dummy: {
           $Include: [
@@ -339,6 +268,14 @@ describe("Edge cases", function () {
         },
       },
       jsonExamples: {
+        Container: {
+          single: { $Type: "jsonExamples.single" },
+        },
+        single: {
+          $Kind: "EntityType",
+          stream1: { $Type: "jsonExamples.typeDefinitionOld" },
+          stream2: { $Type: "jsonExamples.typeDefinitionNew" },
+        },
         typeDefinitionOld: {
           $Kind: "TypeDefinition",
           $UnderlyingType: "Edm.Stream",
@@ -356,41 +293,36 @@ describe("Edge cases", function () {
         },
       },
     };
-    const expected = {
-      openapi: "3.0.2",
-      info: {
-        title: "OData CSDL document",
-        description: "",
-        version: "",
-      },
-      paths: {},
-      components: {
-        schemas: {
-          "jsonExamples.typeDefinitionOld": {
-            title: "typeDefinitionOld",
-            type: "object",
-            additionalProperties: false,
-            patternProperties: {
-              "^[\\w\\.\\-\\/]+$": { type: "string" },
-            },
-          },
-          "jsonExamples.typeDefinitionNew": {
-            title: "typeDefinitionNew",
-            type: "object",
-            additionalProperties: false,
-            patternProperties: {
-              "^[\\w\\.\\-\\/]+$": { type: "string" },
-            },
-          },
+    const openapi = lib.csdl2openapi(csdl, {});
+    assert.deepStrictEqual(
+      openapi.components.schemas["jsonExamples.typeDefinitionOld"],
+      {
+        title: "typeDefinitionOld",
+        type: "object",
+        additionalProperties: false,
+        patternProperties: {
+          "^[\\w\\.\\-\\/]+$": { type: "string" },
         },
       },
-    };
-    const openapi = lib.csdl2openapi(csdl, {});
-    assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
+      "JSON property old-style"
+    );
+    assert.deepStrictEqual(
+      openapi.components.schemas["jsonExamples.typeDefinitionNew"],
+      {
+        title: "typeDefinitionNew",
+        type: "object",
+        additionalProperties: false,
+        patternProperties: {
+          "^[\\w\\.\\-\\/]+$": { type: "string" },
+        },
+      },
+      "JSON property new-style"
+    );
   });
 
   it("type definition with @Org.OData.JSON.V1.Schema", function () {
     const csdl = {
+      $EntityContainer: "jsonExamples.Container",
       $Reference: {
         dummy: {
           $Include: [
@@ -400,6 +332,14 @@ describe("Edge cases", function () {
         },
       },
       jsonExamples: {
+        Container: {
+          single: { $Type: "jsonExamples.single" },
+        },
+        single: {
+          $Kind: "EntityType",
+          stream1: { $Type: "jsonExamples.typeDefinitionOld" },
+          stream2: { $Type: "jsonExamples.typeDefinitionNew" },
+        },
         typeDefinitionOld: {
           $Kind: "TypeDefinition",
           $UnderlyingType: "Edm.Stream",
@@ -417,37 +357,31 @@ describe("Edge cases", function () {
         },
       },
     };
-    const expected = {
-      openapi: "3.0.2",
-      info: {
-        title: "OData CSDL document",
-        description: "",
-        version: "",
-      },
-      paths: {},
-      components: {
-        schemas: {
-          "jsonExamples.typeDefinitionOld": {
-            title: "typeDefinitionOld",
-            type: "object",
-            additionalProperties: false,
-            patternProperties: {
-              "^[\\w\\.\\-\\/]+$": { type: "string" },
-            },
-          },
-          "jsonExamples.typeDefinitionNew": {
-            title: "typeDefinitionNew",
-            type: "object",
-            additionalProperties: false,
-            patternProperties: {
-              "^[\\w\\.\\-\\/]+$": { type: "string" },
-            },
-          },
+    const openapi = lib.csdl2openapi(csdl, {});
+    assert.deepStrictEqual(
+      openapi.components.schemas["jsonExamples.typeDefinitionOld"],
+      {
+        title: "typeDefinitionOld",
+        type: "object",
+        additionalProperties: false,
+        patternProperties: {
+          "^[\\w\\.\\-\\/]+$": { type: "string" },
         },
       },
-    };
-    const openapi = lib.csdl2openapi(csdl, {});
-    assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
+      "JSON property old-style"
+    );
+    assert.deepStrictEqual(
+      openapi.components.schemas["jsonExamples.typeDefinitionNew"],
+      {
+        title: "typeDefinitionNew",
+        type: "object",
+        additionalProperties: false,
+        patternProperties: {
+          "^[\\w\\.\\-\\/]+$": { type: "string" },
+        },
+      },
+      "JSON property new-style"
+    );
   });
 
   it("no key", function () {
