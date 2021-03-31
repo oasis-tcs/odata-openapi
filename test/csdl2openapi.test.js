@@ -386,7 +386,7 @@ describe("Edge cases", function () {
         single: {
           $Kind: "EntityType",
           stream1: { $Type: "jsonExamples.typeDefinitionOld" },
-          stream2: { $Type: "jsonExamples.typeDefinitionNew" },
+          stream2: { $Type: "jsonExamples.typeDefinitionNew", $MaxLength: 10 },
         },
         typeDefinitionOld: {
           $Kind: "TypeDefinition",
@@ -429,6 +429,16 @@ describe("Edge cases", function () {
         },
       },
       "JSON property new-style"
+    );
+    assert.deepStrictEqual(
+      openapi.components.schemas["jsonExamples.single"].properties.stream2,
+      {
+        maxLength: 10,
+        allOf: [
+          { $ref: "#/components/schemas/jsonExamples.typeDefinitionNew" },
+        ],
+      },
+      "MaxLength"
     );
   });
 
@@ -681,7 +691,7 @@ describe("Edge cases", function () {
     );
   });
 
-  it("function with complex and collection parameter", function () {
+  it("function with complex and optional collection parameter", function () {
     const csdl = {
       $Reference: {
         dummy: {
@@ -700,16 +710,54 @@ describe("Edge cases", function () {
                 $Type: "this.Complex",
                 "@Core.Description": "param description",
               },
-              { $Name: "collection", $Collection: true },
+              {
+                $Name: "collection",
+                $Collection: true,
+              },
             ],
             $ReturnType: {},
           },
         ],
-        Container: { fun: { $Function: "this.ComplexParameters" } },
+        OptionalParameter: [
+          {
+            $Kind: "Function",
+            $Parameter: [
+              {
+                $Name: "complex",
+                $Type: "this.Complex",
+                "@Core.OptionalParameter": {},
+              },
+            ],
+            $ReturnType: {},
+          },
+        ],
+        Container: {
+          funC: { $Function: "this.ComplexParameters" },
+          funO: { $Function: "this.OptionalParameter" },
+        },
       },
     };
-    const expected = { paths: { "/$batch": { post: {} } } };
-    const path = "/fun(complex=@complex,collection=@collection)";
+    const expected = {
+      paths: {
+        "/funO": {
+          get: {
+            parameters: [
+              {
+                name: "complex",
+                in: "query",
+                required: false,
+                schema: { type: "string" },
+                example: "{}",
+                description:
+                  "This is URL-encoded JSON of type this.Complex, see [Complex and Collection Literals](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_ComplexandCollectionLiterals)",
+              },
+            ],
+          },
+        },
+        "/$batch": { post: {} },
+      },
+    };
+    const path = "/funC(complex=@complex,collection=@collection)";
     expected.paths[path] = {
       get: {
         parameters: [
@@ -744,7 +792,12 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       actual.paths[path].get.parameters,
       expected.paths[path].get.parameters,
-      "function parameters"
+      "complex function parameters"
+    );
+    assert.deepStrictEqual(
+      actual.paths["/funO"].get.parameters,
+      expected.paths["/funO"].get.parameters,
+      "optional function parameters"
     );
   });
 
@@ -1616,7 +1669,7 @@ describe("Edge cases", function () {
           $Kind: "EntityType",
           $Key: ["key"],
           key: {},
-          one: {},
+          one: { $DefaultValue: "def" },
           two: {},
           nav: {
             $Type: "this.thing",
@@ -1774,6 +1827,11 @@ describe("Edge cases", function () {
       expected.paths["/things"].get,
       "GET things"
     );
+    assert.deepStrictEqual(
+      actual.components.schemas["this.thing"].properties.one,
+      { type: "string", default: "def" },
+      "Property with default value"
+    );
   });
 
   it("ExpandRestrictions", function () {
@@ -1894,6 +1952,10 @@ describe("Edge cases", function () {
         act: [
           {
             $Kind: "Action",
+            $ReturnType: { $Type: "this.root" },
+          },
+          {
+            $Kind: "Action",
             $IsBound: true,
             $Parameter: [{ $Name: "in", $Type: "this.root" }],
           },
@@ -1927,6 +1989,7 @@ describe("Edge cases", function () {
             $Type: "this.root",
             $Collection: true,
           },
+          act: { $Action: "this.act" },
         },
       },
     };
@@ -1934,6 +1997,7 @@ describe("Edge cases", function () {
     const expected = {
       paths: {
         "/$batch": { post: {} },
+        "/act": { post: {} },
         "/roots": { get: {}, post: {} },
         "/roots/act": {
           post: {
@@ -1956,7 +2020,7 @@ describe("Edge cases", function () {
       },
     };
 
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = lib.csdl2openapi(csdl, { diagram: true });
 
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
@@ -1968,6 +2032,11 @@ describe("Edge cases", function () {
       actual.paths["/roots/act"].post,
       expected.paths["/roots/act"].post,
       "POST /roots/act"
+    );
+    assert.strictEqual(
+      actual.info.description,
+      "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[root{bg:lightslategray}],[act{bg:lawngreen}]->[root],[roots%20{bg:lawngreen}]++-*>[root])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
+      "diagram"
     );
   });
 
@@ -2080,6 +2149,137 @@ describe("Edge cases", function () {
       actual.components.schemas["this.child-update"],
       expected.components.schemas["this.child-update"],
       "child update structure"
+    );
+  });
+
+  it("Unknown authorization type", function () {
+    const csdl = {
+      $Version: "4.0",
+      $Reference: {
+        dummy: {
+          $Include: [
+            { $Namespace: "Org.OData.Authorization.V1", $Alias: "Auth" },
+          ],
+        },
+      },
+      "auth.example": {
+        $Alias: "self",
+        Person: {
+          $Kind: "EntityType",
+          $Key: ["ID"],
+          ID: {},
+          Name: {
+            $Nullable: true,
+          },
+        },
+        Container: {
+          $Kind: "EntityContainer",
+          People: {
+            $Collection: true,
+            $Type: "self.Person",
+          },
+          "@Auth.Authorizations": [
+            {
+              "@odata.type": "foo",
+              Name: "should-be-ignored",
+              Description: "Unknown Authentication Scheme",
+              KeyName: "x-api-key",
+              Location: "Header",
+            },
+            {
+              "@odata.type":
+                "https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Authorization.V1.xml#Auth.ApiKey",
+              Name: "api_key",
+              Description: "Authentication via API key",
+              KeyName: "x-api-key",
+              Location: "Header",
+            },
+          ],
+        },
+      },
+      $EntityContainer: "auth.example.Container",
+    };
+
+    const actual = lib.csdl2openapi(csdl, {});
+
+    assert.deepStrictEqual(
+      actual.components.securitySchemes,
+      {
+        api_key: {
+          description: "Authentication via API key",
+          type: "apiKey",
+          name: "x-api-key",
+          in: "header",
+        },
+      },
+      "security schemes"
+    );
+  });
+
+  it("various types and fishy annotations", function () {
+    const csdl = {
+      $EntityContainer: "typeExamples.Container",
+      typeExamples: {
+        Container: {
+          set: { $Type: "typeExamples.single", $Collection: true },
+          unknown: { $Kind: "unknown" },
+        },
+        single: {
+          $Kind: "EntityType",
+          withMaxLength: {
+            $Type: "typeExamples.typeDefinitionNew",
+            $MaxLength: 10,
+          },
+          binary: { $Type: "Edm.Binary" },
+          primitive: { $Type: "Edm.PrimitiveType" },
+          propertyPath: { $Type: "Edm.PropertyPath" },
+          sbyte: { $Type: "Edm.SByte" },
+          time: { $Type: "Edm.TimeOfDay" },
+          kaputt: { $Type: "Edm.kaputt" },
+          unknown: { $Type: "typeExamples.un-known" },
+        },
+        typeDefinitionNew: {
+          $Kind: "TypeDefinition",
+          $UnderlyingType: "Edm.String",
+        },
+        $Annotations: {
+          "typeExamples.single/foo/bar": {
+            /* more than two target path segments */
+          },
+          "typeExamples.single/foo": {
+            /* invalid annotation target */
+          },
+          "typeExamples.not-there": {
+            /* invalid annotation target */
+          },
+        },
+      },
+    };
+
+    const openapi = lib.csdl2openapi(csdl, {});
+
+    assert.deepStrictEqual(
+      openapi.components.schemas["typeExamples.single"].properties,
+      {
+        withMaxLength: {
+          maxLength: 10,
+          allOf: [
+            { $ref: "#/components/schemas/typeExamples.typeDefinitionNew" },
+          ],
+        },
+        binary: { format: "base64url", type: "string" },
+        primitive: {
+          anyOf: [{ type: "boolean" }, { type: "number" }, { type: "string" }],
+        },
+        propertyPath: { type: "string" },
+        sbyte: { type: "integer", format: "int8" },
+        time: { type: "string", format: "time", example: "15:51:04" },
+        kaputt: {},
+        unknown: {
+          $ref: "#/components/schemas/typeExamples.un-known",
+        },
+      },
+      "MaxLength"
     );
   });
 });
