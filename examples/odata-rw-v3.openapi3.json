@@ -3036,629 +3036,81 @@
     },
     "components": {
         "schemas": {
-            "ODataDemo.Product": {
-                "title": "Product",
+            "ODataDemo.Address": {
+                "title": "Address",
                 "type": "object",
                 "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Name": {
+                    "Street": {
                         "type": "string",
                         "nullable": true
                     },
-                    "Description": {
+                    "City": {
                         "type": "string",
                         "nullable": true
                     },
-                    "ReleaseDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z"
-                    },
-                    "DiscontinuedDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z",
-                        "nullable": true
-                    },
-                    "Rating": {
-                        "type": "integer",
-                        "format": "int16"
-                    },
-                    "Price": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "double",
-                        "example": 3.14
-                    },
-                    "Categories": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/ODataDemo.Category"
-                        }
-                    },
-                    "Categories@count": {
-                        "$ref": "#/components/schemas/count"
-                    },
-                    "Supplier": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Supplier"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "ProductDetail": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.ProductDetail"
-                            }
-                        ],
-                        "nullable": true
-                    }
-                },
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.FeaturedProduct"
-                    },
-                    {}
-                ]
-            },
-            "ODataDemo.Product-create": {
-                "title": "Product (for create)",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Name": {
+                    "State": {
                         "type": "string",
                         "nullable": true
                     },
-                    "Description": {
+                    "ZipCode": {
                         "type": "string",
                         "nullable": true
                     },
-                    "ReleaseDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z"
-                    },
-                    "DiscontinuedDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z",
-                        "nullable": true
-                    },
-                    "Rating": {
-                        "type": "integer",
-                        "format": "int16"
-                    },
-                    "Price": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "double",
-                        "example": 3.14
-                    },
-                    "Categories": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/ODataDemo.Category-create"
-                        }
-                    },
-                    "Supplier": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Supplier-create"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "ProductDetail": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.ProductDetail-create"
-                            }
-                        ],
-                        "nullable": true
-                    }
-                },
-                "required": [
-                    "ID"
-                ],
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.FeaturedProduct-create"
-                    },
-                    {}
-                ]
-            },
-            "ODataDemo.Product-update": {
-                "title": "Product (for update)",
-                "type": "object",
-                "properties": {
-                    "Name": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "Description": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "ReleaseDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z"
-                    },
-                    "DiscontinuedDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z",
-                        "nullable": true
-                    },
-                    "Rating": {
-                        "type": "integer",
-                        "format": "int16"
-                    },
-                    "Price": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "double",
-                        "example": 3.14
-                    }
-                },
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.FeaturedProduct-update"
-                    },
-                    {}
-                ]
-            },
-            "ODataDemo.Category": {
-                "title": "Category",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Name": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "Products": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/ODataDemo.Product"
-                        }
-                    },
-                    "Products@count": {
-                        "$ref": "#/components/schemas/count"
-                    }
-                }
-            },
-            "ODataDemo.Category-create": {
-                "title": "Category (for create)",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Name": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "Products": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/ODataDemo.Product-create"
-                        }
-                    }
-                },
-                "required": [
-                    "ID"
-                ]
-            },
-            "ODataDemo.Category-update": {
-                "title": "Category (for update)",
-                "type": "object",
-                "properties": {
-                    "Name": {
+                    "Country": {
                         "type": "string",
                         "nullable": true
                     }
                 }
             },
-            "ODataDemo.Supplier": {
-                "title": "Supplier",
+            "ODataDemo.Address-create": {
+                "title": "Address (for create)",
                 "type": "object",
                 "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Name": {
+                    "Street": {
                         "type": "string",
                         "nullable": true
                     },
-                    "Address": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Address"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Location": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/geoPoint"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Concurrency": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Products": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/ODataDemo.Product"
-                        }
-                    },
-                    "Products@count": {
-                        "$ref": "#/components/schemas/count"
-                    }
-                }
-            },
-            "ODataDemo.Supplier-create": {
-                "title": "Supplier (for create)",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Name": {
+                    "City": {
                         "type": "string",
                         "nullable": true
                     },
-                    "Address": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Address-create"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Location": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/geoPoint"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Concurrency": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Products": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/ODataDemo.Product-create"
-                        }
-                    }
-                },
-                "required": [
-                    "ID"
-                ]
-            },
-            "ODataDemo.Supplier-update": {
-                "title": "Supplier (for update)",
-                "type": "object",
-                "properties": {
-                    "Name": {
+                    "State": {
                         "type": "string",
                         "nullable": true
                     },
-                    "Address": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Address-update"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Location": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/geoPoint"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Concurrency": {
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                }
-            },
-            "ODataDemo.ProductDetail": {
-                "title": "ProductDetail",
-                "type": "object",
-                "properties": {
-                    "ProductID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Details": {
+                    "ZipCode": {
                         "type": "string",
                         "nullable": true
                     },
-                    "Product": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Product"
-                            }
-                        ],
-                        "nullable": true
-                    }
-                }
-            },
-            "ODataDemo.ProductDetail-create": {
-                "title": "ProductDetail (for create)",
-                "type": "object",
-                "properties": {
-                    "ProductID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Details": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "Product": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Product-create"
-                            }
-                        ],
-                        "nullable": true
-                    }
-                },
-                "required": [
-                    "ProductID"
-                ]
-            },
-            "ODataDemo.ProductDetail-update": {
-                "title": "ProductDetail (for update)",
-                "type": "object",
-                "properties": {
-                    "Details": {
+                    "Country": {
                         "type": "string",
                         "nullable": true
                     }
                 }
             },
-            "ODataDemo.Person": {
-                "title": "Person",
+            "ODataDemo.Address-update": {
+                "title": "Address (for update)",
                 "type": "object",
                 "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Name": {
+                    "Street": {
                         "type": "string",
                         "nullable": true
                     },
-                    "PersonDetail": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.PersonDetail"
-                            }
-                        ],
-                        "nullable": true
-                    }
-                },
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Customer"
-                    },
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Employee"
-                    },
-                    {}
-                ]
-            },
-            "ODataDemo.Person-create": {
-                "title": "Person (for create)",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Name": {
+                    "City": {
                         "type": "string",
                         "nullable": true
                     },
-                    "PersonDetail": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.PersonDetail-create"
-                            }
-                        ],
-                        "nullable": true
-                    }
-                },
-                "required": [
-                    "ID"
-                ],
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Customer-create"
-                    },
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Employee-create"
-                    },
-                    {}
-                ]
-            },
-            "ODataDemo.Person-update": {
-                "title": "Person (for update)",
-                "type": "object",
-                "properties": {
-                    "Name": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                },
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Customer-update"
-                    },
-                    {
-                        "$ref": "#/components/schemas/ODataDemo.Employee-update"
-                    },
-                    {}
-                ]
-            },
-            "ODataDemo.PersonDetail": {
-                "title": "PersonDetail",
-                "type": "object",
-                "properties": {
-                    "PersonID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Age": {
-                        "type": "integer",
-                        "format": "uint8"
-                    },
-                    "Gender": {
-                        "type": "boolean"
-                    },
-                    "Phone": {
+                    "State": {
                         "type": "string",
                         "nullable": true
                     },
-                    "Address": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Address"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Photo": {
-                        "type": "string",
-                        "format": "base64url"
-                    },
-                    "Person": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Person"
-                            }
-                        ],
-                        "nullable": true
-                    }
-                }
-            },
-            "ODataDemo.PersonDetail-create": {
-                "title": "PersonDetail (for create)",
-                "type": "object",
-                "properties": {
-                    "PersonID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Age": {
-                        "type": "integer",
-                        "format": "uint8"
-                    },
-                    "Gender": {
-                        "type": "boolean"
-                    },
-                    "Phone": {
+                    "ZipCode": {
                         "type": "string",
                         "nullable": true
                     },
-                    "Address": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Address-create"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Photo": {
-                        "type": "string",
-                        "format": "base64url"
-                    },
-                    "Person": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Person-create"
-                            }
-                        ],
-                        "nullable": true
-                    }
-                },
-                "required": [
-                    "PersonID"
-                ]
-            },
-            "ODataDemo.PersonDetail-update": {
-                "title": "PersonDetail (for update)",
-                "type": "object",
-                "properties": {
-                    "Age": {
-                        "type": "integer",
-                        "format": "uint8"
-                    },
-                    "Gender": {
-                        "type": "boolean"
-                    },
-                    "Phone": {
+                    "Country": {
                         "type": "string",
                         "nullable": true
-                    },
-                    "Address": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Address-update"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Photo": {
-                        "type": "string",
-                        "format": "base64url"
                     }
                 }
             },
@@ -3736,8 +3188,8 @@
                     }
                 }
             },
-            "ODataDemo.FeaturedProduct": {
-                "title": "FeaturedProduct",
+            "ODataDemo.Category": {
+                "title": "Category",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -3748,74 +3200,19 @@
                         "type": "string",
                         "nullable": true
                     },
-                    "Description": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "ReleaseDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z"
-                    },
-                    "DiscontinuedDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z",
-                        "nullable": true
-                    },
-                    "Rating": {
-                        "type": "integer",
-                        "format": "int16"
-                    },
-                    "Price": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "double",
-                        "example": 3.14
-                    },
-                    "Categories": {
+                    "Products": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/ODataDemo.Category"
+                            "$ref": "#/components/schemas/ODataDemo.Product"
                         }
                     },
-                    "Categories@count": {
+                    "Products@count": {
                         "$ref": "#/components/schemas/count"
-                    },
-                    "Supplier": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Supplier"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "ProductDetail": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.ProductDetail"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Advertisement": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Advertisement"
-                            }
-                        ],
-                        "nullable": true
                     }
                 }
             },
-            "ODataDemo.FeaturedProduct-create": {
-                "title": "FeaturedProduct (for create)",
+            "ODataDemo.Category-create": {
+                "title": "Category (for create)",
                 "type": "object",
                 "properties": {
                     "ID": {
@@ -3826,186 +3223,22 @@
                         "type": "string",
                         "nullable": true
                     },
-                    "Description": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "ReleaseDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z"
-                    },
-                    "DiscontinuedDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z",
-                        "nullable": true
-                    },
-                    "Rating": {
-                        "type": "integer",
-                        "format": "int16"
-                    },
-                    "Price": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "double",
-                        "example": 3.14
-                    },
-                    "Categories": {
+                    "Products": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/ODataDemo.Category-create"
+                            "$ref": "#/components/schemas/ODataDemo.Product-create"
                         }
-                    },
-                    "Supplier": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Supplier-create"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "ProductDetail": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.ProductDetail-create"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Advertisement": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Advertisement-create"
-                            }
-                        ],
-                        "nullable": true
                     }
                 },
                 "required": [
                     "ID"
                 ]
             },
-            "ODataDemo.FeaturedProduct-update": {
-                "title": "FeaturedProduct (for update)",
+            "ODataDemo.Category-update": {
+                "title": "Category (for update)",
                 "type": "object",
                 "properties": {
                     "Name": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "Description": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "ReleaseDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z"
-                    },
-                    "DiscontinuedDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z",
-                        "nullable": true
-                    },
-                    "Rating": {
-                        "type": "integer",
-                        "format": "int16"
-                    },
-                    "Price": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "double",
-                        "example": 3.14
-                    }
-                }
-            },
-            "ODataDemo.Address": {
-                "title": "Address",
-                "type": "object",
-                "properties": {
-                    "Street": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "City": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "State": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "ZipCode": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "Country": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                }
-            },
-            "ODataDemo.Address-create": {
-                "title": "Address (for create)",
-                "type": "object",
-                "properties": {
-                    "Street": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "City": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "State": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "ZipCode": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "Country": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                }
-            },
-            "ODataDemo.Address-update": {
-                "title": "Address (for update)",
-                "type": "object",
-                "properties": {
-                    "Street": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "City": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "State": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "ZipCode": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "Country": {
                         "type": "string",
                         "nullable": true
                     }
@@ -4248,6 +3481,773 @@
                         ],
                         "format": "float",
                         "example": 3.14
+                    }
+                }
+            },
+            "ODataDemo.FeaturedProduct": {
+                "title": "FeaturedProduct",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ReleaseDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z"
+                    },
+                    "DiscontinuedDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    },
+                    "Rating": {
+                        "type": "integer",
+                        "format": "int16"
+                    },
+                    "Price": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "double",
+                        "example": 3.14
+                    },
+                    "Categories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ODataDemo.Category"
+                        }
+                    },
+                    "Categories@count": {
+                        "$ref": "#/components/schemas/count"
+                    },
+                    "Supplier": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Supplier"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "ProductDetail": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.ProductDetail"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Advertisement": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Advertisement"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                }
+            },
+            "ODataDemo.FeaturedProduct-create": {
+                "title": "FeaturedProduct (for create)",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ReleaseDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z"
+                    },
+                    "DiscontinuedDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    },
+                    "Rating": {
+                        "type": "integer",
+                        "format": "int16"
+                    },
+                    "Price": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "double",
+                        "example": 3.14
+                    },
+                    "Categories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ODataDemo.Category-create"
+                        }
+                    },
+                    "Supplier": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Supplier-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "ProductDetail": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.ProductDetail-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Advertisement": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Advertisement-create"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "ID"
+                ]
+            },
+            "ODataDemo.FeaturedProduct-update": {
+                "title": "FeaturedProduct (for update)",
+                "type": "object",
+                "properties": {
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ReleaseDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z"
+                    },
+                    "DiscontinuedDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    },
+                    "Rating": {
+                        "type": "integer",
+                        "format": "int16"
+                    },
+                    "Price": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "double",
+                        "example": 3.14
+                    }
+                }
+            },
+            "ODataDemo.Person": {
+                "title": "Person",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "PersonDetail": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.PersonDetail"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/ODataDemo.Customer"
+                    },
+                    {
+                        "$ref": "#/components/schemas/ODataDemo.Employee"
+                    },
+                    {}
+                ]
+            },
+            "ODataDemo.Person-create": {
+                "title": "Person (for create)",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "PersonDetail": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.PersonDetail-create"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "ID"
+                ],
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/ODataDemo.Customer-create"
+                    },
+                    {
+                        "$ref": "#/components/schemas/ODataDemo.Employee-create"
+                    },
+                    {}
+                ]
+            },
+            "ODataDemo.Person-update": {
+                "title": "Person (for update)",
+                "type": "object",
+                "properties": {
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/ODataDemo.Customer-update"
+                    },
+                    {
+                        "$ref": "#/components/schemas/ODataDemo.Employee-update"
+                    },
+                    {}
+                ]
+            },
+            "ODataDemo.PersonDetail": {
+                "title": "PersonDetail",
+                "type": "object",
+                "properties": {
+                    "PersonID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Age": {
+                        "type": "integer",
+                        "format": "uint8"
+                    },
+                    "Gender": {
+                        "type": "boolean"
+                    },
+                    "Phone": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Address": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Address"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Photo": {
+                        "type": "string",
+                        "format": "base64url"
+                    },
+                    "Person": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Person"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                }
+            },
+            "ODataDemo.PersonDetail-create": {
+                "title": "PersonDetail (for create)",
+                "type": "object",
+                "properties": {
+                    "PersonID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Age": {
+                        "type": "integer",
+                        "format": "uint8"
+                    },
+                    "Gender": {
+                        "type": "boolean"
+                    },
+                    "Phone": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Address": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Address-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Photo": {
+                        "type": "string",
+                        "format": "base64url"
+                    },
+                    "Person": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Person-create"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "PersonID"
+                ]
+            },
+            "ODataDemo.PersonDetail-update": {
+                "title": "PersonDetail (for update)",
+                "type": "object",
+                "properties": {
+                    "Age": {
+                        "type": "integer",
+                        "format": "uint8"
+                    },
+                    "Gender": {
+                        "type": "boolean"
+                    },
+                    "Phone": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Address": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Address-update"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Photo": {
+                        "type": "string",
+                        "format": "base64url"
+                    }
+                }
+            },
+            "ODataDemo.Product": {
+                "title": "Product",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ReleaseDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z"
+                    },
+                    "DiscontinuedDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    },
+                    "Rating": {
+                        "type": "integer",
+                        "format": "int16"
+                    },
+                    "Price": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "double",
+                        "example": 3.14
+                    },
+                    "Categories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ODataDemo.Category"
+                        }
+                    },
+                    "Categories@count": {
+                        "$ref": "#/components/schemas/count"
+                    },
+                    "Supplier": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Supplier"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "ProductDetail": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.ProductDetail"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/ODataDemo.FeaturedProduct"
+                    },
+                    {}
+                ]
+            },
+            "ODataDemo.Product-create": {
+                "title": "Product (for create)",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ReleaseDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z"
+                    },
+                    "DiscontinuedDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    },
+                    "Rating": {
+                        "type": "integer",
+                        "format": "int16"
+                    },
+                    "Price": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "double",
+                        "example": 3.14
+                    },
+                    "Categories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ODataDemo.Category-create"
+                        }
+                    },
+                    "Supplier": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Supplier-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "ProductDetail": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.ProductDetail-create"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "ID"
+                ],
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/ODataDemo.FeaturedProduct-create"
+                    },
+                    {}
+                ]
+            },
+            "ODataDemo.Product-update": {
+                "title": "Product (for update)",
+                "type": "object",
+                "properties": {
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ReleaseDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z"
+                    },
+                    "DiscontinuedDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    },
+                    "Rating": {
+                        "type": "integer",
+                        "format": "int16"
+                    },
+                    "Price": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "double",
+                        "example": 3.14
+                    }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/ODataDemo.FeaturedProduct-update"
+                    },
+                    {}
+                ]
+            },
+            "ODataDemo.ProductDetail": {
+                "title": "ProductDetail",
+                "type": "object",
+                "properties": {
+                    "ProductID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Details": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Product": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Product"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                }
+            },
+            "ODataDemo.ProductDetail-create": {
+                "title": "ProductDetail (for create)",
+                "type": "object",
+                "properties": {
+                    "ProductID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Details": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Product": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Product-create"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "ProductID"
+                ]
+            },
+            "ODataDemo.ProductDetail-update": {
+                "title": "ProductDetail (for update)",
+                "type": "object",
+                "properties": {
+                    "Details": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
+            "ODataDemo.Supplier": {
+                "title": "Supplier",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Address": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Address"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Location": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/geoPoint"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Concurrency": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ODataDemo.Product"
+                        }
+                    },
+                    "Products@count": {
+                        "$ref": "#/components/schemas/count"
+                    }
+                }
+            },
+            "ODataDemo.Supplier-create": {
+                "title": "Supplier (for create)",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Address": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Address-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Location": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/geoPoint"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Concurrency": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ODataDemo.Product-create"
+                        }
+                    }
+                },
+                "required": [
+                    "ID"
+                ]
+            },
+            "ODataDemo.Supplier-update": {
+                "title": "Supplier (for update)",
+                "type": "object",
+                "properties": {
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Address": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Address-update"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Location": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/geoPoint"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Concurrency": {
+                        "type": "integer",
+                        "format": "int32"
                     }
                 }
             },

@@ -1959,6 +1959,194 @@
     },
     "components": {
         "schemas": {
+            "ODataDemo.Address": {
+                "title": "Address",
+                "type": "object",
+                "properties": {
+                    "Street": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "City": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "State": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ZipCode": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "CountryName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Country": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Country"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                }
+            },
+            "ODataDemo.Address-create": {
+                "title": "Address (for create)",
+                "type": "object",
+                "properties": {
+                    "Street": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "City": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "State": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ZipCode": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "CountryName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Country": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ODataDemo.Country-create"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                }
+            },
+            "ODataDemo.Address-update": {
+                "title": "Address (for update)",
+                "type": "object",
+                "properties": {
+                    "Street": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "City": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "State": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ZipCode": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "CountryName": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
+            "ODataDemo.Category": {
+                "title": "Category",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Name": {
+                        "type": "string"
+                    },
+                    "Products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ODataDemo.Product"
+                        }
+                    },
+                    "Products@count": {
+                        "$ref": "#/components/schemas/count"
+                    }
+                }
+            },
+            "ODataDemo.Category-create": {
+                "title": "Category (for create)",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Name": {
+                        "type": "string"
+                    },
+                    "Products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ODataDemo.Product-create"
+                        }
+                    }
+                },
+                "required": [
+                    "ID"
+                ]
+            },
+            "ODataDemo.Category-update": {
+                "title": "Category (for update)",
+                "type": "object",
+                "properties": {
+                    "Name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ODataDemo.Country": {
+                "title": "Country",
+                "type": "object",
+                "properties": {
+                    "Code": {
+                        "type": "string",
+                        "maxLength": 2
+                    },
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
+            "ODataDemo.Country-create": {
+                "title": "Country (for create)",
+                "type": "object",
+                "properties": {
+                    "Code": {
+                        "type": "string",
+                        "maxLength": 2
+                    },
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "Code"
+                ]
+            },
+            "ODataDemo.Country-update": {
+                "title": "Country (for update)",
+                "type": "object",
+                "properties": {
+                    "Name": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
             "ODataDemo.Product": {
                 "title": "Product",
                 "type": "object",
@@ -2128,59 +2316,6 @@
                     }
                 }
             },
-            "ODataDemo.Category": {
-                "title": "Category",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Name": {
-                        "type": "string"
-                    },
-                    "Products": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/ODataDemo.Product"
-                        }
-                    },
-                    "Products@count": {
-                        "$ref": "#/components/schemas/count"
-                    }
-                }
-            },
-            "ODataDemo.Category-create": {
-                "title": "Category (for create)",
-                "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Name": {
-                        "type": "string"
-                    },
-                    "Products": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/ODataDemo.Product-create"
-                        }
-                    }
-                },
-                "required": [
-                    "ID"
-                ]
-            },
-            "ODataDemo.Category-update": {
-                "title": "Category (for update)",
-                "type": "object",
-                "properties": {
-                    "Name": {
-                        "type": "string"
-                    }
-                }
-            },
             "ODataDemo.Supplier": {
                 "title": "Supplier",
                 "type": "object",
@@ -2253,141 +2388,6 @@
                     "Concurrency": {
                         "type": "integer",
                         "format": "int32"
-                    }
-                }
-            },
-            "ODataDemo.Country": {
-                "title": "Country",
-                "type": "object",
-                "properties": {
-                    "Code": {
-                        "type": "string",
-                        "maxLength": 2
-                    },
-                    "Name": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                }
-            },
-            "ODataDemo.Country-create": {
-                "title": "Country (for create)",
-                "type": "object",
-                "properties": {
-                    "Code": {
-                        "type": "string",
-                        "maxLength": 2
-                    },
-                    "Name": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                },
-                "required": [
-                    "Code"
-                ]
-            },
-            "ODataDemo.Country-update": {
-                "title": "Country (for update)",
-                "type": "object",
-                "properties": {
-                    "Name": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                }
-            },
-            "ODataDemo.Address": {
-                "title": "Address",
-                "type": "object",
-                "properties": {
-                    "Street": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "City": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "State": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "ZipCode": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "CountryName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "Country": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Country"
-                            }
-                        ],
-                        "nullable": true
-                    }
-                }
-            },
-            "ODataDemo.Address-create": {
-                "title": "Address (for create)",
-                "type": "object",
-                "properties": {
-                    "Street": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "City": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "State": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "ZipCode": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "CountryName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "Country": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/ODataDemo.Country-create"
-                            }
-                        ],
-                        "nullable": true
-                    }
-                }
-            },
-            "ODataDemo.Address-update": {
-                "title": "Address (for update)",
-                "type": "object",
-                "properties": {
-                    "Street": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "City": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "State": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "ZipCode": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "CountryName": {
-                        "type": "string",
-                        "nullable": true
                     }
                 }
             },
