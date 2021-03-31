@@ -656,12 +656,12 @@ describe("Edge cases", function () {
       operations(expected),
       "Operations"
     );
-    assert.equal(
+    assert.strictEqual(
       actual.paths["/$batch"].post.summary,
       "BatchSupport - Description",
       "Batch summary"
     );
-    assert.equal(
+    assert.strictEqual(
       actual.paths["/$batch"].post.description,
       'BatchSupport - LongDescription\n\n*Please note that "Try it out" is not supported for this request.*',
       "Batch description"
@@ -1921,7 +1921,7 @@ describe("Edge cases", function () {
       }
     }
     assert.deepStrictEqual(actualExpands, expectedExpands, "expands");
-    assert.equal(
+    assert.strictEqual(
       actual.paths["/roots"].get.parameters.find(
         (item) => item.name == "expand"
       ).description,
