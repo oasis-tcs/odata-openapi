@@ -214,12 +214,34 @@ describe("Edge cases", function () {
           $Key: ["key"],
           key: {},
         },
+        noUpdate: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          nav: {
+            $Type: "this.noUpdatePart",
+            $Kind: "NavigationProperty",
+            $ContainsTarget: true,
+          },
+        },
+        noUpdatetPart: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+        },
         Container: {
           noInsert: {
             $Type: "this.noInsert",
             $Collection: true,
             "@Capabilities.InsertRestrictions": {
               Insertable: false,
+            },
+          },
+          noUpdate: {
+            $Type: "this.noUpdate",
+            $Collection: true,
+            "@Capabilities.UpdateRestrictions": {
+              Updatable: false,
             },
           },
         },
@@ -239,16 +261,28 @@ describe("Edge cases", function () {
           get: {},
           patch: {},
         },
+        "/noUpdate": {
+          get: {},
+          post: {},
+        },
+        "/noUpdate('{key}')": {
+          get: {},
+          delete: {},
+        },
+        "/noUpdate('{key}')/nav": {
+          get: {},
+          patch: {},
+        },
         "/$batch": { post: {} },
       },
       components: {
         schemas: {
           "this.noInsert": {},
-          "this.noInsert-create": {}, //TODO: weg
           "this.noInsert-update": {},
           "this.noInsertPart": {},
-          "this.noInsertPart-create": {}, //TODO: weg
           "this.noInsertPart-update": {},
+          "this.noUpdate": {},
+          "this.noUpdate-create": {},
         },
       },
     };
