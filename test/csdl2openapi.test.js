@@ -185,6 +185,84 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
   });
 
+  it("InsertRestrictions, UpdateRestrictions, ReadRestrictions", function () {
+    //TODO: restrictions
+    const csdl = {
+      $Version: "4.01",
+      $Reference: {
+        dummy: {
+          $Include: [
+            { $Namespace: "Org.OData.Core.V1", $Alias: "Core" },
+            { $Namespace: "Org.OData.Capabilities.V1", $Alias: "Capabilities" },
+          ],
+        },
+      },
+      $EntityContainer: "this.Container",
+      this: {
+        noInsert: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          nav: {
+            $Type: "this.noInsertPart",
+            $Kind: "NavigationProperty",
+            $ContainsTarget: true,
+          },
+        },
+        noInsertPart: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+        },
+        Container: {
+          noInsert: {
+            $Type: "this.noInsert",
+            $Collection: true,
+            "@Capabilities.InsertRestrictions": {
+              Insertable: false,
+            },
+          },
+        },
+      },
+    };
+    const expected = {
+      paths: {
+        "/noInsert": {
+          get: {},
+        },
+        "/noInsert('{key}')": {
+          get: {},
+          patch: {},
+          delete: {},
+        },
+        "/noInsert('{key}')/nav": {
+          get: {},
+          patch: {},
+        },
+        "/$batch": { post: {} },
+      },
+      components: {
+        schemas: {
+          "this.noInsert": {},
+          "this.noInsert-create": {}, //TODO: weg
+          "this.noInsert-update": {},
+          "this.noInsertPart": {},
+          "this.noInsertPart-create": {}, //TODO: weg
+          "this.noInsertPart-update": {},
+        },
+      },
+    };
+    const actual = lib.csdl2openapi(csdl, {});
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations"
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    //TODO: check components.schemas
+  });
+
   it("circular reference on collect primitive paths", function () {
     const csdl = {
       $EntityContainer: "this.Container",
@@ -1994,4 +2072,10 @@ function operations(openapi) {
     );
   });
   return p;
+}
+
+function schemas(openapi) {
+  return Object.keys(openapi.components.schemas)
+    .sort()
+    .filter((s) => s.includes("."));
 }
