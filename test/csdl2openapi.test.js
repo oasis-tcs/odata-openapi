@@ -229,6 +229,42 @@ describe("Edge cases", function () {
           $Key: ["key"],
           key: {},
         },
+        noRead: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          nav: {
+            $Type: "this.noReadPart",
+            $Kind: "NavigationProperty",
+            $ContainsTarget: true,
+          },
+        },
+        noReadPart: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+        },
+        nothing: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          navOne: {
+            $Type: "this.nothingPart",
+            $Kind: "NavigationProperty",
+            $ContainsTarget: true,
+          },
+          navMany: {
+            $Type: "this.nothingPart",
+            $Kind: "NavigationProperty",
+            $ContainsTarget: true,
+            $Collection: true,
+          },
+        },
+        nothingPart: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+        },
         Container: {
           noInsert: {
             $Type: "this.noInsert",
@@ -242,6 +278,48 @@ describe("Edge cases", function () {
             $Collection: true,
             "@Capabilities.UpdateRestrictions": {
               Updatable: false,
+            },
+          },
+          noRead: {
+            $Type: "this.noRead",
+            $Collection: true,
+            "@Capabilities.InsertRestrictions": {
+              Insertable: false,
+            },
+            "@Capabilities.ReadRestrictions": {
+              Readable: false,
+            },
+          },
+          nothing: {
+            $Type: "this.nothing",
+            $Collection: true,
+            "@Capabilities.InsertRestrictions": {
+              Insertable: false,
+            },
+            "@Capabilities.ReadRestrictions": {
+              Readable: false,
+            },
+            "@Capabilities.UpdateRestrictions": {
+              Updatable: false,
+            },
+            "@Capabilities.DeleteRestrictions": {
+              Deletable: false,
+            },
+            "@Capabilities.NavigationRestrictions": {
+              RestrictedProperties: [
+                {
+                  NavigationProperty: "navMany",
+                  InsertRestrictions: { Insertable: false },
+                  ReadRestrictions: { Readable: false },
+                  UpdateRestrictions: { Updatable: false },
+                  DeleteRestrictions: { Deletable: false },
+                },
+                {
+                  NavigationProperty: "navOne",
+                  ReadRestrictions: { Readable: false },
+                  UpdateRestrictions: { Updatable: false },
+                },
+              ],
             },
           },
         },
@@ -273,6 +351,14 @@ describe("Edge cases", function () {
           get: {},
           patch: {},
         },
+        "/noRead('{key}')": {
+          patch: {},
+          delete: {},
+        },
+        "/noRead('{key}')/nav": {
+          get: {},
+          patch: {},
+        },
         "/$batch": { post: {} },
       },
       components: {
@@ -281,12 +367,17 @@ describe("Edge cases", function () {
           "this.noInsert-update": {},
           "this.noInsertPart": {},
           "this.noInsertPart-update": {},
+          "this.noRead-update": {},
+          "this.noReadPart": {},
+          "this.noReadPart-update": {},
           "this.noUpdate": {},
           "this.noUpdate-create": {},
         },
       },
     };
     const actual = lib.csdl2openapi(csdl, {});
+    console.dir(actual.paths["/nothing"]);
+    console.dir(actual.paths["/nothing('{key}')"]);
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
