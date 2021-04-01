@@ -8,8 +8,6 @@ const fs = require("fs");
 // title/description on entity types for POST and PATCH request bodies
 // tags: Core.Description on entity type as fallback for description on entity set/singleton
 // Nullable on action/function return type
-// deleteUnreferencedSchemas
-// @JSON.Schema
 // @Core.Example
 // reference undefined type: silent for included schema, warning for local schema
 // key-aliases: one and more segments
@@ -27,12 +25,6 @@ const result1 = require("../examples/csdl-16.1.openapi3.json");
 
 const example2 = csdl.xml2json(fs.readFileSync("examples/TripPin.xml"));
 const result2 = require("../examples/TripPin.openapi3.json");
-
-const example3 = csdl.xml2json(fs.readFileSync("examples/miscellaneous.xml"));
-const result3 = require("../examples/miscellaneous.openapi3.json");
-
-const example4 = csdl.xml2json(fs.readFileSync("examples/example.xml"));
-const result4 = require("../examples/example.openapi3.json");
 
 const example5 = csdl.xml2json(fs.readFileSync("examples/annotations.xml"));
 const result5 = require("../examples/annotations.openapi3.json");
@@ -62,20 +54,6 @@ describe("Examples", function () {
       diagram: true,
     });
     check(openapi, result2);
-  });
-
-  it("miscellaneous", function () {
-    const openapi = lib.csdl2openapi(example3, { diagram: true });
-    check(openapi, result3);
-  });
-
-  it("example", function () {
-    const openapi = lib.csdl2openapi(example4, {
-      host: "services.odata.org",
-      basePath: "/V4/OData/(S(nsga2k1tyctb0cn0ofcgcn4o))/OData.svc",
-      diagram: true,
-    });
-    check(openapi, result4);
   });
 
   it("annotations", function () {
@@ -125,96 +103,7 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
   });
 
-  it("only types", function () {
-    const csdl = {
-      $Reference: {
-        dummy: {
-          $Include: [{ $Namespace: "Org.OData.Core.V1", $Alias: "Core" }],
-        },
-      },
-      ReuseTypes: {
-        entityType: {
-          "@Core.Description": "Core.Description",
-          $Kind: "EntityType",
-          $Key: ["key"],
-          key: {},
-        },
-        typeDefinition: {
-          $Kind: "TypeDefinition",
-          $UnderlyingType: "Edm.DateTimeOffset",
-        },
-        typeDefinition2: {
-          $Kind: "TypeDefinition",
-          $UnderlyingType: "Edm.SByte",
-        },
-        typeDefinition3: {
-          $Kind: "TypeDefinition",
-          $UnderlyingType: "Edm.DateTimeOffset",
-          $Precision: 3,
-        },
-        typeDefinition4: {
-          $Kind: "TypeDefinition",
-          $UnderlyingType: "Edm.Foo",
-        },
-      },
-    };
-    const expected = {
-      openapi: "3.0.2",
-      info: {
-        title: "OData CSDL document",
-        description: "",
-        version: "",
-      },
-      paths: {},
-      components: {
-        schemas: {
-          "ReuseTypes.entityType": {
-            type: "object",
-            title: "Core.Description",
-            properties: {
-              key: { type: "string" },
-            },
-          },
-          "ReuseTypes.entityType-create": {
-            type: "object",
-            title: "Core.Description (for create)",
-            properties: {
-              key: { type: "string" },
-            },
-            required: ["key"],
-          },
-          "ReuseTypes.entityType-update": {
-            type: "object",
-            title: "Core.Description (for update)",
-          },
-          "ReuseTypes.typeDefinition": {
-            title: "typeDefinition",
-            type: "string",
-            format: "date-time",
-            example: "2017-04-13T15:51:04Z",
-          },
-          "ReuseTypes.typeDefinition2": {
-            title: "typeDefinition2",
-            type: "integer",
-            format: "int8",
-          },
-          "ReuseTypes.typeDefinition3": {
-            title: "typeDefinition3",
-            type: "string",
-            format: "date-time",
-            example: "2017-04-13T15:51:04.000Z",
-          },
-          "ReuseTypes.typeDefinition4": {
-            title: "typeDefinition4",
-          },
-        },
-      },
-    };
-    const openapi = lib.csdl2openapi(csdl, {});
-    assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
-  });
-
-  it("remove unused types", function () {
+  it("omit unused types", function () {
     const csdl = {
       $Reference: {
         dummy: {
@@ -253,8 +142,250 @@ describe("Edge cases", function () {
       },
     };
     const openapi = lib.csdl2openapi(csdl, {});
-    lib.deleteUnreferencedSchemas(openapi);
     assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
+  });
+
+  it("omit unused types with cyclic references", function () {
+    const csdl = {
+      $Reference: {
+        dummy: {
+          $Include: [{ $Namespace: "Org.OData.Core.V1", $Alias: "Core" }],
+        },
+      },
+      ReuseTypes: {
+        entityType: {
+          "@Core.Description": "Core.Description",
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          nav: { $Kind: "NavigationProperty", $Type: "ReuseTypes.otherType" },
+        },
+        otherType: {
+          "@Core.Description": "Core.Description",
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          nav: { $Kind: "NavigationProperty", $Type: "ReuseTypes.entityType" },
+        },
+      },
+    };
+    const expected = {
+      openapi: "3.0.2",
+      info: {
+        title: "OData CSDL document",
+        description: "",
+        version: "",
+      },
+      paths: {},
+      components: {
+        schemas: {},
+      },
+    };
+    const openapi = lib.csdl2openapi(csdl, {});
+    assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
+  });
+
+  it("InsertRestrictions, UpdateRestrictions, ReadRestrictions", function () {
+    //TODO: restrictions
+    const csdl = {
+      $Version: "4.01",
+      $Reference: {
+        dummy: {
+          $Include: [
+            { $Namespace: "Org.OData.Core.V1", $Alias: "Core" },
+            { $Namespace: "Org.OData.Capabilities.V1", $Alias: "Capabilities" },
+          ],
+        },
+      },
+      $EntityContainer: "this.Container",
+      this: {
+        noInsert: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          nav: {
+            $Type: "this.noInsertPart",
+            $Kind: "NavigationProperty",
+            $ContainsTarget: true,
+          },
+        },
+        noInsertPart: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+        },
+        noUpdate: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          nav: {
+            $Type: "this.noUpdatePart",
+            $Kind: "NavigationProperty",
+            $ContainsTarget: true,
+          },
+        },
+        noUpdatetPart: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+        },
+        noRead: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          nav: {
+            $Type: "this.noReadPart",
+            $Kind: "NavigationProperty",
+            $ContainsTarget: true,
+          },
+        },
+        noReadPart: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+        },
+        nothing: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          navOne: {
+            $Type: "this.nothingPart",
+            $Kind: "NavigationProperty",
+            $ContainsTarget: true,
+          },
+          navMany: {
+            $Type: "this.nothingPart",
+            $Kind: "NavigationProperty",
+            $ContainsTarget: true,
+            $Collection: true,
+          },
+        },
+        nothingPart: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+        },
+        Container: {
+          noInsert: {
+            $Type: "this.noInsert",
+            $Collection: true,
+            "@Capabilities.InsertRestrictions": {
+              Insertable: false,
+            },
+          },
+          noUpdate: {
+            $Type: "this.noUpdate",
+            $Collection: true,
+            "@Capabilities.UpdateRestrictions": {
+              Updatable: false,
+            },
+          },
+          noRead: {
+            $Type: "this.noRead",
+            $Collection: true,
+            "@Capabilities.InsertRestrictions": {
+              Insertable: false,
+            },
+            "@Capabilities.ReadRestrictions": {
+              Readable: false,
+            },
+          },
+          nothing: {
+            $Type: "this.nothing",
+            $Collection: true,
+            "@Capabilities.InsertRestrictions": {
+              Insertable: false,
+            },
+            "@Capabilities.ReadRestrictions": {
+              Readable: false,
+            },
+            "@Capabilities.UpdateRestrictions": {
+              Updatable: false,
+            },
+            "@Capabilities.DeleteRestrictions": {
+              Deletable: false,
+            },
+            "@Capabilities.NavigationRestrictions": {
+              RestrictedProperties: [
+                {
+                  NavigationProperty: "navMany",
+                  InsertRestrictions: { Insertable: false },
+                  ReadRestrictions: { Readable: false },
+                  UpdateRestrictions: { Updatable: false },
+                  DeleteRestrictions: { Deletable: false },
+                },
+                {
+                  NavigationProperty: "navOne",
+                  ReadRestrictions: { Readable: false },
+                  UpdateRestrictions: { Updatable: false },
+                },
+              ],
+            },
+          },
+        },
+      },
+    };
+    const expected = {
+      paths: {
+        "/noInsert": {
+          get: {},
+        },
+        "/noInsert('{key}')": {
+          get: {},
+          patch: {},
+          delete: {},
+        },
+        "/noInsert('{key}')/nav": {
+          get: {},
+          patch: {},
+        },
+        "/noUpdate": {
+          get: {},
+          post: {},
+        },
+        "/noUpdate('{key}')": {
+          get: {},
+          delete: {},
+        },
+        "/noUpdate('{key}')/nav": {
+          get: {},
+          patch: {},
+        },
+        "/noRead('{key}')": {
+          patch: {},
+          delete: {},
+        },
+        "/noRead('{key}')/nav": {
+          get: {},
+          patch: {},
+        },
+        "/$batch": { post: {} },
+      },
+      components: {
+        schemas: {
+          "this.noInsert": {},
+          "this.noInsert-update": {},
+          "this.noInsertPart": {},
+          "this.noInsertPart-update": {},
+          "this.noRead-update": {},
+          "this.noReadPart": {},
+          "this.noReadPart-update": {},
+          "this.noUpdate": {},
+          "this.noUpdate-create": {},
+        },
+      },
+    };
+    const actual = lib.csdl2openapi(csdl, {});
+    console.dir(actual.paths["/nothing"]);
+    console.dir(actual.paths["/nothing('{key}')"]);
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations"
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    //TODO: check components.schemas
   });
 
   it("circular reference on collect primitive paths", function () {
@@ -330,6 +461,7 @@ describe("Edge cases", function () {
 
   it("type definition with @JSON.Schema", function () {
     const csdl = {
+      $EntityContainer: "jsonExamples.Container",
       $Reference: {
         dummy: {
           $Include: [
@@ -339,6 +471,14 @@ describe("Edge cases", function () {
         },
       },
       jsonExamples: {
+        Container: {
+          single: { $Type: "jsonExamples.single" },
+        },
+        single: {
+          $Kind: "EntityType",
+          stream1: { $Type: "jsonExamples.typeDefinitionOld" },
+          stream2: { $Type: "jsonExamples.typeDefinitionNew", $MaxLength: 10 },
+        },
         typeDefinitionOld: {
           $Kind: "TypeDefinition",
           $UnderlyingType: "Edm.Stream",
@@ -356,41 +496,46 @@ describe("Edge cases", function () {
         },
       },
     };
-    const expected = {
-      openapi: "3.0.2",
-      info: {
-        title: "OData CSDL document",
-        description: "",
-        version: "",
-      },
-      paths: {},
-      components: {
-        schemas: {
-          "jsonExamples.typeDefinitionOld": {
-            title: "typeDefinitionOld",
-            type: "object",
-            additionalProperties: false,
-            patternProperties: {
-              "^[\\w\\.\\-\\/]+$": { type: "string" },
-            },
-          },
-          "jsonExamples.typeDefinitionNew": {
-            title: "typeDefinitionNew",
-            type: "object",
-            additionalProperties: false,
-            patternProperties: {
-              "^[\\w\\.\\-\\/]+$": { type: "string" },
-            },
-          },
+    const openapi = lib.csdl2openapi(csdl, {});
+    assert.deepStrictEqual(
+      openapi.components.schemas["jsonExamples.typeDefinitionOld"],
+      {
+        title: "typeDefinitionOld",
+        type: "object",
+        additionalProperties: false,
+        patternProperties: {
+          "^[\\w\\.\\-\\/]+$": { type: "string" },
         },
       },
-    };
-    const openapi = lib.csdl2openapi(csdl, {});
-    assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
+      "JSON property old-style"
+    );
+    assert.deepStrictEqual(
+      openapi.components.schemas["jsonExamples.typeDefinitionNew"],
+      {
+        title: "typeDefinitionNew",
+        type: "object",
+        additionalProperties: false,
+        patternProperties: {
+          "^[\\w\\.\\-\\/]+$": { type: "string" },
+        },
+      },
+      "JSON property new-style"
+    );
+    assert.deepStrictEqual(
+      openapi.components.schemas["jsonExamples.single"].properties.stream2,
+      {
+        maxLength: 10,
+        allOf: [
+          { $ref: "#/components/schemas/jsonExamples.typeDefinitionNew" },
+        ],
+      },
+      "MaxLength"
+    );
   });
 
   it("type definition with @Org.OData.JSON.V1.Schema", function () {
     const csdl = {
+      $EntityContainer: "jsonExamples.Container",
       $Reference: {
         dummy: {
           $Include: [
@@ -400,6 +545,14 @@ describe("Edge cases", function () {
         },
       },
       jsonExamples: {
+        Container: {
+          single: { $Type: "jsonExamples.single" },
+        },
+        single: {
+          $Kind: "EntityType",
+          stream1: { $Type: "jsonExamples.typeDefinitionOld" },
+          stream2: { $Type: "jsonExamples.typeDefinitionNew" },
+        },
         typeDefinitionOld: {
           $Kind: "TypeDefinition",
           $UnderlyingType: "Edm.Stream",
@@ -417,37 +570,31 @@ describe("Edge cases", function () {
         },
       },
     };
-    const expected = {
-      openapi: "3.0.2",
-      info: {
-        title: "OData CSDL document",
-        description: "",
-        version: "",
-      },
-      paths: {},
-      components: {
-        schemas: {
-          "jsonExamples.typeDefinitionOld": {
-            title: "typeDefinitionOld",
-            type: "object",
-            additionalProperties: false,
-            patternProperties: {
-              "^[\\w\\.\\-\\/]+$": { type: "string" },
-            },
-          },
-          "jsonExamples.typeDefinitionNew": {
-            title: "typeDefinitionNew",
-            type: "object",
-            additionalProperties: false,
-            patternProperties: {
-              "^[\\w\\.\\-\\/]+$": { type: "string" },
-            },
-          },
+    const openapi = lib.csdl2openapi(csdl, {});
+    assert.deepStrictEqual(
+      openapi.components.schemas["jsonExamples.typeDefinitionOld"],
+      {
+        title: "typeDefinitionOld",
+        type: "object",
+        additionalProperties: false,
+        patternProperties: {
+          "^[\\w\\.\\-\\/]+$": { type: "string" },
         },
       },
-    };
-    const openapi = lib.csdl2openapi(csdl, {});
-    assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
+      "JSON property old-style"
+    );
+    assert.deepStrictEqual(
+      openapi.components.schemas["jsonExamples.typeDefinitionNew"],
+      {
+        title: "typeDefinitionNew",
+        type: "object",
+        additionalProperties: false,
+        patternProperties: {
+          "^[\\w\\.\\-\\/]+$": { type: "string" },
+        },
+      },
+      "JSON property new-style"
+    );
   });
 
   it("no key", function () {
@@ -600,12 +747,12 @@ describe("Edge cases", function () {
       operations(expected),
       "Operations"
     );
-    assert.equal(
+    assert.strictEqual(
       actual.paths["/$batch"].post.summary,
       "BatchSupport - Description",
       "Batch summary"
     );
-    assert.equal(
+    assert.strictEqual(
       actual.paths["/$batch"].post.description,
       'BatchSupport - LongDescription\n\n*Please note that "Try it out" is not supported for this request.*',
       "Batch description"
@@ -635,7 +782,7 @@ describe("Edge cases", function () {
     );
   });
 
-  it("function with complex and collection parameter", function () {
+  it("function with complex and optional collection parameter", function () {
     const csdl = {
       $Reference: {
         dummy: {
@@ -654,16 +801,54 @@ describe("Edge cases", function () {
                 $Type: "this.Complex",
                 "@Core.Description": "param description",
               },
-              { $Name: "collection", $Collection: true },
+              {
+                $Name: "collection",
+                $Collection: true,
+              },
             ],
             $ReturnType: {},
           },
         ],
-        Container: { fun: { $Function: "this.ComplexParameters" } },
+        OptionalParameter: [
+          {
+            $Kind: "Function",
+            $Parameter: [
+              {
+                $Name: "complex",
+                $Type: "this.Complex",
+                "@Core.OptionalParameter": {},
+              },
+            ],
+            $ReturnType: {},
+          },
+        ],
+        Container: {
+          funC: { $Function: "this.ComplexParameters" },
+          funO: { $Function: "this.OptionalParameter" },
+        },
       },
     };
-    const expected = { paths: { "/$batch": { post: {} } } };
-    const path = "/fun(complex=@complex,collection=@collection)";
+    const expected = {
+      paths: {
+        "/funO": {
+          get: {
+            parameters: [
+              {
+                name: "complex",
+                in: "query",
+                required: false,
+                schema: { type: "string" },
+                example: "{}",
+                description:
+                  "This is URL-encoded JSON of type this.Complex, see [Complex and Collection Literals](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_ComplexandCollectionLiterals)",
+              },
+            ],
+          },
+        },
+        "/$batch": { post: {} },
+      },
+    };
+    const path = "/funC(complex=@complex,collection=@collection)";
     expected.paths[path] = {
       get: {
         parameters: [
@@ -698,7 +883,12 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       actual.paths[path].get.parameters,
       expected.paths[path].get.parameters,
-      "function parameters"
+      "complex function parameters"
+    );
+    assert.deepStrictEqual(
+      actual.paths["/funO"].get.parameters,
+      expected.paths["/funO"].get.parameters,
+      "optional function parameters"
     );
   });
 
@@ -1570,7 +1760,7 @@ describe("Edge cases", function () {
           $Kind: "EntityType",
           $Key: ["key"],
           key: {},
-          one: {},
+          one: { $DefaultValue: "def" },
           two: {},
           nav: {
             $Type: "this.thing",
@@ -1728,6 +1918,11 @@ describe("Edge cases", function () {
       expected.paths["/things"].get,
       "GET things"
     );
+    assert.deepStrictEqual(
+      actual.components.schemas["this.thing"].properties.one,
+      { type: "string", default: "def" },
+      "Property with default value"
+    );
   });
 
   it("ExpandRestrictions", function () {
@@ -1817,7 +2012,7 @@ describe("Edge cases", function () {
       }
     }
     assert.deepStrictEqual(actualExpands, expectedExpands, "expands");
-    assert.equal(
+    assert.strictEqual(
       actual.paths["/roots"].get.parameters.find(
         (item) => item.name == "expand"
       ).description,
@@ -1846,6 +2041,10 @@ describe("Edge cases", function () {
           key: {},
         },
         act: [
+          {
+            $Kind: "Action",
+            $ReturnType: { $Type: "this.root" },
+          },
           {
             $Kind: "Action",
             $IsBound: true,
@@ -1881,6 +2080,7 @@ describe("Edge cases", function () {
             $Type: "this.root",
             $Collection: true,
           },
+          act: { $Action: "this.act" },
         },
       },
     };
@@ -1888,6 +2088,7 @@ describe("Edge cases", function () {
     const expected = {
       paths: {
         "/$batch": { post: {} },
+        "/act": { post: {} },
         "/roots": { get: {}, post: {} },
         "/roots/act": {
           post: {
@@ -1910,7 +2111,7 @@ describe("Edge cases", function () {
       },
     };
 
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = lib.csdl2openapi(csdl, { diagram: true });
 
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
@@ -1922,6 +2123,11 @@ describe("Edge cases", function () {
       actual.paths["/roots/act"].post,
       expected.paths["/roots/act"].post,
       "POST /roots/act"
+    );
+    assert.strictEqual(
+      actual.info.description,
+      "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[root{bg:lightslategray}],[act{bg:lawngreen}]->[root],[roots%20{bg:lawngreen}]++-*>[root])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
+      "diagram"
     );
   });
 
@@ -2036,6 +2242,137 @@ describe("Edge cases", function () {
       "child update structure"
     );
   });
+
+  it("Unknown authorization type", function () {
+    const csdl = {
+      $Version: "4.0",
+      $Reference: {
+        dummy: {
+          $Include: [
+            { $Namespace: "Org.OData.Authorization.V1", $Alias: "Auth" },
+          ],
+        },
+      },
+      "auth.example": {
+        $Alias: "self",
+        Person: {
+          $Kind: "EntityType",
+          $Key: ["ID"],
+          ID: {},
+          Name: {
+            $Nullable: true,
+          },
+        },
+        Container: {
+          $Kind: "EntityContainer",
+          People: {
+            $Collection: true,
+            $Type: "self.Person",
+          },
+          "@Auth.Authorizations": [
+            {
+              "@odata.type": "foo",
+              Name: "should-be-ignored",
+              Description: "Unknown Authentication Scheme",
+              KeyName: "x-api-key",
+              Location: "Header",
+            },
+            {
+              "@odata.type":
+                "https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Authorization.V1.xml#Auth.ApiKey",
+              Name: "api_key",
+              Description: "Authentication via API key",
+              KeyName: "x-api-key",
+              Location: "Header",
+            },
+          ],
+        },
+      },
+      $EntityContainer: "auth.example.Container",
+    };
+
+    const actual = lib.csdl2openapi(csdl, {});
+
+    assert.deepStrictEqual(
+      actual.components.securitySchemes,
+      {
+        api_key: {
+          description: "Authentication via API key",
+          type: "apiKey",
+          name: "x-api-key",
+          in: "header",
+        },
+      },
+      "security schemes"
+    );
+  });
+
+  it("various types and fishy annotations", function () {
+    const csdl = {
+      $EntityContainer: "typeExamples.Container",
+      typeExamples: {
+        Container: {
+          set: { $Type: "typeExamples.single", $Collection: true },
+          unknown: { $Kind: "unknown" },
+        },
+        single: {
+          $Kind: "EntityType",
+          withMaxLength: {
+            $Type: "typeExamples.typeDefinitionNew",
+            $MaxLength: 10,
+          },
+          binary: { $Type: "Edm.Binary" },
+          primitive: { $Type: "Edm.PrimitiveType" },
+          propertyPath: { $Type: "Edm.PropertyPath" },
+          sbyte: { $Type: "Edm.SByte" },
+          time: { $Type: "Edm.TimeOfDay" },
+          kaputt: { $Type: "Edm.kaputt" },
+          unknown: { $Type: "typeExamples.un-known" },
+        },
+        typeDefinitionNew: {
+          $Kind: "TypeDefinition",
+          $UnderlyingType: "Edm.String",
+        },
+        $Annotations: {
+          "typeExamples.single/foo/bar": {
+            /* more than two target path segments */
+          },
+          "typeExamples.single/foo": {
+            /* invalid annotation target */
+          },
+          "typeExamples.not-there": {
+            /* invalid annotation target */
+          },
+        },
+      },
+    };
+
+    const openapi = lib.csdl2openapi(csdl, {});
+
+    assert.deepStrictEqual(
+      openapi.components.schemas["typeExamples.single"].properties,
+      {
+        withMaxLength: {
+          maxLength: 10,
+          allOf: [
+            { $ref: "#/components/schemas/typeExamples.typeDefinitionNew" },
+          ],
+        },
+        binary: { format: "base64url", type: "string" },
+        primitive: {
+          anyOf: [{ type: "boolean" }, { type: "number" }, { type: "string" }],
+        },
+        propertyPath: { type: "string" },
+        sbyte: { type: "integer", format: "int8" },
+        time: { type: "string", format: "time", example: "15:51:04" },
+        kaputt: {},
+        unknown: {
+          $ref: "#/components/schemas/typeExamples.un-known",
+        },
+      },
+      "MaxLength"
+    );
+  });
 });
 
 function check(actual, expected) {
@@ -2060,4 +2397,10 @@ function operations(openapi) {
     );
   });
   return p;
+}
+
+function schemas(openapi) {
+  return Object.keys(openapi.components.schemas)
+    .sort()
+    .filter((s) => s.includes("."));
 }

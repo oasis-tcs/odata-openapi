@@ -9996,6 +9996,192 @@
     },
     "components": {
         "schemas": {
+            "NorthwindModel.Alphabetical_list_of_product": {
+                "title": "Alphabetical_list_of_product",
+                "type": "object",
+                "properties": {
+                    "ProductID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "ProductName": {
+                        "type": "string",
+                        "maxLength": 40
+                    },
+                    "SupplierID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "CategoryID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "QuantityPerUnit": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "UnitPrice": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001,
+                        "nullable": true
+                    },
+                    "UnitsInStock": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "UnitsOnOrder": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "ReorderLevel": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "Discontinued": {
+                        "type": "boolean"
+                    },
+                    "CategoryName": {
+                        "type": "string",
+                        "maxLength": 15
+                    }
+                }
+            },
+            "NorthwindModel.Alphabetical_list_of_product-create": {
+                "title": "Alphabetical_list_of_product (for create)",
+                "type": "object",
+                "properties": {
+                    "ProductID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "ProductName": {
+                        "type": "string",
+                        "maxLength": 40
+                    },
+                    "SupplierID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "CategoryID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "QuantityPerUnit": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "UnitPrice": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001,
+                        "nullable": true
+                    },
+                    "UnitsInStock": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "UnitsOnOrder": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "ReorderLevel": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "Discontinued": {
+                        "type": "boolean"
+                    },
+                    "CategoryName": {
+                        "type": "string",
+                        "maxLength": 15
+                    }
+                },
+                "required": [
+                    "CategoryName",
+                    "Discontinued",
+                    "ProductID",
+                    "ProductName"
+                ]
+            },
+            "NorthwindModel.Alphabetical_list_of_product-update": {
+                "title": "Alphabetical_list_of_product (for update)",
+                "type": "object",
+                "properties": {
+                    "SupplierID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "CategoryID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "QuantityPerUnit": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "UnitPrice": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001,
+                        "nullable": true
+                    },
+                    "UnitsInStock": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "UnitsOnOrder": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "ReorderLevel": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    }
+                }
+            },
             "NorthwindModel.Category": {
                 "title": "Category",
                 "type": "object",
@@ -10079,61 +10265,112 @@
                     }
                 }
             },
-            "NorthwindModel.CustomerDemographic": {
-                "title": "CustomerDemographic",
+            "NorthwindModel.Category_Sales_for_1997": {
+                "title": "Category_Sales_for_1997",
                 "type": "object",
                 "properties": {
-                    "CustomerTypeID": {
+                    "CategoryName": {
                         "type": "string",
-                        "maxLength": 10
+                        "maxLength": 15
                     },
-                    "CustomerDesc": {
-                        "type": "string",
+                    "CategorySales": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001,
                         "nullable": true
-                    },
-                    "Customers": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NorthwindModel.Customer"
-                        }
-                    },
-                    "Customers@count": {
-                        "$ref": "#/components/schemas/count"
                     }
                 }
             },
-            "NorthwindModel.CustomerDemographic-create": {
-                "title": "CustomerDemographic (for create)",
+            "NorthwindModel.Category_Sales_for_1997-create": {
+                "title": "Category_Sales_for_1997 (for create)",
                 "type": "object",
                 "properties": {
-                    "CustomerTypeID": {
+                    "CategoryName": {
                         "type": "string",
-                        "maxLength": 10
+                        "maxLength": 15
                     },
-                    "CustomerDesc": {
-                        "type": "string",
+                    "CategorySales": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001,
                         "nullable": true
-                    },
-                    "Customers": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NorthwindModel.Customer-create"
-                        }
                     }
                 },
                 "required": [
-                    "CustomerTypeID"
+                    "CategoryName"
                 ]
             },
-            "NorthwindModel.CustomerDemographic-update": {
-                "title": "CustomerDemographic (for update)",
+            "NorthwindModel.Category_Sales_for_1997-update": {
+                "title": "Category_Sales_for_1997 (for update)",
                 "type": "object",
                 "properties": {
-                    "CustomerDesc": {
-                        "type": "string",
+                    "CategorySales": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001,
                         "nullable": true
                     }
                 }
+            },
+            "NorthwindModel.Current_Product_List": {
+                "title": "Current_Product_List",
+                "type": "object",
+                "properties": {
+                    "ProductID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "ProductName": {
+                        "type": "string",
+                        "maxLength": 40
+                    }
+                }
+            },
+            "NorthwindModel.Current_Product_List-create": {
+                "title": "Current_Product_List (for create)",
+                "type": "object",
+                "properties": {
+                    "ProductID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "ProductName": {
+                        "type": "string",
+                        "maxLength": 40
+                    }
+                },
+                "required": [
+                    "ProductID",
+                    "ProductName"
+                ]
+            },
+            "NorthwindModel.Current_Product_List-update": {
+                "title": "Current_Product_List (for update)",
+                "type": "object"
             },
             "NorthwindModel.Customer": {
                 "title": "Customer",
@@ -10337,6 +10574,130 @@
                     "Fax": {
                         "type": "string",
                         "maxLength": 24,
+                        "nullable": true
+                    }
+                }
+            },
+            "NorthwindModel.CustomerDemographic": {
+                "title": "CustomerDemographic",
+                "type": "object",
+                "properties": {
+                    "CustomerTypeID": {
+                        "type": "string",
+                        "maxLength": 10
+                    },
+                    "CustomerDesc": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Customers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NorthwindModel.Customer"
+                        }
+                    },
+                    "Customers@count": {
+                        "$ref": "#/components/schemas/count"
+                    }
+                }
+            },
+            "NorthwindModel.CustomerDemographic-create": {
+                "title": "CustomerDemographic (for create)",
+                "type": "object",
+                "properties": {
+                    "CustomerTypeID": {
+                        "type": "string",
+                        "maxLength": 10
+                    },
+                    "CustomerDesc": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Customers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NorthwindModel.Customer-create"
+                        }
+                    }
+                },
+                "required": [
+                    "CustomerTypeID"
+                ]
+            },
+            "NorthwindModel.CustomerDemographic-update": {
+                "title": "CustomerDemographic (for update)",
+                "type": "object",
+                "properties": {
+                    "CustomerDesc": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
+            "NorthwindModel.Customer_and_Suppliers_by_City": {
+                "title": "Customer_and_Suppliers_by_City",
+                "type": "object",
+                "properties": {
+                    "City": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "CompanyName": {
+                        "type": "string",
+                        "maxLength": 40
+                    },
+                    "ContactName": {
+                        "type": "string",
+                        "maxLength": 30,
+                        "nullable": true
+                    },
+                    "Relationship": {
+                        "type": "string",
+                        "maxLength": 9
+                    }
+                }
+            },
+            "NorthwindModel.Customer_and_Suppliers_by_City-create": {
+                "title": "Customer_and_Suppliers_by_City (for create)",
+                "type": "object",
+                "properties": {
+                    "City": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "CompanyName": {
+                        "type": "string",
+                        "maxLength": 40
+                    },
+                    "ContactName": {
+                        "type": "string",
+                        "maxLength": 30,
+                        "nullable": true
+                    },
+                    "Relationship": {
+                        "type": "string",
+                        "maxLength": 9
+                    }
+                },
+                "required": [
+                    "CompanyName",
+                    "Relationship"
+                ]
+            },
+            "NorthwindModel.Customer_and_Suppliers_by_City-update": {
+                "title": "Customer_and_Suppliers_by_City (for update)",
+                "type": "object",
+                "properties": {
+                    "City": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "ContactName": {
+                        "type": "string",
+                        "maxLength": 30,
                         "nullable": true
                     }
                 }
@@ -10679,1460 +11040,6 @@
                     "PhotoPath": {
                         "type": "string",
                         "maxLength": 255,
-                        "nullable": true
-                    }
-                }
-            },
-            "NorthwindModel.Order_Detail": {
-                "title": "Order_Detail",
-                "type": "object",
-                "properties": {
-                    "OrderID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "ProductID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "UnitPrice": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001
-                    },
-                    "Quantity": {
-                        "type": "integer",
-                        "format": "int16"
-                    },
-                    "Discount": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "float",
-                        "example": 3.14
-                    },
-                    "Order": {
-                        "$ref": "#/components/schemas/NorthwindModel.Order"
-                    },
-                    "Product": {
-                        "$ref": "#/components/schemas/NorthwindModel.Product"
-                    }
-                }
-            },
-            "NorthwindModel.Order_Detail-create": {
-                "title": "Order_Detail (for create)",
-                "type": "object",
-                "properties": {
-                    "OrderID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "ProductID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "UnitPrice": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001
-                    },
-                    "Quantity": {
-                        "type": "integer",
-                        "format": "int16"
-                    },
-                    "Discount": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "float",
-                        "example": 3.14
-                    },
-                    "Order": {
-                        "$ref": "#/components/schemas/NorthwindModel.Order-create"
-                    },
-                    "Product": {
-                        "$ref": "#/components/schemas/NorthwindModel.Product-create"
-                    }
-                },
-                "required": [
-                    "OrderID",
-                    "ProductID"
-                ]
-            },
-            "NorthwindModel.Order_Detail-update": {
-                "title": "Order_Detail (for update)",
-                "type": "object",
-                "properties": {
-                    "UnitPrice": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001
-                    },
-                    "Quantity": {
-                        "type": "integer",
-                        "format": "int16"
-                    },
-                    "Discount": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "float",
-                        "example": 3.14
-                    }
-                }
-            },
-            "NorthwindModel.Order": {
-                "title": "Order",
-                "type": "object",
-                "properties": {
-                    "OrderID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "CustomerID": {
-                        "type": "string",
-                        "maxLength": 5,
-                        "nullable": true
-                    },
-                    "EmployeeID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "OrderDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z",
-                        "nullable": true
-                    },
-                    "RequiredDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z",
-                        "nullable": true
-                    },
-                    "ShippedDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z",
-                        "nullable": true
-                    },
-                    "ShipVia": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "Freight": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001,
-                        "nullable": true
-                    },
-                    "ShipName": {
-                        "type": "string",
-                        "maxLength": 40,
-                        "nullable": true
-                    },
-                    "ShipAddress": {
-                        "type": "string",
-                        "maxLength": 60,
-                        "nullable": true
-                    },
-                    "ShipCity": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "ShipRegion": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "ShipPostalCode": {
-                        "type": "string",
-                        "maxLength": 10,
-                        "nullable": true
-                    },
-                    "ShipCountry": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "Customer": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/NorthwindModel.Customer"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Employee": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/NorthwindModel.Employee"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Order_Details": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NorthwindModel.Order_Detail"
-                        }
-                    },
-                    "Order_Details@count": {
-                        "$ref": "#/components/schemas/count"
-                    },
-                    "Shipper": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/NorthwindModel.Shipper"
-                            }
-                        ],
-                        "nullable": true
-                    }
-                }
-            },
-            "NorthwindModel.Order-create": {
-                "title": "Order (for create)",
-                "type": "object",
-                "properties": {
-                    "OrderID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "CustomerID": {
-                        "type": "string",
-                        "maxLength": 5,
-                        "nullable": true
-                    },
-                    "EmployeeID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "OrderDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z",
-                        "nullable": true
-                    },
-                    "RequiredDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z",
-                        "nullable": true
-                    },
-                    "ShippedDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z",
-                        "nullable": true
-                    },
-                    "ShipVia": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "Freight": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001,
-                        "nullable": true
-                    },
-                    "ShipName": {
-                        "type": "string",
-                        "maxLength": 40,
-                        "nullable": true
-                    },
-                    "ShipAddress": {
-                        "type": "string",
-                        "maxLength": 60,
-                        "nullable": true
-                    },
-                    "ShipCity": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "ShipRegion": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "ShipPostalCode": {
-                        "type": "string",
-                        "maxLength": 10,
-                        "nullable": true
-                    },
-                    "ShipCountry": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "Customer": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/NorthwindModel.Customer-create"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Employee": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/NorthwindModel.Employee-create"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Order_Details": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NorthwindModel.Order_Detail-create"
-                        }
-                    },
-                    "Shipper": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/NorthwindModel.Shipper-create"
-                            }
-                        ],
-                        "nullable": true
-                    }
-                },
-                "required": [
-                    "OrderID"
-                ]
-            },
-            "NorthwindModel.Order-update": {
-                "title": "Order (for update)",
-                "type": "object",
-                "properties": {
-                    "CustomerID": {
-                        "type": "string",
-                        "maxLength": 5,
-                        "nullable": true
-                    },
-                    "EmployeeID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "OrderDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z",
-                        "nullable": true
-                    },
-                    "RequiredDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z",
-                        "nullable": true
-                    },
-                    "ShippedDate": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2017-04-13T15:51:04Z",
-                        "nullable": true
-                    },
-                    "ShipVia": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "Freight": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001,
-                        "nullable": true
-                    },
-                    "ShipName": {
-                        "type": "string",
-                        "maxLength": 40,
-                        "nullable": true
-                    },
-                    "ShipAddress": {
-                        "type": "string",
-                        "maxLength": 60,
-                        "nullable": true
-                    },
-                    "ShipCity": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "ShipRegion": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "ShipPostalCode": {
-                        "type": "string",
-                        "maxLength": 10,
-                        "nullable": true
-                    },
-                    "ShipCountry": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    }
-                }
-            },
-            "NorthwindModel.Product": {
-                "title": "Product",
-                "type": "object",
-                "properties": {
-                    "ProductID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "ProductName": {
-                        "type": "string",
-                        "maxLength": 40
-                    },
-                    "SupplierID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "CategoryID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "QuantityPerUnit": {
-                        "type": "string",
-                        "maxLength": 20,
-                        "nullable": true
-                    },
-                    "UnitPrice": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001,
-                        "nullable": true
-                    },
-                    "UnitsInStock": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "UnitsOnOrder": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "ReorderLevel": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "Discontinued": {
-                        "type": "boolean"
-                    },
-                    "Category": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/NorthwindModel.Category"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Order_Details": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NorthwindModel.Order_Detail"
-                        }
-                    },
-                    "Order_Details@count": {
-                        "$ref": "#/components/schemas/count"
-                    },
-                    "Supplier": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/NorthwindModel.Supplier"
-                            }
-                        ],
-                        "nullable": true
-                    }
-                }
-            },
-            "NorthwindModel.Product-create": {
-                "title": "Product (for create)",
-                "type": "object",
-                "properties": {
-                    "ProductID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "ProductName": {
-                        "type": "string",
-                        "maxLength": 40
-                    },
-                    "SupplierID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "CategoryID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "QuantityPerUnit": {
-                        "type": "string",
-                        "maxLength": 20,
-                        "nullable": true
-                    },
-                    "UnitPrice": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001,
-                        "nullable": true
-                    },
-                    "UnitsInStock": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "UnitsOnOrder": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "ReorderLevel": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "Discontinued": {
-                        "type": "boolean"
-                    },
-                    "Category": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/NorthwindModel.Category-create"
-                            }
-                        ],
-                        "nullable": true
-                    },
-                    "Order_Details": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NorthwindModel.Order_Detail-create"
-                        }
-                    },
-                    "Supplier": {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/NorthwindModel.Supplier-create"
-                            }
-                        ],
-                        "nullable": true
-                    }
-                },
-                "required": [
-                    "ProductID"
-                ]
-            },
-            "NorthwindModel.Product-update": {
-                "title": "Product (for update)",
-                "type": "object",
-                "properties": {
-                    "ProductName": {
-                        "type": "string",
-                        "maxLength": 40
-                    },
-                    "SupplierID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "CategoryID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "QuantityPerUnit": {
-                        "type": "string",
-                        "maxLength": 20,
-                        "nullable": true
-                    },
-                    "UnitPrice": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001,
-                        "nullable": true
-                    },
-                    "UnitsInStock": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "UnitsOnOrder": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "ReorderLevel": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "Discontinued": {
-                        "type": "boolean"
-                    }
-                }
-            },
-            "NorthwindModel.Region": {
-                "title": "Region",
-                "type": "object",
-                "properties": {
-                    "RegionID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "RegionDescription": {
-                        "type": "string",
-                        "maxLength": 50
-                    },
-                    "Territories": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NorthwindModel.Territory"
-                        }
-                    },
-                    "Territories@count": {
-                        "$ref": "#/components/schemas/count"
-                    }
-                }
-            },
-            "NorthwindModel.Region-create": {
-                "title": "Region (for create)",
-                "type": "object",
-                "properties": {
-                    "RegionID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "RegionDescription": {
-                        "type": "string",
-                        "maxLength": 50
-                    },
-                    "Territories": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NorthwindModel.Territory-create"
-                        }
-                    }
-                },
-                "required": [
-                    "RegionID"
-                ]
-            },
-            "NorthwindModel.Region-update": {
-                "title": "Region (for update)",
-                "type": "object",
-                "properties": {
-                    "RegionDescription": {
-                        "type": "string",
-                        "maxLength": 50
-                    }
-                }
-            },
-            "NorthwindModel.Shipper": {
-                "title": "Shipper",
-                "type": "object",
-                "properties": {
-                    "ShipperID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "CompanyName": {
-                        "type": "string",
-                        "maxLength": 40
-                    },
-                    "Phone": {
-                        "type": "string",
-                        "maxLength": 24,
-                        "nullable": true
-                    },
-                    "Orders": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NorthwindModel.Order"
-                        }
-                    },
-                    "Orders@count": {
-                        "$ref": "#/components/schemas/count"
-                    }
-                }
-            },
-            "NorthwindModel.Shipper-create": {
-                "title": "Shipper (for create)",
-                "type": "object",
-                "properties": {
-                    "ShipperID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "CompanyName": {
-                        "type": "string",
-                        "maxLength": 40
-                    },
-                    "Phone": {
-                        "type": "string",
-                        "maxLength": 24,
-                        "nullable": true
-                    },
-                    "Orders": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NorthwindModel.Order-create"
-                        }
-                    }
-                },
-                "required": [
-                    "ShipperID"
-                ]
-            },
-            "NorthwindModel.Shipper-update": {
-                "title": "Shipper (for update)",
-                "type": "object",
-                "properties": {
-                    "CompanyName": {
-                        "type": "string",
-                        "maxLength": 40
-                    },
-                    "Phone": {
-                        "type": "string",
-                        "maxLength": 24,
-                        "nullable": true
-                    }
-                }
-            },
-            "NorthwindModel.Supplier": {
-                "title": "Supplier",
-                "type": "object",
-                "properties": {
-                    "SupplierID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "CompanyName": {
-                        "type": "string",
-                        "maxLength": 40
-                    },
-                    "ContactName": {
-                        "type": "string",
-                        "maxLength": 30,
-                        "nullable": true
-                    },
-                    "ContactTitle": {
-                        "type": "string",
-                        "maxLength": 30,
-                        "nullable": true
-                    },
-                    "Address": {
-                        "type": "string",
-                        "maxLength": 60,
-                        "nullable": true
-                    },
-                    "City": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "Region": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "PostalCode": {
-                        "type": "string",
-                        "maxLength": 10,
-                        "nullable": true
-                    },
-                    "Country": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "Phone": {
-                        "type": "string",
-                        "maxLength": 24,
-                        "nullable": true
-                    },
-                    "Fax": {
-                        "type": "string",
-                        "maxLength": 24,
-                        "nullable": true
-                    },
-                    "HomePage": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "Products": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NorthwindModel.Product"
-                        }
-                    },
-                    "Products@count": {
-                        "$ref": "#/components/schemas/count"
-                    }
-                }
-            },
-            "NorthwindModel.Supplier-create": {
-                "title": "Supplier (for create)",
-                "type": "object",
-                "properties": {
-                    "SupplierID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "CompanyName": {
-                        "type": "string",
-                        "maxLength": 40
-                    },
-                    "ContactName": {
-                        "type": "string",
-                        "maxLength": 30,
-                        "nullable": true
-                    },
-                    "ContactTitle": {
-                        "type": "string",
-                        "maxLength": 30,
-                        "nullable": true
-                    },
-                    "Address": {
-                        "type": "string",
-                        "maxLength": 60,
-                        "nullable": true
-                    },
-                    "City": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "Region": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "PostalCode": {
-                        "type": "string",
-                        "maxLength": 10,
-                        "nullable": true
-                    },
-                    "Country": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "Phone": {
-                        "type": "string",
-                        "maxLength": 24,
-                        "nullable": true
-                    },
-                    "Fax": {
-                        "type": "string",
-                        "maxLength": 24,
-                        "nullable": true
-                    },
-                    "HomePage": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "Products": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NorthwindModel.Product-create"
-                        }
-                    }
-                },
-                "required": [
-                    "SupplierID"
-                ]
-            },
-            "NorthwindModel.Supplier-update": {
-                "title": "Supplier (for update)",
-                "type": "object",
-                "properties": {
-                    "CompanyName": {
-                        "type": "string",
-                        "maxLength": 40
-                    },
-                    "ContactName": {
-                        "type": "string",
-                        "maxLength": 30,
-                        "nullable": true
-                    },
-                    "ContactTitle": {
-                        "type": "string",
-                        "maxLength": 30,
-                        "nullable": true
-                    },
-                    "Address": {
-                        "type": "string",
-                        "maxLength": 60,
-                        "nullable": true
-                    },
-                    "City": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "Region": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "PostalCode": {
-                        "type": "string",
-                        "maxLength": 10,
-                        "nullable": true
-                    },
-                    "Country": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "Phone": {
-                        "type": "string",
-                        "maxLength": 24,
-                        "nullable": true
-                    },
-                    "Fax": {
-                        "type": "string",
-                        "maxLength": 24,
-                        "nullable": true
-                    },
-                    "HomePage": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                }
-            },
-            "NorthwindModel.Territory": {
-                "title": "Territory",
-                "type": "object",
-                "properties": {
-                    "TerritoryID": {
-                        "type": "string",
-                        "maxLength": 20
-                    },
-                    "TerritoryDescription": {
-                        "type": "string",
-                        "maxLength": 50
-                    },
-                    "RegionID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Region": {
-                        "$ref": "#/components/schemas/NorthwindModel.Region"
-                    },
-                    "Employees": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NorthwindModel.Employee"
-                        }
-                    },
-                    "Employees@count": {
-                        "$ref": "#/components/schemas/count"
-                    }
-                }
-            },
-            "NorthwindModel.Territory-create": {
-                "title": "Territory (for create)",
-                "type": "object",
-                "properties": {
-                    "TerritoryID": {
-                        "type": "string",
-                        "maxLength": 20
-                    },
-                    "TerritoryDescription": {
-                        "type": "string",
-                        "maxLength": 50
-                    },
-                    "RegionID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "Region": {
-                        "$ref": "#/components/schemas/NorthwindModel.Region-create"
-                    },
-                    "Employees": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NorthwindModel.Employee-create"
-                        }
-                    }
-                },
-                "required": [
-                    "TerritoryID"
-                ]
-            },
-            "NorthwindModel.Territory-update": {
-                "title": "Territory (for update)",
-                "type": "object",
-                "properties": {
-                    "TerritoryDescription": {
-                        "type": "string",
-                        "maxLength": 50
-                    },
-                    "RegionID": {
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                }
-            },
-            "NorthwindModel.Alphabetical_list_of_product": {
-                "title": "Alphabetical_list_of_product",
-                "type": "object",
-                "properties": {
-                    "ProductID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "ProductName": {
-                        "type": "string",
-                        "maxLength": 40
-                    },
-                    "SupplierID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "CategoryID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "QuantityPerUnit": {
-                        "type": "string",
-                        "maxLength": 20,
-                        "nullable": true
-                    },
-                    "UnitPrice": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001,
-                        "nullable": true
-                    },
-                    "UnitsInStock": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "UnitsOnOrder": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "ReorderLevel": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "Discontinued": {
-                        "type": "boolean"
-                    },
-                    "CategoryName": {
-                        "type": "string",
-                        "maxLength": 15
-                    }
-                }
-            },
-            "NorthwindModel.Alphabetical_list_of_product-create": {
-                "title": "Alphabetical_list_of_product (for create)",
-                "type": "object",
-                "properties": {
-                    "ProductID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "ProductName": {
-                        "type": "string",
-                        "maxLength": 40
-                    },
-                    "SupplierID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "CategoryID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "QuantityPerUnit": {
-                        "type": "string",
-                        "maxLength": 20,
-                        "nullable": true
-                    },
-                    "UnitPrice": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001,
-                        "nullable": true
-                    },
-                    "UnitsInStock": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "UnitsOnOrder": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "ReorderLevel": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "Discontinued": {
-                        "type": "boolean"
-                    },
-                    "CategoryName": {
-                        "type": "string",
-                        "maxLength": 15
-                    }
-                },
-                "required": [
-                    "CategoryName",
-                    "Discontinued",
-                    "ProductID",
-                    "ProductName"
-                ]
-            },
-            "NorthwindModel.Alphabetical_list_of_product-update": {
-                "title": "Alphabetical_list_of_product (for update)",
-                "type": "object",
-                "properties": {
-                    "SupplierID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "CategoryID": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "QuantityPerUnit": {
-                        "type": "string",
-                        "maxLength": 20,
-                        "nullable": true
-                    },
-                    "UnitPrice": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001,
-                        "nullable": true
-                    },
-                    "UnitsInStock": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "UnitsOnOrder": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    },
-                    "ReorderLevel": {
-                        "type": "integer",
-                        "format": "int16",
-                        "nullable": true
-                    }
-                }
-            },
-            "NorthwindModel.Category_Sales_for_1997": {
-                "title": "Category_Sales_for_1997",
-                "type": "object",
-                "properties": {
-                    "CategoryName": {
-                        "type": "string",
-                        "maxLength": 15
-                    },
-                    "CategorySales": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001,
-                        "nullable": true
-                    }
-                }
-            },
-            "NorthwindModel.Category_Sales_for_1997-create": {
-                "title": "Category_Sales_for_1997 (for create)",
-                "type": "object",
-                "properties": {
-                    "CategoryName": {
-                        "type": "string",
-                        "maxLength": 15
-                    },
-                    "CategorySales": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001,
-                        "nullable": true
-                    }
-                },
-                "required": [
-                    "CategoryName"
-                ]
-            },
-            "NorthwindModel.Category_Sales_for_1997-update": {
-                "title": "Category_Sales_for_1997 (for update)",
-                "type": "object",
-                "properties": {
-                    "CategorySales": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001,
-                        "nullable": true
-                    }
-                }
-            },
-            "NorthwindModel.Current_Product_List": {
-                "title": "Current_Product_List",
-                "type": "object",
-                "properties": {
-                    "ProductID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "ProductName": {
-                        "type": "string",
-                        "maxLength": 40
-                    }
-                }
-            },
-            "NorthwindModel.Current_Product_List-create": {
-                "title": "Current_Product_List (for create)",
-                "type": "object",
-                "properties": {
-                    "ProductID": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "ProductName": {
-                        "type": "string",
-                        "maxLength": 40
-                    }
-                },
-                "required": [
-                    "ProductID",
-                    "ProductName"
-                ]
-            },
-            "NorthwindModel.Current_Product_List-update": {
-                "title": "Current_Product_List (for update)",
-                "type": "object"
-            },
-            "NorthwindModel.Customer_and_Suppliers_by_City": {
-                "title": "Customer_and_Suppliers_by_City",
-                "type": "object",
-                "properties": {
-                    "City": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "CompanyName": {
-                        "type": "string",
-                        "maxLength": 40
-                    },
-                    "ContactName": {
-                        "type": "string",
-                        "maxLength": 30,
-                        "nullable": true
-                    },
-                    "Relationship": {
-                        "type": "string",
-                        "maxLength": 9
-                    }
-                }
-            },
-            "NorthwindModel.Customer_and_Suppliers_by_City-create": {
-                "title": "Customer_and_Suppliers_by_City (for create)",
-                "type": "object",
-                "properties": {
-                    "City": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "CompanyName": {
-                        "type": "string",
-                        "maxLength": 40
-                    },
-                    "ContactName": {
-                        "type": "string",
-                        "maxLength": 30,
-                        "nullable": true
-                    },
-                    "Relationship": {
-                        "type": "string",
-                        "maxLength": 9
-                    }
-                },
-                "required": [
-                    "CompanyName",
-                    "Relationship"
-                ]
-            },
-            "NorthwindModel.Customer_and_Suppliers_by_City-update": {
-                "title": "Customer_and_Suppliers_by_City (for update)",
-                "type": "object",
-                "properties": {
-                    "City": {
-                        "type": "string",
-                        "maxLength": 15,
-                        "nullable": true
-                    },
-                    "ContactName": {
-                        "type": "string",
-                        "maxLength": 30,
                         "nullable": true
                     }
                 }
@@ -12587,6 +11494,466 @@
                         "example": 0,
                         "multipleOf": 0.0001,
                         "nullable": true
+                    }
+                }
+            },
+            "NorthwindModel.Order": {
+                "title": "Order",
+                "type": "object",
+                "properties": {
+                    "OrderID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "CustomerID": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "nullable": true
+                    },
+                    "EmployeeID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "OrderDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    },
+                    "RequiredDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    },
+                    "ShippedDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    },
+                    "ShipVia": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "Freight": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001,
+                        "nullable": true
+                    },
+                    "ShipName": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "nullable": true
+                    },
+                    "ShipAddress": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "nullable": true
+                    },
+                    "ShipCity": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "ShipRegion": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "ShipPostalCode": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "ShipCountry": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "Customer": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/NorthwindModel.Customer"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Employee": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/NorthwindModel.Employee"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Order_Details": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NorthwindModel.Order_Detail"
+                        }
+                    },
+                    "Order_Details@count": {
+                        "$ref": "#/components/schemas/count"
+                    },
+                    "Shipper": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/NorthwindModel.Shipper"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                }
+            },
+            "NorthwindModel.Order-create": {
+                "title": "Order (for create)",
+                "type": "object",
+                "properties": {
+                    "OrderID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "CustomerID": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "nullable": true
+                    },
+                    "EmployeeID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "OrderDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    },
+                    "RequiredDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    },
+                    "ShippedDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    },
+                    "ShipVia": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "Freight": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001,
+                        "nullable": true
+                    },
+                    "ShipName": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "nullable": true
+                    },
+                    "ShipAddress": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "nullable": true
+                    },
+                    "ShipCity": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "ShipRegion": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "ShipPostalCode": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "ShipCountry": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "Customer": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/NorthwindModel.Customer-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Employee": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/NorthwindModel.Employee-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Order_Details": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NorthwindModel.Order_Detail-create"
+                        }
+                    },
+                    "Shipper": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/NorthwindModel.Shipper-create"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "OrderID"
+                ]
+            },
+            "NorthwindModel.Order-update": {
+                "title": "Order (for update)",
+                "type": "object",
+                "properties": {
+                    "CustomerID": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "nullable": true
+                    },
+                    "EmployeeID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "OrderDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    },
+                    "RequiredDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    },
+                    "ShippedDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    },
+                    "ShipVia": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "Freight": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001,
+                        "nullable": true
+                    },
+                    "ShipName": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "nullable": true
+                    },
+                    "ShipAddress": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "nullable": true
+                    },
+                    "ShipCity": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "ShipRegion": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "ShipPostalCode": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "ShipCountry": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    }
+                }
+            },
+            "NorthwindModel.Order_Detail": {
+                "title": "Order_Detail",
+                "type": "object",
+                "properties": {
+                    "OrderID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "ProductID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "UnitPrice": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001
+                    },
+                    "Quantity": {
+                        "type": "integer",
+                        "format": "int16"
+                    },
+                    "Discount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "float",
+                        "example": 3.14
+                    },
+                    "Order": {
+                        "$ref": "#/components/schemas/NorthwindModel.Order"
+                    },
+                    "Product": {
+                        "$ref": "#/components/schemas/NorthwindModel.Product"
+                    }
+                }
+            },
+            "NorthwindModel.Order_Detail-create": {
+                "title": "Order_Detail (for create)",
+                "type": "object",
+                "properties": {
+                    "OrderID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "ProductID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "UnitPrice": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001
+                    },
+                    "Quantity": {
+                        "type": "integer",
+                        "format": "int16"
+                    },
+                    "Discount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "float",
+                        "example": 3.14
+                    },
+                    "Order": {
+                        "$ref": "#/components/schemas/NorthwindModel.Order-create"
+                    },
+                    "Product": {
+                        "$ref": "#/components/schemas/NorthwindModel.Product-create"
+                    }
+                },
+                "required": [
+                    "OrderID",
+                    "ProductID"
+                ]
+            },
+            "NorthwindModel.Order_Detail-update": {
+                "title": "Order_Detail (for update)",
+                "type": "object",
+                "properties": {
+                    "UnitPrice": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001
+                    },
+                    "Quantity": {
+                        "type": "integer",
+                        "format": "int16"
+                    },
+                    "Discount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "float",
+                        "example": 3.14
                     }
                 }
             },
@@ -13155,6 +12522,235 @@
                     }
                 }
             },
+            "NorthwindModel.Product": {
+                "title": "Product",
+                "type": "object",
+                "properties": {
+                    "ProductID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "ProductName": {
+                        "type": "string",
+                        "maxLength": 40
+                    },
+                    "SupplierID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "CategoryID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "QuantityPerUnit": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "UnitPrice": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001,
+                        "nullable": true
+                    },
+                    "UnitsInStock": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "UnitsOnOrder": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "ReorderLevel": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "Discontinued": {
+                        "type": "boolean"
+                    },
+                    "Category": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/NorthwindModel.Category"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Order_Details": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NorthwindModel.Order_Detail"
+                        }
+                    },
+                    "Order_Details@count": {
+                        "$ref": "#/components/schemas/count"
+                    },
+                    "Supplier": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/NorthwindModel.Supplier"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                }
+            },
+            "NorthwindModel.Product-create": {
+                "title": "Product (for create)",
+                "type": "object",
+                "properties": {
+                    "ProductID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "ProductName": {
+                        "type": "string",
+                        "maxLength": 40
+                    },
+                    "SupplierID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "CategoryID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "QuantityPerUnit": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "UnitPrice": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001,
+                        "nullable": true
+                    },
+                    "UnitsInStock": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "UnitsOnOrder": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "ReorderLevel": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "Discontinued": {
+                        "type": "boolean"
+                    },
+                    "Category": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/NorthwindModel.Category-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Order_Details": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NorthwindModel.Order_Detail-create"
+                        }
+                    },
+                    "Supplier": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/NorthwindModel.Supplier-create"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "ProductID"
+                ]
+            },
+            "NorthwindModel.Product-update": {
+                "title": "Product (for update)",
+                "type": "object",
+                "properties": {
+                    "ProductName": {
+                        "type": "string",
+                        "maxLength": 40
+                    },
+                    "SupplierID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "CategoryID": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "QuantityPerUnit": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "UnitPrice": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001,
+                        "nullable": true
+                    },
+                    "UnitsInStock": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "UnitsOnOrder": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "ReorderLevel": {
+                        "type": "integer",
+                        "format": "int16",
+                        "nullable": true
+                    },
+                    "Discontinued": {
+                        "type": "boolean"
+                    }
+                }
+            },
             "NorthwindModel.Product_Sales_for_1997": {
                 "title": "Product_Sales_for_1997",
                 "type": "object",
@@ -13381,92 +12977,59 @@
                     }
                 }
             },
-            "NorthwindModel.Sales_by_Category": {
-                "title": "Sales_by_Category",
+            "NorthwindModel.Region": {
+                "title": "Region",
                 "type": "object",
                 "properties": {
-                    "CategoryID": {
+                    "RegionID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "CategoryName": {
+                    "RegionDescription": {
                         "type": "string",
-                        "maxLength": 15
+                        "maxLength": 50
                     },
-                    "ProductName": {
-                        "type": "string",
-                        "maxLength": 40
+                    "Territories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NorthwindModel.Territory"
+                        }
                     },
-                    "ProductSales": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001,
-                        "nullable": true
+                    "Territories@count": {
+                        "$ref": "#/components/schemas/count"
                     }
                 }
             },
-            "NorthwindModel.Sales_by_Category-create": {
-                "title": "Sales_by_Category (for create)",
+            "NorthwindModel.Region-create": {
+                "title": "Region (for create)",
                 "type": "object",
                 "properties": {
-                    "CategoryID": {
+                    "RegionID": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "CategoryName": {
+                    "RegionDescription": {
                         "type": "string",
-                        "maxLength": 15
+                        "maxLength": 50
                     },
-                    "ProductName": {
-                        "type": "string",
-                        "maxLength": 40
-                    },
-                    "ProductSales": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001,
-                        "nullable": true
+                    "Territories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NorthwindModel.Territory-create"
+                        }
                     }
                 },
                 "required": [
-                    "CategoryID",
-                    "CategoryName",
-                    "ProductName"
+                    "RegionID"
                 ]
             },
-            "NorthwindModel.Sales_by_Category-update": {
-                "title": "Sales_by_Category (for update)",
+            "NorthwindModel.Region-update": {
+                "title": "Region (for update)",
                 "type": "object",
                 "properties": {
-                    "ProductSales": {
-                        "anyOf": [
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "format": "decimal",
-                        "example": 0,
-                        "multipleOf": 0.0001,
-                        "nullable": true
+                    "RegionDescription": {
+                        "type": "string",
+                        "maxLength": 50
                     }
                 }
             },
@@ -13564,6 +13127,166 @@
                         "type": "string",
                         "format": "date-time",
                         "example": "2017-04-13T15:51:04Z",
+                        "nullable": true
+                    }
+                }
+            },
+            "NorthwindModel.Sales_by_Category": {
+                "title": "Sales_by_Category",
+                "type": "object",
+                "properties": {
+                    "CategoryID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "CategoryName": {
+                        "type": "string",
+                        "maxLength": 15
+                    },
+                    "ProductName": {
+                        "type": "string",
+                        "maxLength": 40
+                    },
+                    "ProductSales": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001,
+                        "nullable": true
+                    }
+                }
+            },
+            "NorthwindModel.Sales_by_Category-create": {
+                "title": "Sales_by_Category (for create)",
+                "type": "object",
+                "properties": {
+                    "CategoryID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "CategoryName": {
+                        "type": "string",
+                        "maxLength": 15
+                    },
+                    "ProductName": {
+                        "type": "string",
+                        "maxLength": 40
+                    },
+                    "ProductSales": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001,
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "CategoryID",
+                    "CategoryName",
+                    "ProductName"
+                ]
+            },
+            "NorthwindModel.Sales_by_Category-update": {
+                "title": "Sales_by_Category (for update)",
+                "type": "object",
+                "properties": {
+                    "ProductSales": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.0001,
+                        "nullable": true
+                    }
+                }
+            },
+            "NorthwindModel.Shipper": {
+                "title": "Shipper",
+                "type": "object",
+                "properties": {
+                    "ShipperID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "CompanyName": {
+                        "type": "string",
+                        "maxLength": 40
+                    },
+                    "Phone": {
+                        "type": "string",
+                        "maxLength": 24,
+                        "nullable": true
+                    },
+                    "Orders": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NorthwindModel.Order"
+                        }
+                    },
+                    "Orders@count": {
+                        "$ref": "#/components/schemas/count"
+                    }
+                }
+            },
+            "NorthwindModel.Shipper-create": {
+                "title": "Shipper (for create)",
+                "type": "object",
+                "properties": {
+                    "ShipperID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "CompanyName": {
+                        "type": "string",
+                        "maxLength": 40
+                    },
+                    "Phone": {
+                        "type": "string",
+                        "maxLength": 24,
+                        "nullable": true
+                    },
+                    "Orders": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NorthwindModel.Order-create"
+                        }
+                    }
+                },
+                "required": [
+                    "ShipperID"
+                ]
+            },
+            "NorthwindModel.Shipper-update": {
+                "title": "Shipper (for update)",
+                "type": "object",
+                "properties": {
+                    "CompanyName": {
+                        "type": "string",
+                        "maxLength": 40
+                    },
+                    "Phone": {
+                        "type": "string",
+                        "maxLength": 24,
                         "nullable": true
                     }
                 }
@@ -13743,6 +13466,283 @@
                         "example": 0,
                         "multipleOf": 0.0001,
                         "nullable": true
+                    }
+                }
+            },
+            "NorthwindModel.Supplier": {
+                "title": "Supplier",
+                "type": "object",
+                "properties": {
+                    "SupplierID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "CompanyName": {
+                        "type": "string",
+                        "maxLength": 40
+                    },
+                    "ContactName": {
+                        "type": "string",
+                        "maxLength": 30,
+                        "nullable": true
+                    },
+                    "ContactTitle": {
+                        "type": "string",
+                        "maxLength": 30,
+                        "nullable": true
+                    },
+                    "Address": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "nullable": true
+                    },
+                    "City": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "Region": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "PostalCode": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "Country": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "Phone": {
+                        "type": "string",
+                        "maxLength": 24,
+                        "nullable": true
+                    },
+                    "Fax": {
+                        "type": "string",
+                        "maxLength": 24,
+                        "nullable": true
+                    },
+                    "HomePage": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NorthwindModel.Product"
+                        }
+                    },
+                    "Products@count": {
+                        "$ref": "#/components/schemas/count"
+                    }
+                }
+            },
+            "NorthwindModel.Supplier-create": {
+                "title": "Supplier (for create)",
+                "type": "object",
+                "properties": {
+                    "SupplierID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "CompanyName": {
+                        "type": "string",
+                        "maxLength": 40
+                    },
+                    "ContactName": {
+                        "type": "string",
+                        "maxLength": 30,
+                        "nullable": true
+                    },
+                    "ContactTitle": {
+                        "type": "string",
+                        "maxLength": 30,
+                        "nullable": true
+                    },
+                    "Address": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "nullable": true
+                    },
+                    "City": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "Region": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "PostalCode": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "Country": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "Phone": {
+                        "type": "string",
+                        "maxLength": 24,
+                        "nullable": true
+                    },
+                    "Fax": {
+                        "type": "string",
+                        "maxLength": 24,
+                        "nullable": true
+                    },
+                    "HomePage": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "Products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NorthwindModel.Product-create"
+                        }
+                    }
+                },
+                "required": [
+                    "SupplierID"
+                ]
+            },
+            "NorthwindModel.Supplier-update": {
+                "title": "Supplier (for update)",
+                "type": "object",
+                "properties": {
+                    "CompanyName": {
+                        "type": "string",
+                        "maxLength": 40
+                    },
+                    "ContactName": {
+                        "type": "string",
+                        "maxLength": 30,
+                        "nullable": true
+                    },
+                    "ContactTitle": {
+                        "type": "string",
+                        "maxLength": 30,
+                        "nullable": true
+                    },
+                    "Address": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "nullable": true
+                    },
+                    "City": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "Region": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "PostalCode": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "Country": {
+                        "type": "string",
+                        "maxLength": 15,
+                        "nullable": true
+                    },
+                    "Phone": {
+                        "type": "string",
+                        "maxLength": 24,
+                        "nullable": true
+                    },
+                    "Fax": {
+                        "type": "string",
+                        "maxLength": 24,
+                        "nullable": true
+                    },
+                    "HomePage": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
+            "NorthwindModel.Territory": {
+                "title": "Territory",
+                "type": "object",
+                "properties": {
+                    "TerritoryID": {
+                        "type": "string",
+                        "maxLength": 20
+                    },
+                    "TerritoryDescription": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "RegionID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Region": {
+                        "$ref": "#/components/schemas/NorthwindModel.Region"
+                    },
+                    "Employees": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NorthwindModel.Employee"
+                        }
+                    },
+                    "Employees@count": {
+                        "$ref": "#/components/schemas/count"
+                    }
+                }
+            },
+            "NorthwindModel.Territory-create": {
+                "title": "Territory (for create)",
+                "type": "object",
+                "properties": {
+                    "TerritoryID": {
+                        "type": "string",
+                        "maxLength": 20
+                    },
+                    "TerritoryDescription": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "RegionID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "Region": {
+                        "$ref": "#/components/schemas/NorthwindModel.Region-create"
+                    },
+                    "Employees": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NorthwindModel.Employee-create"
+                        }
+                    }
+                },
+                "required": [
+                    "TerritoryID"
+                ]
+            },
+            "NorthwindModel.Territory-update": {
+                "title": "Territory (for update)",
+                "type": "object",
+                "properties": {
+                    "TerritoryDescription": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "RegionID": {
+                        "type": "integer",
+                        "format": "int32"
                     }
                 }
             },
