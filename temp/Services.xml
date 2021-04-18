@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2019 Dell Technologies, USA. All rights reserved.-->
+
+<edmx:Edmx Version="4.0" xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/edmx https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/csprd05/schemas/edmx.xsd http://docs.oasis-open.org/odata/ns/edm https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/csprd05/schemas/edm.xsd">
+
+	<!-- <edmx:Edmx Version="4.0" 
+	xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"> -->
+
+	<edmx:Reference Uri="http://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+		<edmx:Include Namespace="Org.OData.Core.V1" Alias="Core"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.xml">
+		<edmx:Include Namespace="AECC.Entities"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/ControlUnits.xml">
+		<edmx:Include Namespace="AECC.ControlUnits"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Sensors.xml">
+		<edmx:Include Namespace="AECC.Sensors"/>
+	</edmx:Reference>
+	<edmx:DataServices>
+		<Schema Namespace="AECC.Services" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+
+			<!-- 
+				Abstract base class for the Management Services.
+			-->
+			<EntityType Name="Service" BaseType="AECC.Entities.Entity" Abstract="true">
+				<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+				<Annotation Term="Core.AdditionalProperties" Bool="false"/>
+				<Annotation Term="Core.Description" String="A means of delivering value to customers by facilitating outcomes customers want to achieve without the ownership of specific costs and risks."/>
+				<NavigationProperty Name="Applications"	Type="Collection(AECC.Entities.Application)" ContainsTarget="true">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of Applications hosted by this Edge service."/>
+				</NavigationProperty>
+			</EntityType>
+
+			<!-- 
+				The CenterService represents the functionality presented by the MSP Center Server.
+			-->
+			<EntityType Name="CenterService" BaseType="AECC.Services.Service">
+				<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+				<Annotation Term="Core.AdditionalProperties" Bool="false"/>
+				<Annotation Term="Core.Description" String="A service running on an MSP Center Server that provides access to the functionality and information available via the MSP cloud."/>
+				<NavigationProperty Name="EdgeServices" Type="Collection(AECC.Services.EdgeService)" Partner="CenterService">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of Edge services known to this Center service."/>
+				</NavigationProperty>
+				<NavigationProperty Name="RoadsideServices" Type="Collection(AECC.Services.RoadsideService)" Partner="CenterService">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of Roadside services known to this Center service."/>
+				</NavigationProperty>
+				<NavigationProperty Name="VehicleServices" Type="Collection(AECC.Services.VehicleService)" Partner="CenterService">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of Vehicle services known to this Center service."/>
+				</NavigationProperty>
+			</EntityType>
+
+
+			<!-- 
+				The EdgeService represents the functionality presented by an MSP Center Server.
+			-->
+			<EntityType Name="EdgeService" BaseType="AECC.Services.Service">
+				<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+				<Annotation Term="Core.AdditionalProperties" Bool="false"/>
+				<Annotation Term="Core.Description" String="A service running on an MSP Edge Server that provides access to the functionality and information collected by an MSP Edge server."/>
+				<NavigationProperty Name="CenterService" Type="AECC.Services.CenterService" Partner="EdgeServices">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The Center service of this Edge service."/>
+				</NavigationProperty>
+				<NavigationProperty Name="ParentEdgeServices" Type="Collection(AECC.Services.EdgeService)" Partner="ChildEdgeServices">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of child Edge services that aggregate this Edge service."/>
+				</NavigationProperty>
+				<NavigationProperty Name="ChildEdgeServices" Type="Collection(AECC.Services.EdgeService)" Partner="ParentEdgeServices">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of parent Edge services aggregated by this Edge service."/>
+				</NavigationProperty>
+				<NavigationProperty Name="PeerEdgeServices" Type="Collection(AECC.Services.EdgeService)" Partner="PeerEdgeServices">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of Peer Edge services known to this edge server"/>
+				</NavigationProperty>
+				<NavigationProperty Name="RoadsideServices" Type="Collection(AECC.Services.RoadsideService)" Partner="RoadsideServices">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of Roadside services utilized by this Edge service."/>
+				</NavigationProperty>
+				<NavigationProperty Name="VehicleServices" Type="Collection(AECC.Services.VehicleService)" Partner="RoadsideServices">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of Vehicle services known to this Edge service."/>
+				</NavigationProperty>
+			</EntityType>
+
+
+			<!-- 
+				The RoadsideService represents the functionality presented by a Roadside Unit.
+			-->
+			<EntityType Name="RoadsideService" BaseType="AECC.Services.Service">
+				<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+				<Annotation Term="Core.AdditionalProperties" Bool="false"/>
+				<Annotation Term="Core.Description" String="A service running on an MSP Roadside Unit that provides access to the functionality and information collected by the Roadside Unit."/>
+				<NavigationProperty Name="CenterService" Type="AECC.Services.CenterService" Partner="RoadsideServices">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The Center service of this Edge service."/>
+				</NavigationProperty>
+				<NavigationProperty Name="EdgeServices" Type="Collection(AECC.Services.EdgeService)" Partner="RoadsideServices">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of Edge services that aggregate this Roadside service."/>
+				</NavigationProperty>
+				<NavigationProperty Name="RoadsideServices" Type="Collection(AECC.Services.RoadsideService)" Partner="RoadsideServices">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of other Roadside services related to this Roadside service."/>
+				</NavigationProperty>
+				<NavigationProperty Name="VehicleServices" Type="Collection(AECC.Services.VehicleService)" Partner="RoadsideServices">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of Vehicle services related to this Roadside service."/>
+				</NavigationProperty>
+				<NavigationProperty Name="ControlUnits" Type="Collection(AECC.ControlUnits.ControlUnit)" ContainsTarget="true">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of Control Units hosted by this Roadside service."/>
+				</NavigationProperty>
+				<NavigationProperty Name="Sensors"	Type="Collection(AECC.Sensors.Sensor)" ContainsTarget="true">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of Sensors hosted by this Roadside service."/>
+				</NavigationProperty>
+			</EntityType>
+
+			<!-- 
+				The VehicleService represents the functionality exposed by a vehicle.
+			-->
+			<EntityType Name="VehicleService" BaseType="AECC.Services.Service">
+				<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+				<Annotation Term="Core.AdditionalProperties" Bool="false"/>
+				<Annotation Term="Core.Description" String="A service running on a Vehicle that provides access to the functionality and information collected by the vehicle."/>
+				<NavigationProperty Name="CenterService" Type="AECC.Services.CenterService"  Partner="VehicleServices">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The Center service of this Edge service."/>
+				</NavigationProperty>
+				<NavigationProperty Name="EdgeServices" Type="Collection(AECC.Services.EdgeService)" Partner="VehicleServices">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of Edge services related to this Vehicle service.."/>
+				</NavigationProperty>
+				<NavigationProperty Name="RoadsideServices" Type="Collection(AECC.Services.RoadsideService)" Partner="VehicleServices">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of Roadside services related to this Vehicle service."/>
+				</NavigationProperty>
+				<NavigationProperty Name="VehicleServices" Type="Collection(AECC.Services.VehicleService)" Partner="VehicleServices">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of other Vehicle services related to this Vehicle service.."/>
+				</NavigationProperty>
+				<NavigationProperty Name="ControlUnits"	Type="Collection(AECC.ControlUnits.ControlUnit)" ContainsTarget="true">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of Control Units hosted by this Roadside service."/>
+				</NavigationProperty>
+				<NavigationProperty Name="Sensors" Type="Collection(AECC.Sensors.Sensor)" ContainsTarget="true">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The set of Sensors hosted by this Roadside service."/>
+				</NavigationProperty>
+			</EntityType>
+
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

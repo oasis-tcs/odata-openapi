@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Copyright 2019 Dell Technologies, USA. All rights reserved. -->
+
+<edmx:Edmx Version="4.0" xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/edmx https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/csprd05/schemas/edmx.xsd http://docs.oasis-open.org/odata/ns/edm https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/csprd05/schemas/edm.xsd">
+
+	<!-- <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"> -->
+
+	<edmx:Reference Uri="http://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+		<edmx:Include Namespace="Org.OData.Core.V1" Alias="Core"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="http://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+		<edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.xml">
+		<edmx:Include Namespace="AECC.Entities"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Services.xml">
+		<edmx:Include Namespace="AECC.Services"/>
+	</edmx:Reference>
+	<edmx:DataServices>
+		<Schema Namespace="AECC.SystemController" 
+			xmlns="http://docs.oasis-open.org/odata/ns/edm" Alias="Self">
+
+
+			<EntityContainer Name="SystemController">
+				<Annotation Term="Core.Description" String="The root element of System Controller."/>
+				<Annotation Term="Capabilities.KeyAsSegmentSupported" />
+				
+				<EntitySet Name="ManagedServices" EntityType="AECC.Services.Service" IncludeInServiceDocument="true">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="This controller manages the referenced controllers."/>
+				</EntitySet>
+							
+				<Singleton Name="DependsOn" Type="AECC.Services.Service">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The existance of this controller depends on the existance of the referenced service, (i.e. it is hosted on the referenced service."/>
+				</Singleton>
+
+			</EntityContainer>
+
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

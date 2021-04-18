@@ -1,0 +1,920 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "The root element of System Controller.",
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)",
+        "version": ""
+    },
+    "servers": [
+        {
+            "url": "https://localhost/service-root"
+        }
+    ],
+    "tags": [
+        {
+            "name": "ManagedServices",
+            "description": "This controller manages the referenced controllers."
+        },
+        {
+            "name": "DependsOn",
+            "description": "The existance of this controller depends on the existance of the referenced service, (i.e. it is hosted on the referenced service."
+        }
+    ],
+    "paths": {
+        "/ManagedServices": {
+            "get": {
+                "summary": "Get entities from ManagedServices",
+                "tags": [
+                    "ManagedServices"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/top"
+                    },
+                    {
+                        "$ref": "#/components/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/components/parameters/search"
+                    },
+                    {
+                        "name": "$filter",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$expand",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "*",
+                                    "Applications"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Collection of Service",
+                                    "properties": {
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/AECC.Services.Service"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to ManagedServices",
+                "tags": [
+                    "ManagedServices"
+                ],
+                "requestBody": {
+                    "description": "A means of delivering value to customers by facilitating outcomes customers want to achieve without the ownership of specific costs and risks.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AECC.Services.Service-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AECC.Services.Service"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/DependsOn": {
+            "get": {
+                "summary": "Get DependsOn",
+                "tags": [
+                    "DependsOn"
+                ],
+                "parameters": [
+                    {
+                        "name": "$expand",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "*",
+                                    "Applications"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AECC.Services.Service"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update DependsOn",
+                "tags": [
+                    "DependsOn"
+                ],
+                "requestBody": {
+                    "description": "A means of delivering value to customers by facilitating outcomes customers want to achieve without the ownership of specific costs and risks.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AECC.Services.Service-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/DependsOn/Applications": {
+            "get": {
+                "summary": "Get entities from related Applications",
+                "tags": [
+                    "DependsOn"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/top"
+                    },
+                    {
+                        "$ref": "#/components/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/components/parameters/search"
+                    },
+                    {
+                        "name": "$filter",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Collection of Application",
+                                    "properties": {
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.openapi3.json#/components/schemas/AECC.Entities.Application"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to related Applications",
+                "tags": [
+                    "DependsOn"
+                ],
+                "requestBody": {
+                    "description": "New entity",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.openapi3.json#/components/schemas/AECC.Entities.Application-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.openapi3.json#/components/schemas/AECC.Entities.Application"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/$batch": {
+            "post": {
+                "summary": "Send a group of requests",
+                "description": "Group multiple requests into a single request payload, see [Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).\n\n*Please note that \"Try it out\" is not supported for this request.*",
+                "tags": [
+                    "Batch Requests"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Batch request",
+                    "content": {
+                        "multipart/mixed;boundary=request-separator": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "example": "--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET ManagedServices HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Batch response",
+                        "content": {
+                            "multipart/mixed": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{...}\n--response-separator--"
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AECC.Services.Service": {
+                "title": "A means of delivering value to customers by facilitating outcomes customers want to achieve without the ownership of specific costs and risks.",
+                "type": "object",
+                "properties": {
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.openapi3.json#/components/schemas/AECC.Entities.Application"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.CenterService"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.EdgeService"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.RoadsideService"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.VehicleService"
+                    }
+                ]
+            },
+            "AECC.Services.Service-create": {
+                "title": "A means of delivering value to customers by facilitating outcomes customers want to achieve without the ownership of specific costs and risks. (for create)",
+                "type": "object",
+                "properties": {
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.openapi3.json#/components/schemas/AECC.Entities.Application"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.CenterService-create"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.EdgeService-create"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.RoadsideService-create"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.VehicleService-create"
+                    }
+                ]
+            },
+            "AECC.Services.Service-update": {
+                "title": "A means of delivering value to customers by facilitating outcomes customers want to achieve without the ownership of specific costs and risks. (for update)",
+                "type": "object",
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.CenterService-update"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.EdgeService-update"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.RoadsideService-update"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.VehicleService-update"
+                    }
+                ]
+            },
+            "AECC.Services.CenterService": {
+                "title": "A service running on an MSP Center Server that provides access to the functionality and information available via the MSP cloud.",
+                "type": "object",
+                "properties": {
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.openapi3.json#/components/schemas/AECC.Entities.Application"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "EdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService"
+                        },
+                        "title": "The set of Edge services known to this Center service."
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService"
+                        },
+                        "title": "The set of Roadside services known to this Center service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService"
+                        },
+                        "title": "The set of Vehicle services known to this Center service."
+                    }
+                }
+            },
+            "AECC.Services.CenterService-create": {
+                "title": "A service running on an MSP Center Server that provides access to the functionality and information available via the MSP cloud. (for create)",
+                "type": "object",
+                "properties": {
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.openapi3.json#/components/schemas/AECC.Entities.Application"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "EdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService-create"
+                        },
+                        "title": "The set of Edge services known to this Center service."
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService-create"
+                        },
+                        "title": "The set of Roadside services known to this Center service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService-create"
+                        },
+                        "title": "The set of Vehicle services known to this Center service."
+                    }
+                }
+            },
+            "AECC.Services.CenterService-update": {
+                "title": "A service running on an MSP Center Server that provides access to the functionality and information available via the MSP cloud. (for update)",
+                "type": "object"
+            },
+            "AECC.Services.EdgeService": {
+                "title": "A service running on an MSP Edge Server that provides access to the functionality and information collected by an MSP Edge server.",
+                "type": "object",
+                "properties": {
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.openapi3.json#/components/schemas/AECC.Entities.Application"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "CenterService": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Services.CenterService"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The Center service of this Edge service."
+                    },
+                    "ParentEdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService"
+                        },
+                        "title": "The set of child Edge services that aggregate this Edge service."
+                    },
+                    "ChildEdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService"
+                        },
+                        "title": "The set of parent Edge services aggregated by this Edge service."
+                    },
+                    "PeerEdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService"
+                        },
+                        "title": "The set of Peer Edge services known to this edge server"
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService"
+                        },
+                        "title": "The set of Roadside services utilized by this Edge service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService"
+                        },
+                        "title": "The set of Vehicle services known to this Edge service."
+                    }
+                }
+            },
+            "AECC.Services.EdgeService-create": {
+                "title": "A service running on an MSP Edge Server that provides access to the functionality and information collected by an MSP Edge server. (for create)",
+                "type": "object",
+                "properties": {
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.openapi3.json#/components/schemas/AECC.Entities.Application"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "CenterService": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Services.CenterService-create"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The Center service of this Edge service."
+                    },
+                    "ParentEdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService-create"
+                        },
+                        "title": "The set of child Edge services that aggregate this Edge service."
+                    },
+                    "ChildEdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService-create"
+                        },
+                        "title": "The set of parent Edge services aggregated by this Edge service."
+                    },
+                    "PeerEdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService-create"
+                        },
+                        "title": "The set of Peer Edge services known to this edge server"
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService-create"
+                        },
+                        "title": "The set of Roadside services utilized by this Edge service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService-create"
+                        },
+                        "title": "The set of Vehicle services known to this Edge service."
+                    }
+                }
+            },
+            "AECC.Services.EdgeService-update": {
+                "title": "A service running on an MSP Edge Server that provides access to the functionality and information collected by an MSP Edge server. (for update)",
+                "type": "object"
+            },
+            "AECC.Services.RoadsideService": {
+                "title": "A service running on an MSP Roadside Unit that provides access to the functionality and information collected by the Roadside Unit.",
+                "type": "object",
+                "properties": {
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.openapi3.json#/components/schemas/AECC.Entities.Application"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "CenterService": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Services.CenterService"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The Center service of this Edge service."
+                    },
+                    "EdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService"
+                        },
+                        "title": "The set of Edge services that aggregate this Roadside service."
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService"
+                        },
+                        "title": "The set of other Roadside services related to this Roadside service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService"
+                        },
+                        "title": "The set of Vehicle services related to this Roadside service."
+                    },
+                    "ControlUnits": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.ControlUnit"
+                        },
+                        "title": "The set of Control Units hosted by this Roadside service."
+                    },
+                    "Sensors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.Sensor"
+                        },
+                        "title": "The set of Sensors hosted by this Roadside service."
+                    }
+                }
+            },
+            "AECC.Services.RoadsideService-create": {
+                "title": "A service running on an MSP Roadside Unit that provides access to the functionality and information collected by the Roadside Unit. (for create)",
+                "type": "object",
+                "properties": {
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.openapi3.json#/components/schemas/AECC.Entities.Application"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "CenterService": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Services.CenterService-create"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The Center service of this Edge service."
+                    },
+                    "EdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService-create"
+                        },
+                        "title": "The set of Edge services that aggregate this Roadside service."
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService-create"
+                        },
+                        "title": "The set of other Roadside services related to this Roadside service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService-create"
+                        },
+                        "title": "The set of Vehicle services related to this Roadside service."
+                    },
+                    "ControlUnits": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.ControlUnit"
+                        },
+                        "title": "The set of Control Units hosted by this Roadside service."
+                    },
+                    "Sensors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.Sensor"
+                        },
+                        "title": "The set of Sensors hosted by this Roadside service."
+                    }
+                }
+            },
+            "AECC.Services.RoadsideService-update": {
+                "title": "A service running on an MSP Roadside Unit that provides access to the functionality and information collected by the Roadside Unit. (for update)",
+                "type": "object"
+            },
+            "AECC.Services.VehicleService": {
+                "title": "A service running on a Vehicle that provides access to the functionality and information collected by the vehicle.",
+                "type": "object",
+                "properties": {
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.openapi3.json#/components/schemas/AECC.Entities.Application"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "CenterService": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Services.CenterService"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The Center service of this Edge service."
+                    },
+                    "EdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService"
+                        },
+                        "title": "The set of Edge services related to this Vehicle service.."
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService"
+                        },
+                        "title": "The set of Roadside services related to this Vehicle service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService"
+                        },
+                        "title": "The set of other Vehicle services related to this Vehicle service.."
+                    },
+                    "ControlUnits": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.ControlUnit"
+                        },
+                        "title": "The set of Control Units hosted by this Roadside service."
+                    },
+                    "Sensors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.Sensor"
+                        },
+                        "title": "The set of Sensors hosted by this Roadside service."
+                    }
+                }
+            },
+            "AECC.Services.VehicleService-create": {
+                "title": "A service running on a Vehicle that provides access to the functionality and information collected by the vehicle. (for create)",
+                "type": "object",
+                "properties": {
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.openapi3.json#/components/schemas/AECC.Entities.Application"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "CenterService": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Services.CenterService-create"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The Center service of this Edge service."
+                    },
+                    "EdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService-create"
+                        },
+                        "title": "The set of Edge services related to this Vehicle service.."
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService-create"
+                        },
+                        "title": "The set of Roadside services related to this Vehicle service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService-create"
+                        },
+                        "title": "The set of other Vehicle services related to this Vehicle service.."
+                    },
+                    "ControlUnits": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.ControlUnit"
+                        },
+                        "title": "The set of Control Units hosted by this Roadside service."
+                    },
+                    "Sensors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.Sensor"
+                        },
+                        "title": "The set of Sensors hosted by this Roadside service."
+                    }
+                }
+            },
+            "AECC.Services.VehicleService-update": {
+                "title": "A service running on a Vehicle that provides access to the functionality and information collected by the vehicle. (for update)",
+                "type": "object"
+            },
+            "error": {
+                "type": "object",
+                "required": [
+                    "error"
+                ],
+                "properties": {
+                    "error": {
+                        "type": "object",
+                        "required": [
+                            "code",
+                            "message"
+                        ],
+                        "properties": {
+                            "code": {
+                                "type": "string"
+                            },
+                            "message": {
+                                "type": "string"
+                            },
+                            "target": {
+                                "type": "string"
+                            },
+                            "details": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "target": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "innererror": {
+                                "type": "object",
+                                "description": "The structure of this object is service-specific"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "top": {
+                "name": "$top",
+                "in": "query",
+                "description": "Show only the first n items, see [Paging - Top](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptiontop)",
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "example": 50
+            },
+            "skip": {
+                "name": "$skip",
+                "in": "query",
+                "description": "Skip the first n items, see [Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionskip)",
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            },
+            "count": {
+                "name": "$count",
+                "in": "query",
+                "description": "Include count of items, see [Count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount)",
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "search": {
+                "name": "$search",
+                "in": "query",
+                "description": "Search items by search phrases, see [Searching](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionsearch)",
+                "schema": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses": {
+            "error": {
+                "description": "Error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/error"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="utf-8"?>	
+<!-- Copyright 2019 Dell Technologies, USA. All rights reserved.-->
+
+<edmx:Edmx Version="4.0" xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/edmx Tools/edmx.xsd">
+
+	<!-- <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"> -->
+
+	<edmx:Reference Uri="http://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+		<edmx:Include Namespace="Org.OData.Core.V1" Alias="Core"/>
+	</edmx:Reference>
+
+	<edmx:DataServices>
+		<Schema Namespace="AECC.Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+
+			<!--  ========== ENUMERATIONS =============================== --> 
+			<!-- 
+					DurableNameFormat literals identify DurableName value syntax. 
+				-->
+			<EnumType Name="DurableNameFormat">
+				<Member Name="VIN">
+					<Annotation Term="Core.Description" String="A Vehicle identification number (VIN)as specified by ISO 3779:2009, Road vehicles – Vehicle identification number (VIN) – Content and structure, and ISO 3780:2009, Road vehicles – World manufacturer identifier (WMI) code."/>
+				</Member>
+				<Member Name="NAA">
+					<Annotation Term="Core.Description" String="A Name Address Authority (NAA) identifier as specified by the T11 Fibre Channel - Framing and Signaling - 3 (FC-FS-3) specification."/>
+				</Member>
+				<Member Name="iQN">
+					<Annotation Term="Core.Description" String="An iSCSI Qualified Name as specified in RFC 3720 and RFC 3721."/>
+				</Member>
+				<Member Name="FC_WWN">
+					<Annotation Term="Core.Description" String="A Fibre Channel World Wide Name as specified in the T11 Fibre Channel Physical and Signaling Interface Specification."/>
+				</Member>
+				<Member Name="UUID">
+					<Annotation Term="Core.Description" String="A Universally Unique Identifier as specified in the Internation Telecom Union's OSI networking and system aspects - Naming, Addressing and Registration Specification."/>
+				</Member>
+				<Member Name="EUI">
+					<Annotation Term="Core.Description" String="An IEEE-defined 64-bit Extended Unique Identifier as specified in the IEEE's Guidelines for 64-bit Global Identifier (EUI-64) Specification."/>
+				</Member>
+			</EnumType>
+
+			<!-- 
+					EntityState literals indicate an Entity's state.
+				-->
+			<EnumType Name="EntityState">
+				<Member Name="Enabled">
+					<Annotation Term="Core.Description" String="This Entity is enabled."/>
+				</Member>
+				<Member Name="Disabled">
+					<Annotation Term="Core.Description" String="This Entity is disabled."/>
+				</Member>
+				<Member Name="StandbyOffline">
+					<Annotation Term="Core.Description" String="This Entity is enabled, but awaiting an external action to activate it."/>
+				</Member>
+				<Member Name="StandbySpare">
+					<Annotation Term="Core.Description" String="This Entity is part of a redundancy set and is awaiting a failover or other external action to activate it."/>
+				</Member>
+				<Member Name="InTest">
+					<Annotation Term="Core.Description" String="This Entity is undergoing testing."/>
+				</Member>
+				<Member Name="Starting">
+					<Annotation Term="Core.Description" String="This Entity is starting."/>
+				</Member>
+				<Member Name="Absent">
+					<Annotation Term="Core.Description" String="This Entity is not present or not detected."/>
+				</Member>
+				<Member Name="UnavailableOffline">
+					<Annotation Term="Core.Description" String="This Entity is present but cannot be used."/>
+				</Member>
+				<Member Name="Deferring">
+					<Annotation Term="Core.Description" String="The Entity will not process any commands but will queue new requests."/>
+				</Member>
+				<Member Name="Quiesced">
+					<Annotation Term="Core.Description" String="The Entity is enabled but only processes a restricted set of commands."/>
+				</Member>
+				<Member Name="Updating">
+					<Annotation Term="Core.Description" String="The Entity is updating and may be unavailable or degraded."/>
+				</Member>
+			</EnumType>
+
+			<!--
+					EntityHealth literals indicate the health of an Entity.
+				-->
+			<EnumType Name="EntityHealth">
+				<Member Name="OK">
+					<Annotation Term="Core.Description" String="Normal."/>
+				</Member>
+				<Member Name="Warning">
+					<Annotation Term="Core.Description" String="A condition exists that requires attention."/>
+				</Member>
+				<Member Name="Critical">
+					<Annotation Term="Core.Description" String="A critical condition exists that requires immediate attention."/>
+				</Member>
+			</EnumType>
+
+			<!--
+					RackOffsetUnits literals specify the units of a RackOffset value.
+				-->
+			<EnumType Name="RackOffsetUnits">
+				<Annotation Term="Core.Description" String="Defines a rack unit of measure."/>
+				<Member Name="OpenU">
+					<Annotation Term="Core.Description" String="Defines a rack unit as being equal to 48 mm (1.89 in), as defined in the Open Compute Open Rack specification."/>
+				</Member>
+				<Member Name="EIA_310">
+					<Annotation Term="Core.Description" String="Defines a rack unit as being equal to 1.75 in (44.45 mm), as specified by the EIA-310 standard."/>
+				</Member>
+			</EnumType>
+
+			<!--
+					EntityLocationType literals specify a location type.
+				-->
+			<EnumType Name="EntityLocationType">
+				<Annotation Term="Core.Description" String="Defines the type of location in use."/>
+				<Member Name="Slot">
+					<Annotation Term="Core.Description" String="The type of location is a slot."/>
+				</Member>
+				<Member Name="Bay">
+					<Annotation Term="Core.Description" String="The type of location is a bay."/>
+				</Member>
+				<Member Name="Connector">
+					<Annotation Term="Core.Description" String="The type of location is a connector."/>
+				</Member>
+				<Member Name="Socket">
+					<Annotation Term="Core.Description" String="The type of location is a socket."/>
+				</Member>
+			</EnumType>
+
+			<!--
+					EntityArea literals specifies the general area where a part is located.
+				-->
+			<EnumType Name="EntityArea">
+				<Annotation Term="Core.Description" String="Defines a general area for the location of the part."/>
+				<Member Name="Top">
+					<Annotation Term="Core.Description" String="The top of the unit."/>
+				</Member>
+				<Member Name="Bottom">
+					<Annotation Term="Core.Description" String="The bottom of the unit."/>
+				</Member>
+				<Member Name="Front">
+					<Annotation Term="Core.Description" String="The front of the unit."/>
+				</Member>
+				<Member Name="Rear">
+					<Annotation Term="Core.Description" String="The rear of the unit."/>
+				</Member>
+				<Member Name="Left">
+					<Annotation Term="Core.Description" String="The left side of the unit."/>
+				</Member>
+				<Member Name="Right">
+					<Annotation Term="Core.Description" String="The right side of the unit."/>
+				</Member>
+				<Member Name="Middle">
+					<Annotation Term="Core.Description" String="The middleof the unit."/>
+				</Member>
+			</EnumType>
+
+			<!--
+					EntityLocationOrientation literals specify the direction of ordering.
+				-->
+			<EnumType Name="EntityLocationOrientation">
+				<Annotation Term="Core.Description" String="Defines a orientation for the ordering of the ordinal value of the part location."/>
+				<Member Name="FrontToBack">
+					<Annotation Term="Core.Description" String="Front to back."/>
+				</Member>
+				<Member Name="BackToFront">
+					<Annotation Term="Core.Description" String="Back to front."/>
+				</Member>
+				<Member Name="TopToBottom">
+					<Annotation Term="Core.Description" String="Top to bottom."/>
+				</Member>
+				<Member Name="BottomToTop">
+					<Annotation Term="Core.Description" String="Bottom to top."/>
+				</Member>
+				<Member Name="LeftToRight">
+					<Annotation Term="Core.Description" String="Left to right."/>
+				</Member>
+				<Member Name="RightToLeft">
+					<Annotation Term="Core.Description" String="Right to left."/>
+				</Member>
+			</EnumType>
+
+
+			<!-- == Complex Types ===========================================  -->
+			<!--
+					This is an Extension point for Vendor properties and actions
+				-->
+			<ComplexType Name="Extension" OpenType="true">
+				<Annotation Term="Core.AdditionalProperties" Bool="true"/>
+				<Annotation Term="Core.Description" String="Vendor extension object."/>
+			</ComplexType>
+
+			<!--
+					Phone Info provides a labeled telephone number. 
+				-->
+			<ComplexType Name="PhoneNumber">
+				<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+				<Annotation Term="Core.AdditionalProperties" Bool="false"/>
+				<Annotation Term="Core.Description" String="A phone number."/>
+				<Property Name="Label" Type="Edm.String">
+					<Annotation Term="Core.Description" String="A label such as 'Home' or 'Office'."/>
+				</Property>
+				<Property Name="Number" Type="Edm.String">
+					<Annotation Term="Core.Description" String="A national or international telephone number using the format specified by the ITU-T Recommendation E.123, 02/2001"/>
+				</Property>
+				<Property Name="Extension" Type="AECC.Entities.Extension" Nullable="false">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="Vendor extensions."/>
+				</Property>
+			</ComplexType>
+
+			<!--
+					Email Address provides a labeled email address. 
+				-->
+			<ComplexType Name="EmailAddress">
+				<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+				<Annotation Term="Core.AdditionalProperties" Bool="false"/>
+				<Annotation Term="Core.Description" String="An email address."/>
+				<Property Name="Label" Type="Edm.String">
+					<Annotation Term="Core.Description" String="A label such as 'Home' or 'Office'."/>
+				</Property>
+				<Property Name="Email" Type="Edm.String">
+					<Annotation Term="Core.Description" String="An email address as specified by the Extended Mailbox Address Syntax clause of IETF RFC6531."/>
+				</Property>
+				<Property Name="Extension" Type="AECC.Entities.Extension" Nullable="false">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="Vendor extensions."/>
+				</Property>
+			</ComplexType>
+
+			<!--
+					ContactInfo provides a number of ways to contact an individual or organization. 
+				-->
+			<ComplexType Name="ContactInfo">
+				<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+				<Annotation Term="Core.AdditionalProperties" Bool="false"/>
+				<Annotation Term="Core.Description" String="Contact information for an individual or organization."/>
+
+				<Property Name="FullName" Type="Edm.String">
+					<Annotation Term="Core.Description" String="The full name of the contact."/>
+				</Property>
+				<Property Name="PhoneNumbers" Type="Collection(AECC.Entities.PhoneNumber)">
+					<Annotation Term="Core.Description" String="Available phone numbers for the contact."/>
+				</Property>
+				<Property Name="EmailAddresses" Type="Collection(AECC.Entities.EmailAddress)">
+					<Annotation Term="Core.Description" String="Available email addresses for the contact."/>
+				</Property>
+				<Property Name="PostalAddresses" Type="Collection(AECC.Entities.PostalAddress)">
+					<Annotation Term="Core.Description" String="Available postal addresses for the contact."/>
+				</Property>
+				<Property Name="Extension" Type="AECC.Entities.Extension" Nullable="false">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="Vendor extensions."/>
+				</Property>
+			</ComplexType>
+
+			<!-- 
+					EntityStatus combines health and status information for an Entity. 
+				-->
+			<ComplexType Name="EntityStatus">
+				<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+				<Annotation Term="Core.AdditionalProperties" Bool="false"/>
+				<Annotation Term="Core.Description" String="Status and health properties of the Entity."/>
+				<Property Name="State" Type="AECC.Entities.EntityState">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The current state of the Entity."/>
+				</Property>
+				<Property Name="HealthRollup" Type="AECC.Entities.EntityHealth">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The overall health of the Entity and its dependent Entities."/>
+				</Property>
+				<Property Name="Health" Type="AECC.Entities.EntityHealth">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The health of the Entity without consideration of its dependent Entities."/>
+				</Property>
+				<Property Name="Extension" Type="AECC.Entities.Extension" Nullable="false">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="Vendor extensions."/>
+				</Property>
+			</ComplexType>
+
+			<!-- 
+					Identifier specifies an identifier value and syntax. 
+				-->
+			<ComplexType Name="Identifier">
+				<Annotation Term="Core.Description" String="An Identifier for a entity."/>
+				<Annotation Term="Core.AdditionalProperties" Bool="false"/>
+				<Property Name="DurableNameFormat" Type="AECC.Entities.DurableNameFormat">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The format of the DurableName property."/>
+				</Property>
+				<Property Name="DurableName" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="A persistent name of the entity, formatted as described by  DurableNameFormat."/>
+				</Property>
+				<Property Name="Extension" Type="AECC.Entities.Extension" Nullable="false">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="Vendor extensions."/>
+				</Property>
+			</ComplexType>
+
+			<!-- 
+					PostalAddress combines real-world attributes used to address an Entity. 
+				-->
+			<ComplexType Name="PostalAddress">
+				<Annotation Term="Core.Description" String="The PostalAddress for a entity."/>
+				<Property Name="Country" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Country, see the RFC5139 Country field."/>
+				</Property>
+				<Property Name="Territory" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="A top-level subdivision (territory, state, region, province, or prefecture) within a country see the RFC5139 A1 field."/>
+				</Property>
+				<Property Name="District" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="A county, parish, gun (JP), or  district (IN), see the RFC5139 A2 field."/>
+				</Property>
+				<Property Name="City" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="City, township, or shi (JP). see the  RFC5139 A3 field."/>
+				</Property>
+				<Property Name="Division" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="City division, borough, dity district, ward, chou (JP), see the RFC5139 A4 field."/>
+				</Property>
+				<Property Name="Neighborhood" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Neighborhood or block see RFC5139 the A5 field."/>
+				</Property>
+				<Property Name="LeadingStreetDirection" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="A leading street direction (N, W, SE), see the RFC5139 PRD field."/>
+				</Property>
+				<Property Name="Street" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Street name, see the RFC5139 A6 field."/>
+				</Property>
+				<Property Name="TrailingStreetSuffix" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="A trailing street suffix, see RFC5139 the POD field."/>
+				</Property>
+				<Property Name="StreetSuffix" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Street suffix (Avenue, Platz, Street, Circle), see the RFC5139 STS field."/>
+				</Property>
+				<Property Name="HouseNumber" Type="Edm.Int64">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Numeric portion of house number, see the RFC5139 HNO field."/>
+				</Property>
+				<Property Name="HouseNumberSuffix" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="House number suffix (F, B, 1/2), see the RFC5139 HNS field."/>
+				</Property>
+				<Property Name="Landmark" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Landmark or vanity address, see the RFC5139 LMK field."/>
+				</Property>
+				<Property Name="Location" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Room designation or other additional info, see RFC5139 the LOC field."/>
+				</Property>
+				<Property Name="Floor" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Floor, see the RFC5139 FLR field."/>
+				</Property>
+				<Property Name="Name" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Name of the occupant, see the RFC5139 NAM field."/>
+				</Property>
+				<Property Name="PostalCode" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Postal code (or zip code), see the RFC5139 PC field."/>
+				</Property>
+				<Property Name="Building" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Name of the building, see the RFC5139 BLD field."/>
+				</Property>
+				<Property Name="Unit" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Name or number of the unit (apartment, suite), see the RFC5139 UNIT field."/>
+				</Property>
+				<Property Name="Room" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Name or number of the room, see the RFC5139 ROOM field."/>
+				</Property>
+				<Property Name="Seat" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Seat (desk, cubicle, workstation), see the RFC5139 SEAT field."/>
+				</Property>
+				<Property Name="PlaceType" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The type of place, (office, residence,...), see the RFC5139 PLC field."/>
+				</Property>
+				<Property Name="Community" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Postal community name, see the RFC5139 PCN field."/>
+				</Property>
+				<Property Name="POBox" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Post office box (P.O. box), see the RFC5139 POBOX field."/>
+				</Property>
+				<Property Name="AdditionalCode" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Additional code, see the RFC5139 ADDCODE field."/>
+				</Property>
+				<Property Name="Road" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="A primary road or street, see the RFC5139 RD field."/>
+				</Property>
+				<Property Name="RoadSection" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Road Section, see the RFC5139 RDSEC field."/>
+				</Property>
+				<Property Name="RoadBranch" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Road branch, see the RFC5139 RDBR field."/>
+				</Property>
+				<Property Name="RoadSubBranch" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Road sub branch, see the RFC5139 RDSUBBR."/>
+				</Property>
+				<Property Name="RoadPreModifier" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Road pre-modifier, see the RFC5139 PRM field."/>
+				</Property>
+				<Property Name="RoadPostModifier" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Road post-modifier, see the POM RFC5139 field."/>
+				</Property>
+				<Property Name="Extension" Type="AECC.Entities.Extension" Nullable="false">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="Vendor extensions."/>
+				</Property>
+			</ComplexType>
+
+			<!-- 
+					Placement provides attributes needed to locate an element within a location. 
+				-->
+			<ComplexType Name="Placement">
+				<Annotation Term="Core.Description" String="The placement within the Entity's location."/>
+				<Property Name="Row" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Name of row."/>
+				</Property>
+				<Property Name="Rack" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Name of a rack location within a row."/>
+				</Property>
+				<Property Name="RackOffsetUnits" Type="AECC.Entities.RackOffsetUnits">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The type of Rack Units in use."/>
+				</Property>
+				<Property Name="RackOffset" Type="Edm.Int64" DefaultValue="0">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="Vertical location of the item in terms of RackOffsetUnits."/>
+				</Property>
+				<Property Name="Extension" Type="AECC.Entities.Extension" Nullable="false">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="Vendor extensions."/>
+				</Property>
+			</ComplexType>
+
+			<!-- 
+					PartLocation provides attributes needed to locate a part within an Entity. 
+				-->
+			<ComplexType Name="PartLocation">
+				<Annotation Term="Core.Description" String="The part location within the placement within the Entity."/>
+				<Property Name="ServiceLabel" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="A label assigned for service at the part location."/>
+				</Property>
+				<Property Name="EntityLocationType" Type="AECC.Entities.EntityLocationType">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The type of location, such as: slot, bay, socket and slot."/>
+				</Property>
+				<Property Name="LocationOrdinalValue" Type="Edm.Int64" DefaultValue="0">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The number represents the location of the part based on the EntityLocationType."/>
+				</Property>
+				<Property Name="EntityLocationOrientation" Type="AECC.Entities.EntityLocationOrientation">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The orientation for ordering used by the LocationOrdinalValue property."/>
+				</Property>
+				<Property Name="EntityArea" Type="AECC.Entities.EntityArea">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The general area used to give guidance as to the location of the part."/>
+				</Property>
+				<Property Name="Extension" Type="AECC.Entities.Extension" Nullable="false">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="Vendor extensions."/>
+				</Property>
+			</ComplexType>
+
+			<!-- 
+					EntityLocation provides the attributes needed to locate an Entity in the real-world.  
+				-->
+			<ComplexType Name="EntityLocation">
+				<Annotation Term="Core.Description" String="The location of the entity."/>
+				<Property Name="PostalAddress" Type="AECC.Entities.PostalAddress">
+					<Annotation Term="Core.Description" String="Postal address of the entity."/>
+				</Property>
+				<Property Name="Placement" Type="AECC.Entities.Placement">
+					<Annotation Term="Core.Description" String="A place within the addressed location."/>
+				</Property>
+				<Property Name="Longitude" Type="Edm.Decimal" DefaultValue="0">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The longitude of the entity."/>
+					<Annotation Term="Measures.Unit" String="deg"/>
+				</Property>
+				<Property Name="Latitude" Type="Edm.Decimal" DefaultValue="0">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The latitude of the entity."/>
+					<Annotation Term="Measures.Unit" String="deg"/>
+				</Property>
+				<Property Name="AltitudeMeters" Type="Edm.Decimal" DefaultValue="0">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The Entity's altitude."/>
+					<Annotation Term="Measures.Unit" String="m"/>
+				</Property>
+				<Property Name="PartLocation" Type="AECC.Entities.PartLocation">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The location within the Entity."/>
+				</Property>
+				<Property Name="Extension" Type="AECC.Entities.Extension" Nullable="false">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="Vendor extensions."/>
+				</Property>
+			</ComplexType>
+
+
+			<!-- 
+					Entity defines common attributes of Entity subtypes. 
+				-->
+			<EntityType Name="Entity" Abstract="true">
+				<Key>
+					<PropertyRef Name="EntityID" />
+				</Key>
+				<Property Name="EntityID" Type="Edm.String" Nullable="false">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="A identifier for this model element in the context of its containing modeled element."/>
+				</Property>
+				<Property Name="EntityStatus" Type="AECC.Entities.EntityStatus" Nullable="false">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The status of this Entity."/>
+				</Property>
+				<Property Name="Description" Type="Edm.String" MaxLength="max">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="A description of the Entity."/>
+				</Property>
+				<Property Name="Identifiers" Type="Collection(AECC.Entities.Identifier)" Nullable="true">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="Identifiers for this Entity."/>
+				</Property>
+				<Property Name="EntityLocation" Type="AECC.Entities.EntityLocation" Nullable="true">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The location of this Entity."/>
+				</Property>
+				<Property Name="Version" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The implemented version of this Entity."/>
+				</Property>
+				<Property Name="OwnerContact" Type="AECC.Entities.ContactInfo" Nullable="true">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="Contact information for the service owner."/>
+				</Property>
+				<Property Name="Extension" Type="AECC.Entities.Extension" Nullable="false">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="Vendor extensions."/>
+				</Property>
+				<Property Name="ExecutableImageInstallDate" Type="Edm.DateTimeOffset">				
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The date and time when the executable image was installed."/>
+				</Property>
+				<NavigationProperty Name="ExecutableImages" Type="Collection(AECC.Entities.ExecutableImage)" ContainsTarget="true">
+					<Annotation Term="OData.Permissions" EnumMember="OData.Permission/Read"/>
+					<Annotation Term="OData.Description" String="A collection of executable images for this application."/>
+					<Annotation Term="OData.AutoExpandReferences"/>
+				</NavigationProperty>
+				<NavigationProperty Name="InstalledExecutableImage" Type="AECC.Entities.ExecutableImage">
+					<Annotation Term="OData.Permissions" EnumMember="OData.Permission/ReadWrite"/>
+					<Annotation Term="OData.Description" String="If present, the installed image of this application."/>
+					<Annotation Term="OData.AutoExpandReferences"/>
+				</NavigationProperty>				
+			</EntityType>
+
+			<!-- 
+					Image defines code images that can implement an Entity.
+				-->			
+			<EntityType Name="ExecutableImage" BaseType="AECC.Entities.Entity" HasStream="true">
+				<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+				<Annotation Term="Core.AdditionalProperties" Bool="false"/>
+				<Annotation Term="Core.Description" String="The metaproperty $value accesses an executable image.  The metaproperties @mediaReadLink and @mediaContentType represent a URL to read the image and it's content type."/>
+				<Property Name="ReleaseDate" Type="Edm.DateTimeOffset">				
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The time and date when this executable image was released."/>
+				</Property>
+				<Property Name="SoftwarePlatform" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="A keyword describing the supporting software environment.  Example: Win10, Linux, iOS, ..."/>
+				</Property>
+				<Property Name="ComputingPlatform" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="A keyword describing the supporting hardware/firmware environment.  Example: x86, ARM, ..."/>
+				</Property>
+			</EntityType>
+
+			<!-- 
+					Abstract base class for applications (or services) hosted on an MSP Center, 
+					Edge, Roadside server or on a Vehicle. Note: This is not the service interface 
+					to those components that is represented by their cooresponding EnityContainers.
+				-->
+			<EntityType Name="Application" BaseType="AECC.Entities.Entity" Abstract="true">
+				<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+				<Annotation Term="Core.AdditionalProperties" Bool="false"/>
+				<Annotation Term="Core.Description" String="An application implements a service."/>
+				<Property Name="Manufacturer" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The manufacturer of application."/>
+				</Property>	
+				<Property Name="MinVersion" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The minimum supported version of this application."/>
+				</Property>			
+			</EntityType>
+
+			<!-- 
+					Abstract base class for the common elements of a part within an Entity.
+				-->
+			<EntityType Name="Part" BaseType="AECC.Entities.Entity" Abstract="true">
+				<Property Name="Manufacturer" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The manufacturer of this part."/>
+				</Property>
+				<Property Name="Model" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The model number of this part."/>
+				</Property>
+				<Property Name="SKU" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="This is the SKU of this part."/>
+				</Property>
+				<Property Name="SerialNumber" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The serial number of this part."/>
+				</Property>
+				<Property Name="PartNumber" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/Read"/>
+					<Annotation Term="Core.Description" String="The part number of this part."/>
+				</Property>
+				<Property Name="AssetTag" Type="Edm.String">
+					<Annotation Term="Core.Permissions" EnumMember="Core.Permission/ReadWrite"/>
+					<Annotation Term="Core.Description" String="The user assigned asset tag for this part."/>
+				</Property>
+			</EntityType>
+
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

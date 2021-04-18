@@ -1,0 +1,55 @@
+{
+    "$Version": "4.0",
+    "$Reference": {
+        "http://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml": {
+            "$Include": [
+                {
+                    "$Namespace": "Org.OData.Core.V1",
+                    "$Alias": "Core"
+                }
+            ]
+        },
+        "http://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml": {
+            "$Include": [
+                {
+                    "$Namespace": "Org.OData.Capabilities.V1",
+                    "$Alias": "Capabilities"
+                }
+            ]
+        },
+        "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.xml": {
+            "$Include": [
+                {
+                    "$Namespace": "AECC.Entities"
+                }
+            ]
+        },
+        "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Services.xml": {
+            "$Include": [
+                {
+                    "$Namespace": "AECC.Services"
+                }
+            ]
+        }
+    },
+    "AECC.SystemController": {
+        "$Alias": "Self",
+        "SystemController": {
+            "$Kind": "EntityContainer",
+            "@Core.Description": "The root element of System Controller.",
+            "@Capabilities.KeyAsSegmentSupported": true,
+            "ManagedServices": {
+                "$Collection": true,
+                "$Type": "AECC.Services.Service",
+                "@Core.Permissions": "Read",
+                "@Core.Description": "This controller manages the referenced controllers."
+            },
+            "DependsOn": {
+                "$Type": "AECC.Services.Service",
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The existance of this controller depends on the existance of the referenced service, (i.e. it is hosted on the referenced service."
+            }
+        }
+    },
+    "$EntityContainer": "AECC.SystemController.SystemController"
+}

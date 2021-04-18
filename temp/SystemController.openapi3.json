@@ -1,0 +1,3826 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "The root element of System Controller.",
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)",
+        "version": ""
+    },
+    "servers": [
+        {
+            "url": "https://localhost/service-root"
+        }
+    ],
+    "tags": [
+        {
+            "name": "ManagedServices",
+            "description": "This controller manages the referenced controllers."
+        },
+        {
+            "name": "DependsOn",
+            "description": "The existance of this controller depends on the existance of the referenced service, (i.e. it is hosted on the referenced service."
+        }
+    ],
+    "paths": {
+        "/ManagedServices": {
+            "get": {
+                "summary": "Get entities from ManagedServices",
+                "tags": [
+                    "ManagedServices"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/top"
+                    },
+                    {
+                        "$ref": "#/components/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/components/parameters/search"
+                    },
+                    {
+                        "name": "$filter",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$expand",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "*",
+                                    "Applications"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Collection of Service",
+                                    "properties": {
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/AECC.Services.Service"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to ManagedServices",
+                "tags": [
+                    "ManagedServices"
+                ],
+                "requestBody": {
+                    "description": "A means of delivering value to customers by facilitating outcomes customers want to achieve without the ownership of specific costs and risks.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AECC.Services.Service-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AECC.Services.Service"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/ManagedServices/{EntityID}": {
+            "parameters": [
+                {
+                    "description": "A identifier for this model element in the context of its containing modeled element.",
+                    "in": "path",
+                    "name": "EntityID",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get entity from ManagedServices by key",
+                "tags": [
+                    "ManagedServices"
+                ],
+                "parameters": [
+                    {
+                        "name": "$expand",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "*",
+                                    "Applications"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AECC.Services.Service"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in ManagedServices",
+                "tags": [
+                    "ManagedServices"
+                ],
+                "requestBody": {
+                    "description": "A means of delivering value to customers by facilitating outcomes customers want to achieve without the ownership of specific costs and risks.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AECC.Services.Service-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from ManagedServices",
+                "tags": [
+                    "ManagedServices"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/ManagedServices/{EntityID}/Applications": {
+            "parameters": [
+                {
+                    "description": "A identifier for this model element in the context of its containing modeled element.",
+                    "in": "path",
+                    "name": "EntityID",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get entities from related Applications",
+                "tags": [
+                    "ManagedServices"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/top"
+                    },
+                    {
+                        "$ref": "#/components/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/components/parameters/search"
+                    },
+                    {
+                        "name": "$filter",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "Manufacturer",
+                                    "Manufacturer desc",
+                                    "MinVersion",
+                                    "MinVersion desc"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "$select",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "Manufacturer",
+                                    "MinVersion"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Collection of Application",
+                                    "properties": {
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/AECC.Entities.Application"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to related Applications",
+                "tags": [
+                    "ManagedServices"
+                ],
+                "requestBody": {
+                    "description": "An application implements a service.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AECC.Entities.Application-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AECC.Entities.Application"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/ManagedServices/{EntityID}/Applications/{EntityID-1}": {
+            "parameters": [
+                {
+                    "description": "A identifier for this model element in the context of its containing modeled element.",
+                    "in": "path",
+                    "name": "EntityID",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "description": "A identifier for this model element in the context of its containing modeled element.",
+                    "in": "path",
+                    "name": "EntityID-1",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get entity from related Applications by key",
+                "tags": [
+                    "ManagedServices"
+                ],
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "Manufacturer",
+                                    "MinVersion"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AECC.Entities.Application"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in related Applications",
+                "tags": [
+                    "ManagedServices"
+                ],
+                "requestBody": {
+                    "description": "An application implements a service.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AECC.Entities.Application-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from related Applications",
+                "tags": [
+                    "ManagedServices"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/DependsOn": {
+            "get": {
+                "summary": "Get DependsOn",
+                "tags": [
+                    "DependsOn"
+                ],
+                "parameters": [
+                    {
+                        "name": "$expand",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "*",
+                                    "Applications"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AECC.Services.Service"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update DependsOn",
+                "tags": [
+                    "DependsOn"
+                ],
+                "requestBody": {
+                    "description": "A means of delivering value to customers by facilitating outcomes customers want to achieve without the ownership of specific costs and risks.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AECC.Services.Service-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/DependsOn/Applications": {
+            "get": {
+                "summary": "Get entities from related Applications",
+                "tags": [
+                    "DependsOn"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/top"
+                    },
+                    {
+                        "$ref": "#/components/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/components/parameters/search"
+                    },
+                    {
+                        "name": "$filter",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "Manufacturer",
+                                    "Manufacturer desc",
+                                    "MinVersion",
+                                    "MinVersion desc"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "$select",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "Manufacturer",
+                                    "MinVersion"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Collection of Application",
+                                    "properties": {
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/AECC.Entities.Application"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to related Applications",
+                "tags": [
+                    "DependsOn"
+                ],
+                "requestBody": {
+                    "description": "An application implements a service.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AECC.Entities.Application-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AECC.Entities.Application"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/DependsOn/Applications/{EntityID-1}": {
+            "parameters": [
+                {
+                    "description": "A identifier for this model element in the context of its containing modeled element.",
+                    "in": "path",
+                    "name": "EntityID-1",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get entity from related Applications by key",
+                "tags": [
+                    "DependsOn"
+                ],
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "Manufacturer",
+                                    "MinVersion"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AECC.Entities.Application"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in related Applications",
+                "tags": [
+                    "DependsOn"
+                ],
+                "requestBody": {
+                    "description": "An application implements a service.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AECC.Entities.Application-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from related Applications",
+                "tags": [
+                    "DependsOn"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/$batch": {
+            "post": {
+                "summary": "Send a group of requests",
+                "description": "Group multiple requests into a single request payload, see [Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).\n\n*Please note that \"Try it out\" is not supported for this request.*",
+                "tags": [
+                    "Batch Requests"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Batch request",
+                    "content": {
+                        "multipart/mixed;boundary=request-separator": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "example": "--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET ManagedServices HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Batch response",
+                        "content": {
+                            "multipart/mixed": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{...}\n--response-separator--"
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AECC.Services.Service": {
+                "title": "A means of delivering value to customers by facilitating outcomes customers want to achieve without the ownership of specific costs and risks.",
+                "type": "object",
+                "properties": {
+                    "EntityID": {
+                        "type": "string",
+                        "title": "A identifier for this model element in the context of its containing modeled element."
+                    },
+                    "EntityStatus": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityStatus"
+                            }
+                        ],
+                        "title": "The status of this Entity."
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A description of the Entity."
+                    },
+                    "Identifiers": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/AECC.Entities.Identifier"
+                                }
+                            ],
+                            "nullable": true
+                        },
+                        "title": "Identifiers for this Entity."
+                    },
+                    "EntityLocation": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityLocation"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The location of this Entity."
+                    },
+                    "Version": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The implemented version of this Entity."
+                    },
+                    "OwnerContact": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ContactInfo"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "Contact information for the service owner."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    },
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.Application"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.CenterService"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.EdgeService"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.RoadsideService"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.VehicleService"
+                    }
+                ]
+            },
+            "AECC.Services.Service-create": {
+                "title": "A means of delivering value to customers by facilitating outcomes customers want to achieve without the ownership of specific costs and risks. (for create)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.Application-create"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.CenterService-create"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.EdgeService-create"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.RoadsideService-create"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.VehicleService-create"
+                    }
+                ]
+            },
+            "AECC.Services.Service-update": {
+                "title": "A means of delivering value to customers by facilitating outcomes customers want to achieve without the ownership of specific costs and risks. (for update)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.CenterService-update"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.EdgeService-update"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.RoadsideService-update"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.VehicleService-update"
+                    }
+                ]
+            },
+            "AECC.Services.CenterService": {
+                "title": "A service running on an MSP Center Server that provides access to the functionality and information available via the MSP cloud.",
+                "type": "object",
+                "properties": {
+                    "EntityID": {
+                        "type": "string",
+                        "title": "A identifier for this model element in the context of its containing modeled element."
+                    },
+                    "EntityStatus": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityStatus"
+                            }
+                        ],
+                        "title": "The status of this Entity."
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A description of the Entity."
+                    },
+                    "Identifiers": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/AECC.Entities.Identifier"
+                                }
+                            ],
+                            "nullable": true
+                        },
+                        "title": "Identifiers for this Entity."
+                    },
+                    "EntityLocation": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityLocation"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The location of this Entity."
+                    },
+                    "Version": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The implemented version of this Entity."
+                    },
+                    "OwnerContact": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ContactInfo"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "Contact information for the service owner."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    },
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.Application"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "EdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService"
+                        },
+                        "title": "The set of Edge services known to this Center service."
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService"
+                        },
+                        "title": "The set of Roadside services known to this Center service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService"
+                        },
+                        "title": "The set of Vehicle services known to this Center service."
+                    }
+                }
+            },
+            "AECC.Services.CenterService-create": {
+                "title": "A service running on an MSP Center Server that provides access to the functionality and information available via the MSP cloud. (for create)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.Application-create"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "EdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService-create"
+                        },
+                        "title": "The set of Edge services known to this Center service."
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService-create"
+                        },
+                        "title": "The set of Roadside services known to this Center service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService-create"
+                        },
+                        "title": "The set of Vehicle services known to this Center service."
+                    }
+                }
+            },
+            "AECC.Services.CenterService-update": {
+                "title": "A service running on an MSP Center Server that provides access to the functionality and information available via the MSP cloud. (for update)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    }
+                }
+            },
+            "AECC.Services.EdgeService": {
+                "title": "A service running on an MSP Edge Server that provides access to the functionality and information collected by an MSP Edge server.",
+                "type": "object",
+                "properties": {
+                    "EntityID": {
+                        "type": "string",
+                        "title": "A identifier for this model element in the context of its containing modeled element."
+                    },
+                    "EntityStatus": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityStatus"
+                            }
+                        ],
+                        "title": "The status of this Entity."
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A description of the Entity."
+                    },
+                    "Identifiers": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/AECC.Entities.Identifier"
+                                }
+                            ],
+                            "nullable": true
+                        },
+                        "title": "Identifiers for this Entity."
+                    },
+                    "EntityLocation": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityLocation"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The location of this Entity."
+                    },
+                    "Version": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The implemented version of this Entity."
+                    },
+                    "OwnerContact": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ContactInfo"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "Contact information for the service owner."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    },
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.Application"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "CenterService": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Services.CenterService"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The Center service of this Edge service."
+                    },
+                    "ParentEdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService"
+                        },
+                        "title": "The set of child Edge services that aggregate this Edge service."
+                    },
+                    "ChildEdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService"
+                        },
+                        "title": "The set of parent Edge services aggregated by this Edge service."
+                    },
+                    "PeerEdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService"
+                        },
+                        "title": "The set of Peer Edge services known to this edge server"
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService"
+                        },
+                        "title": "The set of Roadside services utilized by this Edge service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService"
+                        },
+                        "title": "The set of Vehicle services known to this Edge service."
+                    }
+                }
+            },
+            "AECC.Services.EdgeService-create": {
+                "title": "A service running on an MSP Edge Server that provides access to the functionality and information collected by an MSP Edge server. (for create)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.Application-create"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "CenterService": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Services.CenterService-create"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The Center service of this Edge service."
+                    },
+                    "ParentEdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService-create"
+                        },
+                        "title": "The set of child Edge services that aggregate this Edge service."
+                    },
+                    "ChildEdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService-create"
+                        },
+                        "title": "The set of parent Edge services aggregated by this Edge service."
+                    },
+                    "PeerEdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService-create"
+                        },
+                        "title": "The set of Peer Edge services known to this edge server"
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService-create"
+                        },
+                        "title": "The set of Roadside services utilized by this Edge service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService-create"
+                        },
+                        "title": "The set of Vehicle services known to this Edge service."
+                    }
+                }
+            },
+            "AECC.Services.EdgeService-update": {
+                "title": "A service running on an MSP Edge Server that provides access to the functionality and information collected by an MSP Edge server. (for update)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    }
+                }
+            },
+            "AECC.Services.RoadsideService": {
+                "title": "A service running on an MSP Roadside Unit that provides access to the functionality and information collected by the Roadside Unit.",
+                "type": "object",
+                "properties": {
+                    "EntityID": {
+                        "type": "string",
+                        "title": "A identifier for this model element in the context of its containing modeled element."
+                    },
+                    "EntityStatus": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityStatus"
+                            }
+                        ],
+                        "title": "The status of this Entity."
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A description of the Entity."
+                    },
+                    "Identifiers": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/AECC.Entities.Identifier"
+                                }
+                            ],
+                            "nullable": true
+                        },
+                        "title": "Identifiers for this Entity."
+                    },
+                    "EntityLocation": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityLocation"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The location of this Entity."
+                    },
+                    "Version": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The implemented version of this Entity."
+                    },
+                    "OwnerContact": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ContactInfo"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "Contact information for the service owner."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    },
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.Application"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "CenterService": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Services.CenterService"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The Center service of this Edge service."
+                    },
+                    "EdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService"
+                        },
+                        "title": "The set of Edge services that aggregate this Roadside service."
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService"
+                        },
+                        "title": "The set of other Roadside services related to this Roadside service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService"
+                        },
+                        "title": "The set of Vehicle services related to this Roadside service."
+                    },
+                    "ControlUnits": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.ControlUnit"
+                        },
+                        "title": "The set of Control Units hosted by this Roadside service."
+                    },
+                    "Sensors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.Sensor"
+                        },
+                        "title": "The set of Sensors hosted by this Roadside service."
+                    }
+                }
+            },
+            "AECC.Services.RoadsideService-create": {
+                "title": "A service running on an MSP Roadside Unit that provides access to the functionality and information collected by the Roadside Unit. (for create)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.Application-create"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "CenterService": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Services.CenterService-create"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The Center service of this Edge service."
+                    },
+                    "EdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService-create"
+                        },
+                        "title": "The set of Edge services that aggregate this Roadside service."
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService-create"
+                        },
+                        "title": "The set of other Roadside services related to this Roadside service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService-create"
+                        },
+                        "title": "The set of Vehicle services related to this Roadside service."
+                    },
+                    "ControlUnits": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.ControlUnit"
+                        },
+                        "title": "The set of Control Units hosted by this Roadside service."
+                    },
+                    "Sensors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.Sensor"
+                        },
+                        "title": "The set of Sensors hosted by this Roadside service."
+                    }
+                }
+            },
+            "AECC.Services.RoadsideService-update": {
+                "title": "A service running on an MSP Roadside Unit that provides access to the functionality and information collected by the Roadside Unit. (for update)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    }
+                }
+            },
+            "AECC.Services.VehicleService": {
+                "title": "A service running on a Vehicle that provides access to the functionality and information collected by the vehicle.",
+                "type": "object",
+                "properties": {
+                    "EntityID": {
+                        "type": "string",
+                        "title": "A identifier for this model element in the context of its containing modeled element."
+                    },
+                    "EntityStatus": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityStatus"
+                            }
+                        ],
+                        "title": "The status of this Entity."
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A description of the Entity."
+                    },
+                    "Identifiers": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/AECC.Entities.Identifier"
+                                }
+                            ],
+                            "nullable": true
+                        },
+                        "title": "Identifiers for this Entity."
+                    },
+                    "EntityLocation": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityLocation"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The location of this Entity."
+                    },
+                    "Version": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The implemented version of this Entity."
+                    },
+                    "OwnerContact": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ContactInfo"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "Contact information for the service owner."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    },
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.Application"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "CenterService": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Services.CenterService"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The Center service of this Edge service."
+                    },
+                    "EdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService"
+                        },
+                        "title": "The set of Edge services related to this Vehicle service.."
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService"
+                        },
+                        "title": "The set of Roadside services related to this Vehicle service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService"
+                        },
+                        "title": "The set of other Vehicle services related to this Vehicle service.."
+                    },
+                    "ControlUnits": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.ControlUnit"
+                        },
+                        "title": "The set of Control Units hosted by this Roadside service."
+                    },
+                    "Sensors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.Sensor"
+                        },
+                        "title": "The set of Sensors hosted by this Roadside service."
+                    }
+                }
+            },
+            "AECC.Services.VehicleService-create": {
+                "title": "A service running on a Vehicle that provides access to the functionality and information collected by the vehicle. (for create)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Applications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.Application-create"
+                        },
+                        "title": "The set of Applications hosted by this Edge service."
+                    },
+                    "CenterService": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Services.CenterService-create"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The Center service of this Edge service."
+                    },
+                    "EdgeServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.EdgeService-create"
+                        },
+                        "title": "The set of Edge services related to this Vehicle service.."
+                    },
+                    "RoadsideServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.RoadsideService-create"
+                        },
+                        "title": "The set of Roadside services related to this Vehicle service."
+                    },
+                    "VehicleServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Services.VehicleService-create"
+                        },
+                        "title": "The set of other Vehicle services related to this Vehicle service.."
+                    },
+                    "ControlUnits": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.ControlUnit"
+                        },
+                        "title": "The set of Control Units hosted by this Roadside service."
+                    },
+                    "Sensors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/undefined.Sensor"
+                        },
+                        "title": "The set of Sensors hosted by this Roadside service."
+                    }
+                }
+            },
+            "AECC.Services.VehicleService-update": {
+                "title": "A service running on a Vehicle that provides access to the functionality and information collected by the vehicle. (for update)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    }
+                }
+            },
+            "AECC.Entities.DurableNameFormat": {
+                "type": "string",
+                "title": "DurableNameFormat",
+                "enum": [
+                    "VIN",
+                    "NAA",
+                    "iQN",
+                    "FC_WWN",
+                    "UUID",
+                    "EUI"
+                ]
+            },
+            "AECC.Entities.EntityState": {
+                "type": "string",
+                "title": "EntityState",
+                "enum": [
+                    "Enabled",
+                    "Disabled",
+                    "StandbyOffline",
+                    "StandbySpare",
+                    "InTest",
+                    "Starting",
+                    "Absent",
+                    "UnavailableOffline",
+                    "Deferring",
+                    "Quiesced",
+                    "Updating"
+                ]
+            },
+            "AECC.Entities.EntityHealth": {
+                "type": "string",
+                "title": "EntityHealth",
+                "enum": [
+                    "OK",
+                    "Warning",
+                    "Critical"
+                ]
+            },
+            "AECC.Entities.RackOffsetUnits": {
+                "type": "string",
+                "title": "Defines a rack unit of measure.",
+                "enum": [
+                    "OpenU",
+                    "EIA_310"
+                ]
+            },
+            "AECC.Entities.EntityLocationType": {
+                "type": "string",
+                "title": "Defines the type of location in use.",
+                "enum": [
+                    "Slot",
+                    "Bay",
+                    "Connector",
+                    "Socket"
+                ]
+            },
+            "AECC.Entities.EntityArea": {
+                "type": "string",
+                "title": "Defines a general area for the location of the part.",
+                "enum": [
+                    "Top",
+                    "Bottom",
+                    "Front",
+                    "Rear",
+                    "Left",
+                    "Right",
+                    "Middle"
+                ]
+            },
+            "AECC.Entities.EntityLocationOrientation": {
+                "type": "string",
+                "title": "Defines a orientation for the ordering of the ordinal value of the part location.",
+                "enum": [
+                    "FrontToBack",
+                    "BackToFront",
+                    "TopToBottom",
+                    "BottomToTop",
+                    "LeftToRight",
+                    "RightToLeft"
+                ]
+            },
+            "AECC.Entities.Extension": {
+                "title": "Vendor extension object.",
+                "type": "object"
+            },
+            "AECC.Entities.Extension-create": {
+                "title": "Vendor extension object. (for create)",
+                "type": "object"
+            },
+            "AECC.Entities.Extension-update": {
+                "title": "Vendor extension object. (for update)",
+                "type": "object"
+            },
+            "AECC.Entities.PhoneNumber": {
+                "title": "A phone number.",
+                "type": "object",
+                "properties": {
+                    "Label": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A label such as 'Home' or 'Office'."
+                    },
+                    "Number": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A national or international telephone number using the format specified by the ITU-T Recommendation E.123, 02/2001"
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    }
+                }
+            },
+            "AECC.Entities.PhoneNumber-create": {
+                "title": "A phone number. (for create)",
+                "type": "object",
+                "properties": {
+                    "Label": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A label such as 'Home' or 'Office'."
+                    },
+                    "Number": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A national or international telephone number using the format specified by the ITU-T Recommendation E.123, 02/2001"
+                    }
+                }
+            },
+            "AECC.Entities.PhoneNumber-update": {
+                "title": "A phone number. (for update)",
+                "type": "object",
+                "properties": {
+                    "Label": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A label such as 'Home' or 'Office'."
+                    },
+                    "Number": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A national or international telephone number using the format specified by the ITU-T Recommendation E.123, 02/2001"
+                    }
+                }
+            },
+            "AECC.Entities.EmailAddress": {
+                "title": "An email address.",
+                "type": "object",
+                "properties": {
+                    "Label": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A label such as 'Home' or 'Office'."
+                    },
+                    "Email": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "An email address as specified by the Extended Mailbox Address Syntax clause of IETF RFC6531."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    }
+                }
+            },
+            "AECC.Entities.EmailAddress-create": {
+                "title": "An email address. (for create)",
+                "type": "object",
+                "properties": {
+                    "Label": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A label such as 'Home' or 'Office'."
+                    },
+                    "Email": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "An email address as specified by the Extended Mailbox Address Syntax clause of IETF RFC6531."
+                    }
+                }
+            },
+            "AECC.Entities.EmailAddress-update": {
+                "title": "An email address. (for update)",
+                "type": "object",
+                "properties": {
+                    "Label": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A label such as 'Home' or 'Office'."
+                    },
+                    "Email": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "An email address as specified by the Extended Mailbox Address Syntax clause of IETF RFC6531."
+                    }
+                }
+            },
+            "AECC.Entities.ContactInfo": {
+                "title": "Contact information for an individual or organization.",
+                "type": "object",
+                "properties": {
+                    "FullName": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The full name of the contact."
+                    },
+                    "PhoneNumbers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.PhoneNumber"
+                        },
+                        "title": "Available phone numbers for the contact."
+                    },
+                    "EmailAddresses": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.EmailAddress"
+                        },
+                        "title": "Available email addresses for the contact."
+                    },
+                    "PostalAddresses": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.PostalAddress"
+                        },
+                        "title": "Available postal addresses for the contact."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    }
+                }
+            },
+            "AECC.Entities.ContactInfo-create": {
+                "title": "Contact information for an individual or organization. (for create)",
+                "type": "object",
+                "properties": {
+                    "FullName": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The full name of the contact."
+                    },
+                    "PhoneNumbers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.PhoneNumber-create"
+                        },
+                        "title": "Available phone numbers for the contact."
+                    },
+                    "EmailAddresses": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.EmailAddress-create"
+                        },
+                        "title": "Available email addresses for the contact."
+                    },
+                    "PostalAddresses": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.PostalAddress-create"
+                        },
+                        "title": "Available postal addresses for the contact."
+                    }
+                }
+            },
+            "AECC.Entities.ContactInfo-update": {
+                "title": "Contact information for an individual or organization. (for update)",
+                "type": "object",
+                "properties": {
+                    "FullName": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The full name of the contact."
+                    },
+                    "PhoneNumbers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.PhoneNumber-update"
+                        },
+                        "title": "Available phone numbers for the contact."
+                    },
+                    "EmailAddresses": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.EmailAddress-update"
+                        },
+                        "title": "Available email addresses for the contact."
+                    },
+                    "PostalAddresses": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.PostalAddress-update"
+                        },
+                        "title": "Available postal addresses for the contact."
+                    }
+                }
+            },
+            "AECC.Entities.EntityStatus": {
+                "title": "Status and health properties of the Entity.",
+                "type": "object",
+                "properties": {
+                    "State": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityState"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The current state of the Entity."
+                    },
+                    "HealthRollup": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityHealth"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The overall health of the Entity and its dependent Entities."
+                    },
+                    "Health": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityHealth"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The health of the Entity without consideration of its dependent Entities."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    }
+                }
+            },
+            "AECC.Entities.EntityStatus-create": {
+                "title": "Status and health properties of the Entity. (for create)",
+                "type": "object"
+            },
+            "AECC.Entities.EntityStatus-update": {
+                "title": "Status and health properties of the Entity. (for update)",
+                "type": "object"
+            },
+            "AECC.Entities.Identifier": {
+                "title": "An Identifier for a entity.",
+                "type": "object",
+                "properties": {
+                    "DurableNameFormat": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.DurableNameFormat"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The format of the DurableName property."
+                    },
+                    "DurableName": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A persistent name of the entity, formatted as described by  DurableNameFormat."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    }
+                }
+            },
+            "AECC.Entities.Identifier-create": {
+                "title": "An Identifier for a entity. (for create)",
+                "type": "object"
+            },
+            "AECC.Entities.Identifier-update": {
+                "title": "An Identifier for a entity. (for update)",
+                "type": "object"
+            },
+            "AECC.Entities.PostalAddress": {
+                "title": "The PostalAddress for a entity.",
+                "type": "object",
+                "properties": {
+                    "Country": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Country, see the RFC5139 Country field."
+                    },
+                    "Territory": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A top-level subdivision (territory, state, region, province, or prefecture) within a country see the RFC5139 A1 field."
+                    },
+                    "District": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A county, parish, gun (JP), or  district (IN), see the RFC5139 A2 field."
+                    },
+                    "City": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "City, township, or shi (JP). see the  RFC5139 A3 field."
+                    },
+                    "Division": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "City division, borough, dity district, ward, chou (JP), see the RFC5139 A4 field."
+                    },
+                    "Neighborhood": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Neighborhood or block see RFC5139 the A5 field."
+                    },
+                    "LeadingStreetDirection": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A leading street direction (N, W, SE), see the RFC5139 PRD field."
+                    },
+                    "Street": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Street name, see the RFC5139 A6 field."
+                    },
+                    "TrailingStreetSuffix": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A trailing street suffix, see RFC5139 the POD field."
+                    },
+                    "StreetSuffix": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Street suffix (Avenue, Platz, Street, Circle), see the RFC5139 STS field."
+                    },
+                    "HouseNumber": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "int64",
+                        "example": "42",
+                        "nullable": true,
+                        "title": "Numeric portion of house number, see the RFC5139 HNO field."
+                    },
+                    "HouseNumberSuffix": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "House number suffix (F, B, 1/2), see the RFC5139 HNS field."
+                    },
+                    "Landmark": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Landmark or vanity address, see the RFC5139 LMK field."
+                    },
+                    "Location": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Room designation or other additional info, see RFC5139 the LOC field."
+                    },
+                    "Floor": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Floor, see the RFC5139 FLR field."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name of the occupant, see the RFC5139 NAM field."
+                    },
+                    "PostalCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Postal code (or zip code), see the RFC5139 PC field."
+                    },
+                    "Building": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name of the building, see the RFC5139 BLD field."
+                    },
+                    "Unit": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name or number of the unit (apartment, suite), see the RFC5139 UNIT field."
+                    },
+                    "Room": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name or number of the room, see the RFC5139 ROOM field."
+                    },
+                    "Seat": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Seat (desk, cubicle, workstation), see the RFC5139 SEAT field."
+                    },
+                    "PlaceType": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The type of place, (office, residence,...), see the RFC5139 PLC field."
+                    },
+                    "Community": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Postal community name, see the RFC5139 PCN field."
+                    },
+                    "POBox": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Post office box (P.O. box), see the RFC5139 POBOX field."
+                    },
+                    "AdditionalCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Additional code, see the RFC5139 ADDCODE field."
+                    },
+                    "Road": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A primary road or street, see the RFC5139 RD field."
+                    },
+                    "RoadSection": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Road Section, see the RFC5139 RDSEC field."
+                    },
+                    "RoadBranch": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Road branch, see the RFC5139 RDBR field."
+                    },
+                    "RoadSubBranch": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Road sub branch, see the RFC5139 RDSUBBR."
+                    },
+                    "RoadPreModifier": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Road pre-modifier, see the RFC5139 PRM field."
+                    },
+                    "RoadPostModifier": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Road post-modifier, see the POM RFC5139 field."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    }
+                }
+            },
+            "AECC.Entities.PostalAddress-create": {
+                "title": "The PostalAddress for a entity. (for create)",
+                "type": "object",
+                "properties": {
+                    "Country": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Country, see the RFC5139 Country field."
+                    },
+                    "Territory": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A top-level subdivision (territory, state, region, province, or prefecture) within a country see the RFC5139 A1 field."
+                    },
+                    "District": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A county, parish, gun (JP), or  district (IN), see the RFC5139 A2 field."
+                    },
+                    "City": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "City, township, or shi (JP). see the  RFC5139 A3 field."
+                    },
+                    "Division": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "City division, borough, dity district, ward, chou (JP), see the RFC5139 A4 field."
+                    },
+                    "Neighborhood": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Neighborhood or block see RFC5139 the A5 field."
+                    },
+                    "LeadingStreetDirection": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A leading street direction (N, W, SE), see the RFC5139 PRD field."
+                    },
+                    "Street": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Street name, see the RFC5139 A6 field."
+                    },
+                    "TrailingStreetSuffix": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A trailing street suffix, see RFC5139 the POD field."
+                    },
+                    "StreetSuffix": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Street suffix (Avenue, Platz, Street, Circle), see the RFC5139 STS field."
+                    },
+                    "HouseNumber": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "int64",
+                        "example": "42",
+                        "nullable": true,
+                        "title": "Numeric portion of house number, see the RFC5139 HNO field."
+                    },
+                    "HouseNumberSuffix": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "House number suffix (F, B, 1/2), see the RFC5139 HNS field."
+                    },
+                    "Landmark": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Landmark or vanity address, see the RFC5139 LMK field."
+                    },
+                    "Location": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Room designation or other additional info, see RFC5139 the LOC field."
+                    },
+                    "Floor": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Floor, see the RFC5139 FLR field."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name of the occupant, see the RFC5139 NAM field."
+                    },
+                    "PostalCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Postal code (or zip code), see the RFC5139 PC field."
+                    },
+                    "Building": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name of the building, see the RFC5139 BLD field."
+                    },
+                    "Unit": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name or number of the unit (apartment, suite), see the RFC5139 UNIT field."
+                    },
+                    "Room": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name or number of the room, see the RFC5139 ROOM field."
+                    },
+                    "Seat": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Seat (desk, cubicle, workstation), see the RFC5139 SEAT field."
+                    },
+                    "PlaceType": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The type of place, (office, residence,...), see the RFC5139 PLC field."
+                    },
+                    "Community": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Postal community name, see the RFC5139 PCN field."
+                    },
+                    "POBox": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Post office box (P.O. box), see the RFC5139 POBOX field."
+                    },
+                    "AdditionalCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Additional code, see the RFC5139 ADDCODE field."
+                    },
+                    "Road": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A primary road or street, see the RFC5139 RD field."
+                    },
+                    "RoadSection": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Road Section, see the RFC5139 RDSEC field."
+                    },
+                    "RoadBranch": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Road branch, see the RFC5139 RDBR field."
+                    },
+                    "RoadSubBranch": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Road sub branch, see the RFC5139 RDSUBBR."
+                    },
+                    "RoadPreModifier": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Road pre-modifier, see the RFC5139 PRM field."
+                    },
+                    "RoadPostModifier": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Road post-modifier, see the POM RFC5139 field."
+                    }
+                }
+            },
+            "AECC.Entities.PostalAddress-update": {
+                "title": "The PostalAddress for a entity. (for update)",
+                "type": "object",
+                "properties": {
+                    "Country": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Country, see the RFC5139 Country field."
+                    },
+                    "Territory": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A top-level subdivision (territory, state, region, province, or prefecture) within a country see the RFC5139 A1 field."
+                    },
+                    "District": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A county, parish, gun (JP), or  district (IN), see the RFC5139 A2 field."
+                    },
+                    "City": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "City, township, or shi (JP). see the  RFC5139 A3 field."
+                    },
+                    "Division": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "City division, borough, dity district, ward, chou (JP), see the RFC5139 A4 field."
+                    },
+                    "Neighborhood": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Neighborhood or block see RFC5139 the A5 field."
+                    },
+                    "LeadingStreetDirection": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A leading street direction (N, W, SE), see the RFC5139 PRD field."
+                    },
+                    "Street": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Street name, see the RFC5139 A6 field."
+                    },
+                    "TrailingStreetSuffix": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A trailing street suffix, see RFC5139 the POD field."
+                    },
+                    "StreetSuffix": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Street suffix (Avenue, Platz, Street, Circle), see the RFC5139 STS field."
+                    },
+                    "HouseNumber": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "int64",
+                        "example": "42",
+                        "nullable": true,
+                        "title": "Numeric portion of house number, see the RFC5139 HNO field."
+                    },
+                    "HouseNumberSuffix": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "House number suffix (F, B, 1/2), see the RFC5139 HNS field."
+                    },
+                    "Landmark": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Landmark or vanity address, see the RFC5139 LMK field."
+                    },
+                    "Location": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Room designation or other additional info, see RFC5139 the LOC field."
+                    },
+                    "Floor": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Floor, see the RFC5139 FLR field."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name of the occupant, see the RFC5139 NAM field."
+                    },
+                    "PostalCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Postal code (or zip code), see the RFC5139 PC field."
+                    },
+                    "Building": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name of the building, see the RFC5139 BLD field."
+                    },
+                    "Unit": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name or number of the unit (apartment, suite), see the RFC5139 UNIT field."
+                    },
+                    "Room": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name or number of the room, see the RFC5139 ROOM field."
+                    },
+                    "Seat": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Seat (desk, cubicle, workstation), see the RFC5139 SEAT field."
+                    },
+                    "PlaceType": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The type of place, (office, residence,...), see the RFC5139 PLC field."
+                    },
+                    "Community": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Postal community name, see the RFC5139 PCN field."
+                    },
+                    "POBox": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Post office box (P.O. box), see the RFC5139 POBOX field."
+                    },
+                    "AdditionalCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Additional code, see the RFC5139 ADDCODE field."
+                    },
+                    "Road": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A primary road or street, see the RFC5139 RD field."
+                    },
+                    "RoadSection": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Road Section, see the RFC5139 RDSEC field."
+                    },
+                    "RoadBranch": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Road branch, see the RFC5139 RDBR field."
+                    },
+                    "RoadSubBranch": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Road sub branch, see the RFC5139 RDSUBBR."
+                    },
+                    "RoadPreModifier": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Road pre-modifier, see the RFC5139 PRM field."
+                    },
+                    "RoadPostModifier": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Road post-modifier, see the POM RFC5139 field."
+                    }
+                }
+            },
+            "AECC.Entities.Placement": {
+                "title": "The placement within the Entity's location.",
+                "type": "object",
+                "properties": {
+                    "Row": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name of row."
+                    },
+                    "Rack": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name of a rack location within a row."
+                    },
+                    "RackOffsetUnits": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.RackOffsetUnits"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The type of Rack Units in use."
+                    },
+                    "RackOffset": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "int64",
+                        "example": "42",
+                        "nullable": true,
+                        "default": 0,
+                        "title": "Vertical location of the item in terms of RackOffsetUnits."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    }
+                }
+            },
+            "AECC.Entities.Placement-create": {
+                "title": "The placement within the Entity's location. (for create)",
+                "type": "object",
+                "properties": {
+                    "Row": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name of row."
+                    },
+                    "Rack": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name of a rack location within a row."
+                    },
+                    "RackOffsetUnits": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.RackOffsetUnits"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The type of Rack Units in use."
+                    },
+                    "RackOffset": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "int64",
+                        "example": "42",
+                        "nullable": true,
+                        "default": 0,
+                        "title": "Vertical location of the item in terms of RackOffsetUnits."
+                    }
+                }
+            },
+            "AECC.Entities.Placement-update": {
+                "title": "The placement within the Entity's location. (for update)",
+                "type": "object",
+                "properties": {
+                    "Row": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name of row."
+                    },
+                    "Rack": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "Name of a rack location within a row."
+                    },
+                    "RackOffsetUnits": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.RackOffsetUnits"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The type of Rack Units in use."
+                    },
+                    "RackOffset": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "int64",
+                        "example": "42",
+                        "nullable": true,
+                        "default": 0,
+                        "title": "Vertical location of the item in terms of RackOffsetUnits."
+                    }
+                }
+            },
+            "AECC.Entities.PartLocation": {
+                "title": "The part location within the placement within the Entity.",
+                "type": "object",
+                "properties": {
+                    "ServiceLabel": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A label assigned for service at the part location."
+                    },
+                    "EntityLocationType": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityLocationType"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The type of location, such as: slot, bay, socket and slot."
+                    },
+                    "LocationOrdinalValue": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "int64",
+                        "example": "42",
+                        "nullable": true,
+                        "default": 0,
+                        "title": "The number represents the location of the part based on the EntityLocationType."
+                    },
+                    "EntityLocationOrientation": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityLocationOrientation"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The orientation for ordering used by the LocationOrdinalValue property."
+                    },
+                    "EntityArea": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityArea"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The general area used to give guidance as to the location of the part."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    }
+                }
+            },
+            "AECC.Entities.PartLocation-create": {
+                "title": "The part location within the placement within the Entity. (for create)",
+                "type": "object"
+            },
+            "AECC.Entities.PartLocation-update": {
+                "title": "The part location within the placement within the Entity. (for update)",
+                "type": "object"
+            },
+            "AECC.Entities.EntityLocation": {
+                "title": "The location of the entity.",
+                "type": "object",
+                "properties": {
+                    "PostalAddress": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.PostalAddress"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "Postal address of the entity."
+                    },
+                    "Placement": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Placement"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "A place within the addressed location."
+                    },
+                    "Longitude": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 1,
+                        "nullable": true,
+                        "default": 0,
+                        "title": "The longitude of the entity."
+                    },
+                    "Latitude": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 1,
+                        "nullable": true,
+                        "default": 0,
+                        "title": "The latitude of the entity."
+                    },
+                    "AltitudeMeters": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 1,
+                        "nullable": true,
+                        "default": 0,
+                        "title": "The Entity's altitude."
+                    },
+                    "PartLocation": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.PartLocation"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The location within the Entity."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    }
+                }
+            },
+            "AECC.Entities.EntityLocation-create": {
+                "title": "The location of the entity. (for create)",
+                "type": "object",
+                "properties": {
+                    "PostalAddress": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.PostalAddress-create"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "Postal address of the entity."
+                    },
+                    "Placement": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Placement-create"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "A place within the addressed location."
+                    }
+                }
+            },
+            "AECC.Entities.EntityLocation-update": {
+                "title": "The location of the entity. (for update)",
+                "type": "object",
+                "properties": {
+                    "PostalAddress": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.PostalAddress-update"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "Postal address of the entity."
+                    },
+                    "Placement": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Placement-update"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "A place within the addressed location."
+                    }
+                }
+            },
+            "AECC.Entities.Entity": {
+                "title": "Entity",
+                "type": "object",
+                "properties": {
+                    "EntityID": {
+                        "type": "string",
+                        "title": "A identifier for this model element in the context of its containing modeled element."
+                    },
+                    "EntityStatus": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityStatus"
+                            }
+                        ],
+                        "title": "The status of this Entity."
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A description of the Entity."
+                    },
+                    "Identifiers": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/AECC.Entities.Identifier"
+                                }
+                            ],
+                            "nullable": true
+                        },
+                        "title": "Identifiers for this Entity."
+                    },
+                    "EntityLocation": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityLocation"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The location of this Entity."
+                    },
+                    "Version": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The implemented version of this Entity."
+                    },
+                    "OwnerContact": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ContactInfo"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "Contact information for the service owner."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    },
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.Service"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Entities.Application"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Entities.Part"
+                    }
+                ]
+            },
+            "AECC.Entities.Entity-create": {
+                "title": "Entity (for create)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.Service-create"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Entities.Application-create"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Entities.Part-create"
+                    }
+                ]
+            },
+            "AECC.Entities.Entity-update": {
+                "title": "Entity (for update)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    }
+                },
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/AECC.Services.Service-update"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-update"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Entities.Application-update"
+                    },
+                    {
+                        "$ref": "#/components/schemas/AECC.Entities.Part-update"
+                    }
+                ]
+            },
+            "AECC.Entities.ExecutableImage": {
+                "title": "The metaproperty $value accesses an executable image.  The metaproperties @mediaReadLink and @mediaContentType represent a URL to read the image and it's content type.",
+                "type": "object",
+                "properties": {
+                    "EntityID": {
+                        "type": "string",
+                        "title": "A identifier for this model element in the context of its containing modeled element."
+                    },
+                    "EntityStatus": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityStatus"
+                            }
+                        ],
+                        "title": "The status of this Entity."
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A description of the Entity."
+                    },
+                    "Identifiers": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/AECC.Entities.Identifier"
+                                }
+                            ],
+                            "nullable": true
+                        },
+                        "title": "Identifiers for this Entity."
+                    },
+                    "EntityLocation": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityLocation"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The location of this Entity."
+                    },
+                    "Version": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The implemented version of this Entity."
+                    },
+                    "OwnerContact": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ContactInfo"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "Contact information for the service owner."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    },
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "ReleaseDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The time and date when this executable image was released."
+                    },
+                    "SoftwarePlatform": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A keyword describing the supporting software environment.  Example: Win10, Linux, iOS, ..."
+                    },
+                    "ComputingPlatform": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A keyword describing the supporting hardware/firmware environment.  Example: x86, ARM, ..."
+                    }
+                }
+            },
+            "AECC.Entities.ExecutableImage-create": {
+                "title": "The metaproperty $value accesses an executable image.  The metaproperties @mediaReadLink and @mediaContentType represent a URL to read the image and it's content type. (for create)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "ReleaseDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The time and date when this executable image was released."
+                    },
+                    "SoftwarePlatform": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A keyword describing the supporting software environment.  Example: Win10, Linux, iOS, ..."
+                    },
+                    "ComputingPlatform": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A keyword describing the supporting hardware/firmware environment.  Example: x86, ARM, ..."
+                    }
+                }
+            },
+            "AECC.Entities.ExecutableImage-update": {
+                "title": "The metaproperty $value accesses an executable image.  The metaproperties @mediaReadLink and @mediaContentType represent a URL to read the image and it's content type. (for update)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ReleaseDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The time and date when this executable image was released."
+                    },
+                    "SoftwarePlatform": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A keyword describing the supporting software environment.  Example: Win10, Linux, iOS, ..."
+                    },
+                    "ComputingPlatform": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A keyword describing the supporting hardware/firmware environment.  Example: x86, ARM, ..."
+                    }
+                }
+            },
+            "AECC.Entities.Application": {
+                "title": "An application implements a service.",
+                "type": "object",
+                "properties": {
+                    "EntityID": {
+                        "type": "string",
+                        "title": "A identifier for this model element in the context of its containing modeled element."
+                    },
+                    "EntityStatus": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityStatus"
+                            }
+                        ],
+                        "title": "The status of this Entity."
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A description of the Entity."
+                    },
+                    "Identifiers": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/AECC.Entities.Identifier"
+                                }
+                            ],
+                            "nullable": true
+                        },
+                        "title": "Identifiers for this Entity."
+                    },
+                    "EntityLocation": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityLocation"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The location of this Entity."
+                    },
+                    "Version": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The implemented version of this Entity."
+                    },
+                    "OwnerContact": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ContactInfo"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "Contact information for the service owner."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    },
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Manufacturer": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The manufacturer of application."
+                    },
+                    "MinVersion": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The minimum supported version of this application."
+                    }
+                }
+            },
+            "AECC.Entities.Application-create": {
+                "title": "An application implements a service. (for create)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                }
+            },
+            "AECC.Entities.Application-update": {
+                "title": "An application implements a service. (for update)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    }
+                }
+            },
+            "AECC.Entities.Part": {
+                "title": "Part",
+                "type": "object",
+                "properties": {
+                    "EntityID": {
+                        "type": "string",
+                        "title": "A identifier for this model element in the context of its containing modeled element."
+                    },
+                    "EntityStatus": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityStatus"
+                            }
+                        ],
+                        "title": "The status of this Entity."
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "A description of the Entity."
+                    },
+                    "Identifiers": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/AECC.Entities.Identifier"
+                                }
+                            ],
+                            "nullable": true
+                        },
+                        "title": "Identifiers for this Entity."
+                    },
+                    "EntityLocation": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.EntityLocation"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "The location of this Entity."
+                    },
+                    "Version": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The implemented version of this Entity."
+                    },
+                    "OwnerContact": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ContactInfo"
+                            }
+                        ],
+                        "nullable": true,
+                        "title": "Contact information for the service owner."
+                    },
+                    "Extension": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.Extension"
+                            }
+                        ],
+                        "title": "Vendor extensions."
+                    },
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "Manufacturer": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The manufacturer of this part."
+                    },
+                    "Model": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The model number of this part."
+                    },
+                    "SKU": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "This is the SKU of this part."
+                    },
+                    "SerialNumber": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The serial number of this part."
+                    },
+                    "PartNumber": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The part number of this part."
+                    },
+                    "AssetTag": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The user assigned asset tag for this part."
+                    }
+                }
+            },
+            "AECC.Entities.Part-create": {
+                "title": "Part (for create)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "ExecutableImages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                        }
+                    },
+                    "InstalledExecutableImage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AECC.Entities.ExecutableImage-create"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "AssetTag": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The user assigned asset tag for this part."
+                    }
+                }
+            },
+            "AECC.Entities.Part-update": {
+                "title": "Part (for update)",
+                "type": "object",
+                "properties": {
+                    "ExecutableImageInstallDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "nullable": true,
+                        "title": "The date and time when the executable image was installed."
+                    },
+                    "AssetTag": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "The user assigned asset tag for this part."
+                    }
+                }
+            },
+            "error": {
+                "type": "object",
+                "required": [
+                    "error"
+                ],
+                "properties": {
+                    "error": {
+                        "type": "object",
+                        "required": [
+                            "code",
+                            "message"
+                        ],
+                        "properties": {
+                            "code": {
+                                "type": "string"
+                            },
+                            "message": {
+                                "type": "string"
+                            },
+                            "target": {
+                                "type": "string"
+                            },
+                            "details": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "target": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "innererror": {
+                                "type": "object",
+                                "description": "The structure of this object is service-specific"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "top": {
+                "name": "$top",
+                "in": "query",
+                "description": "Show only the first n items, see [Paging - Top](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptiontop)",
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "example": 50
+            },
+            "skip": {
+                "name": "$skip",
+                "in": "query",
+                "description": "Skip the first n items, see [Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionskip)",
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            },
+            "count": {
+                "name": "$count",
+                "in": "query",
+                "description": "Include count of items, see [Count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount)",
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "search": {
+                "name": "$search",
+                "in": "query",
+                "description": "Search items by search phrases, see [Searching](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionsearch)",
+                "schema": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses": {
+            "error": {
+                "description": "Error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/error"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

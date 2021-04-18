@@ -1,0 +1,682 @@
+{
+    "$Version": "4.0",
+    "$Reference": {
+        "http://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml": {
+            "$Include": [
+                {
+                    "$Namespace": "Org.OData.Core.V1",
+                    "$Alias": "Core"
+                }
+            ]
+        }
+    },
+    "AECC.Entities": {
+        "DurableNameFormat": {
+            "$Kind": "EnumType",
+            "VIN": 0,
+            "VIN@Core.Description": "A Vehicle identification number (VIN)as specified by ISO 3779:2009, Road vehicles – Vehicle identification number (VIN) – Content and structure, and ISO 3780:2009, Road vehicles – World manufacturer identifier (WMI) code.",
+            "NAA": 1,
+            "NAA@Core.Description": "A Name Address Authority (NAA) identifier as specified by the T11 Fibre Channel - Framing and Signaling - 3 (FC-FS-3) specification.",
+            "iQN": 2,
+            "iQN@Core.Description": "An iSCSI Qualified Name as specified in RFC 3720 and RFC 3721.",
+            "FC_WWN": 3,
+            "FC_WWN@Core.Description": "A Fibre Channel World Wide Name as specified in the T11 Fibre Channel Physical and Signaling Interface Specification.",
+            "UUID": 4,
+            "UUID@Core.Description": "A Universally Unique Identifier as specified in the Internation Telecom Union's OSI networking and system aspects - Naming, Addressing and Registration Specification.",
+            "EUI": 5,
+            "EUI@Core.Description": "An IEEE-defined 64-bit Extended Unique Identifier as specified in the IEEE's Guidelines for 64-bit Global Identifier (EUI-64) Specification."
+        },
+        "EntityState": {
+            "$Kind": "EnumType",
+            "Enabled": 0,
+            "Enabled@Core.Description": "This Entity is enabled.",
+            "Disabled": 1,
+            "Disabled@Core.Description": "This Entity is disabled.",
+            "StandbyOffline": 2,
+            "StandbyOffline@Core.Description": "This Entity is enabled, but awaiting an external action to activate it.",
+            "StandbySpare": 3,
+            "StandbySpare@Core.Description": "This Entity is part of a redundancy set and is awaiting a failover or other external action to activate it.",
+            "InTest": 4,
+            "InTest@Core.Description": "This Entity is undergoing testing.",
+            "Starting": 5,
+            "Starting@Core.Description": "This Entity is starting.",
+            "Absent": 6,
+            "Absent@Core.Description": "This Entity is not present or not detected.",
+            "UnavailableOffline": 7,
+            "UnavailableOffline@Core.Description": "This Entity is present but cannot be used.",
+            "Deferring": 8,
+            "Deferring@Core.Description": "The Entity will not process any commands but will queue new requests.",
+            "Quiesced": 9,
+            "Quiesced@Core.Description": "The Entity is enabled but only processes a restricted set of commands.",
+            "Updating": 10,
+            "Updating@Core.Description": "The Entity is updating and may be unavailable or degraded."
+        },
+        "EntityHealth": {
+            "$Kind": "EnumType",
+            "OK": 0,
+            "OK@Core.Description": "Normal.",
+            "Warning": 1,
+            "Warning@Core.Description": "A condition exists that requires attention.",
+            "Critical": 2,
+            "Critical@Core.Description": "A critical condition exists that requires immediate attention."
+        },
+        "RackOffsetUnits": {
+            "$Kind": "EnumType",
+            "@Core.Description": "Defines a rack unit of measure.",
+            "OpenU": 0,
+            "OpenU@Core.Description": "Defines a rack unit as being equal to 48 mm (1.89 in), as defined in the Open Compute Open Rack specification.",
+            "EIA_310": 1,
+            "EIA_310@Core.Description": "Defines a rack unit as being equal to 1.75 in (44.45 mm), as specified by the EIA-310 standard."
+        },
+        "EntityLocationType": {
+            "$Kind": "EnumType",
+            "@Core.Description": "Defines the type of location in use.",
+            "Slot": 0,
+            "Slot@Core.Description": "The type of location is a slot.",
+            "Bay": 1,
+            "Bay@Core.Description": "The type of location is a bay.",
+            "Connector": 2,
+            "Connector@Core.Description": "The type of location is a connector.",
+            "Socket": 3,
+            "Socket@Core.Description": "The type of location is a socket."
+        },
+        "EntityArea": {
+            "$Kind": "EnumType",
+            "@Core.Description": "Defines a general area for the location of the part.",
+            "Top": 0,
+            "Top@Core.Description": "The top of the unit.",
+            "Bottom": 1,
+            "Bottom@Core.Description": "The bottom of the unit.",
+            "Front": 2,
+            "Front@Core.Description": "The front of the unit.",
+            "Rear": 3,
+            "Rear@Core.Description": "The rear of the unit.",
+            "Left": 4,
+            "Left@Core.Description": "The left side of the unit.",
+            "Right": 5,
+            "Right@Core.Description": "The right side of the unit.",
+            "Middle": 6,
+            "Middle@Core.Description": "The middleof the unit."
+        },
+        "EntityLocationOrientation": {
+            "$Kind": "EnumType",
+            "@Core.Description": "Defines a orientation for the ordering of the ordinal value of the part location.",
+            "FrontToBack": 0,
+            "FrontToBack@Core.Description": "Front to back.",
+            "BackToFront": 1,
+            "BackToFront@Core.Description": "Back to front.",
+            "TopToBottom": 2,
+            "TopToBottom@Core.Description": "Top to bottom.",
+            "BottomToTop": 3,
+            "BottomToTop@Core.Description": "Bottom to top.",
+            "LeftToRight": 4,
+            "LeftToRight@Core.Description": "Left to right.",
+            "RightToLeft": 5,
+            "RightToLeft@Core.Description": "Right to left."
+        },
+        "Extension": {
+            "$Kind": "ComplexType",
+            "$OpenType": true,
+            "@Core.AdditionalProperties": true,
+            "@Core.Description": "Vendor extension object."
+        },
+        "PhoneNumber": {
+            "$Kind": "ComplexType",
+            "@Core.Permissions": "Read",
+            "@Core.AdditionalProperties": false,
+            "@Core.Description": "A phone number.",
+            "Label": {
+                "$Nullable": true,
+                "@Core.Description": "A label such as 'Home' or 'Office'."
+            },
+            "Number": {
+                "$Nullable": true,
+                "@Core.Description": "A national or international telephone number using the format specified by the ITU-T Recommendation E.123, 02/2001"
+            },
+            "Extension": {
+                "$Type": "AECC.Entities.Extension",
+                "@Core.Permissions": "Read",
+                "@Core.Description": "Vendor extensions."
+            }
+        },
+        "EmailAddress": {
+            "$Kind": "ComplexType",
+            "@Core.Permissions": "Read",
+            "@Core.AdditionalProperties": false,
+            "@Core.Description": "An email address.",
+            "Label": {
+                "$Nullable": true,
+                "@Core.Description": "A label such as 'Home' or 'Office'."
+            },
+            "Email": {
+                "$Nullable": true,
+                "@Core.Description": "An email address as specified by the Extended Mailbox Address Syntax clause of IETF RFC6531."
+            },
+            "Extension": {
+                "$Type": "AECC.Entities.Extension",
+                "@Core.Permissions": "Read",
+                "@Core.Description": "Vendor extensions."
+            }
+        },
+        "ContactInfo": {
+            "$Kind": "ComplexType",
+            "@Core.Permissions": "Read",
+            "@Core.AdditionalProperties": false,
+            "@Core.Description": "Contact information for an individual or organization.",
+            "FullName": {
+                "$Nullable": true,
+                "@Core.Description": "The full name of the contact."
+            },
+            "PhoneNumbers": {
+                "$Collection": true,
+                "$Type": "AECC.Entities.PhoneNumber",
+                "@Core.Description": "Available phone numbers for the contact."
+            },
+            "EmailAddresses": {
+                "$Collection": true,
+                "$Type": "AECC.Entities.EmailAddress",
+                "@Core.Description": "Available email addresses for the contact."
+            },
+            "PostalAddresses": {
+                "$Collection": true,
+                "$Type": "AECC.Entities.PostalAddress",
+                "@Core.Description": "Available postal addresses for the contact."
+            },
+            "Extension": {
+                "$Type": "AECC.Entities.Extension",
+                "@Core.Permissions": "Read",
+                "@Core.Description": "Vendor extensions."
+            }
+        },
+        "EntityStatus": {
+            "$Kind": "ComplexType",
+            "@Core.Permissions": "Read",
+            "@Core.AdditionalProperties": false,
+            "@Core.Description": "Status and health properties of the Entity.",
+            "State": {
+                "$Type": "AECC.Entities.EntityState",
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The current state of the Entity."
+            },
+            "HealthRollup": {
+                "$Type": "AECC.Entities.EntityHealth",
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The overall health of the Entity and its dependent Entities."
+            },
+            "Health": {
+                "$Type": "AECC.Entities.EntityHealth",
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The health of the Entity without consideration of its dependent Entities."
+            },
+            "Extension": {
+                "$Type": "AECC.Entities.Extension",
+                "@Core.Permissions": "Read",
+                "@Core.Description": "Vendor extensions."
+            }
+        },
+        "Identifier": {
+            "$Kind": "ComplexType",
+            "@Core.Description": "An Identifier for a entity.",
+            "@Core.AdditionalProperties": false,
+            "DurableNameFormat": {
+                "$Type": "AECC.Entities.DurableNameFormat",
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The format of the DurableName property."
+            },
+            "DurableName": {
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "A persistent name of the entity, formatted as described by  DurableNameFormat."
+            },
+            "Extension": {
+                "$Type": "AECC.Entities.Extension",
+                "@Core.Permissions": "Read",
+                "@Core.Description": "Vendor extensions."
+            }
+        },
+        "PostalAddress": {
+            "$Kind": "ComplexType",
+            "@Core.Description": "The PostalAddress for a entity.",
+            "Country": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Country, see the RFC5139 Country field."
+            },
+            "Territory": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "A top-level subdivision (territory, state, region, province, or prefecture) within a country see the RFC5139 A1 field."
+            },
+            "District": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "A county, parish, gun (JP), or  district (IN), see the RFC5139 A2 field."
+            },
+            "City": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "City, township, or shi (JP). see the  RFC5139 A3 field."
+            },
+            "Division": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "City division, borough, dity district, ward, chou (JP), see the RFC5139 A4 field."
+            },
+            "Neighborhood": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Neighborhood or block see RFC5139 the A5 field."
+            },
+            "LeadingStreetDirection": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "A leading street direction (N, W, SE), see the RFC5139 PRD field."
+            },
+            "Street": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Street name, see the RFC5139 A6 field."
+            },
+            "TrailingStreetSuffix": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "A trailing street suffix, see RFC5139 the POD field."
+            },
+            "StreetSuffix": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Street suffix (Avenue, Platz, Street, Circle), see the RFC5139 STS field."
+            },
+            "HouseNumber": {
+                "$Type": "Edm.Int64",
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Numeric portion of house number, see the RFC5139 HNO field."
+            },
+            "HouseNumberSuffix": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "House number suffix (F, B, 1/2), see the RFC5139 HNS field."
+            },
+            "Landmark": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Landmark or vanity address, see the RFC5139 LMK field."
+            },
+            "Location": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Room designation or other additional info, see RFC5139 the LOC field."
+            },
+            "Floor": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Floor, see the RFC5139 FLR field."
+            },
+            "Name": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Name of the occupant, see the RFC5139 NAM field."
+            },
+            "PostalCode": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Postal code (or zip code), see the RFC5139 PC field."
+            },
+            "Building": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Name of the building, see the RFC5139 BLD field."
+            },
+            "Unit": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Name or number of the unit (apartment, suite), see the RFC5139 UNIT field."
+            },
+            "Room": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Name or number of the room, see the RFC5139 ROOM field."
+            },
+            "Seat": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Seat (desk, cubicle, workstation), see the RFC5139 SEAT field."
+            },
+            "PlaceType": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The type of place, (office, residence,...), see the RFC5139 PLC field."
+            },
+            "Community": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Postal community name, see the RFC5139 PCN field."
+            },
+            "POBox": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Post office box (P.O. box), see the RFC5139 POBOX field."
+            },
+            "AdditionalCode": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Additional code, see the RFC5139 ADDCODE field."
+            },
+            "Road": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "A primary road or street, see the RFC5139 RD field."
+            },
+            "RoadSection": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Road Section, see the RFC5139 RDSEC field."
+            },
+            "RoadBranch": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Road branch, see the RFC5139 RDBR field."
+            },
+            "RoadSubBranch": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Road sub branch, see the RFC5139 RDSUBBR."
+            },
+            "RoadPreModifier": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Road pre-modifier, see the RFC5139 PRM field."
+            },
+            "RoadPostModifier": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Road post-modifier, see the POM RFC5139 field."
+            },
+            "Extension": {
+                "$Type": "AECC.Entities.Extension",
+                "@Core.Permissions": "Read",
+                "@Core.Description": "Vendor extensions."
+            }
+        },
+        "Placement": {
+            "$Kind": "ComplexType",
+            "@Core.Description": "The placement within the Entity's location.",
+            "Row": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Name of row."
+            },
+            "Rack": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Name of a rack location within a row."
+            },
+            "RackOffsetUnits": {
+                "$Type": "AECC.Entities.RackOffsetUnits",
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The type of Rack Units in use."
+            },
+            "RackOffset": {
+                "$Type": "Edm.Int64",
+                "$Nullable": true,
+                "$DefaultValue": 0,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "Vertical location of the item in terms of RackOffsetUnits."
+            },
+            "Extension": {
+                "$Type": "AECC.Entities.Extension",
+                "@Core.Permissions": "Read",
+                "@Core.Description": "Vendor extensions."
+            }
+        },
+        "PartLocation": {
+            "$Kind": "ComplexType",
+            "@Core.Description": "The part location within the placement within the Entity.",
+            "ServiceLabel": {
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "A label assigned for service at the part location."
+            },
+            "EntityLocationType": {
+                "$Type": "AECC.Entities.EntityLocationType",
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The type of location, such as: slot, bay, socket and slot."
+            },
+            "LocationOrdinalValue": {
+                "$Type": "Edm.Int64",
+                "$Nullable": true,
+                "$DefaultValue": 0,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The number represents the location of the part based on the EntityLocationType."
+            },
+            "EntityLocationOrientation": {
+                "$Type": "AECC.Entities.EntityLocationOrientation",
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The orientation for ordering used by the LocationOrdinalValue property."
+            },
+            "EntityArea": {
+                "$Type": "AECC.Entities.EntityArea",
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The general area used to give guidance as to the location of the part."
+            },
+            "Extension": {
+                "$Type": "AECC.Entities.Extension",
+                "@Core.Permissions": "Read",
+                "@Core.Description": "Vendor extensions."
+            }
+        },
+        "EntityLocation": {
+            "$Kind": "ComplexType",
+            "@Core.Description": "The location of the entity.",
+            "PostalAddress": {
+                "$Type": "AECC.Entities.PostalAddress",
+                "$Nullable": true,
+                "@Core.Description": "Postal address of the entity."
+            },
+            "Placement": {
+                "$Type": "AECC.Entities.Placement",
+                "$Nullable": true,
+                "@Core.Description": "A place within the addressed location."
+            },
+            "Longitude": {
+                "$Type": "Edm.Decimal",
+                "$Nullable": true,
+                "$Scale": 0,
+                "$DefaultValue": 0,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The longitude of the entity.",
+                "@Measures.Unit": "deg"
+            },
+            "Latitude": {
+                "$Type": "Edm.Decimal",
+                "$Nullable": true,
+                "$Scale": 0,
+                "$DefaultValue": 0,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The latitude of the entity.",
+                "@Measures.Unit": "deg"
+            },
+            "AltitudeMeters": {
+                "$Type": "Edm.Decimal",
+                "$Nullable": true,
+                "$Scale": 0,
+                "$DefaultValue": 0,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The Entity's altitude.",
+                "@Measures.Unit": "m"
+            },
+            "PartLocation": {
+                "$Type": "AECC.Entities.PartLocation",
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The location within the Entity."
+            },
+            "Extension": {
+                "$Type": "AECC.Entities.Extension",
+                "@Core.Permissions": "Read",
+                "@Core.Description": "Vendor extensions."
+            }
+        },
+        "Entity": {
+            "$Kind": "EntityType",
+            "$Abstract": true,
+            "$Key": [
+                "EntityID"
+            ],
+            "EntityID": {
+                "@Core.Permissions": "Read",
+                "@Core.Description": "A identifier for this model element in the context of its containing modeled element."
+            },
+            "EntityStatus": {
+                "$Type": "AECC.Entities.EntityStatus",
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The status of this Entity."
+            },
+            "Description": {
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "A description of the Entity."
+            },
+            "Identifiers": {
+                "$Collection": true,
+                "$Type": "AECC.Entities.Identifier",
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "Identifiers for this Entity."
+            },
+            "EntityLocation": {
+                "$Type": "AECC.Entities.EntityLocation",
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The location of this Entity."
+            },
+            "Version": {
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The implemented version of this Entity."
+            },
+            "OwnerContact": {
+                "$Type": "AECC.Entities.ContactInfo",
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "Contact information for the service owner."
+            },
+            "Extension": {
+                "$Type": "AECC.Entities.Extension",
+                "@Core.Permissions": "Read",
+                "@Core.Description": "Vendor extensions."
+            },
+            "ExecutableImageInstallDate": {
+                "$Type": "Edm.DateTimeOffset",
+                "$Nullable": true,
+                "$Precision": 0,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The date and time when the executable image was installed."
+            },
+            "ExecutableImages": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Entities.ExecutableImage",
+                "$ContainsTarget": true,
+                "@OData.Permissions": "Read",
+                "@OData.Description": "A collection of executable images for this application.",
+                "@OData.AutoExpandReferences": true
+            },
+            "InstalledExecutableImage": {
+                "$Kind": "NavigationProperty",
+                "$Type": "AECC.Entities.ExecutableImage",
+                "$Nullable": true,
+                "@OData.Permissions": "ReadWrite",
+                "@OData.Description": "If present, the installed image of this application.",
+                "@OData.AutoExpandReferences": true
+            }
+        },
+        "ExecutableImage": {
+            "$Kind": "EntityType",
+            "$BaseType": "AECC.Entities.Entity",
+            "$HasStream": true,
+            "@Core.Permissions": "Read",
+            "@Core.AdditionalProperties": false,
+            "@Core.Description": "The metaproperty $value accesses an executable image.  The metaproperties @mediaReadLink and @mediaContentType represent a URL to read the image and it's content type.",
+            "ReleaseDate": {
+                "$Type": "Edm.DateTimeOffset",
+                "$Nullable": true,
+                "$Precision": 0,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The time and date when this executable image was released."
+            },
+            "SoftwarePlatform": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "A keyword describing the supporting software environment.  Example: Win10, Linux, iOS, ..."
+            },
+            "ComputingPlatform": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "A keyword describing the supporting hardware/firmware environment.  Example: x86, ARM, ..."
+            }
+        },
+        "Application": {
+            "$Kind": "EntityType",
+            "$Abstract": true,
+            "$BaseType": "AECC.Entities.Entity",
+            "@Core.Permissions": "Read",
+            "@Core.AdditionalProperties": false,
+            "@Core.Description": "An application implements a service.",
+            "Manufacturer": {
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The manufacturer of application."
+            },
+            "MinVersion": {
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The minimum supported version of this application."
+            }
+        },
+        "Part": {
+            "$Kind": "EntityType",
+            "$Abstract": true,
+            "$BaseType": "AECC.Entities.Entity",
+            "Manufacturer": {
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The manufacturer of this part."
+            },
+            "Model": {
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The model number of this part."
+            },
+            "SKU": {
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "This is the SKU of this part."
+            },
+            "SerialNumber": {
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The serial number of this part."
+            },
+            "PartNumber": {
+                "$Nullable": true,
+                "@Core.Permissions": "Read",
+                "@Core.Description": "The part number of this part."
+            },
+            "AssetTag": {
+                "$Nullable": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The user assigned asset tag for this part."
+            }
+        }
+    }
+}

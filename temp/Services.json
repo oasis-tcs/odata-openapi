@@ -1,0 +1,248 @@
+{
+    "$Version": "4.0",
+    "$Reference": {
+        "http://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml": {
+            "$Include": [
+                {
+                    "$Namespace": "Org.OData.Core.V1",
+                    "$Alias": "Core"
+                }
+            ]
+        },
+        "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Entities.xml": {
+            "$Include": [
+                {
+                    "$Namespace": "AECC.Entities"
+                }
+            ]
+        },
+        "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/ControlUnits.xml": {
+            "$Include": [
+                {
+                    "$Namespace": "AECC.ControlUnits"
+                }
+            ]
+        },
+        "https://raw.eos2git.cec.lab.emc.com/ericsg/AECC/master/schema_xml/Sensors.xml": {
+            "$Include": [
+                {
+                    "$Namespace": "AECC.Sensors"
+                }
+            ]
+        }
+    },
+    "AECC.Services": {
+        "Service": {
+            "$Kind": "EntityType",
+            "$Abstract": true,
+            "$BaseType": "AECC.Entities.Entity",
+            "@Core.Permissions": "Read",
+            "@Core.AdditionalProperties": false,
+            "@Core.Description": "A means of delivering value to customers by facilitating outcomes customers want to achieve without the ownership of specific costs and risks.",
+            "Applications": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Entities.Application",
+                "$ContainsTarget": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of Applications hosted by this Edge service."
+            }
+        },
+        "CenterService": {
+            "$Kind": "EntityType",
+            "$BaseType": "AECC.Services.Service",
+            "@Core.Permissions": "Read",
+            "@Core.AdditionalProperties": false,
+            "@Core.Description": "A service running on an MSP Center Server that provides access to the functionality and information available via the MSP cloud.",
+            "EdgeServices": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Services.EdgeService",
+                "$Partner": "CenterService",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of Edge services known to this Center service."
+            },
+            "RoadsideServices": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Services.RoadsideService",
+                "$Partner": "CenterService",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of Roadside services known to this Center service."
+            },
+            "VehicleServices": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Services.VehicleService",
+                "$Partner": "CenterService",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of Vehicle services known to this Center service."
+            }
+        },
+        "EdgeService": {
+            "$Kind": "EntityType",
+            "$BaseType": "AECC.Services.Service",
+            "@Core.Permissions": "Read",
+            "@Core.AdditionalProperties": false,
+            "@Core.Description": "A service running on an MSP Edge Server that provides access to the functionality and information collected by an MSP Edge server.",
+            "CenterService": {
+                "$Kind": "NavigationProperty",
+                "$Type": "AECC.Services.CenterService",
+                "$Nullable": true,
+                "$Partner": "EdgeServices",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The Center service of this Edge service."
+            },
+            "ParentEdgeServices": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Services.EdgeService",
+                "$Partner": "ChildEdgeServices",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of child Edge services that aggregate this Edge service."
+            },
+            "ChildEdgeServices": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Services.EdgeService",
+                "$Partner": "ParentEdgeServices",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of parent Edge services aggregated by this Edge service."
+            },
+            "PeerEdgeServices": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Services.EdgeService",
+                "$Partner": "PeerEdgeServices",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of Peer Edge services known to this edge server"
+            },
+            "RoadsideServices": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Services.RoadsideService",
+                "$Partner": "RoadsideServices",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of Roadside services utilized by this Edge service."
+            },
+            "VehicleServices": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Services.VehicleService",
+                "$Partner": "RoadsideServices",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of Vehicle services known to this Edge service."
+            }
+        },
+        "RoadsideService": {
+            "$Kind": "EntityType",
+            "$BaseType": "AECC.Services.Service",
+            "@Core.Permissions": "Read",
+            "@Core.AdditionalProperties": false,
+            "@Core.Description": "A service running on an MSP Roadside Unit that provides access to the functionality and information collected by the Roadside Unit.",
+            "CenterService": {
+                "$Kind": "NavigationProperty",
+                "$Type": "AECC.Services.CenterService",
+                "$Nullable": true,
+                "$Partner": "RoadsideServices",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The Center service of this Edge service."
+            },
+            "EdgeServices": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Services.EdgeService",
+                "$Partner": "RoadsideServices",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of Edge services that aggregate this Roadside service."
+            },
+            "RoadsideServices": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Services.RoadsideService",
+                "$Partner": "RoadsideServices",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of other Roadside services related to this Roadside service."
+            },
+            "VehicleServices": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Services.VehicleService",
+                "$Partner": "RoadsideServices",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of Vehicle services related to this Roadside service."
+            },
+            "ControlUnits": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.ControlUnits.ControlUnit",
+                "$ContainsTarget": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of Control Units hosted by this Roadside service."
+            },
+            "Sensors": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Sensors.Sensor",
+                "$ContainsTarget": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of Sensors hosted by this Roadside service."
+            }
+        },
+        "VehicleService": {
+            "$Kind": "EntityType",
+            "$BaseType": "AECC.Services.Service",
+            "@Core.Permissions": "Read",
+            "@Core.AdditionalProperties": false,
+            "@Core.Description": "A service running on a Vehicle that provides access to the functionality and information collected by the vehicle.",
+            "CenterService": {
+                "$Kind": "NavigationProperty",
+                "$Type": "AECC.Services.CenterService",
+                "$Nullable": true,
+                "$Partner": "VehicleServices",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The Center service of this Edge service."
+            },
+            "EdgeServices": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Services.EdgeService",
+                "$Partner": "VehicleServices",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of Edge services related to this Vehicle service.."
+            },
+            "RoadsideServices": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Services.RoadsideService",
+                "$Partner": "VehicleServices",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of Roadside services related to this Vehicle service."
+            },
+            "VehicleServices": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Services.VehicleService",
+                "$Partner": "VehicleServices",
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of other Vehicle services related to this Vehicle service.."
+            },
+            "ControlUnits": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.ControlUnits.ControlUnit",
+                "$ContainsTarget": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of Control Units hosted by this Roadside service."
+            },
+            "Sensors": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "AECC.Sensors.Sensor",
+                "$ContainsTarget": true,
+                "@Core.Permissions": "ReadWrite",
+                "@Core.Description": "The set of Sensors hosted by this Roadside service."
+            }
+        }
+    }
+}
