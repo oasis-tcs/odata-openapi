@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
-  xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
-  xmlns:sap="http://www.sap.com/Protocols/SAPData"
->
-  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml"
-    xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
-  >
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
     <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
   </edmx:Reference>
-  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml"
-    xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
-  >
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
     <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation" />
   </edmx:Reference>
   <edmx:DataServices m:DataServiceVersion="2.0">
@@ -30,6 +23,14 @@
       <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
         <EntitySet Name="AllSet" EntityType="self.SinglePartKey" />
       </EntityContainer>
+
+      <Annotations Target="self.Container/AllSet" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Annotation Term="Capabilities.CountRestrictions">
+          <Record>
+            <PropertyValue Bool="false" Property="Countable" />
+          </Record>
+        </Annotation>
+      </Annotations>
 
       <Annotations Target="self.SinglePartKey/Pattern" xmlns="http://docs.oasis-open.org/odata/ns/edm">
         <Annotation Term="Validation.Pattern" String="^.+$" />
