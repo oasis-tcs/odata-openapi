@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edm="http://docs.oasis-open.org/odata/ns/edm">
   <!--
     This style sheet transforms OData 4.0 CSDL XML documents into OpenAPI 2.0 or OpenAPI 3.0.0 JSON
@@ -4092,7 +4092,7 @@
     <xsl:variable name="target-countable-p" select="$target-annotations[@Term=concat($capabilitiesNamespace,'.CountRestrictions') or @Term=concat($capabilitiesAlias,'.CountRestrictions')]/edm:Record/edm:PropertyValue[@Property='Countable']" />
     <xsl:variable name="target-countable" select="$target-countable-p/@Bool|$target-countable-p/edm:Bool" />
     <!-- TODO: with-count similar to other restrictions, see https://issues.oasis-open.org/browse/ODATA-1300 -->
-    <xsl:variable name="with-count" select="not($target-filterable='false')" />
+    <xsl:variable name="with-count" select="not($target-countable='false')" />
 
     <xsl:variable name="target-sortRestrictions" select="$target-annotations[@Term=concat($capabilitiesNamespace,'.SortRestrictions') or @Term=concat($capabilitiesAlias,'.SortRestrictions')]/edm:Record" />
     <xsl:variable name="target-sortable-p" select="$target-sortRestrictions/edm:PropertyValue[@Property='Sortable']" />
