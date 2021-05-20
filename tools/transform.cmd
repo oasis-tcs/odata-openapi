@@ -47,7 +47,7 @@ exit /b
   if [%5]==[/swagger] (
     java.exe org.apache.xalan.xslt.Process -L -XSL %here%V4-CSDL-to-OpenAPI.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %ODATA_VERSION% -PARAM diagram YES -PARAM openapi-root "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/" -PARAM openapi-version 2.0 -IN %INPUT% -OUT %~dpn1.tmp2.json
 
-    json_reformat.exe < %~dpn1.tmp2.json > %~dpn1.swagger.json
+    python -m json.tool < %~dpn1.tmp2.json > %~dpn1.swagger.json
     if not errorlevel 1 (
       del %~dpn1.tmp2.json
 
@@ -63,7 +63,7 @@ exit /b
 
   java.exe org.apache.xalan.xslt.Process -L -XSL %here%V4-CSDL-to-OpenAPI.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %ODATA_VERSION% -PARAM diagram YES -PARAM openapi-root "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/" -PARAM openapi-version 3.0.0 -IN %INPUT% -OUT %~dpn1.tmp3.json
 
-  json_reformat.exe < %~dpn1.tmp3.json > %~dpn1.openapi3.json
+  python -m json.tool < %~dpn1.tmp3.json > %~dpn1.openapi3.json
   if not errorlevel 1 (
     del %~dpn1.tmp3.json
     if [%ODATA_VERSION%]==[2.0] del %~dpn1.V4.xml
