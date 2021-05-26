@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.0">
   <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Aggregation.V1.xml">
     <edmx:Include Alias="Aggregation" Namespace="Org.OData.Aggregation.V1" />
   </edmx:Reference>
   <edmx:DataServices>
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Alias="SalesModel" Namespace="org.example.odata.salesservice">
-      
+
       <EntityType Name="Category">
         <Key>
           <PropertyRef Name="ID" />
@@ -14,7 +14,7 @@
         <NavigationProperty Name="Products" Type="Collection(SalesModel.Product)" />
         <Property Name="Name" Type="Edm.String" Nullable="false" />
       </EntityType>
-      
+
       <EntityType Name="Currency">
         <Key>
           <PropertyRef Name="Code" />
@@ -24,7 +24,7 @@
           <Annotation Term="Core.IsLanguageDependent" />
         </Property>
       </EntityType>
-      
+
       <EntityType Name="Customer">
         <Key>
           <PropertyRef Name="ID" />
@@ -34,7 +34,7 @@
         <Property Name="Name" Type="Edm.String" Nullable="false" />
         <Property Name="Country" Type="Edm.String" Nullable="false" />
       </EntityType>
-      
+
       <EntityType Name="Product">
         <Key>
           <PropertyRef Name="ID" />
@@ -46,7 +46,7 @@
         <Property Name="Color" Type="Edm.String" Nullable="false" />
         <Property Name="TaxRate" Type="Edm.Decimal" Nullable="false" Scale="variable" />
       </EntityType>
-      
+
       <EntityType Name="Sales">
         <Key>
           <PropertyRef Name="ID" />
@@ -73,7 +73,7 @@
           </Annotation>
         </Annotation>
       </EntityType>
-      
+
       <EntityType Name="SalesOrganization">
         <Key>
           <PropertyRef Name="ID" />
@@ -82,7 +82,7 @@
         <NavigationProperty Name="Superordinate" Type="SalesModel.SalesOrganization" />
         <Property Name="Name" Type="Edm.String" Nullable="false" />
       </EntityType>
-      
+
       <EntityType Name="Time">
         <Key>
           <PropertyRef Name="Date" />
@@ -92,7 +92,7 @@
         <Property Name="Quarter" Type="Edm.String" />
         <Property Name="Year" Type="Edm.String" />
       </EntityType>
-      
+
       <Annotations Target="SalesModel.Product">
         <Annotation Term="Aggregation.LeveledHierarchy" Qualifier="ProductHierarchy">
           <Record>
@@ -105,7 +105,7 @@
           </Record>
         </Annotation>
       </Annotations>
-      
+
       <Annotations Target="SalesModel.Time">
         <Annotation Term="Aggregation.LeveledHierarchy" Qualifier="TimeHierarchy">
           <Record>
@@ -119,7 +119,7 @@
           </Record>
         </Annotation>
       </Annotations>
-      
+
       <Annotations Target="SalesModel.SalesOrganization">
         <Annotation Term="Aggregation.RecursiveHierarchy" Qualifier="SalesOrgHierarchy">
           <Record>
@@ -128,14 +128,20 @@
           </Record>
         </Annotation>
       </Annotations>
-      
+
       <EntityContainer Name="Default">
         <Annotation Term="Aggregation.ApplySupported">
           <Record>
-            <PropertyValue Property="PropertyRestrictions" Bool="true" />
+            <PropertyValue Property="Transformations">
+              <Collection>
+                <String>aggregate</String>
+                <String>groupby</String>
+                <String>filter</String>
+              </Collection>
+            </PropertyValue>
           </Record>
         </Annotation>
-        
+
         <Annotation Term="Aggregation.CustomAggregate" Qualifier="Budget" String="Edm.Decimal">
           <Annotation Term="Aggregation.ContextDefiningProperties">
             <Collection>
@@ -143,7 +149,7 @@
             </Collection>
           </Annotation>
         </Annotation>
-        
+
         <EntitySet Name="Sales" EntityType="SalesModel.Sales" />
         <EntitySet Name="Currencies" EntityType="SalesModel.Currency" />
       </EntityContainer>

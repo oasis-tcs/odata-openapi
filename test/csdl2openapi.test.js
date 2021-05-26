@@ -26,6 +26,9 @@ const result1 = require("../examples/csdl-16.1.openapi3.json");
 const example2 = csdl.xml2json(fs.readFileSync("examples/TripPin.xml"));
 const result2 = require("../examples/TripPin.openapi3.json");
 
+const example4 = csdl.xml2json(fs.readFileSync("examples/aggregation.xml"));
+const result4 = require("../examples/aggregation.openapi3.json");
+
 const example5 = csdl.xml2json(fs.readFileSync("examples/annotations.xml"));
 const result5 = require("../examples/annotations.openapi3.json");
 
@@ -54,6 +57,11 @@ describe("Examples", function () {
       diagram: true,
     });
     check(openapi, result2);
+  });
+
+  it("aggregation", function () {
+    const openapi = lib.csdl2openapi(example4, { diagram: true });
+    check(openapi, result4);
   });
 
   it("annotations", function () {
@@ -1083,8 +1091,7 @@ describe("Edge cases", function () {
                         value: {
                           type: "array",
                           items: {
-                            $ref:
-                              "#/components/schemas/undefined.type_does_not_exist",
+                            $ref: "#/components/schemas/undefined.type_does_not_exist",
                           },
                         },
                       },
@@ -1106,8 +1113,7 @@ describe("Edge cases", function () {
               content: {
                 "application/json": {
                   schema: {
-                    $ref:
-                      "#/components/schemas/undefined.type_does_not_exist-create",
+                    $ref: "#/components/schemas/undefined.type_does_not_exist-create",
                   },
                 },
               },
@@ -1118,8 +1124,7 @@ describe("Edge cases", function () {
                 content: {
                   "application/json": {
                     schema: {
-                      $ref:
-                        "#/components/schemas/undefined.type_does_not_exist",
+                      $ref: "#/components/schemas/undefined.type_does_not_exist",
                     },
                   },
                 },
@@ -1141,8 +1146,7 @@ describe("Edge cases", function () {
                 content: {
                   "application/json": {
                     schema: {
-                      $ref:
-                        "#/components/schemas/undefined.type_does_not_exist",
+                      $ref: "#/components/schemas/undefined.type_does_not_exist",
                     },
                   },
                 },
@@ -1161,8 +1165,7 @@ describe("Edge cases", function () {
               content: {
                 "application/json": {
                   schema: {
-                    $ref:
-                      "#/components/schemas/undefined.type_does_not_exist-update",
+                    $ref: "#/components/schemas/undefined.type_does_not_exist-update",
                   },
                 },
               },
@@ -1354,8 +1357,7 @@ describe("Edge cases", function () {
                 content: {
                   "application/json": {
                     schema: {
-                      $ref:
-                        "#/components/schemas/undefined.type_does_not_exist",
+                      $ref: "#/components/schemas/undefined.type_does_not_exist",
                     },
                   },
                 },
@@ -1542,8 +1544,7 @@ describe("Edge cases", function () {
                 content: {
                   "application/json": {
                     schema: {
-                      $ref:
-                        "#/components/schemas/undefined.type_does_not_exist",
+                      $ref: "#/components/schemas/undefined.type_does_not_exist",
                     },
                   },
                 },
@@ -1709,8 +1710,7 @@ describe("Edge cases", function () {
                 content: {
                   "application/json": {
                     schema: {
-                      $ref:
-                        "#/components/schemas/undefined.type_does_not_exist",
+                      $ref: "#/components/schemas/undefined.type_does_not_exist",
                     },
                   },
                 },
