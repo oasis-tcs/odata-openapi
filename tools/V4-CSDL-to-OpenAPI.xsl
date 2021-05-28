@@ -39,7 +39,7 @@
   <xsl:param name="externalDocs-description" select="null" />
 
   <xsl:param name="property-longDescription" select="true()" />
-  <xsl:param name="label-as-tag" select="false()" />
+  <xsl:param name="label-as-tag" select="true()" />
 
   <xsl:param name="x-tensions" select="null" />
 
