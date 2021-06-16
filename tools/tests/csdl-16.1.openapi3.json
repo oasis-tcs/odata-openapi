@@ -156,17 +156,18 @@
                 }
             },
             "post": {
-                "summary": "Add new entity to Products",
+                "summary": "Add new media resource to Products",
                 "tags": [
                     "Products"
                 ],
                 "requestBody": {
                     "required": true,
-                    "description": "New entity",
+                    "description": "New media resource",
                     "content": {
-                        "application/json": {
+                        "*/*": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Product-create"
+                                "type": "string",
+                                "format": "binary"
                             }
                         }
                     }
@@ -296,6 +297,41 @@
                 "responses": {
                     "204": {
                         "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/Products('{ID}')/$value": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get media resource from Products by key",
+                "tags": [
+                    "Products"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved media resource",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
                     },
                     "4XX": {
                         "$ref": "#/components/responses/error"
@@ -837,18 +873,19 @@
                 }
             },
             "post": {
-                "summary": "Add new entity to related Products",
+                "summary": "Add new media resource to related Products",
                 "tags": [
                     "Categories",
                     "Products"
                 ],
                 "requestBody": {
                     "required": true,
-                    "description": "New entity",
+                    "description": "New media resource",
                     "content": {
-                        "application/json": {
+                        "*/*": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Product-create"
+                                "type": "string",
+                                "format": "binary"
                             }
                         }
                     }
@@ -1267,18 +1304,19 @@
                 }
             },
             "post": {
-                "summary": "Add new entity to related Products",
+                "summary": "Add new media resource to related Products",
                 "tags": [
                     "Suppliers",
                     "Products"
                 ],
                 "requestBody": {
                     "required": true,
-                    "description": "New entity",
+                    "description": "New media resource",
                     "content": {
-                        "application/json": {
+                        "*/*": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Product-create"
+                                "type": "string",
+                                "format": "binary"
                             }
                         }
                     }
@@ -1513,18 +1551,19 @@
                 }
             },
             "post": {
-                "summary": "Add new entity to related Products",
+                "summary": "Add new media resource to related Products",
                 "tags": [
                     "MainSupplier",
                     "Products"
                 ],
                 "requestBody": {
                     "required": true,
-                    "description": "New entity",
+                    "description": "New media resource",
                     "content": {
-                        "application/json": {
+                        "*/*": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Product-create"
+                                "type": "string",
+                                "format": "binary"
                             }
                         }
                     }

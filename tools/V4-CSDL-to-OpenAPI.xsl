@@ -3522,7 +3522,7 @@
 
 
       <!-- GET media resource -->
-      <xsl:if test="$entityType/@HasStream='true'">
+      <xsl:if test="$entityType/@HasStream='true' and $with-get='true'">
         <xsl:text>,"/</xsl:text>
         <xsl:value-of select="$path-template" />
         <xsl:text>/$value":{</xsl:text>

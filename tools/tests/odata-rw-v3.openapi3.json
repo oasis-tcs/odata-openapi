@@ -2677,17 +2677,18 @@
                 }
             },
             "post": {
-                "summary": "Add new entity to Advertisements",
+                "summary": "Add new media resource to Advertisements",
                 "tags": [
                     "Advertisements"
                 ],
                 "requestBody": {
                     "required": true,
-                    "description": "New entity",
+                    "description": "New media resource",
                     "content": {
-                        "application/json": {
+                        "*/*": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Advertisement-create"
+                                "type": "string",
+                                "format": "binary"
                             }
                         }
                     }
@@ -2814,6 +2815,43 @@
                 "responses": {
                     "204": {
                         "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/Advertisements({ID})/$value": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get media resource from Advertisements by key",
+                "tags": [
+                    "Advertisements"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved media resource",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
                     },
                     "4XX": {
                         "$ref": "#/components/responses/error"
