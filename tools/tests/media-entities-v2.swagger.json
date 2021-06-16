@@ -1,0 +1,379 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Service for namespace Media.Entities",
+        "version": "",
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[Media{bg:orange}],[Media{bg:dodgerblue}]++-*>[Media])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
+    },
+    "schemes": [
+        "https"
+    ],
+    "host": "localhost",
+    "basePath": "/service-root",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Media"
+        }
+    ],
+    "paths": {
+        "/Media": {
+            "get": {
+                "summary": "Get entities from Media",
+                "tags": [
+                    "Media"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=64)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=65)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "ID desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=68)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Wrapper",
+                            "type": "object",
+                            "properties": {
+                                "d": {
+                                    "title": "Collection of Media",
+                                    "type": "object",
+                                    "properties": {
+                                        "__count": {
+                                            "$ref": "#/definitions/count"
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Media.Entities.Media"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new media resource to Media",
+                "tags": [
+                    "Media"
+                ],
+                "parameters": [
+                    {
+                        "name": "Media",
+                        "in": "body",
+                        "description": "New media resource",
+                        "schema": {
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "title": "Media",
+                            "type": "object",
+                            "properties": {
+                                "d": {
+                                    "$ref": "#/definitions/Media.Entities.Media"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Media({ID})": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "integer",
+                    "format": "int32"
+                }
+            ],
+            "get": {
+                "summary": "Get entity from Media by key",
+                "tags": [
+                    "Media"
+                ],
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=68)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "title": "Media",
+                            "type": "object",
+                            "properties": {
+                                "d": {
+                                    "$ref": "#/definitions/Media.Entities.Media"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in Media",
+                "tags": [
+                    "Media"
+                ],
+                "parameters": [
+                    {
+                        "name": "Media",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "title": "Modified Media",
+                            "type": "object",
+                            "properties": {
+                                "d": {
+                                    "$ref": "#/definitions/Media.Entities.Media-update"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from Media",
+                "tags": [
+                    "Media"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/$batch": {
+            "post": {
+                "summary": "Send a group of requests",
+                "description": "Group multiple requests into a single request payload, see [Batch Requests](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=152).",
+                "tags": [
+                    "Batch Requests"
+                ],
+                "consumes": [
+                    "multipart/mixed;boundary=request-separator"
+                ],
+                "produces": [
+                    "multipart/mixed"
+                ],
+                "parameters": [
+                    {
+                        "name": "requestBody",
+                        "in": "body",
+                        "description": "Batch request",
+                        "schema": {
+                            "type": "string",
+                            "example": "--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET Media HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Batch response",
+                        "schema": {
+                            "type": "string",
+                            "example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{...}\n--response-separator--"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Media.Entities.Media": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "title": "Media"
+        },
+        "Media.Entities.Media-create": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "required": [
+                "ID"
+            ],
+            "title": "Media (for create)"
+        },
+        "Media.Entities.Media-update": {
+            "type": "object",
+            "title": "Media (for update)"
+        },
+        "count": {
+            "type": "string",
+            "description": "The number of entities in the collection. Available when using the [$inlinecount](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=67) query option."
+        },
+        "error": {
+            "type": "object",
+            "required": [
+                "error"
+            ],
+            "properties": {
+                "error": {
+                    "type": "object",
+                    "required": [
+                        "code",
+                        "message"
+                    ],
+                    "properties": {
+                        "code": {
+                            "type": "string"
+                        },
+                        "message": {
+                            "type": "object",
+                            "required": [
+                                "lang",
+                                "value"
+                            ],
+                            "properties": {
+                                "lang": {
+                                    "type": "string"
+                                },
+                                "value": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "innererror": {
+                            "type": "object",
+                            "description": "The structure of this object is service-specific"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "top": {
+            "name": "$top",
+            "in": "query",
+            "description": "Show only the first n items, see [Paging - Top](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=66)",
+            "type": "integer",
+            "minimum": 0
+        },
+        "skip": {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skip the first n items, see [Paging - Skip](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=65)",
+            "type": "integer",
+            "minimum": 0
+        },
+        "count": {
+            "name": "$inlinecount",
+            "in": "query",
+            "description": "Include count of items, see [Inlinecount](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=67)",
+            "type": "string",
+            "enum": [
+                "allpages",
+                "none"
+            ]
+        }
+    },
+    "responses": {
+        "error": {
+            "description": "Error",
+            "schema": {
+                "$ref": "#/definitions/error"
+            }
+        }
+    }
+}

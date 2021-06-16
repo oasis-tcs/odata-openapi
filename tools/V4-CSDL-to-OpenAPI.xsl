@@ -3132,7 +3132,14 @@
       <xsl:call-template name="operation-summary-description">
         <xsl:with-param name="restriction" select="$insertRestrictions" />
         <xsl:with-param name="fallback-summary">
-          <xsl:text>Add new entity to </xsl:text>
+          <xsl:choose>
+            <xsl:when test="$entityType/@HasStream='true'">
+              <xsl:text>Add new media resource to </xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>Add new entity to </xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
           <xsl:if test="contains($path-prefix,'/')">
             <xsl:text>related </xsl:text>
           </xsl:if>
@@ -3158,16 +3165,41 @@
 
       <xsl:call-template name="entityTypeDescription">
         <xsl:with-param name="entityType" select="$entityType" />
-        <xsl:with-param name="default" select="'New entity'" />
+        <xsl:with-param name="default">
+          <xsl:choose>
+            <xsl:when test="$entityType/@HasStream='true'">
+              <xsl:text>New media resource</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>New entity</xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:with-param>
       </xsl:call-template>
       <xsl:if test="$openapi-version!='2.0'">
-        <xsl:text>"content":{"application/json":{</xsl:text>
+        <xsl:text>"content":{"</xsl:text>
+        <xsl:choose>
+          <xsl:when test="$entityType/@HasStream='true'">
+            <xsl:text>*/*</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>application/json</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:text>":{</xsl:text>
       </xsl:if>
       <xsl:text>"schema":{</xsl:text>
-      <xsl:call-template name="schema-ref">
-        <xsl:with-param name="qualifiedName" select="$qualifiedType" />
-        <xsl:with-param name="suffix" select="'-create'" />
-      </xsl:call-template>
+      <xsl:choose>
+        <xsl:when test="$entityType/@HasStream='true'">
+          <xsl:text>"type":"string","format":"binary"</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="schema-ref">
+            <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+            <xsl:with-param name="suffix" select="'-create'" />
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:text>}</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>}}</xsl:text>
