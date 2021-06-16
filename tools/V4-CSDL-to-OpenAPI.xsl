@@ -1408,7 +1408,7 @@
         <!-- TODO: if base type is not defined in this document, add allOf, tunnel similar to required -->
         <xsl:call-template name="properties">
           <xsl:with-param name="structuredType" select="/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:ComplexType[@Name=$name]
-                   |/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:EntityType[@Name=$name]" />
+                                                       |/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:EntityType[@Name=$name]" />
           <xsl:with-param name="suffix" select="$suffix" />
           <xsl:with-param name="direct" select="false()" />
         </xsl:call-template>
@@ -1429,10 +1429,8 @@
         </xsl:when>
         <xsl:when test="$suffix='-create'">
           <!-- everything except computed and read-only properties -->
-          <xsl:apply-templates select="$structuredType/edm:Property[not(@Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext 
-                                                  or @Name=$read-only)]
-                                      |$structuredType/edm:NavigationProperty[not(concat($qualifiedName,'/',@Name)=$navprop-read-only
-                                                                           or concat($aliasQualifiedName,'/',@Name)=$navprop-read-only)]">
+          <xsl:apply-templates select="$structuredType/edm:Property[not(@Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext or @Name=$read-only)]
+                                      |$structuredType/edm:NavigationProperty[not(concat($qualifiedName,'/',@Name)=$navprop-read-only or concat($aliasQualifiedName,'/',@Name)=$navprop-read-only)]">
             <xsl:with-param name="name" select="'properties'" />
             <xsl:with-param name="suffix" select="'-create'" />
           </xsl:apply-templates>
