@@ -23,6 +23,7 @@ if exist "%1" (
   echo.
   echo   source       Specifies the file to be transformed.
   echo   /swagger     Output Swagger 2.0 in addition to OpenAPI 3.0.0
+  echo   /time        Measure translation time (only for OpenAPI 3.0.0)
 )
 
 endlocal
@@ -59,9 +60,18 @@ exit /b
 
       call npx ajv validate -s %SCHEMA_TWO% -d %~dpn1.swagger.json > nul
     )
+    )
+  
+  if [%5]==[/time] (
+    call :get-time t0
   )
 
   java.exe org.apache.xalan.xslt.Process -L -XSL %here%V4-CSDL-to-OpenAPI.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM odata-version %ODATA_VERSION% -PARAM diagram YES -PARAM openapi-root "https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/" -PARAM openapi-version 3.0.0 -IN %INPUT% -OUT %~dpn1.tmp3.json
+
+  if [%5]==[/time] (
+    call :get-time t1
+    call :echo-elapsed t0 t1
+  )
 
   python -m json.tool < %~dpn1.tmp3.json > %~dpn1.openapi3.json
   if not errorlevel 1 (
@@ -78,4 +88,20 @@ exit /b
     call npx ajv validate -s %SCHEMA_THREE% -d %~dpn1.openapi3.json > nul
   )
 
+exit /b
+
+
+:get-time
+  for /F "tokens=1-4 delims=:.," %%a in ("%time%") do (
+    set /A "%1=(((%%a*60)+1%%b %% 100)*60+1%%c %% 100)*100+1%%d %% 100"
+  )
+exit /b
+
+
+:echo-elapsed
+  setlocal
+  set /A sec=(%2-%1)/100, frac=(%2-%1)%%100
+  echo.
+  echo Elapsed time: %sec%.%frac% seconds
+  endlocal
 exit /b
