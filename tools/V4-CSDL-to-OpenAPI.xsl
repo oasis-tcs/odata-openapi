@@ -3520,6 +3520,54 @@
 
       <xsl:text>}</xsl:text>
 
+
+      <!-- GET media resource -->
+      <xsl:if test="$entityType/@HasStream='true'">
+        <xsl:text>,"/</xsl:text>
+        <xsl:value-of select="$path-template" />
+        <xsl:text>/$value":{</xsl:text>
+
+        <xsl:if test="$path-parameters!=''">
+          <xsl:text>"parameters":[</xsl:text>
+          <xsl:value-of select="$path-parameters" />
+          <xsl:text>]</xsl:text>
+        </xsl:if>
+
+        <xsl:text>,"get":{</xsl:text>
+
+        <xsl:text>"summary":"Get </xsl:text>
+        <xsl:if test="$with-key">
+          <xsl:text>media resource from </xsl:text>
+        </xsl:if>
+        <xsl:if test="contains($path-prefix,'/')">
+          <xsl:text>related </xsl:text>
+        </xsl:if>
+        <xsl:value-of select="@Name" />
+        <xsl:if test="$with-key">
+          <xsl:text> by key</xsl:text>
+        </xsl:if>
+
+        <xsl:text>"</xsl:text>
+
+        <xsl:call-template name="operation-tag">
+          <xsl:with-param name="sourceSet" select="$root" />
+        </xsl:call-template>
+
+        <xsl:text>,"responses":{"200":{"description":"Retrieved media resource",</xsl:text>
+        <xsl:if test="$openapi-version!='2.0'">
+          <xsl:text>"content":{"*/*":{</xsl:text>
+        </xsl:if>
+        <xsl:text>"schema":{"type":"string","format":"binary"}</xsl:text>
+        <xsl:if test="$openapi-version!='2.0'">
+          <xsl:text>}}</xsl:text>
+        </xsl:if>
+        <xsl:text>},</xsl:text>
+        <xsl:value-of select="$defaultResponse" />
+        <xsl:text>}}}</xsl:text>
+      </xsl:if>
+
+      <!-- functions, actions, and navigation properties -->
+
       <xsl:apply-templates select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]" mode="bound">
         <xsl:with-param name="root" select="$root" />
         <xsl:with-param name="path-prefix" select="$path-template" />
