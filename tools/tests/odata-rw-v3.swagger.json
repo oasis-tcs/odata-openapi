@@ -2320,7 +2320,7 @@
                 }
             },
             "post": {
-                "summary": "Add new entity to Advertisements",
+                "summary": "Add new media resource to Advertisements",
                 "tags": [
                     "Advertisements"
                 ],
@@ -2328,9 +2328,10 @@
                     {
                         "name": "Advertisement",
                         "in": "body",
-                        "description": "New entity",
+                        "description": "New media resource",
                         "schema": {
-                            "$ref": "#/definitions/ODataDemo.Advertisement-create"
+                            "type": "string",
+                            "format": "binary"
                         }
                     }
                 ],
@@ -2437,6 +2438,35 @@
                 "responses": {
                     "204": {
                         "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Advertisements({ID})/$value": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Get media resource from Advertisements by key",
+                "tags": [
+                    "Advertisements"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved media resource",
+                        "schema": {
+                            "type": "string",
+                            "format": "binary"
+                        }
                     },
                     "400": {
                         "$ref": "#/responses/error"

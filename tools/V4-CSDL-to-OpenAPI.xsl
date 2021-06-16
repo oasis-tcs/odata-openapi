@@ -3132,7 +3132,14 @@
       <xsl:call-template name="operation-summary-description">
         <xsl:with-param name="restriction" select="$insertRestrictions" />
         <xsl:with-param name="fallback-summary">
-          <xsl:text>Add new entity to </xsl:text>
+          <xsl:choose>
+            <xsl:when test="$entityType/@HasStream='true'">
+              <xsl:text>Add new media resource to </xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>Add new entity to </xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
           <xsl:if test="contains($path-prefix,'/')">
             <xsl:text>related </xsl:text>
           </xsl:if>
@@ -3158,16 +3165,41 @@
 
       <xsl:call-template name="entityTypeDescription">
         <xsl:with-param name="entityType" select="$entityType" />
-        <xsl:with-param name="default" select="'New entity'" />
+        <xsl:with-param name="default">
+          <xsl:choose>
+            <xsl:when test="$entityType/@HasStream='true'">
+              <xsl:text>New media resource</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>New entity</xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:with-param>
       </xsl:call-template>
       <xsl:if test="$openapi-version!='2.0'">
-        <xsl:text>"content":{"application/json":{</xsl:text>
+        <xsl:text>"content":{"</xsl:text>
+        <xsl:choose>
+          <xsl:when test="$entityType/@HasStream='true'">
+            <xsl:text>*/*</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>application/json</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:text>":{</xsl:text>
       </xsl:if>
       <xsl:text>"schema":{</xsl:text>
-      <xsl:call-template name="schema-ref">
-        <xsl:with-param name="qualifiedName" select="$qualifiedType" />
-        <xsl:with-param name="suffix" select="'-create'" />
-      </xsl:call-template>
+      <xsl:choose>
+        <xsl:when test="$entityType/@HasStream='true'">
+          <xsl:text>"type":"string","format":"binary"</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="schema-ref">
+            <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+            <xsl:with-param name="suffix" select="'-create'" />
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:text>}</xsl:text>
       <xsl:if test="$openapi-version!='2.0'">
         <xsl:text>}}</xsl:text>
@@ -3487,6 +3519,54 @@
       </xsl:if>
 
       <xsl:text>}</xsl:text>
+
+
+      <!-- GET media resource -->
+      <xsl:if test="$entityType/@HasStream='true' and $with-get='true'">
+        <xsl:text>,"/</xsl:text>
+        <xsl:value-of select="$path-template" />
+        <xsl:text>/$value":{</xsl:text>
+
+        <xsl:if test="$path-parameters!=''">
+          <xsl:text>"parameters":[</xsl:text>
+          <xsl:value-of select="$path-parameters" />
+          <xsl:text>]</xsl:text>
+        </xsl:if>
+
+        <xsl:text>,"get":{</xsl:text>
+
+        <xsl:text>"summary":"Get </xsl:text>
+        <xsl:if test="$with-key">
+          <xsl:text>media resource from </xsl:text>
+        </xsl:if>
+        <xsl:if test="contains($path-prefix,'/')">
+          <xsl:text>related </xsl:text>
+        </xsl:if>
+        <xsl:value-of select="@Name" />
+        <xsl:if test="$with-key">
+          <xsl:text> by key</xsl:text>
+        </xsl:if>
+
+        <xsl:text>"</xsl:text>
+
+        <xsl:call-template name="operation-tag">
+          <xsl:with-param name="sourceSet" select="$root" />
+        </xsl:call-template>
+
+        <xsl:text>,"responses":{"200":{"description":"Retrieved media resource",</xsl:text>
+        <xsl:if test="$openapi-version!='2.0'">
+          <xsl:text>"content":{"*/*":{</xsl:text>
+        </xsl:if>
+        <xsl:text>"schema":{"type":"string","format":"binary"}</xsl:text>
+        <xsl:if test="$openapi-version!='2.0'">
+          <xsl:text>}}</xsl:text>
+        </xsl:if>
+        <xsl:text>},</xsl:text>
+        <xsl:value-of select="$defaultResponse" />
+        <xsl:text>}}}</xsl:text>
+      </xsl:if>
+
+      <!-- functions, actions, and navigation properties -->
 
       <xsl:apply-templates select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]" mode="bound">
         <xsl:with-param name="root" select="$root" />

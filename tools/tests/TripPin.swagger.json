@@ -115,7 +115,7 @@
                 }
             },
             "post": {
-                "summary": "Add new entity to Photos",
+                "summary": "Add new media resource to Photos",
                 "tags": [
                     "Photos"
                 ],
@@ -123,9 +123,10 @@
                     {
                         "name": "Photo",
                         "in": "body",
-                        "description": "New entity",
+                        "description": "New media resource",
                         "schema": {
-                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo-create"
+                            "type": "string",
+                            "format": "binary"
                         }
                     }
                 ],
@@ -218,6 +219,36 @@
                 "responses": {
                     "204": {
                         "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Photos({Id})/$value": {
+            "parameters": [
+                {
+                    "name": "Id",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: Id",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            ],
+            "get": {
+                "summary": "Get media resource from Photos by key",
+                "tags": [
+                    "Photos"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved media resource",
+                        "schema": {
+                            "type": "string",
+                            "format": "binary"
+                        }
                     },
                     "400": {
                         "$ref": "#/responses/error"
