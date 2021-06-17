@@ -161,12 +161,13 @@
                     "Products"
                 ],
                 "requestBody": {
-                    "description": "New entity",
                     "required": true,
+                    "description": "New media resource",
                     "content": {
-                        "application/json": {
+                        "*/*": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Product-create"
+                                "type": "string",
+                                "format": "binary"
                             }
                         }
                     }
@@ -296,6 +297,41 @@
                 "responses": {
                     "204": {
                         "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/Products('{ID}')/$value": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get media resource from Products by key",
+                "tags": [
+                    "Products"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved media resource",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
                     },
                     "4XX": {
                         "$ref": "#/components/responses/error"
