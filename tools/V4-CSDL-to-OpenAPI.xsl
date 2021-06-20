@@ -207,6 +207,9 @@
 
   <xsl:key name="externalAnnotations" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations" use="@Target" />
 
+  <xsl:key name="namespaceQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Namespace,'.',@Name)" />
+  <xsl:key name="aliasQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Alias,'.',@Name)" />
+
   <!-- TODO: collect all annotations for target once in caller and pass them here -->
   <xsl:template name="capability">
     <xsl:param name="term" />
@@ -1468,23 +1471,10 @@
 
     <xsl:variable name="basetypeinfo">
       <xsl:if test="$structuredType/@BaseType">
-        <xsl:variable name="qualifier">
-          <xsl:call-template name="substring-before-last">
-            <xsl:with-param name="input" select="$structuredType/@BaseType" />
-            <xsl:with-param name="marker" select="'.'" />
-          </xsl:call-template>
-        </xsl:variable>
-        <xsl:variable name="name">
-          <xsl:call-template name="substring-after-last">
-            <xsl:with-param name="input" select="$structuredType/@BaseType" />
-            <xsl:with-param name="marker" select="'.'" />
-          </xsl:call-template>
-        </xsl:variable>
         <!-- recurse to base type -->
         <!-- TODO: if base type is not defined in this document, add allOf, tunnel similar to required -->
         <xsl:call-template name="properties">
-          <xsl:with-param name="structuredType" select="/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:ComplexType[@Name=$name]
-                                                       |/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:EntityType[@Name=$name]" />
+          <xsl:with-param name="structuredType" select="key('namespaceQualifiedType',$structuredType/@BaseType)|key('aliasQualifiedType',$structuredType/@BaseType)" />
           <xsl:with-param name="suffix" select="$suffix" />
           <xsl:with-param name="direct" select="false()" />
         </xsl:call-template>
@@ -2332,8 +2322,8 @@
     </xsl:choose>
     <xsl:text>.</xsl:text>
     <xsl:value-of select="$name" />
-    <xsl:if test="/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:EntityType[@Name=$name]
-                 |/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:ComplexType[@Name=$name]">
+    <xsl:variable name="qualifiedName" select="concat($qualifier,'.',$name)" />
+    <xsl:if test="key('namespaceQualifiedType',$qualifiedName)|key('aliasQualifiedType',$qualifiedName)">
       <xsl:value-of select="$suffix" />
     </xsl:if>
     <xsl:text>"</xsl:text>
@@ -2633,29 +2623,7 @@
     <xsl:choose>
       <xsl:when test="$label-as-tag">
         <xsl:variable name="typename" select="$set/@EntityType|$set/@Type" />
-        <xsl:variable name="qualifier">
-          <xsl:call-template name="substring-before-last">
-            <xsl:with-param name="input" select="$typename" />
-            <xsl:with-param name="marker" select="'.'" />
-          </xsl:call-template>
-        </xsl:variable>
-        <xsl:variable name="namespace">
-          <xsl:choose>
-            <xsl:when test="/edmx:Edmx/edmx:DataServices/edm:Schema[@Alias=$qualifier]">
-              <xsl:value-of select="/edmx:Edmx/edmx:DataServices/edm:Schema[@Alias=$qualifier]/@Namespace" />
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="$qualifier" />
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-        <xsl:variable name="type">
-          <xsl:call-template name="substring-after-last">
-            <xsl:with-param name="input" select="$typename" />
-            <xsl:with-param name="marker" select="'.'" />
-          </xsl:call-template>
-        </xsl:variable>
-        <xsl:variable name="entityType" select="/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]" />
+        <xsl:variable name="entityType" select="key('namespaceQualifiedType',$typename)|key('aliasQualifiedType',$typename)" />
         <xsl:variable name="label">
           <xsl:call-template name="Common.Label">
             <xsl:with-param name="node" select="$entityType" />
@@ -3067,7 +3035,7 @@
       <xsl:text>.</xsl:text>
       <xsl:value-of select="$typename" />
     </xsl:variable>
-    <xsl:variable name="entityType" select="/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$typename]" />
+    <xsl:variable name="entityType" select="key('namespaceQualifiedType',$type)|key('aliasQualifiedType',$type)" />
 
     <xsl:variable name="bindingType">
       <xsl:if test="$return-collection">
@@ -3317,7 +3285,7 @@
       <xsl:text>.</xsl:text>
       <xsl:value-of select="$typename" />
     </xsl:variable>
-    <xsl:variable name="entityType" select="/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$typename]" />
+    <xsl:variable name="entityType" select="key('namespaceQualifiedType',$type)|key('aliasQualifiedType',$type)" />
 
     <!-- for singleton first level we don't need the key -->
     <xsl:if test="$entityType or ($level=0 and not($with-key))">
@@ -3696,31 +3664,8 @@
         </xsl:if>
       </xsl:when>
       <xsl:when test="$entityType/@BaseType">
-        <xsl:variable name="basetypeQualifier">
-          <xsl:call-template name="substring-before-last">
-            <xsl:with-param name="input" select="$entityType/@BaseType" />
-            <xsl:with-param name="marker" select="'.'" />
-          </xsl:call-template>
-        </xsl:variable>
-        <xsl:variable name="basetypeNamespace">
-          <xsl:choose>
-            <xsl:when test="/edmx:Edmx/edmx:DataServices/edm:Schema[@Alias=$basetypeQualifier]">
-              <xsl:value-of select="/edmx:Edmx/edmx:DataServices/edm:Schema[@Alias=$basetypeQualifier]/@Namespace" />
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="$basetypeQualifier" />
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-        <xsl:variable name="basetype">
-          <xsl:call-template name="substring-after-last">
-            <xsl:with-param name="input" select="$entityType/@BaseType" />
-            <xsl:with-param name="marker" select="'.'" />
-          </xsl:call-template>
-        </xsl:variable>
-
         <xsl:call-template name="key-in-path">
-          <xsl:with-param name="entityType" select="/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]" />
+          <xsl:with-param name="entityType" select="key('namespaceQualifiedType',$entityType/@BaseType)|key('aliasQualifiedType',$entityType/@BaseType)" />
           <xsl:with-param name="level" select="$level" />
         </xsl:call-template>
       </xsl:when>
@@ -3845,31 +3790,8 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:when test="$entityType/@BaseType">
-        <xsl:variable name="basetypeQualifier">
-          <xsl:call-template name="substring-before-last">
-            <xsl:with-param name="input" select="$entityType/@BaseType" />
-            <xsl:with-param name="marker" select="'.'" />
-          </xsl:call-template>
-        </xsl:variable>
-        <xsl:variable name="basetypeNamespace">
-          <xsl:choose>
-            <xsl:when test="/edmx:Edmx/edmx:DataServices/edm:Schema[@Alias=$basetypeQualifier]">
-              <xsl:value-of select="/edmx:Edmx/edmx:DataServices/edm:Schema[@Alias=$basetypeQualifier]/@Namespace" />
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="$basetypeQualifier" />
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-        <xsl:variable name="basetype">
-          <xsl:call-template name="substring-after-last">
-            <xsl:with-param name="input" select="$entityType/@BaseType" />
-            <xsl:with-param name="marker" select="'.'" />
-          </xsl:call-template>
-        </xsl:variable>
-
         <xsl:call-template name="key-parameters">
-          <xsl:with-param name="entityType" select="/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]" />
+          <xsl:with-param name="entityType" select="key('namespaceQualifiedType',$entityType/@BaseType)|key('aliasQualifiedType',$entityType/@BaseType)" />
           <xsl:with-param name="level" select="$level" />
         </xsl:call-template>
       </xsl:when>
@@ -3890,34 +3812,10 @@
         <xsl:variable name="first-segment" select="substring-before($name,'/')" />
         <xsl:variable name="property" select="$structuredType/edm:Property[@Name=$first-segment]" />
         <xsl:variable name="propertyType" select="$property/@Type" />
-        <xsl:variable name="qualifier">
-          <xsl:call-template name="substring-before-last">
-            <xsl:with-param name="input" select="$propertyType" />
-            <xsl:with-param name="marker" select="'.'" />
-          </xsl:call-template>
-        </xsl:variable>
-        <xsl:variable name="namespace">
-          <xsl:choose>
-            <xsl:when test="/edmx:Edmx/edmx:DataServices/edm:Schema[@Alias=$qualifier]">
-              <xsl:value-of select="/edmx:Edmx/edmx:DataServices/edm:Schema[@Alias=$qualifier]/@Namespace" />
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="$qualifier" />
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-        <xsl:variable name="typename">
-          <xsl:call-template name="substring-after-last">
-            <xsl:with-param name="input" select="$propertyType" />
-            <xsl:with-param name="marker" select="'.'" />
-          </xsl:call-template>
-        </xsl:variable>
-
         <xsl:call-template name="key-property">
           <xsl:with-param name="name" select="substring-after($name,'/')" />
           <xsl:with-param name="alias" select="$alias" />
-          <xsl:with-param name="structuredType" select="/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$namespace]/edm:ComplexType[@Name=$typename]
-                   |/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$typename]" />
+          <xsl:with-param name="structuredType" select="key('namespaceQualifiedType',$propertyType)|key('aliasQualifiedType',$propertyType)" />
           <xsl:with-param name="level" select="$level" />
         </xsl:call-template>
       </xsl:when>
