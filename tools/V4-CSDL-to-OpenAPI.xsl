@@ -206,6 +206,7 @@
   <xsl:variable name="key-as-segment" select="boolean(/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[not(@Qualifier) and (@Term=$keyAsSegmentSupported or @Term=$keyAsSegmentSupportedAliased)])" />
 
   <xsl:key name="externalAnnotations" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations" use="@Target" />
+  <xsl:key name="externalPropertyAnnotations" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations[contains(@Target,'/')]" use="substring-before(@Target,'/')" />
 
   <xsl:key name="namespaceQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Namespace,'.',@Name)" />
   <xsl:key name="aliasQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Alias,'.',@Name)" />
@@ -1438,15 +1439,6 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:key name="allComputedExt" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations[edm:Annotation[@Term=$coreComputed or @Term=$coreComputedAliased]]" use="substring-before(@Target,'/')" />
-  <xsl:key name="allImmutableExt" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations[edm:Annotation[@Term=$coreImmutable or @Term=$coreImmutableAliased]]" use="substring-before(@Target,'/')" />
-  <!-- TODO: also edm:EnumMember -->
-  <xsl:key name="allMandatoryExt" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations[edm:Annotation[(@Term=$commonFieldControl or @Term=$commonFieldControlAliased)
-                                         and (@EnumMember=$commonFieldControlMandatory or @EnumMember=$commonFieldControlMandatoryAliased)]]" use="substring-before(@Target,'/')" />
-  <!-- TODO: also edm:EnumMember -->
-  <xsl:key name="allReadOnlyExt" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations[edm:Annotation[(@Term=$corePermissions or @Term=$corePermissionsAliased)
-                                        and (@EnumMember=$corePermissionRead or @EnumMember=$corePermissionReadAliased)]]" use="substring-before(@Target,'/')" />
-
   <xsl:template name="properties">
     <xsl:param name="structuredType" />
     <xsl:param name="suffix" select="null" />
@@ -1456,19 +1448,26 @@
     <xsl:variable name="aliasQualifiedName" select="concat($structuredType/../@Alias,'.',$structuredType/@Name)" />
 
     <xsl:variable name="computed" select="$structuredType/edm:Property[edm:Annotation[@Term=$coreComputed or @Term=$coreComputedAliased]]/@Name" />
-    <xsl:variable name="computed-ext" select="key('allComputedExt',$qualifiedName)/@Target|key('allComputedExt',$aliasQualifiedName)/@Target" />
+    <xsl:variable name="computed-ext" select="(key('externalPropertyAnnotations',$qualifiedName)|key('externalPropertyAnnotations',$aliasQualifiedName))
+                                              [edm:Annotation[@Term=$coreComputed or @Term=$coreComputedAliased]]/@Target" />
 
     <xsl:variable name="immutable" select="$structuredType/edm:Property[edm:Annotation[@Term=$coreImmutable or @Term=$coreImmutableAliased]]/@Name" />
-    <xsl:variable name="immutable-ext" select="key('allImmutableExt',$qualifiedName)/@Target|key('allImmutableExt',$aliasQualifiedName)/@Target" />
+    <xsl:variable name="immutable-ext" select="(key('externalPropertyAnnotations',$qualifiedName)|key('externalPropertyAnnotations',$aliasQualifiedName))
+                                               [edm:Annotation[@Term=$coreImmutable or @Term=$coreImmutableAliased]]/@Target" />
 
     <!-- TODO: also @EnumMember and external targeting -->
     <xsl:variable name="read-only" select="$structuredType/edm:Property[edm:Annotation[@Term=$corePermissions or @Term=$corePermissionsAliased]
                                            /edm:EnumMember[.=$corePermissionRead or .=$corePermissionReadAliased]]/@Name" />
     <!-- TODO: also nested annotations -->
-    <xsl:variable name="mandatory" select="key('allMandatoryExt',$qualifiedName)/@Target|key('allMandatoryExt',$aliasQualifiedName)/@Target" />
+    <!-- TODO: also edm:EnumMember -->
+    <xsl:variable name="mandatory" select="(key('externalPropertyAnnotations',$qualifiedName)|key('externalPropertyAnnotations',$aliasQualifiedName))
+                                           [edm:Annotation[(@Term=$commonFieldControl or @Term=$commonFieldControlAliased)
+                                            and (@EnumMember=$commonFieldControlMandatory or @EnumMember=$commonFieldControlMandatoryAliased)]]/@Target" />
     <!-- TODO: also nested annotations -->
-    <xsl:variable name="navprop-read-only" select="key('allReadOnlyExt',$qualifiedName)/@Target|key('allReadOnlyExt',$aliasQualifiedName)/@Target" />
-
+    <!-- TODO: also edm:EnumMember -->
+    <xsl:variable name="navprop-read-only" select="(key('externalPropertyAnnotations',$qualifiedName)|key('externalPropertyAnnotations',$aliasQualifiedName))
+                                                   [edm:Annotation[(@Term=$corePermissions or @Term=$corePermissionsAliased)
+                                                    and (@EnumMember=$corePermissionRead or @EnumMember=$corePermissionReadAliased)]]/@Target" />
     <xsl:variable name="basetypeinfo">
       <xsl:if test="$structuredType/@BaseType">
         <!-- recurse to base type -->
