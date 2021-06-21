@@ -509,7 +509,7 @@
       </xsl:if>
     </xsl:if>
     <xsl:if test="$references">
-      <xsl:for-each select="/edmx:Edmx/edmx:References/edmx:Include[substring(@Namespace,1,10)!='Org.OData.' and substring(@Namespace,1,21)!='com.sap.vocabularies.']">
+      <xsl:for-each select="/edmx:Edmx/edmx:Reference/edmx:Include[substring(@Namespace,1,10)!='Org.OData.' and substring(@Namespace,1,21)!='com.sap.vocabularies.']">
         <xsl:call-template name="reference" />
       </xsl:for-each>
     </xsl:if>
@@ -1438,14 +1438,14 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:variable name="all-computed-ext" select="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations/edm:Annotation[@Term=$coreComputed  or @Term=$coreComputedAliased]" />
-  <xsl:variable name="all-immutable-ext" select="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations/edm:Annotation[@Term=$coreImmutable or @Term=$coreImmutableAliased]" />
+  <xsl:key name="allComputedExt" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations[edm:Annotation[@Term=$coreComputed or @Term=$coreComputedAliased]]" use="substring-before(@Target,'/')" />
+  <xsl:key name="allImmutableExt" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations[edm:Annotation[@Term=$coreImmutable or @Term=$coreImmutableAliased]]" use="substring-before(@Target,'/')" />
   <!-- TODO: also edm:EnumMember -->
-  <xsl:variable name="all-mandatory-ext" select="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations/edm:Annotation[(@Term=$commonFieldControl or @Term=$commonFieldControlAliased)
-                                                 and (@EnumMember=$commonFieldControlMandatory or @EnumMember=$commonFieldControlMandatoryAliased)]" />
+  <xsl:key name="allMandatoryExt" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations[edm:Annotation[(@Term=$commonFieldControl or @Term=$commonFieldControlAliased)
+                                         and (@EnumMember=$commonFieldControlMandatory or @EnumMember=$commonFieldControlMandatoryAliased)]]" use="substring-before(@Target,'/')" />
   <!-- TODO: also edm:EnumMember -->
-  <xsl:variable name="all-read-only-ext" select="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations/edm:Annotation[(@Term=$corePermissions or @Term=$corePermissionsAliased)
-                                                 and (@EnumMember=$corePermissionRead or @EnumMember=$corePermissionReadAliased)]" />
+  <xsl:key name="allReadOnlyExt" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations[edm:Annotation[(@Term=$corePermissions or @Term=$corePermissionsAliased)
+                                        and (@EnumMember=$corePermissionRead or @EnumMember=$corePermissionReadAliased)]]" use="substring-before(@Target,'/')" />
 
   <xsl:template name="properties">
     <xsl:param name="structuredType" />
@@ -1456,18 +1456,18 @@
     <xsl:variable name="aliasQualifiedName" select="concat($structuredType/../@Alias,'.',$structuredType/@Name)" />
 
     <xsl:variable name="computed" select="$structuredType/edm:Property[edm:Annotation[@Term=$coreComputed or @Term=$coreComputedAliased]]/@Name" />
-    <xsl:variable name="computed-ext" select="$all-computed-ext[substring-before(../@Target,'/') = $qualifiedName or substring-before(../@Target,'/') = $aliasQualifiedName]/../@Target" />
+    <xsl:variable name="computed-ext" select="key('allComputedExt',$qualifiedName)/@Target|key('allComputedExt',$aliasQualifiedName)/@Target" />
 
     <xsl:variable name="immutable" select="$structuredType/edm:Property[edm:Annotation[@Term=$coreImmutable or @Term=$coreImmutableAliased]]/@Name" />
-    <xsl:variable name="immutable-ext" select="$all-immutable-ext[substring-before(../@Target,'/') = $qualifiedName or substring-before(../@Target,'/') = $aliasQualifiedName]/../@Target" />
+    <xsl:variable name="immutable-ext" select="key('allImmutableExt',$qualifiedName)/@Target|key('allImmutableExt',$aliasQualifiedName)/@Target" />
 
     <!-- TODO: also @EnumMember and external targeting -->
     <xsl:variable name="read-only" select="$structuredType/edm:Property[edm:Annotation[@Term=$corePermissions or @Term=$corePermissionsAliased]
                                            /edm:EnumMember[.=$corePermissionRead or .=$corePermissionReadAliased]]/@Name" />
     <!-- TODO: also nested annotations -->
-    <xsl:variable name="mandatory" select="$all-mandatory-ext[$qualifiedName=substring-before(../@Target,'/') or $aliasQualifiedName=substring-before(../@Target,'/')]/../@Target" />
+    <xsl:variable name="mandatory" select="key('allMandatoryExt',$qualifiedName)/@Target|key('allMandatoryExt',$aliasQualifiedName)/@Target" />
     <!-- TODO: also nested annotations -->
-    <xsl:variable name="navprop-read-only" select="$all-read-only-ext[$qualifiedName=substring-before(../@Target,'/') or $aliasQualifiedName=substring-before(../@Target,'/')]/../@Target" />
+    <xsl:variable name="navprop-read-only" select="key('allReadOnlyExt',$qualifiedName)/@Target|key('allReadOnlyExt',$aliasQualifiedName)/@Target" />
 
     <xsl:variable name="basetypeinfo">
       <xsl:if test="$structuredType/@BaseType">
@@ -2304,9 +2304,9 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>"$ref":"</xsl:text>
-        <xsl:variable name="externalNamespace" select="/edmx:Edmx/edmx:References/edmx:Include[@Alias=$qualifier]/@Namespace|/edmx:Edmx/edmx:References/edmx:Include[@Namespace=$qualifier]/@Namespace" />
+        <xsl:variable name="externalNamespace" select="/edmx:Edmx/edmx:Reference/edmx:Include[@Alias=$qualifier]/@Namespace|/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$qualifier]/@Namespace" />
         <xsl:call-template name="json-url">
-          <xsl:with-param name="url" select="/edmx:Edmx/edmx:References/edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
+          <xsl:with-param name="url" select="/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
         </xsl:call-template>
         <xsl:value-of select="$reuse-schemas" />
         <xsl:value-of select="$externalNamespace" />
@@ -5164,8 +5164,8 @@
       <xsl:when test="/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$qualifier and @Alias]">
         <xsl:value-of select="/edmx:Edmx/edmx:DataServices/edm:Schema[@Namespace=$qualifier]/@Alias" />
       </xsl:when>
-      <xsl:when test="/edmx:Edmx/edmx:References/edmx:Include[@Namespace=$qualifier and @Alias]">
-        <xsl:value-of select="/edmx:Edmx/edmx:References/edmx:Include[@Namespace=$qualifier]/@Alias" />
+      <xsl:when test="/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$qualifier and @Alias]">
+        <xsl:value-of select="/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$qualifier]/@Alias" />
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$qualifier" />
