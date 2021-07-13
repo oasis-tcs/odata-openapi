@@ -126,12 +126,13 @@
                     "Photos"
                 ],
                 "requestBody": {
-                    "description": "New entity",
+                    "description": "New media resource",
                     "required": true,
                     "content": {
-                        "application/json": {
+                        "*/*": {
                             "schema": {
-                                "$ref": "#/components/schemas/Microsoft.OData.SampleService.Models.TripPin.Photo-create"
+                                "type": "string",
+                                "format": "binary"
                             }
                         }
                     }
@@ -247,6 +248,50 @@
                 "responses": {
                     "204": {
                         "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/Photos({Id})/$value": {
+            "parameters": [
+                {
+                    "description": "key: Id",
+                    "in": "path",
+                    "name": "Id",
+                    "required": true,
+                    "schema": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "int64",
+                        "example": "42"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get media resource from Photos by key",
+                "tags": [
+                    "Photos"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved media resource",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
                     },
                     "4XX": {
                         "$ref": "#/components/responses/error"
