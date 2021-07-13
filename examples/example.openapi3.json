@@ -2728,12 +2728,13 @@
                     "Advertisements"
                 ],
                 "requestBody": {
-                    "description": "New entity",
+                    "description": "New media resource",
                     "required": true,
                     "content": {
-                        "application/json": {
+                        "*/*": {
                             "schema": {
-                                "$ref": "#/components/schemas/ODataDemo.Advertisement-create"
+                                "type": "string",
+                                "format": "binary"
                             }
                         }
                     }
@@ -2860,6 +2861,43 @@
                 "responses": {
                     "204": {
                         "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/Advertisements({ID})/$value": {
+            "parameters": [
+                {
+                    "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get media resource from Advertisements by key",
+                "tags": [
+                    "Advertisements"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved media resource",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
                     },
                     "4XX": {
                         "$ref": "#/components/responses/error"
