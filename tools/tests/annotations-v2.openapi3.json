@@ -3,7 +3,7 @@
     "info": {
         "title": "Service for namespace Supported.Annotations",
         "version": "",
-        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[SinglePartKey{bg:orange}],[AllSet{bg:dodgerblue}]++-*>[SinglePartKey])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[SinglePartKey{bg:orange}],[AllSet{bg:dodgerblue}]++-*>[SinglePartKey],[DoStuff{bg:dodgerblue}])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
     },
     "servers": [
         {
@@ -257,6 +257,38 @@
                 "summary": "Delete entity from AllSet",
                 "tags": [
                     "AllSet"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/DoStuff": {
+            "post": {
+                "summary": "Invoke action DoStuff",
+                "tags": [
+                    "Service Operations"
+                ],
+                "parameters": [
+                    {
+                        "name": "rating",
+                        "in": "query",
+                        "required": true,
+                        "description": "Value needs to be suffixed with `M`",
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[-]?[0-9]+(\\.[0-9]+)?[mM]$",
+                            "multipleOf": 0.01,
+                            "minimum": -999.99,
+                            "maximum": 999.99,
+                            "example": "0M"
+                        }
+                    }
                 ],
                 "responses": {
                     "204": {
