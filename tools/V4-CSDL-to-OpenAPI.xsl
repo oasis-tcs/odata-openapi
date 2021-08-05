@@ -1869,6 +1869,9 @@
               </xsl:if>
               <xsl:text>0</xsl:text>
               <xsl:if test="$odata-version='2.0'">
+                <xsl:if test="$inParameter">
+                  <xsl:text>M</xsl:text>
+                </xsl:if>
                 <xsl:text>"</xsl:text>
               </xsl:if>
             </xsl:with-param>
