@@ -2251,7 +2251,7 @@
     <xsl:variable name="minimum" select="$annos/edm:Annotation[not(@Qualifier) and (@Term=$validationMinimum or @Term=$validationMinimumAliased)]" />
     <xsl:if test="$minimum">
       <xsl:text>,"minimum":</xsl:text>
-      <xsl:value-of select="$minimum/@Decimal|$minimum/edm:Decimal" />
+      <xsl:value-of select="$minimum/@Decimal|$minimum/edm:Decimal|$minimum/@Float|$minimum/edm:Float|$minimum/@Int|$minimum/edm:Int" />
       <xsl:variable name="exclusive" select="$minimum/edm:Annotation[not(@Qualifier) and (@Term=$validationExclusive or @Term=$validationExclusiveAliased)]" />
       <xsl:if test="$exclusive/@Bool = 'true' or $exclusive/edm:Bool='true'">
         <xsl:text>,"exclusiveMinimum":true</xsl:text>
@@ -2264,7 +2264,7 @@
     <xsl:variable name="maximum" select="$annos/edm:Annotation[not(@Qualifier) and (@Term=$validationMaximum or @Term=$validationMaximumAliased)]" />
     <xsl:if test="$maximum">
       <xsl:text>,"maximum":</xsl:text>
-      <xsl:value-of select="$maximum/@Decimal|$maximum/edm:Decimal" />
+      <xsl:value-of select="$maximum/@Decimal|$maximum/edm:Decimal|$maximum/@Float|$maximum/edm:Float|$maximum/@Int|$maximum/edm:Int" />
     </xsl:if>
     <xsl:variable name="exclusive" select="$maximum/edm:Annotation[not(@Qualifier) and (@Term=$validationExclusive or @Term=$validationExclusiveAliased)]" />
     <xsl:if test="$exclusive/@Bool = 'true' or $exclusive/edm:Bool='true'">
