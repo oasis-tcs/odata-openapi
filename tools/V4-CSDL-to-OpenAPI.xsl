@@ -56,10 +56,10 @@
   <xsl:param name="openapi-version" select="'3.0.0'" />
   <xsl:param name="openapi-root" select="''" />
 
-  <xsl:variable name="complexTypeColor" select="''" />
-  <xsl:variable name="entityTypeColor" select="'{bg:orange}'" />
-  <xsl:variable name="externalTypeColor" select="'{bg:whitesmoke}'" />
-  <xsl:variable name="resourceColor" select="'{bg:dodgerblue}'" />
+  <xsl:param name="complexTypeColor" select="''" />
+  <xsl:param name="entityTypeColor" select="'{bg:orange}'" />
+  <xsl:param name="externalTypeColor" select="'{bg:whitesmoke}'" />
+  <xsl:param name="resourceColor" select="'{bg:dodgerblue}'" />
 
   <xsl:variable name="csdl-version" select="/edmx:Edmx/@Version" />
   <xsl:variable name="option-prefix">
