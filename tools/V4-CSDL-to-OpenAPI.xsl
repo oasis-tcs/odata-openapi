@@ -56,6 +56,10 @@
   <xsl:param name="openapi-version" select="'3.0.0'" />
   <xsl:param name="openapi-root" select="''" />
 
+  <xsl:param name="complexTypeColor" select="''" />
+  <xsl:param name="entityTypeColor" select="'{bg:orange}'" />
+  <xsl:param name="externalTypeColor" select="'{bg:whitesmoke}'" />
+  <xsl:param name="resourceColor" select="'{bg:dodgerblue}'" />
 
   <xsl:variable name="csdl-version" select="/edmx:Edmx/@Version" />
   <xsl:variable name="option-prefix">
@@ -506,7 +510,15 @@
         <xsl:apply-templates select="$content" mode="diagram" />
         <xsl:text>)</xsl:text>
         <xsl:text>\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/</xsl:text>
-        <xsl:text>[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])</xsl:text>
+        <xsl:text>[External.Type</xsl:text>
+        <xsl:value-of select="$externalTypeColor" />
+        <xsl:text>],[ComplexType</xsl:text>
+        <xsl:value-of select="$complexTypeColor" />
+        <xsl:text>],[EntityType</xsl:text>
+        <xsl:value-of select="$entityTypeColor" />
+        <xsl:text>],[EntitySet/Singleton/Operation</xsl:text>
+        <xsl:value-of select="$resourceColor" />
+        <xsl:text>])</xsl:text>
       </xsl:if>
     </xsl:if>
     <xsl:if test="$references">
@@ -1039,7 +1051,7 @@
     </xsl:if>
     <xsl:text>[</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>{bg:dodgerblue}</xsl:text>
+    <xsl:value-of select="$resourceColor" />
     <xsl:text>]++-</xsl:text>
     <xsl:choose>
       <xsl:when test="local-name()='EntitySet'">
@@ -1084,7 +1096,7 @@
     </xsl:if>
     <xsl:text>[</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>{bg:dodgerblue}</xsl:text>
+    <xsl:value-of select="$resourceColor" />
     <xsl:text>]</xsl:text>
 
     <xsl:apply-templates select="$action/edm:ReturnType" mode="diagram" />
@@ -1119,7 +1131,7 @@
     </xsl:if>
     <xsl:text>[</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>{bg:dodgerblue}</xsl:text>
+    <xsl:value-of select="$resourceColor" />
     <xsl:text>]</xsl:text>
 
     <!-- TODO: deal with multiple unbound overloads, remove [1] -->
@@ -1181,9 +1193,14 @@
     <xsl:apply-templates select="@BaseType" mode="diagram" />
     <xsl:text>[</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:if test="local-name()='EntityType'">
-      <xsl:text>{bg:orange}</xsl:text>
-    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="local-name()='EntityType'">
+        <xsl:value-of select="$entityTypeColor" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$complexTypeColor" />
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>]</xsl:text>
     <xsl:apply-templates select="edm:NavigationProperty|edm:Property" mode="diagram" />
   </xsl:template>
@@ -1210,7 +1227,7 @@
         <xsl:call-template name="normalizedQualifiedName">
           <xsl:with-param name="qualifiedName" select="." />
         </xsl:call-template>
-        <xsl:text>{bg:whitesmoke}</xsl:text>
+        <xsl:value-of select="$externalTypeColor" />
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>]^</xsl:text>
@@ -1273,12 +1290,20 @@
       <xsl:choose>
         <xsl:when test="$qualifier=/edmx:Edmx/edmx:DataServices/edm:Schema/@Namespace or $qualifier=/edmx:Edmx/edmx:DataServices/edm:Schema/@Alias">
           <xsl:value-of select="$type" />
+          <xsl:choose>
+            <xsl:when test="local-name()='NavigationProperty'">
+              <xsl:value-of select="$entityTypeColor" />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$complexTypeColor" />
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:when>
         <xsl:otherwise>
           <xsl:call-template name="normalizedQualifiedName">
             <xsl:with-param name="qualifiedName" select="$singleType" />
           </xsl:call-template>
-          <xsl:text>{bg:whitesmoke}</xsl:text>
+          <xsl:value-of select="$externalTypeColor" />
         </xsl:otherwise>
       </xsl:choose>
       <xsl:text>]</xsl:text>
