@@ -2489,13 +2489,7 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityContainer">
-    <xsl:for-each select="edm:EntitySet|edm:Singleton|edm:FunctionImport|edm:ActionImport">
-      <xsl:if test="position()>1">
-        <xsl:text>,</xsl:text>
-      </xsl:if>
-      <xsl:apply-templates select="." />
-    </xsl:for-each>
-
+    <xsl:apply-templates select="edm:EntitySet|edm:Singleton|edm:FunctionImport|edm:ActionImport" />
     <xsl:call-template name="batch" />
   </xsl:template>
 
@@ -2506,9 +2500,6 @@
         <xsl:with-param name="target" select="." />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="boolean(edm:EntitySet|edm:Singleton|edm:FunctionImport|edm:ActionImport)">
-      <xsl:text>,</xsl:text>
-    </xsl:if>
     <xsl:text>"/$batch":{</xsl:text>
     <xsl:if test="not($batch-supported='false')">
       <xsl:text>"post":{"summary": "Send a group of requests","description": "Group multiple requests into a single request payload, see [Batch Requests](</xsl:text>
@@ -2837,7 +2828,6 @@
         <xsl:variable name="insertRestrictions" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='InsertRestrictions']/edm:Record/edm:PropertyValue[@Property='Insertable']" />
         <xsl:variable name="navigation-insertable" select="$insertRestrictions/@Bool|$insertRestrictions/edm:Bool" />
 
-        <xsl:text>,</xsl:text>
         <xsl:call-template name="pathItem-entity-collection">
           <xsl:with-param name="type" select="$singleType" />
           <xsl:with-param name="return-collection" select="$collection" />
@@ -3251,7 +3241,7 @@
       <xsl:text>}</xsl:text>
     </xsl:if>
 
-    <xsl:text>}</xsl:text>
+    <xsl:text>},</xsl:text>
 
     <xsl:apply-templates select="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$bindingType or edm:Parameter[1]/@Type=$bindingTypeAliased)]" mode="bound">
       <xsl:with-param name="root" select="$root" />
@@ -3318,10 +3308,6 @@
 
     <!-- for singleton first level we don't need the key -->
     <xsl:if test="$entityType or ($level=0 and not($with-key))">
-      <xsl:if test="$level>0 or $with-key">
-        <xsl:text>,</xsl:text>
-      </xsl:if>
-
       <xsl:variable name="path-template">
         <xsl:value-of select="$path-prefix" />
         <xsl:if test="$with-key">
@@ -3557,12 +3543,12 @@
         </xsl:if>
       </xsl:if>
 
-      <xsl:text>}</xsl:text>
+      <xsl:text>},</xsl:text>
 
 
       <!-- GET media resource -->
       <xsl:if test="$entityType/@HasStream='true' and $with-get='true'">
-        <xsl:text>,"/</xsl:text>
+        <xsl:text>"/</xsl:text>
         <xsl:value-of select="$path-template" />
         <xsl:text>/$value":{</xsl:text>
 
@@ -3602,7 +3588,7 @@
         </xsl:if>
         <xsl:text>},</xsl:text>
         <xsl:value-of select="$defaultResponse" />
-        <xsl:text>}}}</xsl:text>
+        <xsl:text>}}},</xsl:text>
       </xsl:if>
 
       <!-- functions, actions, and navigation properties -->
@@ -4029,7 +4015,7 @@
       <xsl:with-param name="target" select="$action/edm:ReturnType" />
       <xsl:with-param name="functionImport" select="." />
     </xsl:call-template>
-    <xsl:text>}}</xsl:text>
+    <xsl:text>}},</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:FunctionImport">
@@ -4064,9 +4050,6 @@
   <xsl:template match="edm:Function" mode="import">
     <xsl:param name="functionImport" />
 
-    <xsl:if test="position()>1">
-      <xsl:text>,</xsl:text>
-    </xsl:if>
     <xsl:text>"/</xsl:text>
     <xsl:value-of select="$functionImport/@Name" />
     <xsl:if test="$odata-version!='2.0'">
@@ -4114,7 +4097,7 @@
       <xsl:with-param name="target" select="edm:ReturnType" />
       <xsl:with-param name="functionImport" select="$functionImport" />
     </xsl:call-template>
-    <xsl:text>}}</xsl:text>
+    <xsl:text>}},</xsl:text>
   </xsl:template>
 
   <xsl:template name="query-options">
@@ -4424,7 +4407,7 @@
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
 
-    <xsl:text>,"/</xsl:text>
+    <xsl:text>"/</xsl:text>
     <xsl:value-of select="$path-prefix" />
     <xsl:text>/</xsl:text>
     <xsl:choose>
@@ -4494,7 +4477,7 @@
       <xsl:with-param name="nullableFacet" select="edm:ReturnType/@Nullable" />
       <xsl:with-param name="target" select="edm:ReturnType" />
     </xsl:call-template>
-    <xsl:text>}}</xsl:text>
+    <xsl:text>}},</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Function" mode="bound">
@@ -4513,7 +4496,7 @@
       </xsl:choose>
     </xsl:variable>
 
-    <xsl:text>,"/</xsl:text>
+    <xsl:text>"/</xsl:text>
     <xsl:value-of select="$path-prefix" />
     <xsl:text>/</xsl:text>
 
@@ -4559,7 +4542,7 @@
       <xsl:with-param name="nullableFacet" select="edm:ReturnType/@Nullable" />
       <xsl:with-param name="target" select="edm:ReturnType" />
     </xsl:call-template>
-    <xsl:text>}}</xsl:text>
+    <xsl:text>}},</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Action/edm:Parameter" mode="hashvalue">
