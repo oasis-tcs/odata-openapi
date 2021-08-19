@@ -3,7 +3,7 @@
     "info": {
         "title": "Service for namespace Supported.Annotations",
         "version": "",
-        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[SinglePartKey{bg:orange}],[SinglePartKey]-0..1>[TwoPartKey{bg:orange}],[SinglePartKey]-*>[TwoPartKey{bg:orange}],[SinglePartKey]-0..1>[TwoPartKey{bg:orange}],[SinglePartKey]-*>[TwoPartKey{bg:orange}],[SinglePartKey]-0..1>[TwoPartKey{bg:orange}],[SinglePartKey]-*>[TwoPartKey{bg:orange}],[TwoPartKey{bg:orange}],[AllSet{bg:dodgerblue}]++-*>[SinglePartKey],[NoNavigationSet{bg:dodgerblue}]++-*>[SinglePartKey],[OneNavigationSet{bg:dodgerblue}]++-*>[SinglePartKey],[ReadListOnlySet{bg:dodgerblue}]++-*>[SinglePartKey],[AllSingleton{bg:dodgerblue}]++->[SinglePartKey],[ReadOnlySingleton{bg:dodgerblue}]++->[SinglePartKey],[TwoAllSet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoReadOnlySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoReadOnlyByKeySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoWriteOnlySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoNothingSet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoWriteOnlySingleton{bg:dodgerblue}]++->[TwoPartKey],[TwoNothingSingleton{bg:dodgerblue}]++->[TwoPartKey])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[SinglePartKey{bg:orange}],[SinglePartKey]-0..1>[TwoPartKey{bg:orange}],[SinglePartKey]-*>[TwoPartKey{bg:orange}],[SinglePartKey]-0..1>[TwoPartKey{bg:orange}],[SinglePartKey]-*>[TwoPartKey{bg:orange}],[SinglePartKey]-0..1>[TwoPartKey{bg:orange}],[SinglePartKey]-*>[TwoPartKey{bg:orange}],[TwoPartKey{bg:orange}],[AllSet{bg:dodgerblue}]++-*>[SinglePartKey],[NoNavigationSet{bg:dodgerblue}]++-*>[SinglePartKey],[OneNavigationSet{bg:dodgerblue}]++-*>[SinglePartKey],[ReadListOnlySet{bg:dodgerblue}]++-*>[SinglePartKey],[AllSingleton{bg:dodgerblue}]++->[SinglePartKey],[ReadOnlySingleton{bg:dodgerblue}]++->[SinglePartKey],[TwoAllSet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoListOnlySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoReadOnlySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoReadOnlyByKeySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoWriteOnlySet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoNothingSet{bg:dodgerblue}]++-*>[TwoPartKey],[TwoWriteOnlySingleton{bg:dodgerblue}]++->[TwoPartKey],[TwoNothingSingleton{bg:dodgerblue}]++->[TwoPartKey])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
     },
     "schemes": [
         "https"
@@ -38,6 +38,9 @@
         },
         {
             "name": "TwoAllSet"
+        },
+        {
+            "name": "TwoListOnlySet"
         },
         {
             "name": "TwoReadOnlySet"
@@ -583,28 +586,6 @@
                     }
                 }
             }
-        },
-        "/AllSet('{ID}')/NothingOne": {
-            "parameters": [
-                {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
-                    "description": "key: ID",
-                    "type": "string"
-                }
-            ]
-        },
-        "/AllSet('{ID}')/NothingMany": {
-            "parameters": [
-                {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
-                    "description": "key: ID",
-                    "type": "string"
-                }
-            ]
         },
         "/NoNavigationSet": {
             "get": {
@@ -1540,8 +1521,6 @@
                 }
             }
         },
-        "/AllSingleton/NothingOne": {},
-        "/AllSingleton/NothingMany": {},
         "/ReadOnlySingleton": {
             "get": {
                 "summary": "Supports only read",
@@ -1761,7 +1740,6 @@
                 }
             }
         },
-        "/ReadOnlySingleton/NothingOne": {},
         "/ReadOnlySingleton/NothingMany": {
             "get": {
                 "summary": "Get entities from related NothingMany",
@@ -2041,6 +2019,66 @@
                 }
             }
         },
+        "/TwoListOnlySet": {
+            "get": {
+                "summary": "Supports read-list",
+                "description": "Does not support any query options",
+                "tags": [
+                    "TwoListOnlySet"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of TwoPartKey",
+                            "type": "object",
+                            "properties": {
+                                "@count": {
+                                    "$ref": "#/definitions/count"
+                                },
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to TwoListOnlySet",
+                "tags": [
+                    "TwoListOnlySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "TwoPartKey",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
         "/TwoReadOnlySet": {
             "get": {
                 "summary": "Supports read-list",
@@ -2112,7 +2150,6 @@
                 }
             }
         },
-        "/TwoReadOnlyByKeySet": {},
         "/TwoReadOnlyByKeySet(One={One},Two={Two})": {
             "parameters": [
                 {
@@ -2253,7 +2290,6 @@
                 }
             }
         },
-        "/TwoNothingSet": {},
         "/TwoWriteOnlySingleton": {
             "patch": {
                 "summary": "Supports update",
@@ -2280,7 +2316,7 @@
                 }
             }
         },
-        "/TwoNothingSingleton": {}
+        "/$batch": {}
     },
     "definitions": {
         "Supported.Annotations.SinglePartKey": {
