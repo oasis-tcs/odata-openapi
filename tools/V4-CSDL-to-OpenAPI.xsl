@@ -3129,12 +3129,6 @@
           <xsl:with-param name="targetSet" select="$targetSet" />
         </xsl:call-template>
 
-        <xsl:if test="local-name()='EntitySet' or @ContainsTarget='true'">
-          <xsl:call-template name="Common.SAPObjectNodeType">
-            <xsl:with-param name="target" select="$entityType" />
-          </xsl:call-template>
-        </xsl:if>
-
         <xsl:text>,"parameters":[</xsl:text>
         <xsl:call-template name="query-options">
           <xsl:with-param name="navigationPropertyRestriction" select="$navigationPropertyRestriction" />
@@ -3301,9 +3295,9 @@
     <xsl:if test="$sont">
       <xsl:variable name="name" select="$sont/edm:PropertyValue[@Property='Name']" />
       <!--TODO -->
-      <xsl:text>,"x-sap-object-node-type":{"name":"</xsl:text>
+      <xsl:text>,"x-sap-object-node-type":"</xsl:text>
       <xsl:value-of select="$name/@String|$name/edm:String" />
-      <xsl:text>"}</xsl:text>
+      <xsl:text>"</xsl:text>
     </xsl:if>
   </xsl:template>
 
