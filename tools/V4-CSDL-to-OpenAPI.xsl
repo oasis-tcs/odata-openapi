@@ -1409,6 +1409,10 @@
     <xsl:value-of select="$suffix" />
     <xsl:text>":{"type":"object"</xsl:text>
 
+    <xsl:call-template name="Common.SAPObjectNodeType">
+      <xsl:with-param name="target" select="." />
+    </xsl:call-template>
+
     <xsl:call-template name="properties">
       <xsl:with-param name="structuredType" select="." />
       <xsl:with-param name="suffix" select="$suffix" />
@@ -3294,7 +3298,6 @@
     <xsl:variable name="sont" select="$annos/edm:Annotation[@Term=$commonSont or @Term=$commonSontAliased]/edm:Record" />
     <xsl:if test="$sont">
       <xsl:variable name="name" select="$sont/edm:PropertyValue[@Property='Name']" />
-      <!--TODO -->
       <xsl:text>,"x-sap-object-node-type":"</xsl:text>
       <xsl:value-of select="$name/@String|$name/edm:String" />
       <xsl:text>"</xsl:text>
