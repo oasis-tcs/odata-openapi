@@ -1,4 +1,10 @@
-# Changelog
+# Changelog´
+
+## [0.10.0] - 2021-10-22
+
+### Changed
+
+- Paths for bound actions and functions only on entity sets, singletons, and containment navigation properties.
 
 ## [0.9.0] - 2021-10-13
 

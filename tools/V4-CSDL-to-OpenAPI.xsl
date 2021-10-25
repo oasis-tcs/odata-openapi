@@ -3269,16 +3269,18 @@
 
       <xsl:text>},</xsl:text>
 
-      <xsl:apply-templates select="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$bindingType or edm:Parameter[1]/@Type=$bindingTypeAliased)]" mode="bound">
-        <xsl:with-param name="root" select="$root" />
-        <xsl:with-param name="path-prefix" select="$path-prefix" />
-        <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
-      </xsl:apply-templates>
-      <xsl:apply-templates select="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$bindingType or edm:Parameter[1]/@Type=$bindingTypeAliased)]" mode="bound">
-        <xsl:with-param name="root" select="$root" />
-        <xsl:with-param name="path-prefix" select="$path-prefix" />
-        <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
-      </xsl:apply-templates>
+      <xsl:if test="@ContainsTarget='true' or not(contains($path-prefix,'/'))">
+        <xsl:apply-templates select="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$bindingType or edm:Parameter[1]/@Type=$bindingTypeAliased)]" mode="bound">
+          <xsl:with-param name="root" select="$root" />
+          <xsl:with-param name="path-prefix" select="$path-prefix" />
+          <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
+        </xsl:apply-templates>
+        <xsl:apply-templates select="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$bindingType or edm:Parameter[1]/@Type=$bindingTypeAliased)]" mode="bound">
+          <xsl:with-param name="root" select="$root" />
+          <xsl:with-param name="path-prefix" select="$path-prefix" />
+          <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
+        </xsl:apply-templates>
+      </xsl:if>
 
     </xsl:if>
 
