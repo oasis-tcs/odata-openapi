@@ -1409,6 +1409,10 @@
     <xsl:value-of select="$suffix" />
     <xsl:text>":{"type":"object"</xsl:text>
 
+    <xsl:call-template name="Common.SAPObjectNodeType">
+      <xsl:with-param name="target" select="." />
+    </xsl:call-template>
+
     <xsl:call-template name="properties">
       <xsl:with-param name="structuredType" select="." />
       <xsl:with-param name="suffix" select="$suffix" />
@@ -1653,6 +1657,7 @@
     <xsl:param name="type" />
     <xsl:param name="nullableFacet" />
     <xsl:param name="target" select="." />
+    <xsl:param name="inKeyParameter" select="false()" />
     <xsl:param name="inParameter" select="false()" />
     <xsl:param name="inResponse" select="false()" />
     <xsl:param name="suffix" select="null" />
@@ -2202,9 +2207,11 @@
       </xsl:if>
       <xsl:text>}</xsl:text>
     </xsl:if>
-    <xsl:call-template name="Common.SAPObjectNodeTypeReference">
-      <xsl:with-param name="annos" select="$annos" />
-    </xsl:call-template>
+    <xsl:if test="not($inKeyParameter)">
+      <xsl:call-template name="Common.SAPObjectNodeTypeReference">
+        <xsl:with-param name="annos" select="$annos" />
+      </xsl:call-template>
+    </xsl:if>
   </xsl:template>
 
   <!-- TODO: pass $annos as parameter, calculate it once in caller -->
@@ -3296,7 +3303,6 @@
     <xsl:variable name="sont" select="$annos/edm:Annotation[@Term=$commonSont or @Term=$commonSontAliased]/edm:Record" />
     <xsl:if test="$sont">
       <xsl:variable name="name" select="$sont/edm:PropertyValue[@Property='Name']" />
-      <!--TODO -->
       <xsl:text>,"x-sap-object-node-type":"</xsl:text>
       <xsl:value-of select="$name/@String|$name/edm:String" />
       <xsl:text>"</xsl:text>
@@ -3959,8 +3965,24 @@
               <xsl:with-param name="type" select="$propertyType" />
               <xsl:with-param name="nullableFacet" select="'false'" />
               <xsl:with-param name="target" select="$property" />
+              <xsl:with-param name="inKeyParameter" select="true()" />
             </xsl:call-template>
             <xsl:text>}</xsl:text>
+            <xsl:variable name="target-path">
+              <xsl:call-template name="annotation-target">
+                <xsl:with-param name="node" select="$property" />
+              </xsl:call-template>
+            </xsl:variable>
+            <xsl:variable name="target-path-aliased">
+              <xsl:call-template name="annotation-target">
+                <xsl:with-param name="node" select="$property" />
+                <xsl:with-param name="qualifier" select="$property/ancestor::edm:Schema/@Alias" />
+              </xsl:call-template>
+            </xsl:variable>
+            <xsl:variable name="annos" select="key('externalAnnotations',$target-path)|key('externalAnnotations',$target-path-aliased)|$property" />
+            <xsl:call-template name="Common.SAPObjectNodeTypeReference">
+              <xsl:with-param name="annos" select="$annos" />
+            </xsl:call-template>
           </xsl:otherwise>
         </xsl:choose>
 
