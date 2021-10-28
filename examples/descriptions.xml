@@ -121,6 +121,29 @@
             <PropertyValue Property="LongDescription" String="Delete Entity Ext - LongDescription" />
           </Record>
         </Annotation>
+        <Annotation Term="Capabilities.NavigationRestrictions">
+          <Record>
+            <PropertyValue Property="RestrictedProperties">
+              <Collection>
+                <Record>
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="contained" />
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Description" String="Read Contained Ext - Description" />
+                      <PropertyValue Property="LongDescription" String="Read Contained Ext - LongDescription" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Description" String="Create Contained Ext - Description" />
+                      <PropertyValue Property="LongDescription" String="Create Contained Ext - LongDescription" />
+                    </Record>
+                  </PropertyValue>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
       </Annotations>
 
       <Annotations Target="self.Default/single_ext">
@@ -156,10 +179,10 @@
         <Key>
           <PropertyRef Name="id" />
         </Key>
-        <Property Name="id" Type="Edm.String" Nullable="false" MaxLength="70">
+        <Property Name="id" Type="Edm.String" Nullable="false" MaxLength="70" DefaultValue="0000">
           <Annotation Term="Core.Description" String="Property - Description" />
         </Property>
-        <NavigationProperty Name="subs" Type="Collection(self.subEntity)" ContainsTarget="true" />
+        <NavigationProperty Name="contained" Type="Collection(self.subEntity)" ContainsTarget="true" />
       </EntityType>
 
       <Annotations Target="self.entity">

@@ -121,6 +121,29 @@
             <PropertyValue Property="LongDescription" String="Delete Entity Ext - LongDescription" />
           </Record>
         </Annotation>
+        <Annotation Term="Capabilities.NavigationRestrictions">
+          <Record>
+            <PropertyValue Property="RestrictedProperties">
+              <Collection>
+                <Record>
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="contained" />
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Description" String="Read Contained Ext - Description" />
+                      <PropertyValue Property="LongDescription" String="Read Contained Ext - LongDescription" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Description" String="Create Contained Ext - Description" />
+                      <PropertyValue Property="LongDescription" String="Create Contained Ext - LongDescription" />
+                    </Record>
+                  </PropertyValue>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
       </Annotations>
       
       <Annotations Target="self.Default/single_ext">
@@ -159,6 +182,22 @@
         <Property Name="id" Type="Edm.String" Nullable="false" MaxLength="70" DefaultValue="0000">
           <Annotation Term="Core.Description" String="Property - Description" />
         </Property>
+        <NavigationProperty Name="contained" Type="Collection(self.subEntity)" ContainsTarget="true" />
+      </EntityType>
+
+      <Annotations Target="self.entity">
+        <Annotation Term="Core.Description" String="Entity Type - Description" />
+      </Annotations>
+
+      <Annotations Target="self.entity/id">
+        <Annotation Term="Core.LongDescription" String="Property - LongDescription" />
+      </Annotations>
+
+      <EntityType Name="subEntity">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" MaxLength="70" />
       </EntityType>
       
       <Annotations Target="self.entity">
