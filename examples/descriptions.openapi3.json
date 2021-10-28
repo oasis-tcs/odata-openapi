@@ -653,7 +653,8 @@
             "get": {
                 "summary": "Query Related - Description",
                 "tags": [
-                    "entities"
+                    "entities",
+                    "entities_ext"
                 ],
                 "parameters": [
                     {
@@ -760,7 +761,8 @@
             "post": {
                 "summary": "Create Related - Description",
                 "tags": [
-                    "entities"
+                    "entities",
+                    "entities_ext"
                 ],
                 "requestBody": {
                     "description": "Entity Type - Description",
@@ -1415,7 +1417,8 @@
             "get": {
                 "summary": "Get entities from related related",
                 "tags": [
-                    "entities_ext"
+                    "entities_ext",
+                    "entities"
                 ],
                 "parameters": [
                     {
@@ -1517,6 +1520,40 @@
                         "$ref": "#/components/responses/error"
                     }
                 }
+            },
+            "post": {
+                "summary": "Create Entity - Description",
+                "tags": [
+                    "entities_ext",
+                    "entities"
+                ],
+                "requestBody": {
+                    "description": "Entity Type - Description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/descriptions.entity-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/descriptions.entity"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "description": "Create Entity - LongDescription"
             }
         },
         "/single": {
