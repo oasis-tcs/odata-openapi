@@ -3,7 +3,7 @@
     "info": {
         "title": "Container - Description",
         "version": "0.0.1",
-        "description": "Container - LongDescription\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[entities{bg:dodgerblue}]++-*>[entity],[entities_ext{bg:dodgerblue}]++-*>[entity],[single{bg:dodgerblue}]++->[entity],[single_ext{bg:dodgerblue}]++->[entity],[actionimport{bg:dodgerblue}],[actionimport_ext{bg:dodgerblue}],[actionimport_no_descriptions{bg:dodgerblue}],[functionimport{bg:dodgerblue}],[functionimport_ext{bg:dodgerblue}],[functionimport_no_descriptions{bg:dodgerblue}],[entity{bg:orange}],[entity]++-*>[subEntity{bg:orange}],[subEntity{bg:orange}])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
+        "description": "Container - LongDescription\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[entities{bg:dodgerblue}]++-*>[entity],[entities_ext{bg:dodgerblue}]++-*>[entity],[single{bg:dodgerblue}]++->[entity],[single_ext{bg:dodgerblue}]++->[entity],[actionimport{bg:dodgerblue}],[actionimport_ext{bg:dodgerblue}],[actionimport_no_descriptions{bg:dodgerblue}],[functionimport{bg:dodgerblue}],[functionimport_ext{bg:dodgerblue}],[functionimport_no_descriptions{bg:dodgerblue}],[entity{bg:orange}],[entity]++-*>[subEntity{bg:orange}],[entity]-*>[entity{bg:orange}],[subEntity{bg:orange}])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
     },
     "schemes": [
         "https"
@@ -98,7 +98,8 @@
                             "type": "string",
                             "enum": [
                                 "*",
-                                "contained"
+                                "contained",
+                                "related"
                             ]
                         }
                     }
@@ -196,7 +197,8 @@
                             "type": "string",
                             "enum": [
                                 "*",
-                                "contained"
+                                "contained",
+                                "related"
                             ]
                         }
                     }
@@ -557,6 +559,139 @@
                 }
             }
         },
+        "/entities('{id}')/related": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "Property - Description  \nProperty - LongDescription",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Query Related - Description",
+                "description": "Query Related - LongDescription",
+                "tags": [
+                    "entities",
+                    "entities_ext"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "id",
+                                "id desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "id"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "contained",
+                                "related"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of entity",
+                            "type": "object",
+                            "properties": {
+                                "@count": {
+                                    "$ref": "#/definitions/count"
+                                },
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/descriptions.entity"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create Related - Description",
+                "description": "Create Related - LongDescription",
+                "tags": [
+                    "entities",
+                    "entities_ext"
+                ],
+                "parameters": [
+                    {
+                        "name": "entity",
+                        "in": "body",
+                        "description": "Entity Type - Description",
+                        "schema": {
+                            "$ref": "#/definitions/descriptions.entity-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/descriptions.entity"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
         "/entities_ext": {
             "get": {
                 "summary": "Query Entity Set Ext - Description",
@@ -620,7 +755,8 @@
                             "type": "string",
                             "enum": [
                                 "*",
-                                "contained"
+                                "contained",
+                                "related"
                             ]
                         }
                     }
@@ -718,7 +854,8 @@
                             "type": "string",
                             "enum": [
                                 "*",
-                                "contained"
+                                "contained",
+                                "related"
                             ]
                         }
                     }
@@ -1079,6 +1216,139 @@
                 }
             }
         },
+        "/entities_ext('{id}')/related": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "Property - Description  \nProperty - LongDescription",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Query Related Ext - Description",
+                "description": "Query Related Ext - LongDescription",
+                "tags": [
+                    "entities_ext",
+                    "entities"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "id",
+                                "id desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "id"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "contained",
+                                "related"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of entity",
+                            "type": "object",
+                            "properties": {
+                                "@count": {
+                                    "$ref": "#/definitions/count"
+                                },
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/descriptions.entity"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create Related Ext - Description",
+                "description": "Create Related Ext - LongDescription",
+                "tags": [
+                    "entities_ext",
+                    "entities"
+                ],
+                "parameters": [
+                    {
+                        "name": "entity",
+                        "in": "body",
+                        "description": "Entity Type - Description",
+                        "schema": {
+                            "$ref": "#/definitions/descriptions.entity-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/descriptions.entity"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
         "/single": {
             "get": {
                 "summary": "Read Singleton - Description",
@@ -1110,7 +1380,8 @@
                             "type": "string",
                             "enum": [
                                 "*",
-                                "contained"
+                                "contained",
+                                "related"
                             ]
                         }
                     }
@@ -1421,6 +1692,99 @@
                 }
             }
         },
+        "/single/related": {
+            "get": {
+                "summary": "Get entities from related related",
+                "tags": [
+                    "single"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "id",
+                                "id desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "id"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "contained",
+                                "related"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of entity",
+                            "type": "object",
+                            "properties": {
+                                "@count": {
+                                    "$ref": "#/definitions/count"
+                                },
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/descriptions.entity"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
         "/single_ext": {
             "get": {
                 "summary": "Read Singleton Ext - Description",
@@ -1452,7 +1816,8 @@
                             "type": "string",
                             "enum": [
                                 "*",
-                                "contained"
+                                "contained",
+                                "related"
                             ]
                         }
                     }
@@ -1756,6 +2121,99 @@
                 "responses": {
                     "204": {
                         "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/single_ext/related": {
+            "get": {
+                "summary": "Get entities from related related",
+                "tags": [
+                    "single_ext"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "id",
+                                "id desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "id"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "contained",
+                                "related"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of entity",
+                            "type": "object",
+                            "properties": {
+                                "@count": {
+                                    "$ref": "#/definitions/count"
+                                },
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/descriptions.entity"
+                                    }
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "$ref": "#/responses/error"
@@ -2119,6 +2577,12 @@
                     "items": {
                         "$ref": "#/definitions/descriptions.subEntity"
                     }
+                },
+                "related": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/descriptions.entity"
+                    }
                 }
             },
             "title": "Entity Type - Description",
@@ -2138,6 +2602,12 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/descriptions.subEntity-create"
+                    }
+                },
+                "related": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/descriptions.entity-create"
                     }
                 }
             },

@@ -14,7 +14,7 @@
       <EntityContainer Name="Default">
         
         <EntitySet Name="entities" EntityType="self.entity">
-          <NavigationPropertyBinding Path="related" Target="entities" />
+          <NavigationPropertyBinding Path="related" Target="entities_ext" />
 
           <Annotation Term="Core.Description" String="Entity Set - Description" />
           <Annotation Term="Core.LongDescription" String="Entity Set - LongDescription" />
@@ -105,7 +105,9 @@
             </Record>
           </Annotation>
         </EntitySet>
-        <EntitySet Name="entities_ext" EntityType="self.entity" />
+        <EntitySet Name="entities_ext" EntityType="self.entity">
+          <NavigationPropertyBinding Path="related" Target="entities" />
+        </EntitySet>
         
         <Singleton Name="single" Type="self.entity">
           <Annotation Term="Core.Description" String="Singleton - Description" />
@@ -213,6 +215,21 @@
                     <Record>
                       <PropertyValue Property="Description" String="Delete Contained Ext - Description" />
                       <PropertyValue Property="LongDescription" String="Delete Contained Ext - LongDescription" />
+                    </Record>
+                  </PropertyValue>
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="related" />
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Description" String="Query Related Ext - Description" />
+                      <PropertyValue Property="LongDescription" String="Query Related Ext - LongDescription" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Description" String="Create Related Ext - Description" />
+                      <PropertyValue Property="LongDescription" String="Create Related Ext - LongDescription" />
                     </Record>
                   </PropertyValue>
                 </Record>
