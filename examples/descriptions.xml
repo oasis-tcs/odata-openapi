@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <edmx:Edmx xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.01">
   <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
     <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
@@ -9,10 +9,10 @@
   <edmx:DataServices>
     <Schema Namespace="descriptions" Alias="self">
       <Annotation Term="Core.SchemaVersion" String="0.0.1" />
-      
-      
+
+
       <EntityContainer Name="Default">
-        
+
         <EntitySet Name="entities" EntityType="self.entity">
           <Annotation Term="Core.Description" String="Entity Set - Description" />
           <Annotation Term="Core.LongDescription" String="Entity Set - LongDescription" />
@@ -48,7 +48,7 @@
           </Annotation>
         </EntitySet>
         <EntitySet Name="entities_ext" EntityType="self.entity" />
-        
+
         <Singleton Name="single" Type="self.entity">
           <Annotation Term="Core.Description" String="Singleton - Description" />
           <Annotation Term="Core.LongDescription" String="Singleton - LongDescription" />
@@ -66,28 +66,28 @@
           </Annotation>
         </Singleton>
         <Singleton Name="single_ext" Type="self.entity" />
-        
+
         <ActionImport Action="self.action" Name="actionimport">
           <Annotation Term="Core.Description" String="Action Import - Description" />
           <Annotation Term="Core.LongDescription" String="Action Import - LongDescription" />
         </ActionImport>
         <ActionImport Action="self.action" Name="actionimport_ext" />
         <ActionImport Action="self.action" Name="actionimport_no_descriptions" />
-        
+
         <FunctionImport Function="self.function" Name="functionimport">
           <Annotation Term="Core.Description" String="Function Import - Description" />
           <Annotation Term="Core.LongDescription" String="Function Import - LongDescription" />
         </FunctionImport>
         <FunctionImport Function="self.function" Name="functionimport_ext" />
         <FunctionImport Function="self.function" Name="functionimport_no_descriptions" />
-        
+
       </EntityContainer>
-      
+
       <Annotations Target="self.Default">
         <Annotation Term="Core.Description" String="Container - Description" />
         <Annotation Term="Core.LongDescription" String="Container - LongDescription" />
       </Annotations>
-      
+
       <Annotations Target="self.Default/entities_ext">
         <Annotation Term="Core.Description" String="Entity Set Ext - Description" />
         <Annotation Term="Core.LongDescription" String="Entity Set Ext - LongDescription" />
@@ -122,7 +122,7 @@
           </Record>
         </Annotation>
       </Annotations>
-      
+
       <Annotations Target="self.Default/single_ext">
         <Annotation Term="Core.Description" String="Singleton Ext - Description" />
         <Annotation Term="Core.LongDescription" String="Singleton Ext - LongDescription" />
@@ -139,18 +139,18 @@
           </Record>
         </Annotation>
       </Annotations>
-      
+
       <Annotations Target="self.Default/actionimport_ext">
         <Annotation Term="Core.Description" String="Action Import Ext - Description" />
         <Annotation Term="Core.LongDescription" String="Action Import Ext - LongDescription" />
       </Annotations>
-      
+
       <Annotations Target="self.Default/functionimport_ext">
         <Annotation Term="Core.Description" String="Function Import Ext - Description" />
         <Annotation Term="Core.LongDescription" String="Function Import Ext - LongDescription" />
       </Annotations>
 
-      
+
       <EntityType Name="entity">
         <Annotation Term="Core.LongDescription" String="Entity Type - LongDescription" />
         <Key>
@@ -159,17 +159,33 @@
         <Property Name="id" Type="Edm.String" Nullable="false" MaxLength="70">
           <Annotation Term="Core.Description" String="Property - Description" />
         </Property>
+        <NavigationProperty Name="subs" Type="Collection(self.subEntity)" ContainsTarget="true" />
       </EntityType>
-      
+
       <Annotations Target="self.entity">
         <Annotation Term="Core.Description" String="Entity Type - Description" />
       </Annotations>
-      
+
       <Annotations Target="self.entity/id">
         <Annotation Term="Core.LongDescription" String="Property - LongDescription" />
       </Annotations>
-      
-      
+
+      <EntityType Name="subEntity">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" MaxLength="70" />
+      </EntityType>
+
+      <Annotations Target="self.entity">
+        <Annotation Term="Core.Description" String="Entity Type - Description" />
+      </Annotations>
+
+      <Annotations Target="self.entity/id">
+        <Annotation Term="Core.LongDescription" String="Property - LongDescription" />
+      </Annotations>
+
+
       <Action Name="action">
         <Annotation Term="Core.Description" String="Action Unbound Overload - Description" />
         <Parameter Name="nonbinding" Type="Edm.String">
@@ -179,19 +195,19 @@
           <Annotation Term="Core.Description" String="Action Unbound Overload Return Type - Description" />
         </ReturnType>
       </Action>
-      
+
       <Annotations Target="self.action()">
         <Annotation Term="Core.LongDescription" String="Action Unbound Overload Ext - LongDescription" />
       </Annotations>
-      
+
       <Annotations Target="self.action()/nonbinding">
         <Annotation Term="Core.LongDescription" String="Action Unbound Overload Parameter Ext - LongDescription" />
       </Annotations>
-      
+
       <Annotations Target="self.action()/$ReturnType">
         <Annotation Term="Core.LongDescription" String="Action Unbound Overload Return Type Ext - LongDescription" />
       </Annotations>
-      
+
       <Action Name="action" IsBound="true">
         <Annotation Term="Core.LongDescription" String="Action Bound Overload - LongDescription" />
         <Parameter Name="binding" Type="self.entity">
@@ -204,24 +220,24 @@
           <Annotation Term="Core.LongDescription" String="Action Bound Overload Return Type - LongDescription" />
         </ReturnType>
       </Action>
-      
+
       <Annotations Target="self.action(self.entity)">
         <Annotation Term="Core.Description" String="Action Bound Overload Ext - Description" />
       </Annotations>
-      
+
       <Annotations Target="self.action(self.entity)/binding">
         <Annotation Term="Core.Description" String="Action Bound Overload Binding Parameter Ext - Description - is ignored" />
       </Annotations>
-      
+
       <Annotations Target="self.action(self.entity)/nonbinding">
         <Annotation Term="Core.Description" String="Action Bound Overload Nonbinding Parameter Ext - Description" />
       </Annotations>
-      
+
       <Annotations Target="self.action(self.entity)/$ReturnType">
         <Annotation Term="Core.Description" String="Action Bound Overload Return Type Ext - Description" />
       </Annotations>
-      
-      
+
+
       <Function Name="function">
         <Annotation Term="Core.Description" String="Function Unbound Overload - Description" />
         <Parameter Name="nonbinding" Type="Edm.String">
@@ -231,19 +247,19 @@
           <Annotation Term="Core.Description" String="Function Unbound Overload Return Type - Description" />
         </ReturnType>
       </Function>
-      
+
       <Annotations Target="self.function(Edm.String)">
         <Annotation Term="Core.LongDescription" String="Function Unbound Overload Ext - LongDescription" />
       </Annotations>
-      
+
       <Annotations Target="self.function(Edm.String)/nonbinding">
         <Annotation Term="Core.LongDescription" String="Function Unbound Overload Parameter Ext - LongDescription" />
       </Annotations>
-      
+
       <Annotations Target="self.function(Edm.String)/$ReturnType">
         <Annotation Term="Core.LongDescription" String="Function Unbound Overload Return Type Ext - LongDescription" />
       </Annotations>
-      
+
       <Function Name="function" IsBound="true">
         <Annotation Term="Core.LongDescription" String="Function Bound Overload - LongDescription" />
         <Parameter Name="binding" Type="self.entity">
@@ -256,24 +272,24 @@
           <Annotation Term="Core.LongDescription" String="Function Bound Overload Return Type - LongDescription" />
         </ReturnType>
       </Function>
-      
+
       <Annotations Target="self.function(self.entity,Edm.String)">
         <Annotation Term="Core.Description" String="Function Bound Overload Ext - Description" />
       </Annotations>
-      
+
       <Annotations Target="self.function(self.entity,Edm.String)/binding">
         <Annotation Term="Core.Description" String="Function Bound Overload Binding Parameter Ext - Description - is ignored" />
       </Annotations>
-      
+
       <Annotations Target="self.function(self.entity,Edm.String)/nonbinding">
         <Annotation Term="Core.Description" String="Function Bound Overload Nonbinding Parameter Ext - Description" />
       </Annotations>
-      
+
       <Annotations Target="self.function(self.entity,Edm.String)/$ReturnType">
         <Annotation Term="Core.Description" String="Function Bound Overload Return Type Ext - Description" />
       </Annotations>
-      
-      
+
+
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>
