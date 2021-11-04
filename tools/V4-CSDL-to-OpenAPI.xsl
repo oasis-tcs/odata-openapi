@@ -2524,8 +2524,15 @@
         <xsl:with-param name="target" select="." />
       </xsl:call-template>
     </xsl:variable>
+    <xsl:variable name="batch-support-supported">
+      <xsl:call-template name="capability">
+        <xsl:with-param name="term" select="'BatchSupport'" />
+        <xsl:with-param name="property" select="'Supported'" />
+        <xsl:with-param name="target" select="." />
+      </xsl:call-template>
+    </xsl:variable>
     <xsl:text>"/$batch":{</xsl:text>
-    <xsl:if test="not($batch-supported='false')">
+    <xsl:if test="not($batch-supported='false' or $batch-support-supported='false')">
       <xsl:text>"post":{"summary": "Send a group of requests","description": "Group multiple requests into a single request payload, see [Batch Requests](</xsl:text>
       <xsl:choose>
         <xsl:when test="$odata-version='2.0'">
