@@ -161,13 +161,12 @@
                     "Products"
                 ],
                 "requestBody": {
-                    "description": "New media resource",
+                    "description": "New entity",
                     "required": true,
                     "content": {
-                        "*/*": {
+                        "application/json": {
                             "schema": {
-                                "type": "string",
-                                "format": "binary"
+                                "$ref": "#/components/schemas/ODataDemo.Product-create"
                             }
                         }
                     }
@@ -297,41 +296,6 @@
                 "responses": {
                     "204": {
                         "description": "Success"
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            }
-        },
-        "/Products('{ID}')/$value": {
-            "parameters": [
-                {
-                    "description": "key: ID",
-                    "in": "path",
-                    "name": "ID",
-                    "required": true,
-                    "schema": {
-                        "type": "string"
-                    }
-                }
-            ],
-            "get": {
-                "summary": "Get media resource from Products by key",
-                "tags": [
-                    "Products"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Retrieved media resource",
-                        "content": {
-                            "*/*": {
-                                "schema": {
-                                    "type": "string",
-                                    "format": "binary"
-                                }
-                            }
-                        }
                     },
                     "4XX": {
                         "$ref": "#/components/responses/error"
@@ -880,13 +844,12 @@
                     "Products"
                 ],
                 "requestBody": {
-                    "description": "New media resource",
+                    "description": "New entity",
                     "required": true,
                     "content": {
-                        "*/*": {
+                        "application/json": {
                             "schema": {
-                                "type": "string",
-                                "format": "binary"
+                                "$ref": "#/components/schemas/ODataDemo.Product-create"
                             }
                         }
                     }
@@ -1375,13 +1338,12 @@
                     "Products"
                 ],
                 "requestBody": {
-                    "description": "New media resource",
+                    "description": "New entity",
                     "required": true,
                     "content": {
-                        "*/*": {
+                        "application/json": {
                             "schema": {
-                                "type": "string",
-                                "format": "binary"
+                                "$ref": "#/components/schemas/ODataDemo.Product-create"
                             }
                         }
                     }
@@ -1665,13 +1627,12 @@
                     "Products"
                 ],
                 "requestBody": {
-                    "description": "New media resource",
+                    "description": "New entity",
                     "required": true,
                     "content": {
-                        "*/*": {
+                        "application/json": {
                             "schema": {
-                                "type": "string",
-                                "format": "binary"
+                                "$ref": "#/components/schemas/ODataDemo.Product-create"
                             }
                         }
                     }
@@ -2232,6 +2193,61 @@
                     }
                 }
             },
+            "ODataDemo.Product-create": {
+                "title": "Product (for create)",
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
+                    "Description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ReleaseDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "nullable": true
+                    },
+                    "DiscontinuedDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "nullable": true
+                    },
+                    "Rating": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "Price": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 1,
+                        "nullable": true
+                    },
+                    "Currency": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "Category": {
+                        "$ref": "#/components/schemas/entityReference"
+                    }
+                },
+                "required": [
+                    "ID"
+                ]
+            },
             "ODataDemo.Product-update": {
                 "title": "Product (for update)",
                 "type": "object",
@@ -2358,6 +2374,16 @@
                     }
                 ],
                 "description": "The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option."
+            },
+            "entityReference": {
+                "type": "object",
+                "properties": {
+                    "@id": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "[Link to a related entity](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_LinktoRelatedEntitiesWhenCreatinganE)"
+                    }
+                }
             },
             "error": {
                 "type": "object",
