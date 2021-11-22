@@ -1,4 +1,10 @@
-# Changelog´
+# Changelog
+
+## [0.11.0] - 2021-10-22
+
+### Added
+
+- Schemas for create allow linking to existing entities for single-valued non-nullable non-containment navigation properties
 
 ## [0.10.0] - 2021-10-22
 
