@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.1] - 2022-02-21
+
+### Changed
+
+- External annotations targeting a function overload with collection-valued parameters are now correctly recognized
+
 ## [0.11.0] - 2021-11-22
 
 ### Added
