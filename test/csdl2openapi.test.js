@@ -790,6 +790,63 @@ describe("Edge cases", function () {
     );
   });
 
+  it("function with nullable and not nullable parameters", function () {
+    const csdl = {
+      $EntityContainer: "this.Container",
+      this: {
+        func: [
+          {
+            $Kind: "Function",
+            $Parameter: [
+              {
+                $Name: "string",
+              },
+              {
+                $Name: "stringNull",
+                $Nullable: true,
+              },
+              //TODO: all other (relevant) primitive types
+            ],
+            $ReturnType: {},
+          },
+        ],
+        Container: { fun: { $Function: "this.func" } },
+      },
+    };
+    const expected = {
+      paths: {
+        "/fun(string='{string}',stringNull={stringNull})": { get: {} },
+        "/$batch": { post: {} },
+      },
+    };
+    const actual = lib.csdl2openapi(csdl, {});
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations"
+    );
+    assert.deepStrictEqual(
+      actual.paths["/fun(string='{string}',stringNull={stringNull})"].get
+        .parameters,
+      [
+        {
+          in: "path",
+          name: "string",
+          required: true,
+          schema: { type: "string" },
+        },
+        {
+          in: "path",
+          name: "stringNull",
+          required: true,
+          schema: { type: "string", nullable: true, default: "null" },
+        },
+      ],
+      "Function parameters"
+    );
+  });
+
   it("function with complex and optional collection parameter", function () {
     const csdl = {
       $Reference: {
