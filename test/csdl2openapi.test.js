@@ -14,44 +14,44 @@ const fs = require("fs");
 // navigation properties inherited from base type A.n1 -> B.n2 -> C.n3
 // collection-navigation to entity type without key or unknown entity type: suppress path item with key segment
 // remaining Edm types, especially Geo* - see odata-definitions.json
-// (external) annotations on actions, functions, parameters, returntype
+// (external) annotations on actions, functions, parameters, return types
 // control mapping of reference URLs
 
-const csdl = require("odata-csdl");
-const lib = require("../lib/csdl2openapi");
+const { xml2json } = require("odata-csdl");
+const { csdl2openapi } = require("../lib/csdl2openapi");
 
-const example1 = csdl.xml2json(fs.readFileSync("examples/csdl-16.1.xml"));
+const example1 = xml2json(fs.readFileSync("examples/csdl-16.1.xml"));
 const result1 = require("../examples/csdl-16.1.openapi3.json");
 
-const example2 = csdl.xml2json(fs.readFileSync("examples/TripPin.xml"));
+const example2 = xml2json(fs.readFileSync("examples/TripPin.xml"));
 const result2 = require("../examples/TripPin.openapi3.json");
 
-const example4 = csdl.xml2json(fs.readFileSync("examples/aggregation.xml"));
+const example4 = xml2json(fs.readFileSync("examples/aggregation.xml"));
 const result4 = require("../examples/aggregation.openapi3.json");
 
-const example5 = csdl.xml2json(fs.readFileSync("examples/annotations.xml"));
+const example5 = xml2json(fs.readFileSync("examples/annotations.xml"));
 const result5 = require("../examples/annotations.openapi3.json");
 
-const example6 = csdl.xml2json(fs.readFileSync("examples/containment.xml"));
+const example6 = xml2json(fs.readFileSync("examples/containment.xml"));
 const result6 = require("../examples/containment.openapi3.json");
 
-const example7 = csdl.xml2json(fs.readFileSync("examples/authorization.xml"));
+const example7 = xml2json(fs.readFileSync("examples/authorization.xml"));
 const result7 = require("../examples/authorization.openapi3.json");
 
-const example8 = csdl.xml2json(fs.readFileSync("examples/descriptions.xml"));
+const example8 = xml2json(fs.readFileSync("examples/descriptions.xml"));
 const result8 = require("../examples/descriptions.openapi3.json");
 
-const example9 = csdl.xml2json(fs.readFileSync("examples/odata-rw-v3.xml"));
+const example9 = xml2json(fs.readFileSync("examples/odata-rw-v3.xml"));
 const result9 = require("../examples/odata-rw-v3.openapi3.json");
 
 describe("Examples", function () {
   it("csdl-16.1", function () {
-    const openapi = lib.csdl2openapi(example1, { diagram: true });
+    const openapi = csdl2openapi(example1, { diagram: true });
     check(openapi, result1);
   });
 
   it("TripPin", function () {
-    const openapi = lib.csdl2openapi(example2, {
+    const openapi = csdl2openapi(example2, {
       host: "services.odata.org",
       basePath: "/V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW",
       diagram: true,
@@ -60,32 +60,32 @@ describe("Examples", function () {
   });
 
   it("aggregation", function () {
-    const openapi = lib.csdl2openapi(example4, { diagram: true });
+    const openapi = csdl2openapi(example4, { diagram: true });
     check(openapi, result4);
   });
 
   it("annotations", function () {
-    const openapi = lib.csdl2openapi(example5, { diagram: true });
+    const openapi = csdl2openapi(example5, { diagram: true });
     check(openapi, result5);
   });
 
   it("containment", function () {
-    const openapi = lib.csdl2openapi(example6, { diagram: true });
+    const openapi = csdl2openapi(example6, { diagram: true });
     check(openapi, result6);
   });
 
   it("authorization", function () {
-    const openapi = lib.csdl2openapi(example7, { diagram: true });
+    const openapi = csdl2openapi(example7, { diagram: true });
     check(openapi, result7);
   });
 
   it("descriptions", function () {
-    const openapi = lib.csdl2openapi(example8, { diagram: true });
+    const openapi = csdl2openapi(example8, { diagram: true });
     check(openapi, result8);
   });
 
   it("odata-rw-v3", function () {
-    const openapi = lib.csdl2openapi(example9, {
+    const openapi = csdl2openapi(example9, {
       host: "services.odata.org",
       basePath: "/V3/(S(1urrjxgkuh4r30yqim0hqrtj))/OData/OData.svc",
       diagram: true,
@@ -107,7 +107,7 @@ describe("Edge cases", function () {
       paths: {},
       components: { schemas: {} },
     };
-    const openapi = lib.csdl2openapi(csdl, {});
+    const openapi = csdl2openapi(csdl, {});
     assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
   });
 
@@ -149,7 +149,7 @@ describe("Edge cases", function () {
         schemas: {},
       },
     };
-    const openapi = lib.csdl2openapi(csdl, {});
+    const openapi = csdl2openapi(csdl, {});
     assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
   });
 
@@ -189,7 +189,7 @@ describe("Edge cases", function () {
         schemas: {},
       },
     };
-    const openapi = lib.csdl2openapi(csdl, {});
+    const openapi = csdl2openapi(csdl, {});
     assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
   });
 
@@ -383,7 +383,7 @@ describe("Edge cases", function () {
         },
       },
     };
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
     console.dir(actual.paths["/nothing"]);
     console.dir(actual.paths["/nothing('{key}')"]);
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
@@ -460,7 +460,7 @@ describe("Edge cases", function () {
       },
     };
 
-    const openapi = lib.csdl2openapi(csdl, {});
+    const openapi = csdl2openapi(csdl, {});
     assert.deepStrictEqual(
       openapi.paths["/sources"].get.parameters[4],
       expected_sources_get_param
@@ -504,7 +504,7 @@ describe("Edge cases", function () {
         },
       },
     };
-    const openapi = lib.csdl2openapi(csdl, {});
+    const openapi = csdl2openapi(csdl, {});
     assert.deepStrictEqual(
       openapi.components.schemas["jsonExamples.typeDefinitionOld"],
       {
@@ -578,7 +578,7 @@ describe("Edge cases", function () {
         },
       },
     };
-    const openapi = lib.csdl2openapi(csdl, {});
+    const openapi = csdl2openapi(csdl, {});
     assert.deepStrictEqual(
       openapi.components.schemas["jsonExamples.typeDefinitionOld"],
       {
@@ -619,7 +619,7 @@ describe("Edge cases", function () {
         "/$batch": { post: {} },
       },
     };
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -642,7 +642,7 @@ describe("Edge cases", function () {
         "/$batch": { post: {} },
       },
     };
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -666,7 +666,7 @@ describe("Edge cases", function () {
         "/$batch": { post: {} },
       },
     };
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -700,7 +700,7 @@ describe("Edge cases", function () {
         "/Set('{key}')": { get: {}, patch: {}, delete: {} },
       },
     };
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -748,7 +748,7 @@ describe("Edge cases", function () {
         "/$batch": { post: {} },
       },
     };
-    const actual = lib.csdl2openapi(csdl);
+    const actual = csdl2openapi(csdl);
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -781,7 +781,7 @@ describe("Edge cases", function () {
         "/$batch": { post: {} },
       },
     };
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -805,10 +805,40 @@ describe("Edge cases", function () {
                 $Name: "stringNull",
                 $Nullable: true,
               },
-              //TODO: all other (relevant) primitive types
             ],
             $ReturnType: {},
           },
+          {
+            $Kind: "Function",
+            $Parameter: [
+              {
+                $Name: "guid",
+                $Type: "Edm.Guid",
+              },
+              {
+                $Name: "guidNull",
+                $Type: "Edm.Guid",
+                $Nullable: true,
+              },
+            ],
+            $ReturnType: {},
+          },
+          {
+            $Kind: "Function",
+            $Parameter: [
+              {
+                $Name: "int32",
+                $Type: "Edm.Int32",
+              },
+              {
+                $Name: "int32Null",
+                $Type: "Edm.Int32",
+                $Nullable: true,
+              },
+            ],
+            $ReturnType: {},
+          },
+          //TODO: all other (relevant) primitive types
         ],
         Container: { fun: { $Function: "this.func" } },
       },
@@ -816,10 +846,13 @@ describe("Edge cases", function () {
     const expected = {
       paths: {
         "/fun(string='{string}',stringNull={stringNull})": { get: {} },
+        "/fun(guid={guid},guidNull={guidNull})": { get: {} },
+        "/fun(int32={int32},int32Null={int32Null})": { get: {} },
         "/$batch": { post: {} },
       },
     };
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
+    fs.writeFileSync("./test.json", JSON.stringify(actual, 0, 2));
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -840,10 +873,70 @@ describe("Edge cases", function () {
           in: "path",
           name: "stringNull",
           required: true,
-          schema: { type: "string", nullable: true, default: "null" },
+          schema: {
+            type: "string",
+            nullable: true,
+            default: "null",
+            pattern: "^(null|'([^']|'')*')$",
+          },
         },
       ],
-      "Function parameters"
+      "String function parameters"
+    );
+    assert.deepStrictEqual(
+      actual.paths["/fun(guid={guid},guidNull={guidNull})"].get.parameters,
+      [
+        {
+          in: "path",
+          name: "guid",
+          required: true,
+          schema: {
+            type: "string",
+            format: "uuid",
+            example: "01234567-89ab-cdef-0123-456789abcdef",
+          },
+        },
+        {
+          in: "path",
+          name: "guidNull",
+          required: true,
+          schema: {
+            type: "string",
+            format: "uuid,null",
+            //TODO: pattern?
+            nullable: true,
+            default: "null",
+          },
+        },
+      ],
+      "Guid function parameters"
+    );
+    assert.deepStrictEqual(
+      actual.paths["/fun(int32={int32},int32Null={int32Null})"].get.parameters,
+      [
+        {
+          in: "path",
+          name: "int32",
+          required: true,
+          schema: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        {
+          in: "path",
+          name: "int32Null",
+          required: true,
+          schema: {
+            type: "string",
+            format: "int32,null",
+            pattern: "^(null|-?\\d+)$",
+            nullable: true,
+            default: "null",
+          },
+        },
+      ],
+      "Int32 function parameters"
     );
   });
 
@@ -938,7 +1031,7 @@ describe("Edge cases", function () {
         ],
       },
     };
-    const actual = lib.csdl2openapi(csdl, { diagram: true });
+    const actual = csdl2openapi(csdl, { diagram: true });
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -1036,7 +1129,7 @@ describe("Edge cases", function () {
         "/$batch": { post: {} },
       },
     };
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -1103,7 +1196,7 @@ describe("Edge cases", function () {
         type: "string",
       },
     };
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -1253,7 +1346,7 @@ describe("Edge cases", function () {
         "/$batch": { post: {} },
       },
     };
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -1453,7 +1546,7 @@ describe("Edge cases", function () {
         "/$batch": { post: {} },
       },
     };
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -1642,7 +1735,7 @@ describe("Edge cases", function () {
         "/$batch": { post: {} },
       },
     };
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -1799,7 +1892,7 @@ describe("Edge cases", function () {
         "/$batch": { post: {} },
       },
     };
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -1976,7 +2069,7 @@ describe("Edge cases", function () {
         "/$batch": { post: {} },
       },
     };
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -2069,7 +2162,7 @@ describe("Edge cases", function () {
       "/roots('{key}')/no_expand": ["*", "nav"],
     };
 
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
 
     const actualExpands = {};
     for (const [path, item] of Object.entries(actual.paths)) {
@@ -2182,7 +2275,7 @@ describe("Edge cases", function () {
       },
     };
 
-    const actual = lib.csdl2openapi(csdl, { diagram: true });
+    const actual = csdl2openapi(csdl, { diagram: true });
 
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
@@ -2300,7 +2393,7 @@ describe("Edge cases", function () {
       },
     };
 
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
 
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
@@ -2370,7 +2463,7 @@ describe("Edge cases", function () {
       $EntityContainer: "auth.example.Container",
     };
 
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = csdl2openapi(csdl, {});
 
     assert.deepStrictEqual(
       actual.components.securitySchemes,
@@ -2426,7 +2519,7 @@ describe("Edge cases", function () {
       },
     };
 
-    const openapi = lib.csdl2openapi(csdl, {});
+    const openapi = csdl2openapi(csdl, {});
 
     assert.deepStrictEqual(
       openapi.components.schemas["typeExamples.single"].properties,
