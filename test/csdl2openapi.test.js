@@ -881,7 +881,7 @@ describe("Edge cases", function () {
         ],
       },
     };
-    const actual = lib.csdl2openapi(csdl, {});
+    const actual = lib.csdl2openapi(csdl, { diagram: true });
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -897,6 +897,19 @@ describe("Edge cases", function () {
       actual.paths["/funO"].get.parameters,
       expected.paths["/funO"].get.parameters,
       "optional function parameters"
+    );
+    assert.deepStrictEqual(
+      actual.info.description.split("\n"),
+      [
+        "This service is located at [https://localhost/service-root/](https://localhost/service-root/)",
+        "",
+        "## Entity Data Model",
+        "![ER Diagram](https://yuml.me/diagram/class/[Complex],[funO{bg:lawngreen}],[funO{bg:lawngreen}]in->[Complex],[funC{bg:lawngreen}],[funC{bg:lawngreen}]in->[Complex])",
+        "",
+        "### Legend",
+        "![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
+      ],
+      "diagram"
     );
   });
 
@@ -2043,6 +2056,7 @@ describe("Edge cases", function () {
         act: [
           {
             $Kind: "Action",
+            $Parameter: [{ $Name: "in", $Type: "this.root" }],
             $ReturnType: { $Type: "this.root" },
           },
           {
@@ -2124,9 +2138,17 @@ describe("Edge cases", function () {
       expected.paths["/roots/act"].post,
       "POST /roots/act"
     );
-    assert.strictEqual(
-      actual.info.description,
-      "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[root{bg:lightslategray}],[act{bg:lawngreen}]->[root],[roots%20{bg:lawngreen}]++-*>[root])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
+    assert.deepStrictEqual(
+      actual.info.description.split("\n"),
+      [
+        "This service is located at [https://localhost/service-root/](https://localhost/service-root/)",
+        "",
+        "## Entity Data Model",
+        "![ER Diagram](https://yuml.me/diagram/class/[root{bg:lightslategray}],[act{bg:lawngreen}]->[root],[act{bg:lawngreen}]in->[root],[roots%20{bg:lawngreen}]++-*>[root])",
+        "",
+        "### Legend",
+        "![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
+      ],
       "diagram"
     );
   });
