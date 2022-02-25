@@ -852,6 +852,7 @@ describe("Edge cases", function () {
       },
     };
     const actual = csdl2openapi(csdl, {});
+    //TODO: remove
     fs.writeFileSync("./test.json", JSON.stringify(actual, 0, 2));
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
