@@ -385,7 +385,7 @@ describe("Edge cases", function () {
     };
     const actual = csdl2openapi(csdl, {});
     console.dir(actual.paths["/nothing"]);
-    console.dir(actual.paths["/nothing('{key}')"]);
+    console.dir(actual.paths["/nothing({key})"]);
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -838,16 +838,79 @@ describe("Edge cases", function () {
             ],
             $ReturnType: {},
           },
-          //TODO: all other (relevant) primitive types
+          {
+            $Kind: "Function",
+            $Parameter: [
+              {
+                $Name: "binary",
+                $Type: "Edm.Binary",
+              },
+              {
+                $Name: "binaryNull",
+                $Type: "Edm.Binary",
+                $Nullable: true,
+              },
+            ],
+            $ReturnType: {},
+          },
+          {
+            $Kind: "Function",
+            $Parameter: [
+              {
+                $Name: "boolean",
+                $Type: "Edm.Boolean",
+              },
+              {
+                $Name: "booleanNull",
+                $Type: "Edm.Boolean",
+                $Nullable: true,
+              },
+            ],
+            $ReturnType: {},
+          },
+          {
+            $Kind: "Function",
+            $Parameter: [
+              {
+                $Name: "decimal",
+                $Type: "Edm.Decimal",
+              },
+              {
+                $Name: "decimalNull",
+                $Type: "Edm.Decimal",
+                $Nullable: true,
+              },
+            ],
+            $ReturnType: {},
+          },
+          {
+            $Kind: "Function",
+            $Parameter: [
+              {
+                $Name: "duration",
+                $Type: "Edm.Duration",
+              },
+              {
+                $Name: "durationNull",
+                $Type: "Edm.Duration",
+                $Nullable: true,
+              },
+            ],
+            $ReturnType: {},
+          },
         ],
         Container: { fun: { $Function: "this.func" } },
       },
     };
     const expected = {
       paths: {
-        "/fun(string='{string}',stringNull={stringNull})": { get: {} },
+        "/fun(string={string},stringNull={stringNull})": { get: {} },
         "/fun(guid={guid},guidNull={guidNull})": { get: {} },
         "/fun(int32={int32},int32Null={int32Null})": { get: {} },
+        "/fun(binary={binary},binaryNull={binaryNull})": { get: {} },
+        "/fun(boolean={boolean},booleanNull={booleanNull})": { get: {} },
+        "/fun(decimal={decimal},decimalNull={decimalNull})": { get: {} },
+        "/fun(duration={duration},durationNull={durationNull})": { get: {} },
         "/$batch": { post: {} },
       },
     };
@@ -861,14 +924,14 @@ describe("Edge cases", function () {
       "Operations"
     );
     assert.deepStrictEqual(
-      actual.paths["/fun(string='{string}',stringNull={stringNull})"].get
+      actual.paths["/fun(string={string},stringNull={stringNull})"].get
         .parameters,
       [
         {
           in: "path",
           name: "string",
           required: true,
-          schema: { type: "string" },
+          schema: { type: "string", pattern: "^'([^']|'')*'$" },
         },
         {
           in: "path",
@@ -907,6 +970,7 @@ describe("Edge cases", function () {
             //TODO: pattern?
             nullable: true,
             default: "null",
+            example: "01234567-89ab-cdef-0123-456789abcdef",
           },
         },
       ],
@@ -931,13 +995,122 @@ describe("Edge cases", function () {
           schema: {
             type: "string",
             format: "int32,null",
-            pattern: "^(null|-?\\d+)$",
             nullable: true,
             default: "null",
           },
         },
       ],
       "Int32 function parameters"
+    );
+    assert.deepStrictEqual(
+      actual.paths["/fun(binary={binary},binaryNull={binaryNull})"].get
+        .parameters,
+      [
+        {
+          in: "path",
+          name: "binary",
+          required: true,
+          schema: {
+            type: "string",
+            format: "base64url",
+          },
+        },
+        {
+          in: "path",
+          name: "binaryNull",
+          required: true,
+          schema: {
+            type: "string",
+            format: "base64url,null",
+            nullable: true,
+            default: "null",
+          },
+        },
+      ],
+      "Binary function parameters"
+    );
+    assert.deepStrictEqual(
+      actual.paths["/fun(boolean={boolean},booleanNull={booleanNull})"].get
+        .parameters,
+      [
+        {
+          in: "path",
+          name: "boolean",
+          required: true,
+          schema: {
+            type: "boolean",
+          },
+        },
+        {
+          in: "path",
+          name: "booleanNull",
+          required: true,
+          schema: {
+            type: "string",
+            nullable: true,
+            default: "null",
+          },
+        },
+      ],
+      "Binary function parameters"
+    );
+    assert.deepStrictEqual(
+      actual.paths["/fun(decimal={decimal},decimalNull={decimalNull})"].get
+        .parameters,
+      [
+        {
+          in: "path",
+          name: "decimal",
+          required: true,
+          schema: {
+            type: "string",
+            format: "decimal",
+            example: 0,
+          },
+        },
+        {
+          in: "path",
+          name: "decimalNull",
+          required: true,
+          schema: {
+            type: "string",
+            format: "decimal,null",
+            nullable: true,
+            default: "null",
+            example: 0,
+          },
+        },
+      ],
+      "Decimal function parameters"
+    );
+    assert.deepStrictEqual(
+      actual.paths["/fun(duration={duration},durationNull={durationNull})"].get
+        .parameters,
+      [
+        {
+          in: "path",
+          name: "duration",
+          required: true,
+          schema: {
+            type: "string",
+            format: "duration",
+            example: "'P4DT15H51M04S'",
+          },
+        },
+        {
+          in: "path",
+          name: "durationNull",
+          required: true,
+          schema: {
+            type: "string",
+            format: "duration,null",
+            nullable: true,
+            default: "null",
+            example: "'P4DT15H51M04S'",
+          },
+        },
+      ],
+      "Duration function parameters"
     );
   });
 
@@ -1098,7 +1271,7 @@ describe("Edge cases", function () {
             },
           },
         },
-        "/fun(in='{in}')": {
+        "/fun(in={in})": {
           get: {
             responses: {
               200: {
@@ -1143,8 +1316,8 @@ describe("Edge cases", function () {
       "fun"
     );
     assert.deepStrictEqual(
-      actual.paths["/fun(in='{in}')"].get.responses[200],
-      expected.paths["/fun(in='{in}')"].get.responses[200],
+      actual.paths["/fun(in={in})"].get.responses[200],
+      expected.paths["/fun(in={in})"].get.responses[200],
       "fun(in)"
     );
   });
@@ -1394,7 +1567,7 @@ describe("Edge cases", function () {
           $Kind: "EntityType",
           $BaseType: "this.base",
           $Key: ["key"],
-          key: {},
+          key: { $Type: "Edm.Int32" },
           derivedProp: {},
           derivedNav: { $Kind: "NavigationProperty", $Type: "this.other" },
         },
@@ -1532,16 +1705,16 @@ describe("Edge cases", function () {
             },
           },
         },
-        "/set('{key}')": {
+        "/set({key})": {
           get: {},
           patch: {},
           delete: {},
         },
-        "/set('{key}')/baseNav": {
+        "/set({key})/baseNav": {
           get: {},
           patch: {},
         },
-        "/set('{key}')/derivedNav": {
+        "/set({key})/derivedNav": {
           get: {},
         },
         "/$batch": { post: {} },
@@ -1923,7 +2096,7 @@ describe("Edge cases", function () {
         thing: {
           $Kind: "EntityType",
           $Key: ["key"],
-          key: {},
+          key: { $Type: "Edm.Int32" },
           one: { $DefaultValue: "def" },
           two: {},
           nav: {
@@ -2058,12 +2231,12 @@ describe("Edge cases", function () {
           },
           post: {},
         },
-        "/things('{key}')": {
+        "/things({key})": {
           get: {},
           patch: {},
           delete: {},
         },
-        "/things('{key}')/nav": {
+        "/things({key})/nav": {
           get: {},
           patch: {},
         },
@@ -2104,7 +2277,7 @@ describe("Edge cases", function () {
         root: {
           $Kind: "EntityType",
           $Key: ["key"],
-          key: {},
+          key: { $Type: "Edm.Int32" },
           one: {},
           two: {},
           nav: {
@@ -2158,9 +2331,9 @@ describe("Edge cases", function () {
     };
     const expectedExpands = {
       "/roots": ["*", "nav"],
-      "/roots('{key}')": ["*", "nav"],
-      "/roots('{key}')/nav": ["*", "nav"],
-      "/roots('{key}')/no_expand": ["*", "nav"],
+      "/roots({key})": ["*", "nav"],
+      "/roots({key})/nav": ["*", "nav"],
+      "/roots({key})/no_expand": ["*", "nav"],
     };
 
     const actual = csdl2openapi(csdl, {});

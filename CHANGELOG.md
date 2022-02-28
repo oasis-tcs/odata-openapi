@@ -1,10 +1,10 @@
 # Changelog
 
-## [0.11.3] - 2022-02-xx
+## [0.12.0] - 2022-02-xx
 
 ### Changed
 
-- Correctly represent nullable function parameters
+- Path templates for function parameters in parentheses within the path part now exclude the single quotes that are required for e.g. `Edm.String` values. Instead the quotes have to be entered in the parameter form. This "breaking" change is necessary to allow null values and empty string values as function parameters.
 
 ## [0.11.2] - 2022-02-25
 
