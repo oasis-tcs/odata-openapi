@@ -967,7 +967,6 @@ describe("Edge cases", function () {
           schema: {
             type: "string",
             format: "uuid,null",
-            //TODO: pattern?
             nullable: true,
             default: "null",
             example: "01234567-89ab-cdef-0123-456789abcdef",
@@ -1063,7 +1062,7 @@ describe("Edge cases", function () {
           name: "decimal",
           required: true,
           schema: {
-            type: "string",
+            anyOf: [{ type: "number" }, { type: "string" }],
             format: "decimal",
             example: 0,
           },
@@ -1073,7 +1072,7 @@ describe("Edge cases", function () {
           name: "decimalNull",
           required: true,
           schema: {
-            type: "string",
+            anyOf: [{ type: "number" }, { type: "string" }],
             format: "decimal,null",
             nullable: true,
             default: "null",
