@@ -792,6 +792,14 @@ describe("Edge cases", function () {
 
   it("function with nullable and not nullable parameters", function () {
     const csdl = {
+      $Reference: {
+        dummy: {
+          $Include: [
+            { $Namespace: "Org.OData.Core.V1", $Alias: "Core" },
+            { $Namespace: "Org.OData.Validation.V1", $Alias: "Validation" },
+          ],
+        },
+      },
       $EntityContainer: "this.Container",
       this: {
         func: [
@@ -800,10 +808,12 @@ describe("Edge cases", function () {
             $Parameter: [
               {
                 $Name: "string",
+                "@Validation.Pattern": "^red|green$",
               },
               {
                 $Name: "stringNull",
                 $Nullable: true,
+                "@Core.LongDescription": "Nullable string",
               },
             ],
             $ReturnType: {},
@@ -915,8 +925,6 @@ describe("Edge cases", function () {
       },
     };
     const actual = csdl2openapi(csdl, {});
-    //TODO: remove
-    fs.writeFileSync("./test.json", JSON.stringify(actual, 0, 2));
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -930,13 +938,16 @@ describe("Edge cases", function () {
         {
           in: "path",
           name: "string",
+          description: "String value needs to be enclosed in single quotes",
           required: true,
-          schema: { type: "string", pattern: "^'([^']|'')*'$" },
+          schema: { type: "string", pattern: "^'(red|green)'$" },
         },
         {
           in: "path",
           name: "stringNull",
           required: true,
+          description:
+            "Nullable string  \nString value needs to be enclosed in single quotes",
           schema: {
             type: "string",
             nullable: true,
