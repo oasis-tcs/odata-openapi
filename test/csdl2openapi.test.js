@@ -802,6 +802,7 @@ describe("Edge cases", function () {
       },
       $EntityContainer: "this.Container",
       this: {
+        typedef: { $Kind: "TypeDefinition", $UnderlyingType: "Edm.String" },
         func: [
           {
             $Kind: "Function",
@@ -812,6 +813,23 @@ describe("Edge cases", function () {
               },
               {
                 $Name: "stringNull",
+                $Nullable: true,
+                "@Core.LongDescription": "Nullable string",
+              },
+            ],
+            $ReturnType: {},
+          },
+          {
+            $Kind: "Function",
+            $Parameter: [
+              {
+                $Name: "typedef",
+                $Type: "this.typedef",
+                "@Validation.Pattern": "^red|green$",
+              },
+              {
+                $Name: "typedefNull",
+                $Type: "this.typedef",
                 $Nullable: true,
                 "@Core.LongDescription": "Nullable string",
               },
@@ -915,6 +933,7 @@ describe("Edge cases", function () {
     const expected = {
       paths: {
         "/fun(string={string},stringNull={stringNull})": { get: {} },
+        "/fun(typedef={typedef},typedefNull={typedefNull})": { get: {} },
         "/fun(guid={guid},guidNull={guidNull})": { get: {} },
         "/fun(int32={int32},int32Null={int32Null})": { get: {} },
         "/fun(binary={binary},binaryNull={binaryNull})": { get: {} },
@@ -957,6 +976,34 @@ describe("Edge cases", function () {
         },
       ],
       "String function parameters"
+    );
+    assert.deepStrictEqual(
+      actual.paths["/fun(typedef={typedef},typedefNull={typedefNull})"].get
+        .parameters,
+      [
+        {
+          in: "path",
+          name: "typedef",
+          description: "String value needs to be enclosed in single quotes",
+          required: true,
+          schema: {
+            $ref: "#/components/schemas/this.typedef",
+          },
+        },
+        {
+          in: "path",
+          name: "typedefNull",
+          required: true,
+          description:
+            "Nullable string  \nString value needs to be enclosed in single quotes",
+          schema: {
+            allOf: [{ $ref: "#/components/schemas/this.typedef" }],
+            nullable: true,
+            default: "null",
+          },
+        },
+      ],
+      "TypeDefinition function parameters"
     );
     assert.deepStrictEqual(
       actual.paths["/fun(guid={guid},guidNull={guidNull})"].get.parameters,
