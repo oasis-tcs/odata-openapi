@@ -11,13 +11,13 @@ _Note: this tool does not support OData 2.0, and it does not produce Swagger 2.0
 Clone or download this repository, go to its root folder and type
 
 ```sh
-npm install
+npm install odata-openapi
 ```
 
 To install globally type
 
 ```sh
-npm install -g
+npm install -g odata-openapi
 ```
 
 ## Usage
