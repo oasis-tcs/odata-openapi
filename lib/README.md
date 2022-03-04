@@ -8,8 +8,6 @@ _Note: this tool does not support OData 2.0, and it does not produce Swagger 2.0
 
 ## Installation
 
-Clone or download this repository, go to its root folder and type
-
 ```sh
 npm install odata-openapi
 ```
