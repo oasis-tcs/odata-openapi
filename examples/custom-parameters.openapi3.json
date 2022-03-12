@@ -2,7 +2,7 @@
     "openapi": "3.0.2",
     "info": {
         "title": "Service for namespace custom.parameters",
-        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[ent{bg:lightslategray}],[func{bg:lawngreen}]-0..1>[ent],[act{bg:lawngreen}]-0..1>[ent],[ents%20{bg:lawngreen}]++-*>[ent])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[ent{bg:lightslategray}],[func{bg:lawngreen}]-0..1>[ent],[act{bg:lawngreen}]-0..1>[ent],[sing%20{bg:lawngreen}]++->[ent],[ents%20{bg:lawngreen}]++-*>[ent])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
         "version": ""
     },
     "servers": [
@@ -13,6 +13,9 @@
     "tags": [
         {
             "name": "ents"
+        },
+        {
+            "name": "sing"
         }
     ],
     "paths": {
@@ -447,6 +450,255 @@
                             "type": "string"
                         }
                     },
+                    {
+                        "required": true,
+                        "in": "query",
+                        "name": "par",
+                        "description": "String value needs to be enclosed in single quotes",
+                        "schema": {
+                            "type": "string",
+                            "nullable": true,
+                            "pattern": "^(null|'([^']|'')*')$",
+                            "default": "null"
+                        }
+                    },
+                    {
+                        "name": "custom-bound-function",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Bound Function",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-bound-function"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customBoundFunction",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Bound Function",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customBoundFunction"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/custom.parameters.ent"
+                                        }
+                                    ],
+                                    "nullable": true
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/sing": {
+            "get": {
+                "summary": "Get sing",
+                "tags": [
+                    "sing"
+                ],
+                "parameters": [
+                    {
+                        "name": "custom-read",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Read",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-read"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customRead",
+                        "in": "query",
+                        "required": true,
+                        "description": "Custom Query Option for Read",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "name"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/custom.parameters.ent"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update sing",
+                "tags": [
+                    "sing"
+                ],
+                "requestBody": {
+                    "description": "New property values",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/custom.parameters.ent-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "custom-update",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Update",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-update"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customUpdate",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Update",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customUpdate"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "/sing/act": {
+            "post": {
+                "summary": "Invoke action act",
+                "tags": [
+                    "sing"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/custom.parameters.ent"
+                                        }
+                                    ],
+                                    "nullable": true
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "requestBody": {
+                    "description": "Action parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "par": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "custom-bound-action",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Bound Action",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-bound-action"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customBoundAction",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Bound Action",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customBoundAction"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "/sing/func": {
+            "get": {
+                "summary": "Invoke function func",
+                "tags": [
+                    "sing"
+                ],
+                "parameters": [
                     {
                         "required": true,
                         "in": "query",

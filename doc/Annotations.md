@@ -30,6 +30,7 @@ Term | Annotation Target | OpenAPI field
 Term | Annotation Target | OpenAPI field
 -----|-------------------|--------------
 `CountRestrictions`<br>&emsp;`/Countable` | EntitySet | `$count` system query option for `GET` operation
+`DeepUpdateSupport`<br>&emsp;`/Supported` | EntityContainer | `PATCH` operations support [deep update](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_UpdateRelatedEntitiesWhenUpdatinganE)
 `DeleteRestrictions`<br>&emsp;`/Deletable` | EntitySet, Singleton | `DELETE` operation for deleting an existing entity
 &emsp;`/Description` | EntitySet, Singleton | `summary` of Operation Object
 &emsp;`/LongDescription` | EntitySet, Singleton | `description` of Operation Object
