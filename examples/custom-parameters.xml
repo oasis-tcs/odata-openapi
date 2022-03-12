@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.01">
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
+</edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="custom.parameters" Alias="this">
+            <Annotation Term="Core.DefaultNamespace" />
+
+            <EntityType Name="ent">
+                <Key>
+                    <PropertyRef Name="name" />
+                </Key>
+                <Property Name="name" Type="Edm.String" Nullable="false" />
+            </EntityType>
+            <Action Name="act">
+                <Parameter Name="par" Type="Edm.String" />
+                <ReturnType Type="this.ent" />
+            </Action>
+            <Action Name="act" IsBound="true">
+                <Parameter Name="it" Type="this.ent" />
+                <Parameter Name="par" Type="Edm.String" />
+                <ReturnType Type="this.ent" />
+            </Action>
+            <Function Name="func" IsBound="true">
+                <Parameter Name="it" Type="this.ent" />
+                <Parameter Name="par" Type="Edm.String" />
+                <ReturnType Type="this.ent" />
+            </Function>
+            <Function Name="func">
+                <Parameter Name="par" Type="Edm.String" />
+                <ReturnType Type="this.ent" />
+            </Function>
+            <EntityContainer Name="box">
+                <Annotation Term="Capabilities.KeyAsSegmentSupported" Bool="true" />
+                <EntitySet Name="ents" EntityType="this.ent" />
+                <ActionImport Name="act" EntitySet="ents" Action="this.act" />
+                <FunctionImport Name="func" EntitySet="ents" Function="this.func" />
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
