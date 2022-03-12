@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.13.0] - 2022-03-12
+
+### Added
+
+- Custom headers and custom query options, see example [`custom-parameters.xml`](./examples/custom-parameters.xml) and its output [`custom-parameters.openapi3.json`](./examples/custom-parameters.openapi3.json).
+
 ## [0.12.0] - 2022-02-28
 
 ### Changed

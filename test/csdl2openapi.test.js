@@ -2485,6 +2485,12 @@ describe("Edge cases", function () {
           },
           act: { $Action: "this.act" },
         },
+        $Annotations: {
+          "this.act": {
+            "@Core.Description":
+              "Annotations targeting all overloads are currently ignored",
+          },
+        },
       },
     };
 
