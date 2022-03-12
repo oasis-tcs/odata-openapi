@@ -4,8 +4,8 @@
         <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
     </edmx:Reference>
     <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
-    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
-</edmx:Reference>
+        <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
+    </edmx:Reference>
     <edmx:DataServices>
         <Schema Namespace="custom.parameters" Alias="this">
             <Annotation Term="Core.DefaultNamespace" />
@@ -16,6 +16,7 @@
                 </Key>
                 <Property Name="name" Type="Edm.String" Nullable="false" />
             </EntityType>
+
             <Action Name="act">
                 <Parameter Name="par" Type="Edm.String" />
                 <ReturnType Type="this.ent" />
@@ -25,6 +26,7 @@
                 <Parameter Name="par" Type="Edm.String" />
                 <ReturnType Type="this.ent" />
             </Action>
+
             <Function Name="func" IsBound="true">
                 <Parameter Name="it" Type="this.ent" />
                 <Parameter Name="par" Type="Edm.String" />
@@ -34,12 +36,389 @@
                 <Parameter Name="par" Type="Edm.String" />
                 <ReturnType Type="this.ent" />
             </Function>
+
             <EntityContainer Name="box">
                 <Annotation Term="Capabilities.KeyAsSegmentSupported" Bool="true" />
                 <EntitySet Name="ents" EntityType="this.ent" />
                 <ActionImport Name="act" EntitySet="ents" Action="this.act" />
                 <FunctionImport Name="func" EntitySet="ents" Function="this.func" />
             </EntityContainer>
+
+            <Annotations Target="this.box/ents">
+                <Annotation Term="Capabilities.ReadRestrictions">
+                    <Record>
+                        <PropertyValue Property="CustomHeaders">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="custom-read" />
+                                    <PropertyValue Property="Description" String="Custom Header for Read" />
+                                    <PropertyValue Property="Required" Bool="true" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/headers/custom-read" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="CustomQueryOptions">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="customRead" />
+                                    <PropertyValue Property="Description" String="Custom Query Option for Read" />
+                                    <PropertyValue Property="Required" Bool="false" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/options/customRead" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="ReadByKeyRestrictions">
+                            <Record>
+                                <PropertyValue Property="CustomHeaders">
+                                    <Collection>
+                                        <Record>
+                                            <PropertyValue Property="Name" String="custom-read-by-key" />
+                                            <PropertyValue Property="Description" String="Custom Header for Read by Key" />
+                                            <PropertyValue Property="Required" Bool="true" />
+                                            <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/headers/custom-read-by-key" />
+                                            <PropertyValue Property="ExampleValues">
+                                                <Collection>
+                                                    <Record>
+                                                        <PropertyValue Property="Description" String="Example Value" />
+                                                        <PropertyValue Property="Value" String="example" />
+                                                    </Record>
+                                                </Collection>
+                                            </PropertyValue>
+                                        </Record>
+                                    </Collection>
+                                </PropertyValue>
+                                <PropertyValue Property="CustomQueryOptions">
+                                    <Collection>
+                                        <Record>
+                                            <PropertyValue Property="Name" String="customReadByKey" />
+                                            <PropertyValue Property="Description" String="Custom Query Option for Read by Key" />
+                                            <PropertyValue Property="Required" Bool="false" />
+                                            <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/options/customReadByKey" />
+                                            <PropertyValue Property="ExampleValues">
+                                                <Collection>
+                                                    <Record>
+                                                        <PropertyValue Property="Description" String="Example Value" />
+                                                        <PropertyValue Property="Value" String="example" />
+                                                    </Record>
+                                                </Collection>
+                                            </PropertyValue>
+                                        </Record>
+                                    </Collection>
+                                </PropertyValue>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="CustomHeaders">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="custom-insert" />
+                                    <PropertyValue Property="Description" String="Custom Header for Insert" />
+                                    <PropertyValue Property="Required" Bool="true" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/headers/custom-insert" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="CustomQueryOptions">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="customInsert" />
+                                    <PropertyValue Property="Description" String="Custom Query Option for Insert" />
+                                    <PropertyValue Property="Required" Bool="false" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/options/customInsert" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="CustomHeaders">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="custom-update" />
+                                    <PropertyValue Property="Description" String="Custom Header for Update" />
+                                    <PropertyValue Property="Required" Bool="true" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/headers/custom-update" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="CustomQueryOptions">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="customUpdate" />
+                                    <PropertyValue Property="Description" String="Custom Query Option for Update" />
+                                    <PropertyValue Property="Required" Bool="false" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/options/customUpdate" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="CustomHeaders">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="custom-delete" />
+                                    <PropertyValue Property="Description" String="Custom Header for Delete" />
+                                    <PropertyValue Property="Required" Bool="true" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/headers/custom-delete" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="CustomQueryOptions">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="customDelete" />
+                                    <PropertyValue Property="Description" String="Custom Query Option for Delete" />
+                                    <PropertyValue Property="Required" Bool="false" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/options/customDelete" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+
+            <Annotations Target="this.box/act()">
+                <Annotation Term="Capabilities.OperationRestrictions">
+                    <Record>
+                        <PropertyValue Property="CustomHeaders">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="custom-unbound-action" />
+                                    <PropertyValue Property="Description" String="Custom Header for Unbound Action" />
+                                    <PropertyValue Property="Required" Bool="true" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/headers/custom-unbound-action" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="CustomQueryOptions">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="customUnboundAction" />
+                                    <PropertyValue Property="Description" String="Custom Query Option for Unbound Action" />
+                                    <PropertyValue Property="Required" Bool="false" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/options/customUnboundAction" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+
+            <Annotations Target="this.act(this.ent)">
+                <Annotation Term="Capabilities.OperationRestrictions">
+                    <Record>
+                        <PropertyValue Property="CustomHeaders">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="custom-bound-action" />
+                                    <PropertyValue Property="Description" String="Custom Header for Bound Action" />
+                                    <PropertyValue Property="Required" Bool="true" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/headers/custom-bound-action" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="CustomQueryOptions">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="customBoundAction" />
+                                    <PropertyValue Property="Description" String="Custom Query Option for Bound Action" />
+                                    <PropertyValue Property="Required" Bool="false" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/options/customBoundAction" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+
+            <Annotations Target="this.func(Edm.String)">
+                <Annotation Term="Capabilities.OperationRestrictions">
+                    <Record>
+                        <PropertyValue Property="CustomHeaders">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="custom-unbound-function" />
+                                    <PropertyValue Property="Description" String="Custom Header for Unbound Function" />
+                                    <PropertyValue Property="Required" Bool="true" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/headers/custom-unbound-function" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="CustomQueryOptions">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="customUnboundFunction" />
+                                    <PropertyValue Property="Description" String="Custom Query Option for Unbound Function" />
+                                    <PropertyValue Property="Required" Bool="false" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/options/customUnboundFunction" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+
+            <Annotations Target="this.func(this.ent,Edm.String)">
+                <Annotation Term="Capabilities.OperationRestrictions">
+                    <Record>
+                        <PropertyValue Property="CustomHeaders">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="custom-bound-function" />
+                                    <PropertyValue Property="Description" String="Custom Header for Bound Function" />
+                                    <PropertyValue Property="Required" Bool="true" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/headers/custom-bound-function" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="CustomQueryOptions">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Name" String="customBoundFunction" />
+                                    <PropertyValue Property="Description" String="Custom Query Option for Bound Function" />
+                                    <PropertyValue Property="Required" Bool="false" />
+                                    <PropertyValue Property="DocumentationURL" String="https://docs.example.com/apis/options/customBoundFunction" />
+                                    <PropertyValue Property="ExampleValues">
+                                        <Collection>
+                                            <Record>
+                                                <PropertyValue Property="Description" String="Example Value" />
+                                                <PropertyValue Property="Value" String="example" />
+                                            </Record>
+                                        </Collection>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+
         </Schema>
     </edmx:DataServices>
 </edmx:Edmx>
