@@ -34,6 +34,8 @@ Term | Annotation Target | OpenAPI field
 `DeleteRestrictions`<br>&emsp;`/Deletable` | EntitySet, Singleton | `DELETE` operation for deleting an existing entity
 &emsp;`/Description` | EntitySet, Singleton | `summary` of Operation Object
 &emsp;`/LongDescription` | EntitySet, Singleton | `description` of Operation Object
+&emsp;`/CustomHeaders` | EntitySet, Singleton | custom header
+&emsp;`/CustomQueryOptions` | EntitySet, Singleton | custom query option
 `ExpandRestrictions`<br>&emsp;`/Expandable` | EntitySet, Singleton | `$expand` system query option for `GET` operations
 `FilterRestrictions`<br>&emsp;`/Filterable` | EntitySet | `$filter` system query option for `GET` operation
 &emsp;`/RequiredProperties` | EntitySet | required properties in `$filter` system query option for `GET` operation (parameter description only)
@@ -42,6 +44,8 @@ Term | Annotation Target | OpenAPI field
 `InsertRestrictions`<br>&emsp;`/Insertable` | EntitySet | `POST` operation for inserting a new entity
 &emsp;`/Description` | EntitySet | `summary` of Operation Object
 &emsp;`/LongDescription` | EntitySet | `description` of Operation Object
+&emsp;`/CustomHeaders` | EntitySet | custom header
+&emsp;`/CustomQueryOptions` | EntitySet | custom query option
 `KeyAsSegmentSupported` | EntityContainer | `paths` URL templates use key-as-segment style instead of parenthesis style
 `NavigationRestrictions`<br>&emsp;`/RestrictedProperties` | EntitySet, Singleton | operations via a navigation path
 &emsp;&emsp;`/DeleteRestrictions/...` | EntitySet, Singleton | `DELETE` operation for deleting a contained entity via a navigation path
@@ -58,9 +62,13 @@ Term | Annotation Target | OpenAPI field
 `ReadByKeyRestrictions`<br>&emsp;`/Readable` | EntitySet | `GET` operation for reading a single entity by key
 &emsp;`/Description` | EntitySet | `summary` of Operation Object
 &emsp;`/LongDescription` | EntitySet | `description` of Operation Object
+&emsp;`/CustomHeaders` | EntitySet | custom header
+&emsp;`/CustomQueryOptions` | EntitySet | custom query option
 `ReadRestrictions`<br>&emsp;`/Readable` | EntitySet, Singleton | `GET` operation for reading an entity set or singleton
 &emsp;`/Description` | EntitySet, Singleton | `summary` of Operation Object
 &emsp;`/LongDescription` | EntitySet, Singleton | `description` of Operation Object
+&emsp;`/CustomHeaders` | EntitySet, Singleton | custom header
+&emsp;`/CustomQueryOptions` | EntitySet, Singleton | custom query option
 `SearchRestrictions`<br>&emsp;`/Searchable` | EntitySet | `$search` system query option for `GET` operation
 `SelectSupport`<br>&emsp;`/Supported` | EntitySet, Singleton | `$select` system query option for `GET` operation
 `SkipSupported` | EntitySet | `$skip` system query option for `GET` operation
@@ -70,6 +78,8 @@ Term | Annotation Target | OpenAPI field
 `UpdateRestrictions`<br>&emsp;`/Updatable` | EntitySet, Singleton | `PATCH` operation for modifying an existing entity
 &emsp;`/Description` | EntitySet, Singleton | `summary` of Operation Object
 &emsp;`/LongDescription` | EntitySet, Singleton | `description` of Operation Object
+&emsp;`/CustomHeaders` | EntitySet, Singleton | custom header
+&emsp;`/CustomQueryOptions` | EntitySet, Singleton | custom query option
 
 
 ## [Validation](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Validation.V1.md)
