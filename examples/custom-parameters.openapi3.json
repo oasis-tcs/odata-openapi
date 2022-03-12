@@ -2,7 +2,7 @@
     "openapi": "3.0.2",
     "info": {
         "title": "Service for namespace custom.parameters",
-        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[ent{bg:lightslategray}],[func{bg:lawngreen}]-0..1>[ent],[act{bg:lawngreen}]-0..1>[ent],[sing%20{bg:lawngreen}]++->[ent],[ents%20{bg:lawngreen}]++-*>[ent])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[ent{bg:lightslategray}],[func{bg:lawngreen}]-0..1>[ent],[act{bg:lawngreen}]-0..1>[ent],[sing%20{bg:lawngreen}]++-0..1>[ent],[ents%20{bg:lawngreen}]++-*>[ent])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
         "version": ""
     },
     "servers": [
@@ -520,7 +520,7 @@
                         "name": "custom-read",
                         "in": "header",
                         "required": true,
-                        "description": "Custom Header for Read",
+                        "description": "Custom Header for Read Singleton",
                         "schema": {
                             "type": "string",
                             "externalDocs": {
@@ -532,7 +532,7 @@
                         "name": "customRead",
                         "in": "query",
                         "required": true,
-                        "description": "Custom Query Option for Read",
+                        "description": "Custom Query Option for Read Singleton",
                         "schema": {
                             "type": "string"
                         }
@@ -599,7 +599,7 @@
                         "name": "custom-update",
                         "in": "header",
                         "required": true,
-                        "description": "Custom Header for Update",
+                        "description": "Custom Header for Update Singleton",
                         "schema": {
                             "type": "string",
                             "externalDocs": {
@@ -611,11 +611,51 @@
                         "name": "customUpdate",
                         "in": "query",
                         "required": false,
-                        "description": "Custom Query Option for Update",
+                        "description": "Custom Query Option for Update Singleton",
                         "schema": {
                             "type": "string",
                             "externalDocs": {
                                 "url": "https://docs.example.com/apis/options/customUpdate"
+                            }
+                        }
+                    }
+                ]
+            },
+            "delete": {
+                "summary": "Delete sing",
+                "tags": [
+                    "sing"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "custom-delete",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Delete Singleton",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-delete"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customDelete",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Delete Singleton",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customDelete"
                             }
                         }
                     }
