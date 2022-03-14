@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.14.0] - 2022-03-15
+
+### Added
+
+- `Capabilities.UpdateMethod` to use for example `PUT` instead of `PATCH`.
+
 ## [0.13.0] - 2022-03-14
 
 ### Added
