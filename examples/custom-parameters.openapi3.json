@@ -1,0 +1,1116 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Service for namespace custom.parameters",
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[ent{bg:lightslategray}],[func{bg:lawngreen}]-0..1>[ent],[act{bg:lawngreen}]-0..1>[ent],[sing%20{bg:lawngreen}]++-0..1>[ent],[ents%20{bg:lawngreen}]++-*>[ent])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
+        "version": ""
+    },
+    "servers": [
+        {
+            "url": "https://localhost/service-root"
+        }
+    ],
+    "tags": [
+        {
+            "name": "ents"
+        },
+        {
+            "name": "sing"
+        }
+    ],
+    "paths": {
+        "/ents": {
+            "get": {
+                "summary": "Get entities from ents",
+                "tags": [
+                    "ents"
+                ],
+                "parameters": [
+                    {
+                        "name": "custom-read",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Read",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-read"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customRead",
+                        "in": "query",
+                        "required": true,
+                        "description": "Custom Query Option for Read",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/top"
+                    },
+                    {
+                        "$ref": "#/components/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/components/parameters/search"
+                    },
+                    {
+                        "name": "filter",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "orderby",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "name",
+                                    "name desc"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "name"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Collection of ent",
+                                    "properties": {
+                                        "@count": {
+                                            "$ref": "#/components/schemas/count"
+                                        },
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/custom.parameters.ent"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to ents",
+                "tags": [
+                    "ents"
+                ],
+                "requestBody": {
+                    "description": "New entity",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/custom.parameters.ent-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/custom.parameters.ent"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "custom-insert",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Insert",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-insert"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customInsert",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Insert",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customInsert"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "/ents/{name}": {
+            "parameters": [
+                {
+                    "description": "key: name",
+                    "in": "path",
+                    "name": "name",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get entity from ents by key",
+                "tags": [
+                    "ents"
+                ],
+                "parameters": [
+                    {
+                        "name": "custom-read-by-key",
+                        "in": "header",
+                        "required": false,
+                        "description": "Custom Header for Read by Key",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-read-by-key"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customReadByKey",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Read by Key",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customReadByKey"
+                            }
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "name"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/custom.parameters.ent"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in ents",
+                "tags": [
+                    "ents"
+                ],
+                "requestBody": {
+                    "description": "New property values",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/custom.parameters.ent-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "custom-update",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Update",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-update"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customUpdate",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Update",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customUpdate"
+                            }
+                        }
+                    }
+                ]
+            },
+            "delete": {
+                "summary": "Delete entity from ents",
+                "tags": [
+                    "ents"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "custom-delete",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Delete",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-delete"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customDelete",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Delete",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customDelete"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "/ents/{name}/act": {
+            "post": {
+                "summary": "Invoke action act",
+                "tags": [
+                    "ents"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/custom.parameters.ent"
+                                        }
+                                    ],
+                                    "nullable": true
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "key: name",
+                        "in": "path",
+                        "name": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "custom-bound-action",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Bound Action",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-bound-action"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customBoundAction",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Bound Action",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customBoundAction"
+                            }
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Action parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "par": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ents/{name}/func": {
+            "get": {
+                "summary": "Invoke function func",
+                "tags": [
+                    "ents"
+                ],
+                "parameters": [
+                    {
+                        "description": "key: name",
+                        "in": "path",
+                        "name": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "required": true,
+                        "in": "query",
+                        "name": "par",
+                        "description": "String value needs to be enclosed in single quotes",
+                        "schema": {
+                            "type": "string",
+                            "nullable": true,
+                            "pattern": "^(null|'([^']|'')*')$",
+                            "default": "null"
+                        }
+                    },
+                    {
+                        "name": "custom-bound-function",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Bound Function",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-bound-function"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customBoundFunction",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Bound Function",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customBoundFunction"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/custom.parameters.ent"
+                                        }
+                                    ],
+                                    "nullable": true
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/sing": {
+            "get": {
+                "summary": "Get sing",
+                "tags": [
+                    "sing"
+                ],
+                "parameters": [
+                    {
+                        "name": "custom-read",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Read Singleton",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-read"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customRead",
+                        "in": "query",
+                        "required": true,
+                        "description": "Custom Query Option for Read Singleton",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "name"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/custom.parameters.ent"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update sing",
+                "tags": [
+                    "sing"
+                ],
+                "requestBody": {
+                    "description": "New property values",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/custom.parameters.ent-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "custom-update",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Update Singleton",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-update"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customUpdate",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Update Singleton",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customUpdate"
+                            }
+                        }
+                    }
+                ]
+            },
+            "delete": {
+                "summary": "Delete sing",
+                "tags": [
+                    "sing"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "custom-delete",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Delete Singleton",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-delete"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customDelete",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Delete Singleton",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customDelete"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "/sing/act": {
+            "post": {
+                "summary": "Invoke action act",
+                "tags": [
+                    "sing"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/custom.parameters.ent"
+                                        }
+                                    ],
+                                    "nullable": true
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "requestBody": {
+                    "description": "Action parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "par": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "custom-bound-action",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Bound Action",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-bound-action"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customBoundAction",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Bound Action",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customBoundAction"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "/sing/func": {
+            "get": {
+                "summary": "Invoke function func",
+                "tags": [
+                    "sing"
+                ],
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "query",
+                        "name": "par",
+                        "description": "String value needs to be enclosed in single quotes",
+                        "schema": {
+                            "type": "string",
+                            "nullable": true,
+                            "pattern": "^(null|'([^']|'')*')$",
+                            "default": "null"
+                        }
+                    },
+                    {
+                        "name": "custom-bound-function",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Bound Function",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-bound-function"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customBoundFunction",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Bound Function",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customBoundFunction"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/custom.parameters.ent"
+                                        }
+                                    ],
+                                    "nullable": true
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/act": {
+            "post": {
+                "summary": "Invoke action act",
+                "tags": [
+                    "ents"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/custom.parameters.ent"
+                                        }
+                                    ],
+                                    "nullable": true
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                },
+                "requestBody": {
+                    "description": "Action parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "par": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "custom-unbound-action",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Unbound Action",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-unbound-action"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customUnboundAction",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Unbound Action",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customUnboundAction"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "/func": {
+            "get": {
+                "summary": "Invoke function func",
+                "tags": [
+                    "ents"
+                ],
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "query",
+                        "name": "par",
+                        "description": "String value needs to be enclosed in single quotes",
+                        "schema": {
+                            "type": "string",
+                            "nullable": true,
+                            "pattern": "^(null|'([^']|'')*')$",
+                            "default": "null"
+                        }
+                    },
+                    {
+                        "name": "custom-unbound-function",
+                        "in": "header",
+                        "required": true,
+                        "description": "Custom Header for Unbound Function",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/headers/custom-unbound-function"
+                            }
+                        }
+                    },
+                    {
+                        "name": "customUnboundFunction",
+                        "in": "query",
+                        "required": false,
+                        "description": "Custom Query Option for Unbound Function",
+                        "schema": {
+                            "type": "string",
+                            "externalDocs": {
+                                "url": "https://docs.example.com/apis/options/customUnboundFunction"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/custom.parameters.ent"
+                                        }
+                                    ],
+                                    "nullable": true
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/$batch": {
+            "post": {
+                "summary": "Send a group of requests",
+                "description": "Group multiple requests into a single request payload, see [Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).\n\n*Please note that \"Try it out\" is not supported for this request.*",
+                "tags": [
+                    "Batch Requests"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Batch request",
+                    "content": {
+                        "multipart/mixed;boundary=request-separator": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "example": "--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET ents HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Batch response",
+                        "content": {
+                            "multipart/mixed": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{...}\n--response-separator--"
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "custom.parameters.ent": {
+                "title": "ent",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "custom.parameters.ent-create": {
+                "title": "ent (for create)",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
+            "custom.parameters.ent-update": {
+                "title": "ent (for update)",
+                "type": "object"
+            },
+            "count": {
+                "anyOf": [
+                    {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    {
+                        "type": "string"
+                    }
+                ],
+                "description": "The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option."
+            },
+            "error": {
+                "type": "object",
+                "required": [
+                    "error"
+                ],
+                "properties": {
+                    "error": {
+                        "type": "object",
+                        "required": [
+                            "code",
+                            "message"
+                        ],
+                        "properties": {
+                            "code": {
+                                "type": "string"
+                            },
+                            "message": {
+                                "type": "string"
+                            },
+                            "target": {
+                                "type": "string"
+                            },
+                            "details": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "target": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "innererror": {
+                                "type": "object",
+                                "description": "The structure of this object is service-specific"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "top": {
+                "name": "top",
+                "in": "query",
+                "description": "Show only the first n items, see [Paging - Top](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptiontop)",
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "example": 50
+            },
+            "skip": {
+                "name": "skip",
+                "in": "query",
+                "description": "Skip the first n items, see [Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionskip)",
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            },
+            "count": {
+                "name": "count",
+                "in": "query",
+                "description": "Include count of items, see [Count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount)",
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "search": {
+                "name": "search",
+                "in": "query",
+                "description": "Search items by search phrases, see [Searching](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionsearch)",
+                "schema": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses": {
+            "error": {
+                "description": "Error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/error"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

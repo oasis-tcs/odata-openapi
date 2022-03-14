@@ -26,6 +26,9 @@ const result1 = require("../examples/csdl-16.1.openapi3.json");
 const example2 = xml2json(fs.readFileSync("examples/TripPin.xml"));
 const result2 = require("../examples/TripPin.openapi3.json");
 
+const example3 = xml2json(fs.readFileSync("examples/custom-parameters.xml"));
+const result3 = require("../examples/custom-parameters.openapi3.json");
+
 const example4 = xml2json(fs.readFileSync("examples/aggregation.xml"));
 const result4 = require("../examples/aggregation.openapi3.json");
 
@@ -57,6 +60,11 @@ describe("Examples", function () {
       diagram: true,
     });
     check(openapi, result2);
+  });
+
+  it("custom-parameters", function () {
+    const openapi = csdl2openapi(example3, { diagram: true });
+    check(openapi, result3);
   });
 
   it("aggregation", function () {
@@ -2476,6 +2484,12 @@ describe("Edge cases", function () {
             $Collection: true,
           },
           act: { $Action: "this.act" },
+        },
+        $Annotations: {
+          "this.act": {
+            "@Core.Description":
+              "Annotations targeting all overloads are currently ignored",
+          },
         },
       },
     };
