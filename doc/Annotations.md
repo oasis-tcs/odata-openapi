@@ -76,6 +76,7 @@ Term | Annotation Target | OpenAPI field
 &emsp;`/Sortable` | EntitySet | `$orderby` system query option for `GET` operation
 `TopSupported` | EntitySet | `$top` system query option for `GET` operation
 `UpdateRestrictions`<br>&emsp;`/Updatable` | EntitySet, Singleton | `PATCH` operation for modifying an existing entity
+&emsp;`/UpdateMethod` | EntitySet, Singleton | define update method (default is `PATCH`)
 &emsp;`/Description` | EntitySet, Singleton | `summary` of Operation Object
 &emsp;`/LongDescription` | EntitySet, Singleton | `description` of Operation Object
 &emsp;`/CustomHeaders` | EntitySet, Singleton | custom header

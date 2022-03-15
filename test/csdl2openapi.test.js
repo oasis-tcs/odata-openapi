@@ -288,6 +288,9 @@ describe("Edge cases", function () {
             "@Capabilities.InsertRestrictions": {
               Insertable: false,
             },
+            "@Capabilities.UpdateRestrictions": {
+              UpdateMethod: "PUT",
+            },
           },
           noUpdate: {
             $Type: "this.noUpdate",
@@ -348,7 +351,7 @@ describe("Edge cases", function () {
         },
         "/noInsert('{key}')": {
           get: {},
-          patch: {},
+          put: {},
           delete: {},
         },
         "/noInsert('{key}')/nav": {
