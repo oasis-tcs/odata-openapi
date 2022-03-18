@@ -248,6 +248,19 @@ function deleteUnusedSchemas(openapi) {
   }
 }
 
+function java(args, cwd) {
+  return new Promise((resolve) => {
+    exec(`java ${args.join(" ")}`, { cwd }, (error, stdout, stderr) => {
+      resolve({
+        code: error && error.code ? error.code : 0,
+        error,
+        stdout,
+        stderr,
+      });
+    });
+  });
+}
+
 function getReferencedSchemas(document, referenced) {
   Object.keys(document).forEach((key) => {
     let value = document[key];
