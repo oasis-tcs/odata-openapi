@@ -10,17 +10,17 @@
 
 "use strict";
 
-var xslt4node = require("xslt4node");
-var minimist = require("minimist");
-var path = require("path");
-var fs = require("fs");
+const minimist = require("minimist");
+const path = require("path");
+const fs = require("fs");
+const { spawnSync } = require("child_process");
 
-var xsltpath = path.dirname(require.main.filename) + path.sep;
-xslt4node.addLibrary(xsltpath + "xalan/xalan.jar");
+const toolsPath = path.dirname(require.main.filename) + path.sep;
+const classPath = `${toolsPath}xalan/xalan.jar;${toolsPath}xalan/serializer.jar`;
 
-var unknown = false;
+let unknown = false;
 
-var argv = minimist(process.argv.slice(2), {
+let argv = minimist(process.argv.slice(2), {
   string: ["o", "openapi-version", "t", "target", "scheme", "host", "basePath"],
   boolean: [
     "d",
@@ -58,7 +58,7 @@ var argv = minimist(process.argv.slice(2), {
   },
   unknown: (arg) => {
     if (arg.substring(0, 1) == "-") {
-      console.error("Unknown option: " + arg);
+      console.error(`Unknown option: ${arg}`);
       unknown = true;
       return false;
     }
@@ -82,137 +82,133 @@ Options:
  -u, --used-schemas-only produce only schemas that are actually used in operation objects
  --verbose               output additional progress information`);
 } else {
-  for (var i = 0; i < argv._.length; i++) {
+  for (let i = 0; i < argv._.length; i++) {
     transform(argv._[i]);
   }
 }
 
 function transform(source) {
   if (!fs.existsSync(source)) {
-    console.error("Source file not found: " + source);
-    return;
+    console.error(`Source file not found: ${source}`);
+    process.exit(1);
   }
 
   if (argv.verbose)
-    console.log("Checking OData version used in source file: " + source);
+    console.log(`Checking OData version used in source file: ${source}`);
 
-  xslt4node.transform(
-    {
-      xsltPath: xsltpath + "OData-Version.xsl",
-      sourcePath: source,
-      result: String,
-    },
-    (err, result) => {
-      if (err) {
-        console.error("Source file not XML: " + source);
-      } else if (result == "") {
-        console.error("Source file not OData: " + source);
-      } else if (result == "2.0" || result == "3.0") {
-        if (argv.verbose)
-          console.log("Source file is OData version: " + result);
-        transformV2V3(source, result);
-      } else {
-        if (argv.verbose)
-          console.log("Source file is OData version: " + result);
-        transformV4(source, "4.0", false);
-      }
-    }
-  );
+  const result = xalan("OData-Version.xsl", "-IN", source);
+
+  if (result.status === null) {
+    console.error("Java did not start: is it installed and in the PATH?");
+    process.exit(1);
+  }
+
+  if (result.stderr.length) {
+    console.error(`Source file not XML: ${source}`);
+    if (argv.verbose) console.log(result.stderr.toString());
+    process.exit(1);
+  }
+
+  const version = result.stdout.toString();
+  if (version == "") {
+    console.error("Source file not OData: " + source);
+    process.exit(1);
+  }
+
+  if (version == "2.0" || version == "3.0") {
+    if (argv.verbose) console.log(`Source file is OData version: ${version}`);
+    transformV2V3(source, version);
+  } else {
+    if (argv.verbose) console.log(`Source file is OData version: ${version}`);
+    transformV4(source, "4.0", false);
+  }
+}
+
+function xalan(xslt, ...args) {
+  return spawnSync("java", [
+    "-cp",
+    classPath,
+    "org.apache.xalan.xslt.Process",
+    "-XSL",
+    toolsPath + xslt,
+    ...args,
+  ]);
 }
 
 function transformV2V3(source, version) {
-  var target = source.substring(0, source.lastIndexOf(".") + 1) + "tmp";
+  const target = source.substring(0, source.lastIndexOf(".") + 1) + "tmp";
 
   if (argv.verbose)
-    console.log(
-      "Transforming " + source + " to OData V4, target file: " + target
-    );
+    console.log(`Transforming ${source} to OData V4, target file: ${target}`);
 
-  xslt4node.transform(
-    {
-      xsltPath: xsltpath + "V2-to-V4-CSDL.xsl",
-      sourcePath: source,
-      result: target,
-    },
-    (err, result) => {
-      if (err) {
-        console.error(err);
-      } else {
-        transformV4(target, version, true);
-      }
-    }
-  );
+  const result = xalan("V2-to-V4-CSDL.xsl", "-IN", source, "-OUT", target);
+
+  if (result.stderr.length) {
+    console.error(result.stderr.toString());
+    process.exit(1);
+  }
+
+  transformV4(target, version, true);
 }
 
 function transformV4(source, version, deleteSource) {
-  var target =
+  const target =
     argv.t || source.substring(0, source.lastIndexOf(".") + 1) + "openapi.json";
 
   if (argv.verbose)
     console.log(
-      "Transforming " +
-        source +
-        " to OpenAPI " +
-        argv.o +
-        ", target file: " +
-        target
+      `Transforming ${source} to OpenAPI ${argv.o}, target file: ${target}`
     );
 
-  xslt4node.transform(
-    {
-      xsltPath: xsltpath + "V4-CSDL-to-OpenAPI.xsl",
-      sourcePath: source,
-      result: argv.pretty || argv.u ? Buffer : target,
-      params: {
-        basePath: argv.basePath,
-        diagram: argv.diagram,
-        host: argv.host,
-        "odata-version": version,
-        "openapi-version": argv.o,
-        references: argv.references,
-        scheme: argv.scheme,
-      },
-    },
-    (err, result) => {
-      if (err) {
-        console.error(err);
-      } else {
-        if (argv.pretty || argv.u) {
-          try {
-            let openapi = JSON.parse(result);
-            if (argv.u) {
-              if (argv.verbose) console.log("Deleting unused schemas");
-              deleteUnusedSchemas(openapi);
-            }
-            if (argv.verbose) console.log("Writing target file: " + target);
-            fs.writeFileSync(
-              target,
-              JSON.stringify(openapi, null, argv.pretty ? 4 : 0)
-            );
-          } catch (e) {
-            if (argv.verbose) console.log("Ooops, something went wrong: ");
-            console.log(e);
-            fs.writeFileSync(target, result);
-          }
-        }
-        if (deleteSource) {
-          if (argv.verbose)
-            console.log("Removing intermediate file: " + source);
-          fs.unlink(source, (err) => {
-            if (err) console.error(err);
-          });
-        }
-        if (argv.verbose) console.log("Done.");
-        //TODO: figure out why this is needed on Ubunto and not on Windows
-        process.exit(0);
+  const params = ["-IN", source];
+  if (!argv.u && !argv.pretty) params.push("-OUT", target);
+  if (argv.basePath) params.push("-PARAM", "basePath", argv.basePath);
+  if (argv.diagram) params.push("-PARAM", "diagram", argv.diagram);
+  if (argv.host) params.push("-PARAM", "host", argv.host);
+  params.push("-PARAM", "odata-version", version);
+  params.push("-PARAM", "openapi-version", argv.o);
+  if (argv.references) params.push("-PARAM", "references", argv.references);
+  if (argv.scheme) params.push("-PARAM", "scheme", argv.scheme);
+
+  const result = xalan("V4-CSDL-to-OpenAPI.xsl", ...params);
+
+  if (result.stderr.length) {
+    console.error(result.stderr.toString());
+    process.exit(1);
+  }
+
+  if (argv.pretty || argv.u) {
+    try {
+      let openapi = JSON.parse(result.stdout);
+
+      if (argv.u) {
+        if (argv.verbose) console.log("Deleting unused schemas");
+        deleteUnusedSchemas(openapi);
       }
+      if (argv.verbose) console.log(`Writing target file: ${target}`);
+      fs.writeFileSync(
+        target,
+        JSON.stringify(openapi, null, argv.pretty ? 4 : 0)
+      );
+    } catch (e) {
+      if (argv.verbose) console.log("Ooops, something went wrong: ");
+      console.log(e);
+      fs.writeFileSync(target, result.stdout);
     }
-  );
+  }
+
+  if (deleteSource) {
+    if (argv.verbose) console.log(`Removing intermediate file: ${source}`);
+    fs.unlinkSync(source);
+  }
+
+  if (argv.verbose) console.log("Done.");
+  process.exit(0);
 }
 
 function deleteUnusedSchemas(openapi) {
-  var referenced;
-  var deleted;
+  let referenced;
+  let deleted;
 
   while (true) {
     referenced = {};
@@ -264,7 +260,7 @@ function getReferencedSchemas(document, referenced) {
 }
 
 function deleteUnreferenced(schemas, referenced, prefix) {
-  var deleted = false;
+  let deleted = false;
 
   Object.keys(schemas).forEach((key) => {
     if (!referenced[prefix + key]) {

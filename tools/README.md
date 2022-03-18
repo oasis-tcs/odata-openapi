@@ -16,17 +16,13 @@ _Note: if you want to transform OData V3, V4, or V4.01 into OpenAPI 3.0.x, you b
 
 This script transforms one or more OData CSDL (`$metadata`) XML documents into OpenAPI JSON documents.
 
-It uses [`xslt4node`](https://www.npmjs.com/package/xslt4node), which in turn needs [`node-gyp`](https://www.npmjs.com/package/node-gyp) and a [Java SE JDK](http://jdk.java.net).
-
 ### Installation
 
 Install a [Java SE JDK](http://jdk.java.net) and make sure it is in the `PATH`
 
 ```sh
-javac -version
+java -version
 ```
-
-Install `node-gyp` globally, following the [platform-specific installation instructions for `node-gyp`](https://github.com/nodejs/node-gyp/blob/master/README.md#installation).
 
 Clone or download this repository, go to the `tools` folder and type
 
