@@ -11,7 +11,7 @@ describe("CLI", function () {
 
   it("help", async () => {
     const result = await cmd(["-h"]);
-    assert.equal(result.code, 0);
+    assert.equal(result.code, 1);
     assert.match(
       result.stdout,
       /Usage: odata-openapi <options> <source files>/
@@ -20,8 +20,26 @@ describe("CLI", function () {
 
   it("invalid option", async () => {
     const result = await cmd(["-x"]);
-    // assert.equal(result.code, 1);
+    assert.equal(result.code, 1);
     assert.equal(result.stderr, "Unknown option: -x\n");
+  });
+
+  it("non-existing file", async () => {
+    const result = await cmd(["x"]);
+    assert.equal(result.code, 1);
+    assert.equal(result.stderr, "Source file not found: x\n");
+  });
+
+  it("file not XML", async () => {
+    const result = await cmd(["test.cmd"]);
+    assert.equal(result.code, 1);
+    assert.equal(result.stderr, "Source file not XML: test.cmd\n");
+  });
+
+  it("file not OData", async () => {
+    const result = await cmd(["OData-Version.xsl"]);
+    assert.equal(result.code, 1);
+    assert.equal(result.stderr, "Source file not OData: OData-Version.xsl\n");
   });
 
   it("annotations-v2", async () => {
@@ -31,12 +49,21 @@ describe("CLI", function () {
     const result = await cmd([
       "-d",
       "--scheme https",
+      "--verbose",
       "tests/annotations-v2.xml",
     ]);
 
     assert.equal(result.code, 0);
     assert.equal(result.stderr, "");
-    assert.equal(result.stdout, "");
+    assert.deepStrictEqual(result.stdout.split("\n"), [
+      "Checking OData version used in source file: tests/annotations-v2.xml",
+      "Source file is OData version: 2.0",
+      "Transforming tests/annotations-v2.xml to OData V4, target file: tests/annotations-v2.tmp",
+      "Transforming tests/annotations-v2.tmp to OpenAPI 3.0.0, target file: tests/annotations-v2.openapi.json",
+      "Removing intermediate file: tests/annotations-v2.tmp",
+      "Done.",
+      "",
+    ]);
     assert.equal(fs.existsSync(target), true);
     const actual = JSON.parse(fs.readFileSync(target, "utf8"));
     const expected = JSON.parse(annoV2);
@@ -48,7 +75,7 @@ describe("CLI", function () {
     const target = "tests/TripPin.openapi.json";
     if (fs.existsSync(target)) fs.unlinkSync(target);
 
-    const result = await cmd(["-dp", "--scheme https", "tests/TripPin.xml"]);
+    const result = await cmd(["-dpu", "--scheme https", "tests/TripPin.xml"]);
 
     assert.equal(result.code, 0);
     assert.equal(result.stderr, "");
