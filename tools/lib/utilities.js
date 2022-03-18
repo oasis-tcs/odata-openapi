@@ -1,77 +1,75 @@
 module.exports = { deleteUnusedSchemas };
 
 function deleteUnusedSchemas(openapi) {
-  //TODO: new algorithm
-  // - get referenced schemas from openapi.paths, similar to now
-  // - then get referenced schemas for all referenced schemas until map/list is stable
-  // - cross-check with production algorithm in JS version
-  // - finally remove everything that is not referenced in one go
+  const ref = { used: {}, list: [], paths: {} };
 
-  let referenced;
-  let deleted;
+  collectReferences(openapi.paths || {}, ref);
 
-  while (true) {
-    referenced = {};
-    getReferencedSchemas(openapi, referenced);
-
-    if (openapi.hasOwnProperty("components"))
-      deleted = deleteUnreferenced(
-        openapi.components.schemas || {},
-        referenced,
-        "#/components/schemas/"
-      );
-    else
-      deleted = deleteUnreferenced(
-        openapi.definitions || {},
-        referenced,
-        "#/definitions/"
-      );
-
-    if (!deleted) break;
+  for (const name of ref.list) {
+    collectReferences(schema(openapi, name), ref);
   }
 
-  if (openapi.hasOwnProperty("components")) {
-    deleteUnreferenced(
-      openapi.components.parameters || {},
-      referenced,
-      "#/components/parameters/"
-    );
-    if (
-      openapi.components.parameters &&
-      Object.keys(openapi.components.parameters).length == 0
-    )
-      delete openapi.components.parameters;
-  } else {
-    deleteUnreferenced(openapi.parameters || {}, referenced, "#/parameters/");
-    if (openapi.parameters && Object.keys(openapi.parameters).length == 0)
-      delete openapi.parameters;
+  // remove everything that is not referenced
+  for (const [path, schemas] of Object.entries(ref.paths)) {
+    const container = schema(openapi, path);
+    for (const name of Object.keys(container)) {
+      if (!schemas[name]) delete container[name];
+    }
+  }
+
+  deleteEmptyPathItems(openapi);
+
+  deleteIfEmpty(openapi.components, "schemas");
+  deleteIfEmpty(openapi.components, "parameters");
+  deleteIfEmpty(openapi.components, "responses");
+  deleteIfEmpty(openapi, "components");
+
+  deleteIfEmpty(openapi, "definitions");
+  deleteIfEmpty(openapi, "parameters");
+  deleteIfEmpty(openapi, "responses");
+}
+
+function collectReferences(document, ref) {
+  for (const [name, value] of Object.entries(document)) {
+    if (name === "$ref") {
+      if (value.startsWith("#")) addReference(ref, value);
+    } else if (Array.isArray(value)) {
+      value.forEach((item) => collectReferences(item, ref));
+    } else if (typeof value === "object" && value !== null) {
+      collectReferences(value, ref);
+    }
   }
 }
 
-function getReferencedSchemas(document, referenced) {
-  Object.keys(document).forEach((key) => {
-    let value = document[key];
-    if (key == "$ref") {
-      if (value.startsWith("#")) referenced[value] = true;
-    } else {
-      if (Array.isArray(value)) {
-        value.forEach((item) => getReferencedSchemas(item, referenced));
-      } else if (typeof value == "object" && value != null) {
-        getReferencedSchemas(value, referenced);
-      }
-    }
-  });
+function addReference(ref, value) {
+  if (ref.used[value]) return;
+  ref.used[value] = true;
+  ref.list.push(value);
+  const pos = value.lastIndexOf("/");
+  const path = value.substring(0, pos);
+  const name = value.substring(pos + 1);
+  if (!ref.paths[path]) ref.paths[path] = {};
+  ref.paths[path][name] = true;
 }
 
-function deleteUnreferenced(schemas, referenced, prefix) {
-  let deleted = false;
+function schema(document, name) {
+  const path = name.split("/");
+  let s = document;
+  for (let i = 1; i < path.length; i++) {
+    s = s[path[i]];
+  }
+  return s;
+}
 
-  Object.keys(schemas).forEach((key) => {
-    if (!referenced[prefix + key]) {
-      delete schemas[key];
-      deleted = true;
-    }
-  });
+function deleteEmptyPathItems(openapi) {
+  for (const [path, item] of Object.entries(openapi.paths || {})) {
+    const keys = Object.keys(item);
+    if (keys.length === 0 || (keys.length === 1 && keys[0] === "parameters"))
+      delete openapi.paths[path];
+  }
+}
 
-  return deleted;
+function deleteIfEmpty(object, key) {
+  if (object && object[key] && Object.keys(object[key]).length === 0)
+    delete object[key];
 }

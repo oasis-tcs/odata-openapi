@@ -3,15 +3,7 @@ const assert = require("assert");
 const { deleteUnusedSchemas } = require("../lib/utilities");
 
 describe("utilities", function () {
-  it("nothing to delete - OpenAPI 3.x", () => {
-    const source = { components: {} };
-    const target = { components: {} };
-
-    deleteUnusedSchemas(source);
-    assert.deepStrictEqual(source, target, "OpenAPI");
-  });
-
-  it("nothing to delete - Swagger", () => {
+  it("nothing to delete", () => {
     const source = {};
     const target = {};
 
@@ -19,17 +11,33 @@ describe("utilities", function () {
     assert.deepStrictEqual(source, target, "OpenAPI");
   });
 
-  it("no empty parameters - OpenAPI 3.x", () => {
-    const source = { components: { schemas: {}, parameters: {} } };
-    const target = { components: { schemas: {} } };
+  it("no empty path items, components, schemas, parameters, responses - OpenAPI 3.x", () => {
+    const source = {
+      paths: {
+        keep: { get: {} },
+        "/remove": {},
+        "/remove/too": { parameters: [] },
+      },
+      components: { schemas: {}, parameters: {}, responses: {} },
+    };
+    const target = { paths: { keep: { get: {} } } };
 
     deleteUnusedSchemas(source);
     assert.deepStrictEqual(source, target, "OpenAPI");
   });
 
-  it("no empty parameters - Swagger", () => {
-    const source = { parameters: {} };
-    const target = {};
+  it("no empty path items, definitions, parameters, responses - Swagger", () => {
+    const source = {
+      paths: {
+        keep: { get: {} },
+        "/remove": {},
+        "/remove/too": { parameters: [] },
+      },
+      definitions: {},
+      parameters: {},
+      responses: {},
+    };
+    const target = { paths: { keep: { get: {} } } };
 
     deleteUnusedSchemas(source);
     assert.deepStrictEqual(source, target, "OpenAPI");
@@ -173,7 +181,15 @@ describe("utilities", function () {
       },
       components: {
         schemas: {
-          response: { description: "should stay" },
+          response: {
+            description: "should stay",
+            properties: { used: { $ref: "#/components/schemas/used" } },
+          },
+          used: {
+            description: "should stay",
+            properties: { used: { $ref: "#/components/schemas/used2" } },
+          },
+          used2: { description: "should stay" },
           unused: {
             description: "should go",
             properties: { cycle: { $ref: "#/components/schemas/unused2" } },
@@ -207,7 +223,17 @@ describe("utilities", function () {
         },
       },
       components: {
-        schemas: { response: { description: "should stay" } },
+        schemas: {
+          response: {
+            description: "should stay",
+            properties: { used: { $ref: "#/components/schemas/used" } },
+          },
+          used: {
+            description: "should stay",
+            properties: { used: { $ref: "#/components/schemas/used2" } },
+          },
+          used2: { description: "should stay" },
+        },
         parameters: {
           top: { description: "should stay" },
         },
