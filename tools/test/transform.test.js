@@ -6,8 +6,8 @@ const path = require("path");
 describe("CLI", function () {
   this.timeout(20000);
 
-  const source = "tests/annotations-v2.xml";
-  const target = "tests/annotations-v2.openapi.json";
+  const annoV2 = fs.readFileSync("tests/annotations-v2.openapi3.json", "utf8");
+  const tripPin = fs.readFileSync("tests/TripPin.openapi3.json", "utf8");
 
   it("help", async () => {
     const result = await cmd(["-h"]);
@@ -24,41 +24,40 @@ describe("CLI", function () {
     assert.equal(result.stderr, "Unknown option: -x\n");
   });
 
-  it("transform one file", async () => {
+  it("annotations-v2", async () => {
+    const target = "tests/annotations-v2.openapi.json";
     if (fs.existsSync(target)) fs.unlinkSync(target);
 
-    const result = await cmd(["-d", "--scheme https", source]);
+    const result = await cmd([
+      "-d",
+      "--scheme https",
+      "tests/annotations-v2.xml",
+    ]);
 
     assert.equal(result.code, 0);
     assert.equal(result.stderr, "");
     assert.equal(result.stdout, "");
     assert.equal(fs.existsSync(target), true);
     const actual = JSON.parse(fs.readFileSync(target, "utf8"));
-    const expected = JSON.parse(
-      fs.readFileSync("tests/annotations-v2.openapi3.json", "utf8")
-    );
+    const expected = JSON.parse(annoV2);
     assert.deepStrictEqual(actual, expected, "produced OpenAPI");
     fs.unlinkSync(target);
   });
 
-  //TODO: später weg
-  it("call java", async () => {
-    const result = await java(["-version"]);
-    assert.equal(result.code, 0);
-  });
+  it("TripPin", async () => {
+    const target = "tests/TripPin.openapi.json";
+    if (fs.existsSync(target)) fs.unlinkSync(target);
 
-  it("call version xslt", () => {
-    java([
-      "-cp ./xalan/xalan.jar;./xalan/serializer.jar",
-      "org.apache.xalan.xslt.Process",
-      "-XSL ./OData-Version.xsl",
-      "-IN",
-      source,
-    ]).then((result) => {
-      assert.equal(result.stderr, "");
-      assert.equal(result.code, 0);
-      assert.equal(result.stdout, "2.0");
-    });
+    const result = await cmd(["-dp", "--scheme https", "tests/TripPin.xml"]);
+
+    assert.equal(result.code, 0);
+    assert.equal(result.stderr, "");
+    assert.equal(result.stdout, "");
+    assert.equal(fs.existsSync(target), true);
+    const actual = fs.readFileSync(target, "utf8").split("\n");
+    actual.push("");
+    assert.deepStrictEqual(actual, tripPin.split("\r\n"), "produced OpenAPI");
+    fs.unlinkSync(target);
   });
 });
 
@@ -76,18 +75,5 @@ function cmd(args, cwd) {
         });
       }
     );
-  });
-}
-
-function java(args, cwd) {
-  return new Promise((resolve) => {
-    exec(`java ${args.join(" ")}`, { cwd }, (error, stdout, stderr) => {
-      resolve({
-        code: error && error.code ? error.code : 0,
-        error,
-        stdout,
-        stderr,
-      });
-    });
   });
 }
