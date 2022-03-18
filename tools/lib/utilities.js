@@ -1,6 +1,12 @@
 module.exports = { deleteUnusedSchemas };
 
 function deleteUnusedSchemas(openapi) {
+  //TODO: new algorithm
+  // - get referenced schemas from openapi.paths, similar to now
+  // - then get referenced schemas for all referenced schemas until map/list is stable
+  // - cross-check with production algorithm in JS version
+  // - finally remove everything that is not referenced in one go
+
   let referenced;
   let deleted;
 
