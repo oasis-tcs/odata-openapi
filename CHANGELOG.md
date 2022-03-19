@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.15.0] - 2022-03-21
+
+### Added
+
+- Schema for custom headers and custom query options with annotation `JSON.Schema`.
+
 ## [0.14.0] - 2022-03-15
 
 ### Added
