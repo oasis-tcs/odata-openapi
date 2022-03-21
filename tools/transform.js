@@ -17,7 +17,7 @@ const { spawnSync } = require("child_process");
 const { deleteUnusedSchemas } = require("./lib/utilities");
 
 const toolsPath = path.dirname(require.main.filename) + path.sep;
-const classPath = `${toolsPath}xalan/xalan.jar;${toolsPath}xalan/serializer.jar`;
+const classPath = `${toolsPath}xalan/xalan.jar${path.delimiter}${toolsPath}xalan/serializer.jar`;
 
 let unknown = false;
 
