@@ -104,6 +104,32 @@ Then
 transform path/to/XML-file
 ```
 
+### Write your own script
+
+Depending on your use case you may want to write your own wrapper script and do some pre- or post-processing. In that case you just need Java installed, and can call the XSL transformations directly.
+
+Make sure to add `xalan/xalan.jar` and `xalan/serializer.jar` to your `CLASSPATH` or add a `-cp ...` command-line argument to the examples below. Note that the separator character for the class path depends on the operating system, `;` for Windows, `:` for Linux, ...
+
+If you don't know up-front which of your input files is OData V2, and which is OData V4, use the detection script and capture its output:
+
+```sh
+java org.apache.xalan.xslt.Process -XSL path-to-tools/OData-Version.xsl -IN your-file
+```
+
+An OData V2 or V3 file needs to be converted to a temporary file in V4 format first:
+
+```sh
+java org.apache.xalan.xslt.Process -L -XSL path-to-tools/V2-to-V4-CSDL.xsl -IN your-file -OUT your-temp-V4-file
+```
+
+An OData V4 file can then be converted to OpenAPI 3.0.0 (change the values of parameters `scheme`, `host`, `basePath`, and `odata-version` to the correct values for your API):
+
+```sh
+java org.apache.xalan.xslt.Process -L -XSL path-to-tools/V4-CSDL-to-OpenAPI.xsl -PARAM scheme http -PARAM host your-host.com -PARAM basePath /url-path/of/your/service -PARAM odata-version 4.01 -PARAM openapi-version 3.0.0 -IN your-V4-file -OUT your-openapi-file.json
+```
+
+Check the `<xsl:param name="..." />` elements in `V4-CSDL-to-OpenAPI.xsl` for further parameters that you might want to supply via `-PARAM x y`.
+
 ## Supported Annotations
 
 The mapping can be fine-tuned via [annotations](../doc/Annotations.md) in the CSDL (`$metadata`) XML documents.

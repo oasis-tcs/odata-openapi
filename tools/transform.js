@@ -14,9 +14,10 @@ const minimist = require("minimist");
 const path = require("path");
 const fs = require("fs");
 const { spawnSync } = require("child_process");
+const { deleteUnusedSchemas } = require("./lib/utilities");
 
 const toolsPath = path.dirname(require.main.filename) + path.sep;
-const classPath = `${toolsPath}xalan/xalan.jar;${toolsPath}xalan/serializer.jar`;
+const classPath = `${toolsPath}xalan/xalan.jar${path.delimiter}${toolsPath}xalan/serializer.jar`;
 
 let unknown = false;
 
@@ -81,6 +82,7 @@ Options:
  -t, --target            target file (only useful with a single source file)
  -u, --used-schemas-only produce only schemas that are actually used in operation objects
  --verbose               output additional progress information`);
+  process.exit(1);
 } else {
   for (let i = 0; i < argv._.length; i++) {
     transform(argv._[i]);
@@ -203,71 +205,4 @@ function transformV4(source, version, deleteSource) {
   }
 
   if (argv.verbose) console.log("Done.");
-  process.exit(0);
-}
-
-function deleteUnusedSchemas(openapi) {
-  let referenced;
-  let deleted;
-
-  while (true) {
-    referenced = {};
-    getReferencedSchemas(openapi, referenced);
-
-    if (openapi.hasOwnProperty("components"))
-      deleted = deleteUnreferenced(
-        openapi.components.schemas,
-        referenced,
-        "#/components/schemas/"
-      );
-    else
-      deleted = deleteUnreferenced(
-        openapi.definitions,
-        referenced,
-        "#/definitions/"
-      );
-
-    if (!deleted) break;
-  }
-
-  if (openapi.hasOwnProperty("components")) {
-    deleteUnreferenced(
-      openapi.components.parameters,
-      referenced,
-      "#/components/parameters/"
-    );
-    if (Object.keys(openapi.components.parameters).length == 0)
-      delete openapi.components.parameters;
-  } else {
-    deleteUnreferenced(openapi.parameters, referenced, "#/parameters/");
-    if (Object.keys(openapi.parameters).length == 0) delete openapi.parameters;
-  }
-}
-
-function getReferencedSchemas(document, referenced) {
-  Object.keys(document).forEach((key) => {
-    let value = document[key];
-    if (key == "$ref") {
-      if (value.startsWith("#")) referenced[value] = true;
-    } else {
-      if (Array.isArray(value)) {
-        value.forEach((item) => getReferencedSchemas(item, referenced));
-      } else if (typeof value == "object" && value != null) {
-        getReferencedSchemas(value, referenced);
-      }
-    }
-  });
-}
-
-function deleteUnreferenced(schemas, referenced, prefix) {
-  let deleted = false;
-
-  Object.keys(schemas).forEach((key) => {
-    if (!referenced[prefix + key]) {
-      delete schemas[key];
-      deleted = true;
-    }
-  });
-
-  return deleted;
 }
