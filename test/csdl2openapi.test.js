@@ -492,6 +492,7 @@ describe("Edge cases", function () {
       jsonExamples: {
         Container: {
           single: { $Type: "jsonExamples.single" },
+          f: { $Function: "jsonExamples.func" },
         },
         single: {
           $Kind: "EntityType",
@@ -513,6 +514,23 @@ describe("Edge cases", function () {
             patternProperties: { "^[\\w\\.\\-\\/]+$": { type: "string" } },
           },
         },
+        func: [
+          {
+            $Kind: "function",
+            $Parameter: [
+              { $Name: "first", $Type: "jsonExamples.typeDefinitionNew" },
+              {
+                $Name: "second",
+                $Type: "Edm.Stream",
+                "@JSON.Schema": { type: "array", items: { type: "string" } },
+              },
+            ],
+            $ReturnType: {
+              $Type: "Edm.Stream",
+              "@JSON.Schema": { type: "array" },
+            },
+          },
+        ],
       },
     };
     const openapi = csdl2openapi(csdl, {});
@@ -549,6 +567,43 @@ describe("Edge cases", function () {
         ],
       },
       "MaxLength"
+    );
+    assert.deepStrictEqual(
+      openapi.paths["/f(first=@first,second=@second)"].get.parameters,
+      [
+        {
+          name: "@first",
+          required: true,
+          description:
+            "This is URL-encoded JSON of type jsonExamples.typeDefinitionNew, see [Complex and Collection Literals](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_ComplexandCollectionLiterals)",
+          in: "query",
+          example: "{}",
+          schema: {
+            title: "typeDefinitionNew",
+            type: "object",
+            additionalProperties: false,
+            patternProperties: {
+              "^[\\w\\.\\-\\/]+$": { type: "string" },
+            },
+          },
+        },
+        {
+          name: "@second",
+          required: true,
+          description:
+            "This is URL-encoded JSON of type Edm.Stream, see [Complex and Collection Literals](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_ComplexandCollectionLiterals)",
+          in: "query",
+          example: "{}",
+          schema: { type: "array", items: { type: "string" } },
+        },
+      ],
+      "stream parameters of function"
+    );
+    assert.deepStrictEqual(
+      openapi.paths["/f(first=@first,second=@second)"].get.responses[200]
+        .content["application/json"],
+      { schema: { type: "array" } },
+      "stream return type of function"
     );
   });
 

@@ -100,3 +100,10 @@ Term | Annotation Target | OpenAPI field
 -----|-------------------|--------------
 `Authorizations` | EntityContainer | `securitySchemes` of Components Object / `securityDefinitions` of Swagger Object 
 `SecuritySchemes` | EntityContainer | `security` of OpenAPI / Swagger Object
+
+
+## [JSON](https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.JSON.V1.md)
+
+Term | Annotation Target | OpenAPI field
+-----|-------------------|--------------
+`Schema` | Property, CustomParameter | `schema` of property, custom header, or custom query option
