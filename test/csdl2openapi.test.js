@@ -2516,6 +2516,7 @@ describe("Edge cases", function () {
             $IsBound: true,
             $Parameter: [
               { $Name: "in", $Type: "this.root", $Collection: true },
+              { $Name: "other" },
             ],
           },
         ],
@@ -2548,6 +2549,9 @@ describe("Edge cases", function () {
             "@Core.Description":
               "Annotations targeting all overloads are currently ignored",
           },
+          "this.act(Collection(this.root))": {
+            "@Core.Description": "Act!",
+          },
         },
       },
     };
@@ -2559,8 +2563,19 @@ describe("Edge cases", function () {
         "/roots": { get: {}, post: {} },
         "/roots/act": {
           post: {
-            summary: "Invoke action act",
+            summary: "Act!",
             tags: ["roots"],
+            requestBody: {
+              description: "Action parameters",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: { other: { type: "string" } },
+                  },
+                },
+              },
+            },
             responses: {
               204: {
                 description: "Success",
