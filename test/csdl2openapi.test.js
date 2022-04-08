@@ -146,7 +146,7 @@ describe("Edge cases", function () {
       },
     };
     const expected = {
-      openapi: "3.0.2",
+      openapi: "3.0.0",
       info: {
         title: "OData CSDL document",
         description: "",
@@ -157,7 +157,7 @@ describe("Edge cases", function () {
         schemas: {},
       },
     };
-    const openapi = csdl2openapi(csdl, {});
+    const openapi = csdl2openapi(csdl, { openapiVersion: "3.0.0" });
     assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
   });
 
