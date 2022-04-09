@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0] - 2022-04-11
+
+### Added
+
+- Option `-o` / `--openapi-version` to set the OpenAPI version - version will be used for `openapi` output property without checks.
+- Support for OpenAPI version 3.1.0.
+
 ## [0.15.0] - 2022-03-28
 
 ### Added

@@ -1,6 +1,6 @@
-# Convert OData 4.0x CSDL JSON or XML to OpenAPI 3.0.x
+# Convert OData 4.0x CSDL JSON or XML to OpenAPI 3.0.x or 3.1.0
 
-This script converts an OData Version 3.0, 4.0, or 4.01 [CSDL XML](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html) or [CSDL JSON](http://docs.oasis-open.org/odata/odata-csdl-json/v4.01/odata-csdl-json-v4.01.html) (`$metadata`) document into an [OpenAPI 3.0.x](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md) JSON document.
+This script converts an OData Version 3.0, 4.0, or 4.01 [CSDL XML](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html) or [CSDL JSON](http://docs.oasis-open.org/odata/odata-csdl-json/v4.01/odata-csdl-json-v4.01.html) (`$metadata`) document into an [OpenAPI 3.0.x](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.3.md) or [OpenAPI 3.1.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md) JSON document.
 
 It's a pure JavaScript implementation, depending only on [`odata-csdl`](https://github.com/oasis-tcs/odata-csdl-schemas/tree/master/lib), which in turn depends on [`sax js`](https://www.npmjs.com/package/sax).
 
@@ -43,6 +43,7 @@ Options:
  -d, --diagram           include YUML diagram
  -h, --help              show this info
  --host                  host (default: localhost)
+ -o, --openapi-version   3.0.0 to 3.0.3 or 3.1.0 (default: 3.0.2)
  -p, --pretty            pretty-print JSON result
  --scheme                scheme (default: http)
  -t, --target            target file (default: source file base name + .openapi3.json)
