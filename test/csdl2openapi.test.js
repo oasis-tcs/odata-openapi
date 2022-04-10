@@ -2799,6 +2799,11 @@ describe("Edge cases", function () {
 
   it("various types and fishy annotations", function () {
     const csdl = {
+      $Reference: {
+        dummy: {
+          $Include: [{ $Namespace: "Org.OData.Core.V1", $Alias: "Core" }],
+        },
+      },
       $EntityContainer: "typeExamples.Container",
       typeExamples: {
         Container: {
@@ -2812,6 +2817,7 @@ describe("Edge cases", function () {
             $MaxLength: 10,
           },
           binary: { $Type: "Edm.Binary", $MaxLength: 42 },
+          enum: { $Type: "typeExamples.enumType" },
           primitive: { $Type: "Edm.PrimitiveType" },
           annotationPath: { $Type: "Edm.AnnotationPath" },
           modelElementPath: { $Type: "Edm.ModelElementPath" },
@@ -2826,6 +2832,12 @@ describe("Edge cases", function () {
         typeDefinitionNew: {
           $Kind: "TypeDefinition",
           $UnderlyingType: "Edm.String",
+        },
+        enumType: {
+          "@Core.LongDescription": "an enumeration type",
+          $Kind: "EnumType",
+          foo: {},
+          bar: {},
         },
         $Annotations: {
           "typeExamples.single/foo/bar": {
@@ -2853,6 +2865,9 @@ describe("Edge cases", function () {
           ],
         },
         binary: { format: "base64url", type: "string", maxLength: 56 },
+        enum: {
+          $ref: "#/components/schemas/typeExamples.enumType",
+        },
         primitive: {
           anyOf: [{ type: "boolean" }, { type: "number" }, { type: "string" }],
         },
@@ -2930,6 +2945,7 @@ describe("Edge cases", function () {
         typeDef: {
           $Kind: "TypeDefinition",
           $UnderlyingType: "Edm.Int32",
+          "@Core.LongDescription": "an integer",
         },
       },
     };
