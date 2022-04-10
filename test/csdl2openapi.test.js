@@ -200,6 +200,58 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
   });
 
+  it("external reference", function () {
+    const csdl = {
+      $Reference: {
+        "dummy.xml": {
+          $Include: [{ $Namespace: "external" }],
+        },
+      },
+      $EntityContainer: "this.container",
+      this: {
+        container: {
+          sing: { $Type: "this.entityType" },
+        },
+        entityType: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          nav: { $Kind: "NavigationProperty", $Type: "external.otherType" },
+        },
+      },
+    };
+    const expected = {
+      openapi: "3.0.2",
+      info: {
+        title: "OData CSDL document",
+        description: "",
+        version: "",
+      },
+      paths: { "/$batch": {}, "/sing": {}, "/sing/nav": {} },
+      components: {
+        schemas: {
+          "this.entityType": {
+            title: "entityType",
+            type: "object",
+            properties: {
+              key: { type: "string" },
+              nav: {
+                $ref: "dummy.openapi3.json#/components/schemas/external.otherType",
+              },
+            },
+          },
+        },
+      },
+    };
+    const actual = csdl2openapi(csdl, { diagram: true });
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      actual.components.schemas["this.entityType"],
+      expected.components.schemas["this.entityType"],
+      "entityType schema"
+    );
+  });
+
   it("InsertRestrictions, UpdateRestrictions, ReadRestrictions", function () {
     //TODO: restrictions
     const csdl = {
@@ -409,6 +461,11 @@ describe("Edge cases", function () {
 
   it("circular reference on collect primitive paths", function () {
     const csdl = {
+      $Reference: {
+        dummy: {
+          $IncludeAnnotations: [{ $Namespace: "foo.bar" }],
+        },
+      },
       $EntityContainer: "this.Container",
       this: {
         source: {
@@ -516,7 +573,7 @@ describe("Edge cases", function () {
         },
         func: [
           {
-            $Kind: "function",
+            $Kind: "Function",
             $Parameter: [
               { $Name: "first", $Type: "jsonExamples.typeDefinitionNew" },
               {
@@ -837,7 +894,17 @@ describe("Edge cases", function () {
     const csdl = {
       $EntityContainer: "this.Container",
       this: {
-        NoParameters: [{ $Kind: "Function", $ReturnType: {} }],
+        $Annotations: {
+          "this.NoParameters()": {
+            "@Org.OData.Core.V1.Description": "no parameters",
+          },
+        },
+        NoParameters: [
+          {
+            $Kind: "Function",
+            $ReturnType: {},
+          },
+        ],
         Container: { fun: { $Function: "this.NoParameters" } },
       },
     };
@@ -853,6 +920,11 @@ describe("Edge cases", function () {
       operations(actual),
       operations(expected),
       "Operations"
+    );
+    assert.equal(
+      actual.paths["/fun()"].get.summary,
+      "no parameters",
+      "function summary"
     );
   });
 
@@ -1246,6 +1318,11 @@ describe("Edge cases", function () {
       },
       $EntityContainer: "this.Container",
       this: {
+        $Annotations: {
+          "this.ComplexParameters(this.Complex,Collection(Edm.String))": {
+            "@Core.Description": "foo",
+          },
+        },
         Complex: { $Kind: "ComplexType", $OpenType: true },
         ComplexParameters: [
           {
@@ -1339,6 +1416,11 @@ describe("Edge cases", function () {
       actual.paths[path].get.parameters,
       expected.paths[path].get.parameters,
       "complex function parameters"
+    );
+    assert.equal(
+      actual.paths[path].get.summary,
+      "foo",
+      "complex function summary"
     );
     assert.deepStrictEqual(
       actual.paths["/funO"].get.parameters,

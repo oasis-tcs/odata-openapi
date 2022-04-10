@@ -6,6 +6,7 @@
 
 - Option `-o` / `--openapi-version` to set the OpenAPI version - version will be used for `openapi` output property without checks.
 - Support for OpenAPI version 3.1.0.
+- Recognize namespace-qualified annotations without vocabulary reference
 
 ## [0.15.0] - 2022-03-28
 
