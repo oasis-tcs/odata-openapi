@@ -527,11 +527,21 @@ describe("Edge cases", function () {
         uniqueItems: true,
       },
     };
+    const messages = [];
 
-    const openapi = csdl2openapi(csdl, {});
+    const openapi = csdl2openapi(csdl, { messages });
+
     assert.deepStrictEqual(
       openapi.paths["/sources"].get.parameters[4],
       expected_sources_get_param
+    );
+    assert.deepStrictEqual(
+      messages,
+      [
+        "Cycle detected this.complex1->this.complex2->this.complex1",
+        "Cycle detected this.complex2->this.complex1->this.complex2",
+      ],
+      "messages"
     );
   });
 
@@ -2863,7 +2873,8 @@ describe("Edge cases", function () {
       $EntityContainer: "auth.example.Container",
     };
 
-    const actual = csdl2openapi(csdl, {});
+    const messages = [];
+    const actual = csdl2openapi(csdl, { messages });
 
     assert.deepStrictEqual(
       actual.components.securitySchemes,
@@ -2876,6 +2887,11 @@ describe("Edge cases", function () {
         },
       },
       "security schemes"
+    );
+    assert.deepStrictEqual(
+      messages,
+      ["Unknown Authorization type foo"],
+      "messages"
     );
   });
 
@@ -2935,7 +2951,8 @@ describe("Edge cases", function () {
       },
     };
 
-    const openapi = csdl2openapi(csdl, {});
+    const messages = [];
+    const openapi = csdl2openapi(csdl, { messages });
 
     assert.deepStrictEqual(
       openapi.components.schemas["typeExamples.single"].properties,
@@ -2970,6 +2987,19 @@ describe("Edge cases", function () {
         },
       },
       "MaxLength"
+    );
+    assert.deepStrictEqual(
+      messages,
+      [
+        "More than two annotation target path segments",
+        "Invalid annotation target 'typeExamples.single/foo'",
+        "Invalid annotation target 'typeExamples.not-there'",
+        'Unknown type for element: ["unknown",{"$Type":"typeExamples.un-known"}]',
+        "Unrecognized entity container child: unknown",
+        "Unknown type: Edm.kaputt",
+        "Unknown type: Edm.kaputt",
+      ],
+      "messages"
     );
   });
 
