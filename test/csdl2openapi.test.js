@@ -8,7 +8,6 @@ const fs = require("fs");
 // title/description on entity types for POST and PATCH request bodies
 // tags: Core.Description on entity type as fallback for description on entity set/singleton
 // Nullable on action/function return type
-// @Core.Example
 // reference undefined type: silent for included schema, warning for local schema
 // key-aliases: one and more segments
 // navigation properties inherited from base type A.n1 -> B.n2 -> C.n3
@@ -146,7 +145,7 @@ describe("Edge cases", function () {
       },
     };
     const expected = {
-      openapi: "3.0.2",
+      openapi: "3.0.0",
       info: {
         title: "OData CSDL document",
         description: "",
@@ -157,7 +156,7 @@ describe("Edge cases", function () {
         schemas: {},
       },
     };
-    const openapi = csdl2openapi(csdl, {});
+    const openapi = csdl2openapi(csdl, { openapiVersion: "3.0.0" });
     assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
   });
 
@@ -201,6 +200,58 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
   });
 
+  it("external reference", function () {
+    const csdl = {
+      $Reference: {
+        "dummy.xml": {
+          $Include: [{ $Namespace: "external" }],
+        },
+      },
+      $EntityContainer: "this.container",
+      this: {
+        container: {
+          sing: { $Type: "this.entityType" },
+        },
+        entityType: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          nav: { $Kind: "NavigationProperty", $Type: "external.otherType" },
+        },
+      },
+    };
+    const expected = {
+      openapi: "3.0.2",
+      info: {
+        title: "OData CSDL document",
+        description: "",
+        version: "",
+      },
+      paths: { "/$batch": {}, "/sing": {}, "/sing/nav": {} },
+      components: {
+        schemas: {
+          "this.entityType": {
+            title: "entityType",
+            type: "object",
+            properties: {
+              key: { type: "string" },
+              nav: {
+                $ref: "dummy.openapi3.json#/components/schemas/external.otherType",
+              },
+            },
+          },
+        },
+      },
+    };
+    const actual = csdl2openapi(csdl, { diagram: true });
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      actual.components.schemas["this.entityType"],
+      expected.components.schemas["this.entityType"],
+      "entityType schema"
+    );
+  });
+
   it("InsertRestrictions, UpdateRestrictions, ReadRestrictions", function () {
     //TODO: restrictions
     const csdl = {
@@ -240,7 +291,7 @@ describe("Edge cases", function () {
             $ContainsTarget: true,
           },
         },
-        noUpdatetPart: {
+        noUpdatePart: {
           $Kind: "EntityType",
           $Key: ["key"],
           key: {},
@@ -391,12 +442,13 @@ describe("Edge cases", function () {
           "this.noReadPart-update": {},
           "this.noUpdate": {},
           "this.noUpdate-create": {},
+          "this.noUpdatePart": {},
+          "this.noUpdatePart-create": {},
+          "this.noUpdatePart-update": {},
         },
       },
     };
     const actual = csdl2openapi(csdl, {});
-    console.dir(actual.paths["/nothing"]);
-    console.dir(actual.paths["/nothing({key})"]);
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -409,6 +461,11 @@ describe("Edge cases", function () {
 
   it("circular reference on collect primitive paths", function () {
     const csdl = {
+      $Reference: {
+        dummy: {
+          $IncludeAnnotations: [{ $Namespace: "foo.bar" }],
+        },
+      },
       $EntityContainer: "this.Container",
       this: {
         source: {
@@ -470,11 +527,21 @@ describe("Edge cases", function () {
         uniqueItems: true,
       },
     };
+    const messages = [];
 
-    const openapi = csdl2openapi(csdl, {});
+    const openapi = csdl2openapi(csdl, { messages });
+
     assert.deepStrictEqual(
       openapi.paths["/sources"].get.parameters[4],
       expected_sources_get_param
+    );
+    assert.deepStrictEqual(
+      messages,
+      [
+        "Cycle detected this.complex1->this.complex2->this.complex1",
+        "Cycle detected this.complex2->this.complex1->this.complex2",
+      ],
+      "messages"
     );
   });
 
@@ -516,7 +583,7 @@ describe("Edge cases", function () {
         },
         func: [
           {
-            $Kind: "function",
+            $Kind: "Function",
             $Parameter: [
               { $Name: "first", $Type: "jsonExamples.typeDefinitionNew" },
               {
@@ -837,7 +904,17 @@ describe("Edge cases", function () {
     const csdl = {
       $EntityContainer: "this.Container",
       this: {
-        NoParameters: [{ $Kind: "Function", $ReturnType: {} }],
+        $Annotations: {
+          "this.NoParameters()": {
+            "@Org.OData.Core.V1.Description": "no parameters",
+          },
+        },
+        NoParameters: [
+          {
+            $Kind: "Function",
+            $ReturnType: {},
+          },
+        ],
         Container: { fun: { $Function: "this.NoParameters" } },
       },
     };
@@ -853,6 +930,11 @@ describe("Edge cases", function () {
       operations(actual),
       operations(expected),
       "Operations"
+    );
+    assert.equal(
+      actual.paths["/fun()"].get.summary,
+      "no parameters",
+      "function summary"
     );
   });
 
@@ -1246,6 +1328,11 @@ describe("Edge cases", function () {
       },
       $EntityContainer: "this.Container",
       this: {
+        $Annotations: {
+          "this.ComplexParameters(this.Complex,Collection(Edm.String))": {
+            "@Core.Description": "foo",
+          },
+        },
         Complex: { $Kind: "ComplexType", $OpenType: true },
         ComplexParameters: [
           {
@@ -1339,6 +1426,11 @@ describe("Edge cases", function () {
       actual.paths[path].get.parameters,
       expected.paths[path].get.parameters,
       "complex function parameters"
+    );
+    assert.equal(
+      actual.paths[path].get.summary,
+      "foo",
+      "complex function summary"
     );
     assert.deepStrictEqual(
       actual.paths["/funO"].get.parameters,
@@ -2781,7 +2873,8 @@ describe("Edge cases", function () {
       $EntityContainer: "auth.example.Container",
     };
 
-    const actual = csdl2openapi(csdl, {});
+    const messages = [];
+    const actual = csdl2openapi(csdl, { messages });
 
     assert.deepStrictEqual(
       actual.components.securitySchemes,
@@ -2795,10 +2888,20 @@ describe("Edge cases", function () {
       },
       "security schemes"
     );
+    assert.deepStrictEqual(
+      messages,
+      ["Unknown Authorization type foo"],
+      "messages"
+    );
   });
 
   it("various types and fishy annotations", function () {
     const csdl = {
+      $Reference: {
+        dummy: {
+          $Include: [{ $Namespace: "Org.OData.Core.V1", $Alias: "Core" }],
+        },
+      },
       $EntityContainer: "typeExamples.Container",
       typeExamples: {
         Container: {
@@ -2811,17 +2914,28 @@ describe("Edge cases", function () {
             $Type: "typeExamples.typeDefinitionNew",
             $MaxLength: 10,
           },
-          binary: { $Type: "Edm.Binary" },
+          binary: { $Type: "Edm.Binary", $MaxLength: 42 },
+          enum: { $Type: "typeExamples.enumType" },
           primitive: { $Type: "Edm.PrimitiveType" },
+          annotationPath: { $Type: "Edm.AnnotationPath" },
+          modelElementPath: { $Type: "Edm.ModelElementPath" },
+          navigationPropertyPath: { $Type: "Edm.NavigationPropertyPath" },
           propertyPath: { $Type: "Edm.PropertyPath" },
           sbyte: { $Type: "Edm.SByte" },
           time: { $Type: "Edm.TimeOfDay" },
+          timestamp: { $Type: "Edm.DateTimeOffset", $Precision: 7 },
           kaputt: { $Type: "Edm.kaputt" },
           unknown: { $Type: "typeExamples.un-known" },
         },
         typeDefinitionNew: {
           $Kind: "TypeDefinition",
           $UnderlyingType: "Edm.String",
+        },
+        enumType: {
+          "@Core.LongDescription": "an enumeration type",
+          $Kind: "EnumType",
+          foo: {},
+          bar: {},
         },
         $Annotations: {
           "typeExamples.single/foo/bar": {
@@ -2837,7 +2951,8 @@ describe("Edge cases", function () {
       },
     };
 
-    const openapi = csdl2openapi(csdl, {});
+    const messages = [];
+    const openapi = csdl2openapi(csdl, { messages });
 
     assert.deepStrictEqual(
       openapi.components.schemas["typeExamples.single"].properties,
@@ -2848,19 +2963,168 @@ describe("Edge cases", function () {
             { $ref: "#/components/schemas/typeExamples.typeDefinitionNew" },
           ],
         },
-        binary: { format: "base64url", type: "string" },
+        binary: { format: "base64url", type: "string", maxLength: 56 },
+        enum: {
+          $ref: "#/components/schemas/typeExamples.enumType",
+        },
         primitive: {
           anyOf: [{ type: "boolean" }, { type: "number" }, { type: "string" }],
         },
+        annotationPath: { type: "string" },
+        modelElementPath: { type: "string" },
+        navigationPropertyPath: { type: "string" },
         propertyPath: { type: "string" },
         sbyte: { type: "integer", format: "int8" },
         time: { type: "string", format: "time", example: "15:51:04" },
+        timestamp: {
+          type: "string",
+          format: "date-time",
+          example: "2017-04-13T15:51:04.0000000Z",
+        },
         kaputt: {},
         unknown: {
           $ref: "#/components/schemas/typeExamples.un-known",
         },
       },
       "MaxLength"
+    );
+    assert.deepStrictEqual(
+      messages,
+      [
+        "More than two annotation target path segments",
+        "Invalid annotation target 'typeExamples.single/foo'",
+        "Invalid annotation target 'typeExamples.not-there'",
+        'Unknown type for element: ["unknown",{"$Type":"typeExamples.un-known"}]',
+        "Unrecognized entity container child: unknown",
+        "Unknown type: Edm.kaputt",
+        "Unknown type: Edm.kaputt",
+      ],
+      "messages"
+    );
+  });
+
+  it("OpenAPI 3.1.0", function () {
+    const csdl = {
+      $Reference: {
+        dummy: {
+          $Include: [
+            { $Namespace: "Org.OData.Core.V1", $Alias: "Core" },
+            { $Namespace: "Org.OData.Validation.V1", $Alias: "Validation" },
+          ],
+        },
+      },
+      $EntityContainer: "oas31.Container",
+      oas31: {
+        Container: {
+          sing: { $Type: "oas31.single" },
+        },
+        single: {
+          $Kind: "EntityType",
+          date: { $Type: "Edm.Date" },
+          nullableString: { $Nullable: true },
+          primitive: { $Type: "Edm.PrimitiveType" },
+          ref: { $Type: "oas31.typeDef" },
+          refDef: { $Type: "oas31.typeDef", $DefaultValue: 42 },
+          refD: { $Type: "oas31.typeDef", "@Core.Description": "D" },
+          refEx: { $Type: "oas31.typeDef", "@Core.Example": { Value: 11 } },
+          refLD: { $Type: "oas31.typeDef", "@Core.LongDescription": "LD" },
+          refMax: { $Type: "oas31.typeDef", "@Validation.Maximum": -5 },
+          refMin: { $Type: "oas31.typeDef", "@Validation.Minimum": -5 },
+          nullableRef: {
+            $Type: "oas31.typeDef",
+            $Nullable: true,
+          },
+          min: {
+            $Type: "Edm.Int32",
+            "@Validation.Minimum": 1,
+          },
+          exclusiveMin: {
+            $Type: "Edm.Int64",
+            "@Validation.Minimum@Validation.Exclusive": true,
+            "@Validation.Minimum": 0,
+          },
+          max: {
+            $Type: "Edm.Decimal",
+            $Nullable: true,
+            "@Validation.Maximum": 42,
+          },
+          exclusiveMax: {
+            $Type: "Edm.Double",
+            "@Validation.Maximum@Validation.Exclusive": true,
+            "@Validation.Maximum": 42,
+          },
+        },
+        typeDef: {
+          $Kind: "TypeDefinition",
+          $UnderlyingType: "Edm.Int32",
+          "@Core.LongDescription": "an integer",
+        },
+      },
+    };
+
+    const properties = {
+      date: { type: "string", format: "date", example: "2017-04-13" }, // example is deprecated but still allowed
+      nullableString: { type: ["string", "null"] },
+      primitive: { type: ["boolean", "number", "string"] },
+      ref: { $ref: "#/components/schemas/oas31.typeDef" },
+      refDef: {
+        allOf: [{ $ref: "#/components/schemas/oas31.typeDef" }],
+        default: 42,
+      },
+      refD: {
+        allOf: [{ $ref: "#/components/schemas/oas31.typeDef" }],
+        title: "D",
+      },
+      refLD: {
+        allOf: [{ $ref: "#/components/schemas/oas31.typeDef" }],
+        description: "LD",
+      },
+      refEx: {
+        allOf: [{ $ref: "#/components/schemas/oas31.typeDef" }],
+        example: 11,
+      },
+      refMax: {
+        allOf: [{ $ref: "#/components/schemas/oas31.typeDef" }],
+        maximum: -5,
+      },
+      refMin: {
+        allOf: [{ $ref: "#/components/schemas/oas31.typeDef" }],
+        minimum: -5,
+      },
+      nullableRef: {
+        anyOf: [
+          { $ref: "#/components/schemas/oas31.typeDef" },
+          { type: "null" },
+        ],
+      },
+      min: { type: "integer", format: "int32", minimum: 1 },
+      exclusiveMin: {
+        type: ["integer", "string"],
+        format: "int64",
+        example: "42",
+        exclusiveMinimum: 0,
+      },
+      max: {
+        type: ["number", "string", "null"],
+        format: "decimal",
+        example: 0,
+        maximum: 42,
+      },
+      exclusiveMax: {
+        type: "number",
+        format: "double",
+        example: 3.14,
+        exclusiveMaximum: 42,
+      },
+    };
+
+    const openapi = csdl2openapi(csdl, { openapiVersion: "3.1.0" });
+
+    assert.equal(openapi.openapi, "3.1.0", "OpenAPI version");
+    assert.deepStrictEqual(
+      openapi.components.schemas["oas31.single"].properties,
+      properties,
+      "Schemas"
     );
   });
 });

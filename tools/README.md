@@ -12,7 +12,7 @@ The mapping can be fine-tuned via [annotations](../doc/Annotations.md) in the CS
 
 ## `transform.js` for Node.js
 
-_Note: if you want to transform OData V3, V4, or V4.01 into OpenAPI 3.0.x, you better use the [pure Node.js-based tool](../lib)._
+_Note: if you want to transform OData V3, V4, or V4.01 into OpenAPI 3.0.x or 3.1.0, you better use the [pure Node.js-based tool](../lib)._
 
 This script transforms one or more OData CSDL (`$metadata`) XML documents into OpenAPI JSON documents.
 
