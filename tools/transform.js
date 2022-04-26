@@ -145,10 +145,8 @@ function transformV2V3(source, version) {
 
   const result = xalan("V2-to-V4-CSDL.xsl", "-IN", source, "-OUT", target);
 
-  if (result.stderr.length) {
-    console.error(result.stderr.toString());
-    process.exit(1);
-  }
+  if (result.stderr.length) console.error(result.stderr.toString());
+  if (result.status !== 0) process.exit(1);
 
   transformV4(target, version, true);
 }
@@ -174,10 +172,8 @@ function transformV4(source, version, deleteSource) {
 
   const result = xalan("V4-CSDL-to-OpenAPI.xsl", ...params);
 
-  if (result.stderr.length) {
-    console.error(result.stderr.toString());
-    process.exit(1);
-  }
+  if (result.stderr.length) console.error(result.stderr.toString());
+  if (result.status !== 0) process.exit(1);
 
   if (argv.pretty || argv.u) {
     try {
