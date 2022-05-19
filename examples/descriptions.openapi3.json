@@ -2,7 +2,7 @@
     "openapi": "3.0.2",
     "info": {
         "title": "Container - Description",
-        "description": "Container - LongDescription\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[entity{bg:lightslategray}],[entity]++-*>[subEntity{bg:lightslategray}],[entity]-*>[entity{bg:lightslategray}],[subEntity{bg:lightslategray}],[functionimport_no_descriptions{bg:lawngreen}],[functionimport_ext{bg:lawngreen}],[functionimport{bg:lawngreen}],[actionimport_no_descriptions{bg:lawngreen}],[actionimport_ext{bg:lawngreen}],[actionimport{bg:lawngreen}],[single_ext%20{bg:lawngreen}]++->[entity],[single%20{bg:lawngreen}]++->[entity],[entities_ext%20{bg:lawngreen}]++-*>[entity],[entities%20{bg:lawngreen}]++-*>[entity])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
+        "description": "Container - LongDescription\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[entity{bg:lightslategray}],[entity]++-*>[subEntity{bg:lightslategray}],[entity]-*>[entity{bg:lightslategray}],[subEntity{bg:lightslategray}],[functionimport_no_descriptions{bg:lawngreen}],[functionimport_ext{bg:lawngreen}],[functionimport{bg:lawngreen}],[actionimport_no_descriptions{bg:lawngreen}],[actionimport_ext{bg:lawngreen}],[actionimport{bg:lawngreen}],[single_ext%20{bg:lawngreen}]++->[entity],[single%20{bg:lawngreen}]++-0..1>[entity],[entities_ext%20{bg:lawngreen}]++-*>[entity],[entities%20{bg:lawngreen}]++-*>[entity])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
         "version": "0.0.1"
     },
     "servers": [
@@ -1817,8 +1817,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on read singleton",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Read Singleton - LongDescription"
@@ -1843,11 +1850,40 @@
                     "204": {
                         "description": "Success"
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on update singleton",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Update Singleton - LongDescription"
+            },
+            "delete": {
+                "summary": "Delete Singleton - Description",
+                "tags": [
+                    "single"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "418": {
+                        "description": "Out of coffee on delete singleton",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Delete Singleton - LongDescription"
             }
         },
         "/single/self.action": {

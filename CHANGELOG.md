@@ -4,7 +4,7 @@
 
 ### Added
 
-- Define operation-specific HTTP error response codes with descriptions via `ErrorResponses` property of certain annotations
+- Define operation-specific HTTP error response status codes with descriptions via `ErrorResponses` property of certain annotations
 
 ## [0.16.0] - 2022-04-11
 
