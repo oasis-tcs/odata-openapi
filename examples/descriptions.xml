@@ -538,6 +538,44 @@
         <Annotation Term="Core.Description" String="Action Bound Overload Return Type Ext - Description" />
       </Annotations>
 
+      <Action Name="action" IsBound="true">
+        <Annotation Term="Core.LongDescription" String="Action Bound Overload subEntity - LongDescription" />
+        <Parameter Name="binding" Type="self.subEntity">
+          <Annotation Term="Core.LongDescription" String="Action Bound Overload Binding Parameter subEntity - LongDescription - is ignored" />
+        </Parameter>
+        <Parameter Name="nonbinding" Type="Edm.String">
+          <Annotation Term="Core.LongDescription" String="Action Bound Overload Non-Binding Parameter subEntity - LongDescription" />
+        </Parameter>
+      </Action>
+
+      <Annotations Target="self.action(self.subEntity)">
+        <Annotation Term="Core.Description" String="Action Bound Overload Ext subEntity - Description" />
+        <Annotation Term="Capabilities.OperationRestrictions">
+          <Record>
+            <PropertyValue Property="ErrorResponses">
+              <Collection>
+                <Record>
+                  <PropertyValue Property="StatusCode" String="418" />
+                  <PropertyValue Property="Description" String="Out of coffee on bound action call on subEntity" />
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="self.action(self.subEntity)/binding">
+        <Annotation Term="Core.Description" String="Action Bound Overload Binding Parameter Ext subEntity - Description - is ignored" />
+      </Annotations>
+
+      <Annotations Target="self.action(self.subEntity)/nonbinding">
+        <Annotation Term="Core.Description" String="Action Bound Overload Nonbinding Parameter Ext subEntity - Description" />
+      </Annotations>
+
+      <Annotations Target="self.action(self.subEntity)/$ReturnType">
+        <Annotation Term="Core.Description" String="Action Bound Overload Return Type Ext subEntity - Description - is ignored, no return type" />
+      </Annotations>
+
 
       <Function Name="function">
         <Annotation Term="Core.Description" String="Function Unbound Overload - Description" />
