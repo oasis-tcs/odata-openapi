@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.18.0] - 2022-06-01
+
+### Added
+
+- Dynamic capabilities using `Path=`(XML) or `$Path` (JSON) are now treated as `true`
+
 ## [0.17.0] - 2022-05-19
 
 ### Added
