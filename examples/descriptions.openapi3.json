@@ -2,7 +2,7 @@
     "openapi": "3.0.2",
     "info": {
         "title": "Container - Description",
-        "description": "Container - LongDescription\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[entity{bg:lightslategray}],[entity]++-*>[subEntity{bg:lightslategray}],[entity]-*>[entity{bg:lightslategray}],[subEntity{bg:lightslategray}],[functionimport_no_descriptions{bg:lawngreen}],[functionimport_ext{bg:lawngreen}],[functionimport{bg:lawngreen}],[actionimport_no_descriptions{bg:lawngreen}],[actionimport_ext{bg:lawngreen}],[actionimport{bg:lawngreen}],[single_ext%20{bg:lawngreen}]++->[entity],[single%20{bg:lawngreen}]++->[entity],[entities_ext%20{bg:lawngreen}]++-*>[entity],[entities%20{bg:lawngreen}]++-*>[entity])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
+        "description": "Container - LongDescription\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[entity{bg:lightslategray}],[entity]++-*>[subEntity{bg:lightslategray}],[entity]-*>[entity{bg:lightslategray}],[subEntity{bg:lightslategray}],[functionimport_no_descriptions{bg:lawngreen}],[functionimport_ext{bg:lawngreen}],[functionimport{bg:lawngreen}],[actionimport_no_descriptions{bg:lawngreen}],[actionimport_ext{bg:lawngreen}],[actionimport{bg:lawngreen}],[single_ext%20{bg:lawngreen}]++->[entity],[single%20{bg:lawngreen}]++-0..1>[entity],[entities_ext%20{bg:lawngreen}]++-*>[entity],[entities%20{bg:lawngreen}]++-*>[entity])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
         "version": "0.0.1"
     },
     "servers": [
@@ -131,8 +131,25 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on query",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    },
+                    "5XX": {
+                        "description": "This should never have happened",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Query Entity Set - LongDescription"
@@ -164,8 +181,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on create",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Create Entity - LongDescription"
@@ -237,8 +261,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on read-by-key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Read Entity by Key - LongDescription"
@@ -263,8 +294,15 @@
                     "204": {
                         "description": "Success"
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on update",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Update Entity - LongDescription"
@@ -278,8 +316,15 @@
                     "204": {
                         "description": "Success"
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on delete",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Delete Entity - LongDescription"
@@ -305,8 +350,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on bound action call",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Action Bound Overload - LongDescription",
@@ -388,8 +440,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on bound function call",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Function Bound Overload - LongDescription"
@@ -492,8 +551,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on query contained",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Query Contained - LongDescription"
@@ -525,8 +591,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on create contained",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Create Contained - LongDescription"
@@ -590,8 +663,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on read contained by key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Read Contained by Key - LongDescription"
@@ -616,8 +696,15 @@
                     "204": {
                         "description": "Success"
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on update contained",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Update Contained - LongDescription"
@@ -631,11 +718,83 @@
                     "204": {
                         "description": "Success"
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on delete contained",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Delete Contained - LongDescription"
+            }
+        },
+        "/entities('{id}')/contained('{id_1}')/self.action": {
+            "post": {
+                "summary": "Action Bound Overload Ext subEntity - Description",
+                "tags": [
+                    "entities"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "418": {
+                        "description": "Out of coffee on bound action call on subEntity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Action Bound Overload subEntity - LongDescription",
+                "parameters": [
+                    {
+                        "description": "Property - Description  \nProperty - LongDescription",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 70,
+                            "default": "0000"
+                        }
+                    },
+                    {
+                        "description": "key: id",
+                        "in": "path",
+                        "name": "id_1",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 70
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Action parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nonbinding": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "title": "Action Bound Overload Nonbinding Parameter Ext subEntity - Description",
+                                        "description": "Action Bound Overload Non-Binding Parameter subEntity - LongDescription"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/entities('{id}')/related": {
@@ -1071,8 +1230,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on bound action call",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Action Bound Overload - LongDescription",
@@ -1154,8 +1320,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on bound function call",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Function Bound Overload - LongDescription"
@@ -1404,6 +1577,71 @@
                 "description": "Delete Contained Ext - LongDescription"
             }
         },
+        "/entities_ext('{id}')/contained('{id_1}')/self.action": {
+            "post": {
+                "summary": "Action Bound Overload Ext subEntity - Description",
+                "tags": [
+                    "entities_ext"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "418": {
+                        "description": "Out of coffee on bound action call on subEntity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Action Bound Overload subEntity - LongDescription",
+                "parameters": [
+                    {
+                        "description": "Property - Description  \nProperty - LongDescription",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 70,
+                            "default": "0000"
+                        }
+                    },
+                    {
+                        "description": "key: id",
+                        "in": "path",
+                        "name": "id_1",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 70
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Action parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nonbinding": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "title": "Action Bound Overload Nonbinding Parameter Ext subEntity - Description",
+                                        "description": "Action Bound Overload Non-Binding Parameter subEntity - LongDescription"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/entities_ext('{id}')/related": {
             "parameters": [
                 {
@@ -1614,8 +1852,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on read singleton",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Read Singleton - LongDescription"
@@ -1640,11 +1885,40 @@
                     "204": {
                         "description": "Success"
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on update singleton",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Update Singleton - LongDescription"
+            },
+            "delete": {
+                "summary": "Delete Singleton - Description",
+                "tags": [
+                    "single"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "418": {
+                        "description": "Out of coffee on delete singleton",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Delete Singleton - LongDescription"
             }
         },
         "/single/self.action": {
@@ -1667,8 +1941,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on bound action call",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Action Bound Overload - LongDescription",
@@ -1726,8 +2007,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on bound function call",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Function Bound Overload - LongDescription"
@@ -1950,6 +2238,60 @@
                     }
                 },
                 "description": "Singleton Delete Contained - LongDescription"
+            }
+        },
+        "/single/contained('{id_1}')/self.action": {
+            "post": {
+                "summary": "Action Bound Overload Ext subEntity - Description",
+                "tags": [
+                    "single"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "418": {
+                        "description": "Out of coffee on bound action call on subEntity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Action Bound Overload subEntity - LongDescription",
+                "parameters": [
+                    {
+                        "description": "key: id",
+                        "in": "path",
+                        "name": "id_1",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 70
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Action parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nonbinding": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "title": "Action Bound Overload Nonbinding Parameter Ext subEntity - Description",
+                                        "description": "Action Bound Overload Non-Binding Parameter subEntity - LongDescription"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/single/related": {
@@ -2202,8 +2544,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on bound action call",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Action Bound Overload - LongDescription",
@@ -2261,8 +2610,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on bound function call",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Function Bound Overload - LongDescription"
@@ -2487,6 +2843,60 @@
                 "description": "Singleton Delete Contained Ext - LongDescription"
             }
         },
+        "/single_ext/contained('{id_1}')/self.action": {
+            "post": {
+                "summary": "Action Bound Overload Ext subEntity - Description",
+                "tags": [
+                    "single_ext"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "418": {
+                        "description": "Out of coffee on bound action call on subEntity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Action Bound Overload subEntity - LongDescription",
+                "parameters": [
+                    {
+                        "description": "key: id",
+                        "in": "path",
+                        "name": "id_1",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 70
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Action parameters",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nonbinding": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "title": "Action Bound Overload Nonbinding Parameter Ext subEntity - Description",
+                                        "description": "Action Bound Overload Non-Binding Parameter subEntity - LongDescription"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/single_ext/related": {
             "get": {
                 "summary": "Singleton Query Related Ext - Description",
@@ -2651,8 +3061,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on unbound action call",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Action Import - LongDescription",
@@ -2696,8 +3113,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on unbound action call",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Action Import Ext - LongDescription",
@@ -2741,8 +3165,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on unbound action call",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Action Unbound Overload Ext - LongDescription",
@@ -2800,8 +3231,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on unbound function call",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Function Import - LongDescription"
@@ -2841,8 +3279,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on unbound function call",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Function Import Ext - LongDescription"
@@ -2882,8 +3327,15 @@
                             }
                         }
                     },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
+                    "418": {
+                        "description": "Out of coffee on unbound function call",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
                     }
                 },
                 "description": "Function Unbound Overload Ext - LongDescription"
