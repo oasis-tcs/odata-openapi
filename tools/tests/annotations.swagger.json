@@ -130,7 +130,9 @@
                                 "RequiredInFilter",
                                 "RequiredInFilter desc",
                                 "ImmutableExt",
-                                "ImmutableExt desc"
+                                "ImmutableExt desc",
+                                "switch",
+                                "switch desc"
                             ]
                         }
                     },
@@ -160,7 +162,8 @@
                                 "ComputedExt",
                                 "Immutable",
                                 "RequiredInFilter",
-                                "ImmutableExt"
+                                "ImmutableExt",
+                                "switch"
                             ]
                         }
                     },
@@ -278,7 +281,8 @@
                                 "ComputedExt",
                                 "Immutable",
                                 "RequiredInFilter",
-                                "ImmutableExt"
+                                "ImmutableExt",
+                                "switch"
                             ]
                         }
                     },
@@ -656,7 +660,9 @@
                                 "RequiredInFilter",
                                 "RequiredInFilter desc",
                                 "ImmutableExt",
-                                "ImmutableExt desc"
+                                "ImmutableExt desc",
+                                "switch",
+                                "switch desc"
                             ]
                         }
                     },
@@ -686,7 +692,8 @@
                                 "ComputedExt",
                                 "Immutable",
                                 "RequiredInFilter",
-                                "ImmutableExt"
+                                "ImmutableExt",
+                                "switch"
                             ]
                         }
                     },
@@ -804,7 +811,8 @@
                                 "ComputedExt",
                                 "Immutable",
                                 "RequiredInFilter",
-                                "ImmutableExt"
+                                "ImmutableExt",
+                                "switch"
                             ]
                         }
                     },
@@ -948,7 +956,9 @@
                                 "RequiredInFilter",
                                 "RequiredInFilter desc",
                                 "ImmutableExt",
-                                "ImmutableExt desc"
+                                "ImmutableExt desc",
+                                "switch",
+                                "switch desc"
                             ]
                         }
                     },
@@ -978,7 +988,8 @@
                                 "ComputedExt",
                                 "Immutable",
                                 "RequiredInFilter",
-                                "ImmutableExt"
+                                "ImmutableExt",
+                                "switch"
                             ]
                         }
                     },
@@ -1069,7 +1080,8 @@
                                 "ComputedExt",
                                 "Immutable",
                                 "RequiredInFilter",
-                                "ImmutableExt"
+                                "ImmutableExt",
+                                "switch"
                             ]
                         }
                     },
@@ -1099,6 +1111,44 @@
                         "schema": {
                             "$ref": "#/definitions/Supported.Annotations.SinglePartKey"
                         }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in OneNavigationSet",
+                "tags": [
+                    "OneNavigationSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "SinglePartKey",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.SinglePartKey-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from OneNavigationSet",
+                "tags": [
+                    "OneNavigationSet"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
                     },
                     "400": {
                         "$ref": "#/responses/error"
@@ -1262,7 +1312,8 @@
                                 "ComputedExt",
                                 "Immutable",
                                 "RequiredInFilter",
-                                "ImmutableExt"
+                                "ImmutableExt",
+                                "switch"
                             ]
                         }
                     },
@@ -1943,8 +1994,7 @@
                     "in": "path",
                     "required": true,
                     "description": "key: Two",
-                    "type": "integer",
-                    "format": "int32"
+                    "type": "string"
                 }
             ],
             "get": {
@@ -2127,8 +2177,7 @@
                     "in": "path",
                     "required": true,
                     "description": "key: Two",
-                    "type": "integer",
-                    "format": "int32"
+                    "type": "string"
                 }
             ],
             "get": {
@@ -2165,8 +2214,7 @@
                     "in": "path",
                     "required": true,
                     "description": "key: Two",
-                    "type": "integer",
-                    "format": "int32"
+                    "type": "string"
                 }
             ],
             "get": {
@@ -2247,8 +2295,7 @@
                     "in": "path",
                     "required": true,
                     "description": "key: Two",
-                    "type": "integer",
-                    "format": "int32"
+                    "type": "string"
                 }
             ],
             "patch": {
@@ -2484,6 +2531,12 @@
                     ],
                     "example": "string"
                 },
+                "switch": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
                 "AllOne": {
                     "$ref": "#/definitions/Supported.Annotations.TwoPartKey"
                 },
@@ -2665,6 +2718,12 @@
                     ],
                     "example": "string"
                 },
+                "switch": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
                 "AllMany": {
                     "type": "array",
                     "items": {
@@ -2830,6 +2889,12 @@
                         "null"
                     ],
                     "example": "string"
+                },
+                "switch": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
                 }
             },
             "title": "SinglePartKey (for update)"
@@ -2843,8 +2908,9 @@
                     "x-sap-object-node-type-reference": "SontOne"
                 },
                 "Two": {
-                    "type": "integer",
-                    "format": "int32"
+                    "type": "string",
+                    "format": "time",
+                    "example": "15:51:04"
                 }
             },
             "title": "TwoPartKey"
@@ -2858,8 +2924,9 @@
                     "x-sap-object-node-type-reference": "SontOne"
                 },
                 "Two": {
-                    "type": "integer",
-                    "format": "int32"
+                    "type": "string",
+                    "format": "time",
+                    "example": "15:51:04"
                 }
             },
             "required": [

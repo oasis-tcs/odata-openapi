@@ -95,6 +95,7 @@
         </Property>
         <Property Name="RequiredInFilter" Type="Edm.String" />
         <Property Name="ImmutableExt" Type="Edm.String" />
+        <Property Name="switch" Type="Edm.Boolean" />
         <NavigationProperty Name="AllOne" Type="self.TwoPartKey" />
         <NavigationProperty Name="AllMany" Type="Collection(self.TwoPartKey)" />
         <NavigationProperty Name="ReadOnlyOne" Type="self.TwoPartKey" />
@@ -109,7 +110,7 @@
           <PropertyRef Name="Two" />
         </Key>
         <Property Name="One" Type="Edm.Int32" Nullable="false" />
-        <Property Name="Two" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Two" Type="Edm.TimeOfDay" Nullable="false" />
       </EntityType>
 
       <EntityContainer Name="Container">
@@ -174,12 +175,12 @@
           </Annotation>
           <Annotation Term="Capabilities.UpdateRestrictions">
             <Record>
-              <PropertyValue Bool="false" Property="Updatable" />
+              <PropertyValue Path="switch" Property="Updatable" />
             </Record>
           </Annotation>
           <Annotation Term="Capabilities.DeleteRestrictions">
             <Record>
-              <PropertyValue Bool="false" Property="Deletable" />
+              <PropertyValue Path="switch" Property="Deletable" />
             </Record>
           </Annotation>
         </EntitySet>
@@ -298,7 +299,7 @@
                     <PropertyValue Property="NavigationProperty" NavigationPropertyPath="ReadOnlyMany" />
                     <PropertyValue Property="InsertRestrictions">
                       <Record>
-                        <PropertyValue Property="Insertable" Bool="true" />
+                        <PropertyValue Property="Insertable" Path="switch" />
                       </Record>
                     </PropertyValue>
                   </Record>

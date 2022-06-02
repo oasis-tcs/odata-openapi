@@ -2857,7 +2857,7 @@
 
         <!-- InsertRestrictions on source for this navigation property -->
         <xsl:variable name="insertRestrictions" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='InsertRestrictions']/edm:Record/edm:PropertyValue[@Property='Insertable']" />
-        <xsl:variable name="navigation-insertable" select="$insertRestrictions/@Bool|$insertRestrictions/edm:Bool" />
+        <xsl:variable name="navigation-insertable" select="$insertRestrictions/@Bool|$insertRestrictions/edm:Bool|$insertRestrictions/@Path|$insertRestrictions/edm:Path" />
 
         <xsl:call-template name="pathItem-entity-collection">
           <xsl:with-param name="type" select="$singleType" />
@@ -2876,7 +2876,7 @@
             <xsl:with-param name="selectSupport"
             select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SelectSupport']" />
           -->
-          <xsl:with-param name="with-post" select="$collection and ($targetSet or @ContainsTarget='true') and ($navigation-insertable='true' or (not($navigation-insertable) and not($insertable='false')))" />
+          <xsl:with-param name="with-post" select="$collection and ($targetSet or @ContainsTarget='true') and ($navigation-insertable!='false' or (not($navigation-insertable) and not($insertable='false')))" />
         </xsl:call-template>
       </xsl:if>
 

@@ -128,7 +128,9 @@
                                     "RequiredInFilter",
                                     "RequiredInFilter desc",
                                     "ImmutableExt",
-                                    "ImmutableExt desc"
+                                    "ImmutableExt desc",
+                                    "switch",
+                                    "switch desc"
                                 ]
                             }
                         }
@@ -161,7 +163,8 @@
                                     "ComputedExt",
                                     "Immutable",
                                     "RequiredInFilter",
-                                    "ImmutableExt"
+                                    "ImmutableExt",
+                                    "switch"
                                 ]
                             }
                         }
@@ -296,7 +299,8 @@
                                     "ComputedExt",
                                     "Immutable",
                                     "RequiredInFilter",
-                                    "ImmutableExt"
+                                    "ImmutableExt",
+                                    "switch"
                                 ]
                             }
                         }
@@ -727,7 +731,9 @@
                                     "RequiredInFilter",
                                     "RequiredInFilter desc",
                                     "ImmutableExt",
-                                    "ImmutableExt desc"
+                                    "ImmutableExt desc",
+                                    "switch",
+                                    "switch desc"
                                 ]
                             }
                         }
@@ -760,7 +766,8 @@
                                     "ComputedExt",
                                     "Immutable",
                                     "RequiredInFilter",
-                                    "ImmutableExt"
+                                    "ImmutableExt",
+                                    "switch"
                                 ]
                             }
                         }
@@ -895,7 +902,8 @@
                                     "ComputedExt",
                                     "Immutable",
                                     "RequiredInFilter",
-                                    "ImmutableExt"
+                                    "ImmutableExt",
+                                    "switch"
                                 ]
                             }
                         }
@@ -1052,7 +1060,9 @@
                                     "RequiredInFilter",
                                     "RequiredInFilter desc",
                                     "ImmutableExt",
-                                    "ImmutableExt desc"
+                                    "ImmutableExt desc",
+                                    "switch",
+                                    "switch desc"
                                 ]
                             }
                         }
@@ -1085,7 +1095,8 @@
                                     "ComputedExt",
                                     "Immutable",
                                     "RequiredInFilter",
-                                    "ImmutableExt"
+                                    "ImmutableExt",
+                                    "switch"
                                 ]
                             }
                         }
@@ -1188,7 +1199,8 @@
                                     "ComputedExt",
                                     "Immutable",
                                     "RequiredInFilter",
-                                    "ImmutableExt"
+                                    "ImmutableExt",
+                                    "switch"
                                 ]
                             }
                         }
@@ -1226,6 +1238,45 @@
                                 }
                             }
                         }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in OneNavigationSet",
+                "tags": [
+                    "OneNavigationSet"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New property values",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Supported.Annotations.SinglePartKey-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from OneNavigationSet",
+                "tags": [
+                    "OneNavigationSet"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
                     },
                     "4XX": {
                         "$ref": "#/components/responses/error"
@@ -1409,7 +1460,8 @@
                                     "ComputedExt",
                                     "Immutable",
                                     "RequiredInFilter",
-                                    "ImmutableExt"
+                                    "ImmutableExt",
+                                    "switch"
                                 ]
                             }
                         }
@@ -2200,8 +2252,9 @@
                     "required": true,
                     "description": "key: Two",
                     "schema": {
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "string",
+                        "format": "time",
+                        "example": "15:51:04"
                     }
                 }
             ],
@@ -2410,8 +2463,9 @@
                     "required": true,
                     "description": "key: Two",
                     "schema": {
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "string",
+                        "format": "time",
+                        "example": "15:51:04"
                     }
                 }
             ],
@@ -2457,8 +2511,9 @@
                     "required": true,
                     "description": "key: Two",
                     "schema": {
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "string",
+                        "format": "time",
+                        "example": "15:51:04"
                     }
                 }
             ],
@@ -2556,8 +2611,9 @@
                     "required": true,
                     "description": "key: Two",
                     "schema": {
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "string",
+                        "format": "time",
+                        "example": "15:51:04"
                     }
                 }
             ],
@@ -2784,6 +2840,10 @@
                         "type": "string",
                         "nullable": true
                     },
+                    "switch": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
                     "AllOne": {
                         "nullable": true,
                         "allOf": [
@@ -2973,6 +3033,10 @@
                         "type": "string",
                         "nullable": true
                     },
+                    "switch": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
                     "AllMany": {
                         "type": "array",
                         "items": {
@@ -3147,6 +3211,10 @@
                     "RequiredInFilter": {
                         "type": "string",
                         "nullable": true
+                    },
+                    "switch": {
+                        "type": "boolean",
+                        "nullable": true
                     }
                 },
                 "title": "SinglePartKey (for update)"
@@ -3160,8 +3228,9 @@
                         "x-sap-object-node-type-reference": "SontOne"
                     },
                     "Two": {
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "string",
+                        "format": "time",
+                        "example": "15:51:04"
                     }
                 },
                 "title": "TwoPartKey"
@@ -3175,8 +3244,9 @@
                         "x-sap-object-node-type-reference": "SontOne"
                     },
                     "Two": {
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "string",
+                        "format": "time",
+                        "example": "15:51:04"
                     }
                 },
                 "required": [
