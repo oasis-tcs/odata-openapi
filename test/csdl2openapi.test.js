@@ -2926,6 +2926,7 @@ describe("Edge cases", function () {
           timestamp: { $Type: "Edm.DateTimeOffset", $Precision: 7 },
           kaputt: { $Type: "Edm.kaputt" },
           unknown: { $Type: "typeExamples.un-known" },
+          "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {}, // non-standard property name, silently accept it
         },
         typeDefinitionNew: {
           $Kind: "TypeDefinition",
@@ -2984,6 +2985,9 @@ describe("Edge cases", function () {
         kaputt: {},
         unknown: {
           $ref: "#/components/schemas/typeExamples.un-known",
+        },
+        "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
+          type: "string",
         },
       },
       "MaxLength"
