@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.18.3] - 2022-09-01
+
+### Added
+
+- Use [stringifyStream](https://www.npmjs.com/package/@discoveryjs/json-ext) for generating JSON
+
 ## [0.18.0] - 2022-06-01
 
 ### Added
