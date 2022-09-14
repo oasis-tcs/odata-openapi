@@ -118,6 +118,41 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
   });
 
+  it("don't modify input", function () {
+    const csdl = {
+      $Version: "4.0",
+      $EntityContainer: "Model.Service",
+      Model: {
+        Foo: {
+          $Kind: "EntityType",
+          $OpenType: true,
+          $Key: ["is"],
+          is: {},
+        },
+        Service: {
+          $Kind: "EntityContainer",
+          foos: {
+            $Collection: true,
+            $Type: "Model.Foo",
+          },
+          foo: {
+            $Type: "Model.Foo",
+          },
+        },
+      },
+    };
+    csdl2openapi(csdl, {});
+    assert.deepStrictEqual(
+      csdl.Model.Service,
+      {
+        $Kind: "EntityContainer",
+        foo: { $Type: "Model.Foo" },
+        foos: { $Type: "Model.Foo", $Collection: true },
+      },
+      "Entity container of CSDL input"
+    );
+  });
+
   it("omit unused types", function () {
     const csdl = {
       $Reference: {
