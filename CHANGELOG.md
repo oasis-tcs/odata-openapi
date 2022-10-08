@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.19.0] - 2022-10-08
+
+### Added
+
+- Support for OData V2
+
 ## [0.18.3] - 2022-09-01
 
 ### Added

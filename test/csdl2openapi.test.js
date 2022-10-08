@@ -46,6 +46,9 @@ const result8 = require("../examples/descriptions.openapi3.json");
 const example9 = xml2json(fs.readFileSync("examples/odata-rw-v3.xml"));
 const result9 = require("../examples/odata-rw-v3.openapi3.json");
 
+const example10 = xml2json(fs.readFileSync("examples/odata-rw-v2.xml"));
+const result10 = require("../examples/odata-rw-v2.openapi3.json");
+
 describe("Examples", function () {
   it("csdl-16.1", function () {
     const openapi = csdl2openapi(example1, { diagram: true });
@@ -98,6 +101,11 @@ describe("Examples", function () {
       diagram: true,
     });
     check(openapi, result9);
+  });
+
+  it("odata-rw-v2", function () {
+    const openapi = csdl2openapi(example10, { diagram: true });
+    check(openapi, result10);
   });
 });
 
