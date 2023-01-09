@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.20.0] - 2023-01-xx
+
+### Added
+
+- Support for `FilterSegmentSupported` property of [`UpdateRestrictions`](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Capabilities.V1.md#updaterestrictionstype) and [`DeleteRestrictions`](https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Capabilities.V1.md#deleterestrictionstype)
+
 ## [0.19.0] - 2022-10-08
 
 ### Added
