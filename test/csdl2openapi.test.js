@@ -498,7 +498,6 @@ describe("Edge cases", function () {
       "Operations"
     );
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
-    //TODO: check components.schemas
   });
 
   it("circular reference on collect primitive paths", function () {
@@ -2853,8 +2852,6 @@ describe("Edge cases", function () {
       operations(expected),
       "Operations"
     );
-
-    //TODO: check components
     assert.deepStrictEqual(
       actual.components.schemas["this.root-update"],
       expected.components.schemas["this.root-update"],
@@ -3212,12 +3209,32 @@ describe("Edge cases", function () {
             "@Capabilities.DeleteRestrictions": {
               FilterSegmentSupported: true,
             },
+            "@Capabilities.NavigationRestrictions": {
+              RestrictedProperties: [
+                {
+                  NavigationProperty: "nav",
+                  DeleteRestrictions: {
+                    FilterSegmentSupported: true,
+                  },
+                },
+              ],
+            },
           },
           filteredUpdate: {
             $Type: "this.whole",
             $Collection: true,
             "@Capabilities.UpdateRestrictions": {
               FilterSegmentSupported: true,
+            },
+            "@Capabilities.NavigationRestrictions": {
+              RestrictedProperties: [
+                {
+                  NavigationProperty: "nav",
+                  UpdateRestrictions: {
+                    FilterSegmentSupported: true,
+                  },
+                },
+              ],
             },
           },
         },
@@ -3246,6 +3263,9 @@ describe("Edge cases", function () {
           patch: {},
           delete: {},
         },
+        "/filteredDelete('{key}')/nav/$filter({filter_expression})/$each": {
+          delete: {},
+        },
         "/filteredUpdate": {
           get: {},
           post: {},
@@ -3266,6 +3286,9 @@ describe("Edge cases", function () {
           get: {},
           patch: {},
           delete: {},
+        },
+        "/filteredUpdate('{key}')/nav/$filter({filter_expression})/$each": {
+          patch: {},
         },
         "/$batch": { post: {} },
       },
@@ -3288,7 +3311,6 @@ describe("Edge cases", function () {
       "Operations"
     );
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
-    //TODO: check delete-with-filter and update-with-filter operations
   });
 });
 
