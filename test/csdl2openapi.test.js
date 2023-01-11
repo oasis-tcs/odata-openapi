@@ -3229,7 +3229,7 @@ describe("Edge cases", function () {
           get: {},
           post: {},
         },
-        "/filteredDelete/$filter(...)": {
+        "/filteredDelete/$filter({filter_expression})/$each": {
           delete: {},
         },
         "/filteredDelete('{key}')": {
@@ -3250,7 +3250,7 @@ describe("Edge cases", function () {
           get: {},
           post: {},
         },
-        "/filteredUpdate/$filter(...)": {
+        "/filteredUpdate/$filter({filter_expression})/$each": {
           patch: {},
         },
         "/filteredUpdate('{key}')": {
