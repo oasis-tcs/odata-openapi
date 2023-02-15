@@ -296,7 +296,6 @@ describe("Edge cases", function () {
   });
 
   it("InsertRestrictions, UpdateRestrictions, ReadRestrictions", function () {
-    //TODO: restrictions
     const csdl = {
       $Version: "4.01",
       $Reference: {
@@ -499,7 +498,6 @@ describe("Edge cases", function () {
       "Operations"
     );
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
-    //TODO: check components.schemas
   });
 
   it("circular reference on collect primitive paths", function () {
@@ -2854,8 +2852,6 @@ describe("Edge cases", function () {
       operations(expected),
       "Operations"
     );
-
-    //TODO: check components
     assert.deepStrictEqual(
       actual.components.schemas["this.root-update"],
       expected.components.schemas["this.root-update"],
@@ -3173,6 +3169,148 @@ describe("Edge cases", function () {
       properties,
       "Schemas"
     );
+  });
+
+  it("FilterSegmentSupported", function () {
+    const csdl = {
+      $Version: "4.01",
+      $Reference: {
+        dummy: {
+          $Include: [
+            { $Namespace: "Org.OData.Core.V1", $Alias: "Core" },
+            { $Namespace: "Org.OData.Capabilities.V1", $Alias: "Capabilities" },
+          ],
+        },
+      },
+      $EntityContainer: "this.Container",
+      this: {
+        whole: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          data: {},
+          nav: {
+            $Type: "this.part",
+            $Kind: "NavigationProperty",
+            $ContainsTarget: true,
+            $Collection: true,
+          },
+        },
+        part: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+          data: {},
+        },
+        Container: {
+          filteredDelete: {
+            $Type: "this.whole",
+            $Collection: true,
+            "@Capabilities.DeleteRestrictions": {
+              FilterSegmentSupported: true,
+            },
+            "@Capabilities.NavigationRestrictions": {
+              RestrictedProperties: [
+                {
+                  NavigationProperty: "nav",
+                  DeleteRestrictions: {
+                    FilterSegmentSupported: true,
+                  },
+                },
+              ],
+            },
+          },
+          filteredUpdate: {
+            $Type: "this.whole",
+            $Collection: true,
+            "@Capabilities.UpdateRestrictions": {
+              FilterSegmentSupported: true,
+            },
+            "@Capabilities.NavigationRestrictions": {
+              RestrictedProperties: [
+                {
+                  NavigationProperty: "nav",
+                  UpdateRestrictions: {
+                    FilterSegmentSupported: true,
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    };
+    const expected = {
+      paths: {
+        "/filteredDelete": {
+          get: {},
+          post: {},
+        },
+        "/filteredDelete/$filter({filter_expression})/$each": {
+          delete: {},
+        },
+        "/filteredDelete('{key}')": {
+          get: {},
+          patch: {},
+          delete: {},
+        },
+        "/filteredDelete('{key}')/nav": {
+          get: {},
+          post: {},
+        },
+        "/filteredDelete('{key}')/nav('{key_1}')": {
+          get: {},
+          patch: {},
+          delete: {},
+        },
+        "/filteredDelete('{key}')/nav/$filter({filter_expression})/$each": {
+          delete: {},
+        },
+        "/filteredUpdate": {
+          get: {},
+          post: {},
+        },
+        "/filteredUpdate/$filter({filter_expression})/$each": {
+          patch: {},
+        },
+        "/filteredUpdate('{key}')": {
+          get: {},
+          patch: {},
+          delete: {},
+        },
+        "/filteredUpdate('{key}')/nav": {
+          get: {},
+          post: {},
+        },
+        "/filteredUpdate('{key}')/nav('{key_1}')": {
+          get: {},
+          patch: {},
+          delete: {},
+        },
+        "/filteredUpdate('{key}')/nav/$filter({filter_expression})/$each": {
+          patch: {},
+        },
+        "/$batch": { post: {} },
+      },
+      components: {
+        schemas: {
+          "this.part": {},
+          "this.part-create": {},
+          "this.part-update": {},
+          "this.whole": {},
+          "this.whole-create": {},
+          "this.whole-update": {},
+        },
+      },
+    };
+    const actual = csdl2openapi(csdl, {});
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations"
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
   });
 });
 

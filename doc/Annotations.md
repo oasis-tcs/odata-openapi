@@ -37,6 +37,7 @@ Term | Annotation Target | OpenAPI field
 &emsp;`/CustomHeaders` | EntitySet, Singleton | custom headers
 &emsp;`/CustomQueryOptions` | EntitySet, Singleton | custom query options
 &emsp;`/ErrorResponses` | EntitySet, Singleton | error response status codes with descriptions
+&emsp;`/FilterSegmentSupported` | EntitySet | `DELETE` operation with `/$filter` segment on collection for deleting existing entities
 `ExpandRestrictions`<br>&emsp;`/Expandable` | EntitySet, Singleton | `$expand` system query option for `GET` operations
 `FilterRestrictions`<br>&emsp;`/Filterable` | EntitySet | `$filter` system query option for `GET` operation
 &emsp;`/RequiredProperties` | EntitySet | required properties in `$filter` system query option for `GET` operation (parameter description only)
@@ -86,6 +87,7 @@ Term | Annotation Target | OpenAPI field
 &emsp;`/CustomHeaders` | EntitySet, Singleton | custom headers
 &emsp;`/CustomQueryOptions` | EntitySet, Singleton | custom query options
 &emsp;`/ErrorResponses` | EntitySet, Singleton | error response status codes with descriptions
+&emsp;`/FilterSegmentSupported` | EntitySet | `PATCH` operation with `/$filter` segment on collection for modifying existing entities
 `OperationRestrictions`<br>&emsp;`/CustomHeaders` | Action, Function | custom headers
 &emsp;`/CustomQueryOptions` |Action, Function | custom query options
 &emsp;`/ErrorResponses` | Action, Function | error response status codes with descriptions

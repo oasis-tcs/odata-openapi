@@ -571,6 +571,69 @@
                 }
             }
         },
+        "/AllSet('{ID}')/AllMany/$filter({filter_expression})/$each": {
+            "parameters": [
+                {
+                    "description": "key: ID",
+                    "in": "path",
+                    "name": "ID",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "filter_expression",
+                    "in": "path",
+                    "required": true,
+                    "description": "Filter expression using the [Common Expression Syntax](https://docs.oasis-open.org/odata/odata/v4.01/os/part2-url-conventions/odata-v4.01-os-part2-url-conventions.html#sec_CommonExpressionSyntax)",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "patch": {
+                "summary": "Update entities matching the filter expression in related AllMany",
+                "description": "See [Update Members of a Collection](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_UpdateMembersofaCollection)",
+                "tags": [
+                    "AllSet"
+                ],
+                "requestBody": {
+                    "description": "New property values",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Supported.Annotations.TwoPartKey-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entities matching the filter expression from related AllMany",
+                "description": "See [Delete Members of a Collection](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_DeleteMembersofaCollection)",
+                "tags": [
+                    "AllSet"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
         "/AllSet('{ID}')/ReadOnlyOne": {
             "parameters": [
                 {
@@ -648,6 +711,60 @@
                                 }
                             }
                         }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/AllSet/$filter({filter_expression})/$each": {
+            "parameters": [
+                {
+                    "name": "filter_expression",
+                    "in": "path",
+                    "required": true,
+                    "description": "Filter expression using the [Common Expression Syntax](https://docs.oasis-open.org/odata/odata/v4.01/os/part2-url-conventions/odata-v4.01-os-part2-url-conventions.html#sec_CommonExpressionSyntax)",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "patch": {
+                "summary": "Update entities matching the filter expression in AllSet",
+                "description": "See [Update Members of a Collection](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_UpdateMembersofaCollection)",
+                "tags": [
+                    "AllSet"
+                ],
+                "requestBody": {
+                    "description": "New property values",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Supported.Annotations.SinglePartKey-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entities matching the filter expression from AllSet",
+                "description": "See [Delete Members of a Collection](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_DeleteMembersofaCollection)",
+                "tags": [
+                    "AllSet"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
                     },
                     "4XX": {
                         "$ref": "#/components/responses/error"
