@@ -51,6 +51,7 @@ const result10 = require("../examples/odata-rw-v2.openapi3.json");
 
 const example11 = xml2json(fs.readFileSync("examples/PingTest_V1.xml"));
 const result11 = require("../examples/PingTest_V1.openapi3.json");
+const result11Batch = require("../examples/PingTest_V1.batch.openapi3.json");
 
 describe("Examples", function () {
   it("csdl-16.1", function () {
@@ -58,9 +59,14 @@ describe("Examples", function () {
     check(openapi, result1);
   });
 
-  it("SAP PingTest skip", function () {
-    const openapi = csdl2openapi(example11, { disableBatchPath: true });
+  it("SAP PingTest skipBatchPath", function () {
+    const openapi = csdl2openapi(example11, { skipBatchPath: true });
     check(openapi, result11);
+  });
+
+  it("SAP PingTest with batch", function () {
+    const openapi = csdl2openapi(example11);
+    check(openapi, result11Batch);
   });
 
   it("TripPin", function () {
