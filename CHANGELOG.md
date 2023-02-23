@@ -4,7 +4,7 @@
 
 ### Added
 
-- Support to skip the by default generated `$batch` path using the CLI parameter `--skipBatchPath`, it will skip the generation always
+- Support to skip the `$batch` path using the CLI parameter `--skipBatchPath`, it will skip the generation always
 
 ## [0.20.0] - 2023-01-12
 
