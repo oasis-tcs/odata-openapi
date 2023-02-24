@@ -53,20 +53,14 @@ const example11 = xml2json(fs.readFileSync("examples/PingTest_V1.xml"));
 const result11 = require("../examples/PingTest_V1.openapi3.json");
 const result11NoBatch = require("../examples/PingTest_V1.no-batch.openapi3.json");
 
+const example12 = xml2json(fs.readFileSync("examples/SapVersion.xml"));
+const resultCliVersion12 = require("../examples/SapVersion.cli-version.openapi3.json");
+
+
 describe("Examples", function () {
   it("csdl-16.1", function () {
     const openapi = csdl2openapi(example1, { diagram: true });
     check(openapi, result1);
-  });
-
-  it("SAP PingTest with $batch path (default)", function () {
-    const openapi = csdl2openapi(example11, { diagram: true });
-    check(openapi, result11);
-  });
-
-  it("SAP PingTest without $batch path", function () {
-    const openapi = csdl2openapi(example11, { skipBatchPath: true, diagram: false });
-    check(openapi, result11NoBatch);
   });
 
   it("TripPin", function () {
@@ -121,6 +115,22 @@ describe("Examples", function () {
     const openapi = csdl2openapi(example10, { diagram: true });
     check(openapi, result10);
   });
+
+  it("SAP PingTest with $batch path (default)", function () {
+    const openapi = csdl2openapi(example11, { diagram: true });
+    check(openapi, result11);
+  });
+
+  it("SAP PingTest without $batch path", function () {
+    const openapi = csdl2openapi(example11, { skipBatchPath: true, diagram: false });
+    check(openapi, result11NoBatch);
+  });
+
+  it("CLI version test", function () {
+    const openapi = csdl2openapi(example12, { diagram: true, apiVersion: "1.3" });
+    check(openapi, resultCliVersion12);
+  });
+
 });
 
 describe("Edge cases", function () {
