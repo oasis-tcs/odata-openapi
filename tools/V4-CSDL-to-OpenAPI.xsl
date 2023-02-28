@@ -1825,6 +1825,14 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>,"format":"decimal"</xsl:text>
+            <xsl:if test="number($target/@Precision)=$target/@Precision">
+              <xsl:text>,"x-sap-precision":</xsl:text>
+              <xsl:value-of select="$target/@Precision" />
+            </xsl:if>
+            <xsl:if test="number($target/@Scale)=$target/@Scale">
+              <xsl:text>,"x-sap-scale":</xsl:text>
+              <xsl:value-of select="$target/@Scale" />
+            </xsl:if>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:choose>
