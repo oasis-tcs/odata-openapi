@@ -1418,6 +1418,7 @@
 
     <xsl:call-template name="Common.SAPObjectNodeType-ODM.entityName-ODM.oid">
       <xsl:with-param name="target" select="." />
+      <xsl:with-param name="suffix" select="$suffix" />
     </xsl:call-template>
 
     <xsl:call-template name="properties">
@@ -3310,6 +3311,8 @@
 
   <xsl:template name="Common.SAPObjectNodeType-ODM.entityName-ODM.oid">
     <xsl:param name="target" />
+    <xsl:param name="suffix" />
+
     <xsl:variable name="target-path">
       <xsl:call-template name="annotation-target">
         <xsl:with-param name="node" select="$target" />
@@ -3338,11 +3341,13 @@
       <xsl:text>"</xsl:text>
     </xsl:if>
 
-    <xsl:variable name="oid" select="$annos/edm:Annotation[@Term=$odmOid or @Term=$odmOidAliased]" />
-    <xsl:if test="$oid">
-      <xsl:text>,"x-sap-odm-oid":"</xsl:text>
-      <xsl:value-of select="$oid/@PropertyPath|$oid/edm:PropertyPath" />
-      <xsl:text>"</xsl:text>
+    <xsl:if test="not($suffix)">
+      <xsl:variable name="oid" select="$annos/edm:Annotation[@Term=$odmOid or @Term=$odmOidAliased]" />
+      <xsl:if test="$oid">
+        <xsl:text>,"x-sap-odm-oid":"</xsl:text>
+        <xsl:value-of select="$oid/@PropertyPath|$oid/edm:PropertyPath" />
+        <xsl:text>"</xsl:text>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 
