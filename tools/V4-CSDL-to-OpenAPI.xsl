@@ -192,6 +192,13 @@
   <xsl:variable name="commonSontReference" select="concat($commonNamespace,'.SAPObjectNodeTypeReference')" />
   <xsl:variable name="commonSontReferenceAliased" select="concat($commonAlias,'.SAPObjectNodeTypeReference')" />
 
+  <xsl:variable name="odmNamespace" select="'com.sap.vocabularies.ODM.v1'" />
+  <xsl:variable name="odmAlias" select="/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$odmNamespace]/@Alias" />
+  <xsl:variable name="odmEntityName" select="concat($odmNamespace,'.entityName')" />
+  <xsl:variable name="odmEntityNameAliased" select="concat($odmAlias,'.entityName')" />
+  <xsl:variable name="odmOid" select="concat($odmNamespace,'.oid')" />
+  <xsl:variable name="odmOidAliased" select="concat($odmAlias,'.oid')" />
+
   <xsl:variable name="defaultResponse">
     <xsl:text>"</xsl:text>
     <xsl:choose>
@@ -1409,8 +1416,9 @@
     <xsl:value-of select="$suffix" />
     <xsl:text>":{"type":"object"</xsl:text>
 
-    <xsl:call-template name="Common.SAPObjectNodeType">
+    <xsl:call-template name="Common.SAPObjectNodeType-ODM.entityName-ODM.oid">
       <xsl:with-param name="target" select="." />
+      <xsl:with-param name="suffix" select="$suffix" />
     </xsl:call-template>
 
     <xsl:call-template name="properties">
@@ -3301,8 +3309,10 @@
 
   </xsl:template>
 
-  <xsl:template name="Common.SAPObjectNodeType">
+  <xsl:template name="Common.SAPObjectNodeType-ODM.entityName-ODM.oid">
     <xsl:param name="target" />
+    <xsl:param name="suffix" />
+
     <xsl:variable name="target-path">
       <xsl:call-template name="annotation-target">
         <xsl:with-param name="node" select="$target" />
@@ -3315,12 +3325,29 @@
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="annos" select="key('externalAnnotations',$target-path)|key('externalAnnotations',$target-path-aliased)|$target" />
+
     <xsl:variable name="sont" select="$annos/edm:Annotation[@Term=$commonSont or @Term=$commonSontAliased]/edm:Record" />
     <xsl:if test="$sont">
       <xsl:variable name="name" select="$sont/edm:PropertyValue[@Property='Name']" />
       <xsl:text>,"x-sap-object-node-type":"</xsl:text>
       <xsl:value-of select="$name/@String|$name/edm:String" />
       <xsl:text>"</xsl:text>
+    </xsl:if>
+
+    <xsl:variable name="entityName" select="$annos/edm:Annotation[@Term=$odmEntityName or @Term=$odmEntityNameAliased]" />
+    <xsl:if test="$entityName">
+      <xsl:text>,"x-sap-odm-entity-name":"</xsl:text>
+      <xsl:value-of select="$entityName/@String|$entityName/edm:String" />
+      <xsl:text>"</xsl:text>
+    </xsl:if>
+
+    <xsl:if test="not($suffix)">
+      <xsl:variable name="oid" select="$annos/edm:Annotation[@Term=$odmOid or @Term=$odmOidAliased]" />
+      <xsl:if test="$oid">
+        <xsl:text>,"x-sap-odm-oid":"</xsl:text>
+        <xsl:value-of select="$oid/@PropertyPath|$oid/edm:PropertyPath" />
+        <xsl:text>"</xsl:text>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 

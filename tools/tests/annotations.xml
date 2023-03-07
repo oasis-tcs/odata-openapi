@@ -22,6 +22,9 @@
   <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
     <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common" />
   </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/ODM.xml">
+    <edmx:Include Namespace="com.sap.vocabularies.ODM.v1" Alias="ODM" />
+  </edmx:Reference>
   <edmx:DataServices>
     <Schema Namespace="Supported.Annotations" Alias="self">
       <EntityType Name="SinglePartKey">
@@ -111,6 +114,12 @@
         </Key>
         <Property Name="One" Type="Edm.Int32" Nullable="false" />
         <Property Name="Two" Type="Edm.TimeOfDay" Nullable="false" />
+        <Annotation Term="ODM.entityName">
+          <String>odmTwo</String>
+        </Annotation>
+        <Annotation Term="ODM.oid">
+          <PropertyPath>One</PropertyPath>
+        </Annotation>
       </EntityType>
 
       <EntityContainer Name="Container">
@@ -616,6 +625,8 @@
             <PropertyValue Property="Name" String="SontOne" />
           </Record>
         </Annotation>
+        <Annotation Term="ODM.entityName" String="odmOne" />
+        <Annotation Term="ODM.oid" PropertyPath="Computed" />
       </Annotations>
 
       <Annotations Target="self.TwoPartKey/One">
