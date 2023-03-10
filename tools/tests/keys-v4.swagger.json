@@ -1,0 +1,433 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Service for namespace KeyTypes",
+        "version": "",
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[MultiPartKey{bg:orange}],[Set{bg:dodgerblue}]++-*>[MultiPartKey])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
+    },
+    "schemes": [
+        "https"
+    ],
+    "host": "localhost",
+    "basePath": "/service-root",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Set"
+        }
+    ],
+    "paths": {
+        "/Set": {
+            "get": {
+                "summary": "Get entities from Set",
+                "tags": [
+                    "Set"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "int32",
+                                "int32 desc",
+                                "timeOfDay",
+                                "timeOfDay desc",
+                                "boolean",
+                                "boolean desc",
+                                "duration",
+                                "duration desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "int32",
+                                "timeOfDay",
+                                "boolean",
+                                "duration"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of MultiPartKey",
+                            "type": "object",
+                            "properties": {
+                                "@odata.count": {
+                                    "$ref": "#/definitions/count"
+                                },
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/KeyTypes.MultiPartKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to Set",
+                "tags": [
+                    "Set"
+                ],
+                "parameters": [
+                    {
+                        "name": "MultiPartKey",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/KeyTypes.MultiPartKey-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/KeyTypes.MultiPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Set(int32={int32},timeOfDay={timeOfDay},boolean={boolean},duration=duration'{duration}')": {
+            "parameters": [
+                {
+                    "name": "int32",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: int32",
+                    "type": "integer",
+                    "format": "int32"
+                },
+                {
+                    "name": "timeOfDay",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: timeOfDay",
+                    "type": "string"
+                },
+                {
+                    "name": "boolean",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: boolean",
+                    "type": "string"
+                },
+                {
+                    "name": "duration",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: duration",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Get entity from Set by key",
+                "tags": [
+                    "Set"
+                ],
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "int32",
+                                "timeOfDay",
+                                "boolean",
+                                "duration"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/KeyTypes.MultiPartKey"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in Set",
+                "tags": [
+                    "Set"
+                ],
+                "parameters": [
+                    {
+                        "name": "MultiPartKey",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/KeyTypes.MultiPartKey-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from Set",
+                "tags": [
+                    "Set"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/$batch": {
+            "post": {
+                "summary": "Send a group of requests",
+                "description": "Group multiple requests into a single request payload, see [Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).",
+                "tags": [
+                    "Batch Requests"
+                ],
+                "consumes": [
+                    "multipart/mixed;boundary=request-separator"
+                ],
+                "produces": [
+                    "multipart/mixed"
+                ],
+                "parameters": [
+                    {
+                        "name": "requestBody",
+                        "in": "body",
+                        "description": "Batch request",
+                        "schema": {
+                            "type": "string",
+                            "example": "--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET Set HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Batch response",
+                        "schema": {
+                            "type": "string",
+                            "example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{...}\n--response-separator--"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "KeyTypes.MultiPartKey": {
+            "type": "object",
+            "properties": {
+                "int32": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "timeOfDay": {
+                    "type": "string",
+                    "format": "time",
+                    "example": "15:51:04"
+                },
+                "boolean": {
+                    "type": "boolean"
+                },
+                "duration": {
+                    "type": "string",
+                    "format": "duration",
+                    "example": "P4DT15H51M04S"
+                }
+            },
+            "title": "MultiPartKey"
+        },
+        "KeyTypes.MultiPartKey-create": {
+            "type": "object",
+            "properties": {
+                "int32": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "timeOfDay": {
+                    "type": "string",
+                    "format": "time",
+                    "example": "15:51:04"
+                },
+                "boolean": {
+                    "type": "boolean"
+                },
+                "duration": {
+                    "type": "string",
+                    "format": "duration",
+                    "example": "P4DT15H51M04S"
+                }
+            },
+            "required": [
+                "int32",
+                "timeOfDay",
+                "boolean",
+                "duration"
+            ],
+            "title": "MultiPartKey (for create)"
+        },
+        "KeyTypes.MultiPartKey-update": {
+            "type": "object",
+            "title": "MultiPartKey (for update)"
+        },
+        "count": {
+            "type": "string",
+            "description": "The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option."
+        },
+        "error": {
+            "type": "object",
+            "required": [
+                "error"
+            ],
+            "properties": {
+                "error": {
+                    "type": "object",
+                    "required": [
+                        "code",
+                        "message"
+                    ],
+                    "properties": {
+                        "code": {
+                            "type": "string"
+                        },
+                        "message": {
+                            "type": "string"
+                        },
+                        "target": {
+                            "type": "string"
+                        },
+                        "details": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "code",
+                                    "message"
+                                ],
+                                "properties": {
+                                    "code": {
+                                        "type": "string"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "target": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "innererror": {
+                            "type": "object",
+                            "description": "The structure of this object is service-specific"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "top": {
+            "name": "$top",
+            "in": "query",
+            "description": "Show only the first n items, see [Paging - Top](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptiontop)",
+            "type": "integer",
+            "minimum": 0
+        },
+        "skip": {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skip the first n items, see [Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionskip)",
+            "type": "integer",
+            "minimum": 0
+        },
+        "count": {
+            "name": "$count",
+            "in": "query",
+            "description": "Include count of items, see [Count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount)",
+            "type": "boolean"
+        },
+        "search": {
+            "name": "$search",
+            "in": "query",
+            "description": "Search items by search phrases, see [Searching](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionsearch)",
+            "type": "string"
+        }
+    },
+    "responses": {
+        "error": {
+            "description": "Error",
+            "schema": {
+                "$ref": "#/definitions/error"
+            }
+        }
+    }
+}
