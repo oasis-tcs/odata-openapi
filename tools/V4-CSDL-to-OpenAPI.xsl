@@ -3861,9 +3861,13 @@
       <xsl:when test="$odata-version='2.0' and $type='Edm.TimeOfDay'">
         <xsl:text>time'</xsl:text>
       </xsl:when>
+      <xsl:when test="$odata-version='4.0' and $type='Edm.Duration'">
+        <xsl:text>duration'</xsl:text>
+      </xsl:when>
       <xsl:when test="$type='Edm.Int64' or $type='Edm.Int32' or $type='Edm.Int16' or $type='Edm.SByte' or $type='Edm.Byte' 
-                   or $type='Edm.Double' or $type='Edm.Single' or $type='Edm.Date' or $type='Edm.DateTimeOffset' or $type='Edm.Guid' or $type='Edm.TimeOfDay'" />
-      <!-- TODO: handle other Edm types, enumeration types, and type definitions -->
+                   or $type='Edm.Decimal' or $type='Edm.Double' or $type='Edm.Single' or $type='Edm.Boolean' 
+                   or $type='Edm.Date' or $type='Edm.DateTimeOffset' or $type='Edm.Guid' or $type='Edm.TimeOfDay'" />
+      <!-- TODO: handle enumeration types and type definitions -->
       <xsl:otherwise>
         <xsl:if test="not($key-as-segment)">
           <xsl:text>'</xsl:text>
@@ -3879,8 +3883,9 @@
         <xsl:text>'</xsl:text>
       </xsl:when>
       <xsl:when test="$type='Edm.Int64' or $type='Edm.Int32' or $type='Edm.Int16' or $type='Edm.SByte' or $type='Edm.Byte'
-                   or $type='Edm.Double' or $type='Edm.Single' or $type='Edm.Date' or $type='Edm.DateTimeOffset' or $type='Edm.Guid' or $type='Edm.TimeOfDay'" />
-      <!-- TODO: handle other Edm types, enumeration types, and type definitions -->
+                   or $type='Edm.Decimal' or $type='Edm.Double' or $type='Edm.Double' or $type='Edm.Single' or $type='Edm.Boolean'
+                   or $type='Edm.Date' or $type='Edm.DateTimeOffset' or $type='Edm.Guid' or $type='Edm.TimeOfDay'" />
+      <!-- TODO: handle enumeration types and type definitions -->
       <xsl:otherwise>
         <xsl:if test="not($key-as-segment)">
           <xsl:text>'</xsl:text>
