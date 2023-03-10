@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.21.3] - 2023-03-10
+
+### Changed
+
+- Path templates for decimal key properties in parentheses now correctly do not have the single quotes
+
 ## [0.21.0] - 2023-02-23
 
 ### Added
