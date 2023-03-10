@@ -99,21 +99,23 @@
         <Property Name="RequiredInFilter" Type="Edm.String" />
         <Property Name="ImmutableExt" Type="Edm.String" />
         <Property Name="switch" Type="Edm.Boolean" />
-        <NavigationProperty Name="AllOne" Type="self.TwoPartKey" />
-        <NavigationProperty Name="AllMany" Type="Collection(self.TwoPartKey)" />
-        <NavigationProperty Name="ReadOnlyOne" Type="self.TwoPartKey" />
-        <NavigationProperty Name="ReadOnlyMany" Type="Collection(self.TwoPartKey)" />
-        <NavigationProperty Name="NothingOne" Type="self.TwoPartKey" />
-        <NavigationProperty Name="NothingMany" Type="Collection(self.TwoPartKey)" />
+        <NavigationProperty Name="AllOne" Type="self.MultiPartKey" />
+        <NavigationProperty Name="AllMany" Type="Collection(self.MultiPartKey)" />
+        <NavigationProperty Name="ReadOnlyOne" Type="self.MultiPartKey" />
+        <NavigationProperty Name="ReadOnlyMany" Type="Collection(self.MultiPartKey)" />
+        <NavigationProperty Name="NothingOne" Type="self.MultiPartKey" />
+        <NavigationProperty Name="NothingMany" Type="Collection(self.MultiPartKey)" />
       </EntityType>
 
-      <EntityType Name="TwoPartKey">
+      <EntityType Name="MultiPartKey">
         <Key>
           <PropertyRef Name="One" />
           <PropertyRef Name="Two" />
+          <PropertyRef Name="Three" />
         </Key>
         <Property Name="One" Type="Edm.Int32" Nullable="false" />
         <Property Name="Two" Type="Edm.TimeOfDay" Nullable="false" />
+        <Property Name="Three" Type="Edm.Boolean" Nullable="false" />
         <Annotation Term="ODM.entityName">
           <String>odmTwo</String>
         </Annotation>
@@ -325,14 +327,14 @@
             </Record>
           </Annotation>
         </Singleton>
-        <EntitySet Name="TwoAllSet" EntityType="self.TwoPartKey" />
-        <EntitySet Name="TwoListOnlySet" EntityType="self.TwoPartKey" />
-        <EntitySet Name="TwoReadOnlySet" EntityType="self.TwoPartKey" />
-        <EntitySet Name="TwoReadOnlyByKeySet" EntityType="self.TwoPartKey" />
-        <EntitySet Name="TwoWriteOnlySet" EntityType="self.TwoPartKey" />
-        <EntitySet Name="TwoNothingSet" EntityType="self.TwoPartKey" />
-        <Singleton Name="TwoWriteOnlySingleton" Type="self.TwoPartKey" />
-        <Singleton Name="TwoNothingSingleton" Type="self.TwoPartKey" />
+        <EntitySet Name="TwoAllSet" EntityType="self.MultiPartKey" />
+        <EntitySet Name="TwoListOnlySet" EntityType="self.MultiPartKey" />
+        <EntitySet Name="TwoReadOnlySet" EntityType="self.MultiPartKey" />
+        <EntitySet Name="TwoReadOnlyByKeySet" EntityType="self.MultiPartKey" />
+        <EntitySet Name="TwoWriteOnlySet" EntityType="self.MultiPartKey" />
+        <EntitySet Name="TwoNothingSet" EntityType="self.MultiPartKey" />
+        <Singleton Name="TwoWriteOnlySingleton" Type="self.MultiPartKey" />
+        <Singleton Name="TwoNothingSingleton" Type="self.MultiPartKey" />
       </EntityContainer>
 
       <Annotations Target="Supported.Annotations.SinglePartKey/PatternExt">
@@ -629,7 +631,7 @@
         <Annotation Term="ODM.oid" PropertyPath="Computed" />
       </Annotations>
 
-      <Annotations Target="self.TwoPartKey/One">
+      <Annotations Target="self.MultiPartKey/One">
         <Annotation Term="Common.SAPObjectNodeTypeReference" String="SontOne" />
       </Annotations>
 
