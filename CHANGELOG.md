@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.4] - 2023-03-14
+
+### Changed
+
+- Add cli support for a custom default swagger title using `--title`
+- Add cli support for a custom default swagger description using `--description`, works with diagram
+
 ## [0.21.3] - 2023-03-10
 
 ### Changed
