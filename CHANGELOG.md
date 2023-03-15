@@ -4,8 +4,8 @@
 
 ### Changed
 
-- Add cli support for a custom default swagger title using `--title`
-- Add cli support for a custom default swagger description using `--description`, works with diagram
+- Add cli support for a default title if none is annotated using `--title`
+- Add cli support for a default description if none is annotated using `--description`, works with diagram
 
 ## [0.21.3] - 2023-03-10
 

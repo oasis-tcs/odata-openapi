@@ -16,7 +16,7 @@ To install globally type
 npm install -g odata-openapi
 ```
 
-## Local installation of the CLI
+## Direct local usage of the CLI
 
 Switch into the checkout project directory
 
@@ -64,8 +64,8 @@ Options:
  --scheme                scheme (default: http)
  -t, --target            target file (default: source file basename + .openapi3.json)
  --skipBatchPath         skips the generation of the $batch path, (default: false)
- --title                 custom title which should be used instead of the default one
- --description           custom description which should be used instead of the default one
+ --title                 default title if none is annotated
+ --description           default description if none is annotated
 ```
 
 If you installed the script locally, start it via
