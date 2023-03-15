@@ -16,6 +16,24 @@ To install globally type
 npm install -g odata-openapi
 ```
 
+## Direct local usage of the CLI
+
+Switch into the checkout project directory
+
+```sh
+npm install
+npm run build
+npm link
+```
+
+You can verify the installation using `npm list -g`, which should show the installed:
+
+```sh
+npm list -g
+├── npm@9.6.1
+└── odata-openapi@0.21.4 -> .\..\..\your\path\odata-openapi
+```
+
 ## Usage
 
 Assuming you installed the script globally, and your XML metadata file is `MyMetadata.xml`, then
@@ -44,7 +62,10 @@ Options:
  -o, --openapi-version   3.0.0 to 3.0.3 or 3.1.0 (default: 3.0.2)
  -p, --pretty            pretty-print JSON result
  --scheme                scheme (default: http)
- -t, --target            target file (default: source file base name + .openapi3.json)
+ -t, --target            target file (default: source file basename + .openapi3.json)
+ --skipBatchPath         skips the generation of the $batch path, (default: false)
+ --title                 default title if none is annotated
+ --description           default description if none is annotated
 ```
 
 If you installed the script locally, start it via

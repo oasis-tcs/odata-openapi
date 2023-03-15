@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.4] - 2023-03-14
+
+### Changed
+
+- Add cli support for a default title if none is annotated using `--title`
+- Add cli support for a default description if none is annotated using `--description`, works with diagram
+
 ## [0.21.3] - 2023-03-10
 
 ### Changed
