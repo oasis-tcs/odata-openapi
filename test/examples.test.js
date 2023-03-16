@@ -1,6 +1,8 @@
 const assert = require("assert");
 const fs = require("fs");
 
+const { paths, operations } = require("./utilities");
+
 const { xml2json } = require("odata-csdl");
 const { csdl2openapi } = require("../lib/csdl2openapi");
 
@@ -130,18 +132,4 @@ function check(actual, expected) {
     "Operations"
   );
   assert.deepStrictEqual(actual, expected, "OpenAPI document");
-}
-
-function paths(openapi) {
-  return Object.keys(openapi.paths).sort();
-}
-
-function operations(openapi) {
-  const p = {};
-  Object.keys(openapi.paths).forEach((template) => {
-    p[template] = Object.keys(openapi.paths[template]).filter(
-      (op) => op != "parameters"
-    );
-  });
-  return p;
 }
