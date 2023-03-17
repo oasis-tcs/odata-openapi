@@ -2634,7 +2634,8 @@ describe("Edge cases", function () {
       },
     };
 
-    const actual = csdl2openapi(csdl, { diagram: true });
+    const messages = [];
+    const actual = csdl2openapi(csdl, { diagram: true, messages });
 
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
@@ -2659,6 +2660,11 @@ describe("Edge cases", function () {
         "![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
       ],
       "diagram"
+    );
+    assert.deepStrictEqual(
+      messages,
+      ["Ignoring annotations targeting all overloads of 'this.act'"],
+      "messages"
     );
   });
 
