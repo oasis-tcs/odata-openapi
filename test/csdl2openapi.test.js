@@ -15,7 +15,7 @@ const assert = require("assert");
 // (external) annotations on actions, functions, parameters, return types
 // control mapping of reference URLs
 
-const { csdl2openapi } = require("../lib/csdl2openapi");
+const { csdl2openapi } = require("odata-openapi");
 
 describe("Edge cases", function () {
   it("empty input", function () {
@@ -30,7 +30,7 @@ describe("Edge cases", function () {
       paths: {},
       components: { schemas: {} },
     };
-    const openapi = csdl2openapi(csdl, {});
+    const openapi = csdl2openapi(csdl, { diagram: true });
     assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
   });
 
