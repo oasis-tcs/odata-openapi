@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.22.0] - 2023-03-21
+
+### Changed
+
+- Refactored code without functional changes, added `exports` in `package.json` to prevent unintended use of package-internal modules
+
 ## [0.21.4] - 2023-03-14
 
 ### Changed
