@@ -4,7 +4,7 @@ const fs = require("fs");
 const { paths, operations } = require("./utilities");
 
 const { xml2json } = require("odata-csdl");
-const { csdl2openapi } = require("../lib/csdl2openapi");
+const { csdl2openapi } = require("odata-openapi");
 
 const example1 = xml2json(fs.readFileSync("examples/csdl-16.1.xml"));
 const result1 = require("../examples/csdl-16.1.openapi3.json");

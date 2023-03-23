@@ -15,7 +15,7 @@ const assert = require("assert");
 // (external) annotations on actions, functions, parameters, return types
 // control mapping of reference URLs
 
-const { csdl2openapi } = require("../lib/csdl2openapi");
+const { csdl2openapi } = require("odata-openapi");
 
 describe("Edge cases", function () {
   it("empty input", function () {
@@ -30,7 +30,7 @@ describe("Edge cases", function () {
       paths: {},
       components: { schemas: {} },
     };
-    const openapi = csdl2openapi(csdl, {});
+    const openapi = csdl2openapi(csdl, { diagram: true });
     assert.deepStrictEqual(openapi, expected, "Empty CSDL document");
   });
 
@@ -55,6 +55,12 @@ describe("Edge cases", function () {
             $Type: "Model.Foo",
           },
         },
+        //TODO: do not modify CSDL input
+        // $Annotations: {
+        //   "Model.Service/foos": {
+        //     "@Org.OData.Vocabularies.V1.Core.Description": "my foos",
+        //   },
+        // },
       },
     };
     csdl2openapi(csdl, {});
@@ -1275,8 +1281,9 @@ describe("Edge cases", function () {
           $Include: [{ $Namespace: "Org.OData.Core.V1", $Alias: "Core" }],
         },
       },
-      $EntityContainer: "this.Container",
-      this: {
+      $EntityContainer: "model.Container",
+      model: {
+        $Alias: "this",
         $Annotations: {
           "this.ComplexParameters(this.Complex,Collection(Edm.String))": {
             "@Core.Description": "foo",
@@ -1331,7 +1338,7 @@ describe("Edge cases", function () {
                 schema: { type: "string" },
                 example: "{}",
                 description:
-                  "This is URL-encoded JSON of type this.Complex, see [Complex and Collection Literals](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_ComplexandCollectionLiterals)",
+                  "This is URL-encoded JSON of type model.Complex, see [Complex and Collection Literals](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_ComplexandCollectionLiterals)",
               },
             ],
           },
@@ -1350,7 +1357,7 @@ describe("Edge cases", function () {
             schema: { type: "string" },
             example: "{}",
             description:
-              "param description  \nThis is URL-encoded JSON of type this.Complex, see [Complex and Collection Literals](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_ComplexandCollectionLiterals)",
+              "param description  \nThis is URL-encoded JSON of type model.Complex, see [Complex and Collection Literals](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_ComplexandCollectionLiterals)",
           },
           {
             name: "@collection",
@@ -2634,7 +2641,8 @@ describe("Edge cases", function () {
       },
     };
 
-    const actual = csdl2openapi(csdl, { diagram: true });
+    const messages = [];
+    const actual = csdl2openapi(csdl, { diagram: true, messages });
 
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
@@ -2659,6 +2667,11 @@ describe("Edge cases", function () {
         "![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
       ],
       "diagram"
+    );
+    assert.deepStrictEqual(
+      messages,
+      ["Ignoring annotations targeting all overloads of 'this.act'"],
+      "messages"
     );
   });
 
