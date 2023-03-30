@@ -2875,6 +2875,11 @@ describe("Edge cases", function () {
             $MaxLength: 10,
           },
           binary: { $Type: "Edm.Binary", $MaxLength: 42 },
+          decfloat34: {
+            $Type: "Edm.Decimal",
+            $Precision: 34,
+            $Scale: "floating",
+          },
           enum: { $Type: "typeExamples.enumType" },
           primitive: { $Type: "Edm.PrimitiveType" },
           annotationPath: { $Type: "Edm.AnnotationPath" },
@@ -2925,6 +2930,11 @@ describe("Edge cases", function () {
           ],
         },
         binary: { format: "base64url", type: "string", maxLength: 56 },
+        decfloat34: {
+          anyOf: [{ type: "number" }, { type: "string" }],
+          example: "9.9e6144",
+          format: "decimal128",
+        },
         enum: {
           $ref: "#/components/schemas/typeExamples.enumType",
         },
