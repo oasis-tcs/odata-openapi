@@ -2875,6 +2875,11 @@ describe("Edge cases", function () {
             $MaxLength: 10,
           },
           binary: { $Type: "Edm.Binary", $MaxLength: 42 },
+          decfloat34: {
+            $Type: "Edm.Decimal",
+            $Precision: 34,
+            $Scale: "floating",
+          },
           enum: { $Type: "typeExamples.enumType" },
           primitive: { $Type: "Edm.PrimitiveType" },
           annotationPath: { $Type: "Edm.AnnotationPath" },
@@ -2925,6 +2930,11 @@ describe("Edge cases", function () {
           ],
         },
         binary: { format: "base64url", type: "string", maxLength: 56 },
+        decfloat34: {
+          anyOf: [{ type: "number" }, { type: "string" }],
+          example: "9.9e6144",
+          format: "decimal128",
+        },
         enum: {
           $ref: "#/components/schemas/typeExamples.enumType",
         },
@@ -2984,6 +2994,8 @@ describe("Edge cases", function () {
         },
         single: {
           $Kind: "EntityType",
+          binary: { $Type: "Edm.Binary" },
+          stream: { $Type: "Edm.Stream" },
           date: { $Type: "Edm.Date" },
           nullableString: { $Nullable: true },
           primitive: { $Type: "Edm.PrimitiveType" },
@@ -3027,6 +3039,8 @@ describe("Edge cases", function () {
     };
 
     const properties = {
+      binary: { type: "string", contentEncoding: "base64url" },
+      stream: { type: "string", contentEncoding: "base64url" },
       date: { type: "string", format: "date", example: "2017-04-13" }, // example is deprecated but still allowed
       nullableString: { type: ["string", "null"] },
       primitive: { type: ["boolean", "number", "string"] },
