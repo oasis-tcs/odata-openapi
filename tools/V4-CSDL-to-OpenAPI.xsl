@@ -11,13 +11,12 @@
     - response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884
     - inline definitions for Edm.* to make OpenAPI documents self-contained
     - complex or collection-valued function parameters need special treatment in /paths,
-    use parameter aliases with alias option of type string
+      use parameter aliases with alias option of type string
     - @Extends for entity container: include /paths from referenced container
     - both "clickable" and freestyle $expand, $select, $orderby - does not work yet, open issue for Swagger UI
     - system query options for actions/functions/imports depending on "Collection("
     - 200 response for PATCH if $odata-version!='2.0'
     - ETag for GET / If-Match for PATCH and DELETE depending on @Core.OptimisticConcurrency
-    - external targeting for Capabilities.KeyAsSegmentSupported
     - external targeting for Core.Permission/Read
     - example values via Core.Example: Int
     - count/expand restrictions for GET collection-valued (containment) navigation - https://issues.oasis-open.org/browse/ODATA-1300
@@ -216,9 +215,25 @@
     <xsl:text>responses/error"}</xsl:text>
   </xsl:variable>
 
-  <xsl:variable name="keyAsSegmentSupported" select="concat($capabilitiesNamespace,'.KeyAsSegmentSupported')" />
-  <xsl:variable name="keyAsSegmentSupportedAliased" select="concat($capabilitiesAlias,'.KeyAsSegmentSupported')" />
-  <xsl:variable name="key-as-segment" select="boolean(/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[not(@Qualifier) and (@Term=$keyAsSegmentSupported or @Term=$keyAsSegmentSupportedAliased)])" />
+  <xsl:variable name="key-as-segment-value">
+    <xsl:variable name="target" select="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer" />
+    <xsl:variable name="target-path" select="concat($target/../@Namespace,'.',$target/@Name)" />
+    <xsl:variable name="target-path-aliased" select="concat($target/../@Alias,'.',$target/@Name)" />
+    <xsl:variable name="annos" select="key('externalAnnotations',$target-path)|key('externalAnnotations',$target-path-aliased)|$target" />
+    <xsl:variable name="term" select="concat($capabilitiesNamespace,'.KeyAsSegmentSupported')" />
+    <xsl:variable name="termAliased" select="concat($capabilitiesAlias,'.KeyAsSegmentSupported')" />
+    <xsl:variable name="anno" select="$annos/edm:Annotation[@Term=$term or @Term=$termAliased]" />
+    <xsl:choose>
+      <xsl:when test="$anno/@Bool|$anno/edm:Bool">
+        <xsl:value-of select="$anno/@Bool|$anno/edm:Bool" />
+      </xsl:when>
+      <xsl:when test="$anno">
+        <xsl:text>true</xsl:text>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:variable>
+  <xsl:variable name="key-as-segment" select="$key-as-segment-value='true'" />
+
 
   <xsl:key name="externalAnnotations" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations" use="@Target" />
   <xsl:key name="externalPropertyAnnotations" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations[contains(@Target,'/')]" use="substring-before(@Target,'/')" />
@@ -724,11 +739,11 @@
 
   <xsl:template name="security-schemes">
     <xsl:variable name="target" select="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer" />
-    <xsl:variable name="term" select="concat($authorizationNamespace,'.Authorizations')" />
-    <xsl:variable name="termAliased" select="concat($authorizationAlias,'.Authorizations')" />
     <xsl:variable name="target-path" select="concat($target/../@Namespace,'.',$target/@Name)" />
     <xsl:variable name="target-path-aliased" select="concat($target/../@Alias,'.',$target/@Name)" />
     <xsl:variable name="annos" select="key('externalAnnotations',$target-path)|key('externalAnnotations',$target-path-aliased)|$target" />
+    <xsl:variable name="term" select="concat($authorizationNamespace,'.Authorizations')" />
+    <xsl:variable name="termAliased" select="concat($authorizationAlias,'.Authorizations')" />
     <xsl:variable name="anno" select="$annos/edm:Annotation[@Term=$term or @Term=$termAliased]" />
     <xsl:if test="$anno">
       <xsl:text>,"</xsl:text>
