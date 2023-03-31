@@ -2994,6 +2994,8 @@ describe("Edge cases", function () {
         },
         single: {
           $Kind: "EntityType",
+          binary: { $Type: "Edm.Binary" },
+          stream: { $Type: "Edm.Stream" },
           date: { $Type: "Edm.Date" },
           nullableString: { $Nullable: true },
           primitive: { $Type: "Edm.PrimitiveType" },
@@ -3037,6 +3039,8 @@ describe("Edge cases", function () {
     };
 
     const properties = {
+      binary: { type: "string", contentEncoding: "base64url" },
+      stream: { type: "string", contentEncoding: "base64url" },
       date: { type: "string", format: "date", example: "2017-04-13" }, // example is deprecated but still allowed
       nullableString: { type: ["string", "null"] },
       primitive: { type: ["boolean", "number", "string"] },

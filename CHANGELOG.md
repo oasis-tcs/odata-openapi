@@ -4,7 +4,8 @@
 
 ### Changed
 
-- Decimals with floating scale and precision 34 use the newly registered OpenAPI format [`decimal128`](https://spec.openapis.org/registry/format/decimal128.html)
+- Edm.Decimal with floating scale and precision 34 uses the newly registered OpenAPI format [`decimal128`](https://spec.openapis.org/registry/format/decimal128.html)
+- Edm.Binary and Edm.Stream in OpenAPI 3.1 use [`contentEncoding`](https://json-schema.org/draft/2020-12/json-schema-validation.html#name-contentencoding) with a value of `base64url`.
 
 ## [0.22.0] - 2023-03-21
 
