@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.23.0] - 2023-03-31
+
+### Changed
+
+- Decimals with floating scale and precision 34 use the newly registered OpenAPI format [`decimal128`](https://spec.openapis.org/registry/format/decimal128.html)
+
 ## [0.22.0] - 2023-03-21
 
 ### Changed
