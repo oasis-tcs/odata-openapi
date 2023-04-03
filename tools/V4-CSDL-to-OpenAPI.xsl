@@ -299,34 +299,22 @@
     <xsl:param name="node" />
     <xsl:param name="term" />
     <xsl:param name="termAliased" />
-    <xsl:param name="qualifier" select="null" />
-    <xsl:variable name="annotation" select="$node/edm:Annotation[((not($qualifier) and not(@Qualifier)) or $qualifier=@Qualifier) and (@Term=$term or @Term=$termAliased)]" />
-    <xsl:variable name="description" select="$annotation/@String|$annotation/edm:String" />
-    <xsl:choose>
-      <xsl:when test="$description">
-        <xsl:call-template name="escape">
-          <xsl:with-param name="string" select="$description" />
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:variable name="target-path">
-          <xsl:call-template name="annotation-target">
-            <xsl:with-param name="node" select="$node" />
-          </xsl:call-template>
-        </xsl:variable>
-        <xsl:variable name="target-path-aliased">
-          <xsl:call-template name="annotation-target">
-            <xsl:with-param name="node" select="$node" />
-            <xsl:with-param name="qualifier" select="$node/ancestor::edm:Schema/@Alias" />
-          </xsl:call-template>
-        </xsl:variable>
-        <xsl:variable name="annos" select="key('externalAnnotations',$target-path)|key('externalAnnotations',$target-path-aliased)" />
-        <xsl:variable name="annotationExt" select="$annos/edm:Annotation[((not($qualifier) and not(@Qualifier)) or $qualifier=@Qualifier) and (@Term=$term or @Term=$termAliased)]" />
-        <xsl:call-template name="escape">
-          <xsl:with-param name="string" select="$annotationExt/@String|$annotationExt/edm:String" />
-        </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:variable name="target-path">
+      <xsl:call-template name="annotation-target">
+        <xsl:with-param name="node" select="$node" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="target-path-aliased">
+      <xsl:call-template name="annotation-target">
+        <xsl:with-param name="node" select="$node" />
+        <xsl:with-param name="qualifier" select="$node/ancestor::edm:Schema/@Alias" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="annos" select="key('externalAnnotations',$target-path)|key('externalAnnotations',$target-path-aliased)|$node" />
+    <xsl:variable name="annotationExt" select="$annos/edm:Annotation[not(@Qualifier) and (@Term=$term or @Term=$termAliased)]" />
+    <xsl:call-template name="escape">
+      <xsl:with-param name="string" select="$annotationExt/@String|$annotationExt/edm:String" />
+    </xsl:call-template>
   </xsl:template>
 
   <xsl:template name="annotation-target">
@@ -385,23 +373,19 @@
   <!-- TODO: collect all annotations for target once in caller and pass them to these four templates -->
   <xsl:template name="Core.Description">
     <xsl:param name="node" />
-    <xsl:param name="qualifier" select="null" />
     <xsl:call-template name="annotation-string">
       <xsl:with-param name="node" select="$node" />
       <xsl:with-param name="term" select="$coreDescription" />
       <xsl:with-param name="termAliased" select="$coreDescriptionAliased" />
-      <xsl:with-param name="qualifier" select="$qualifier" />
     </xsl:call-template>
   </xsl:template>
 
   <xsl:template name="Core.LongDescription">
     <xsl:param name="node" />
-    <xsl:param name="qualifier" select="null" />
     <xsl:call-template name="annotation-string">
       <xsl:with-param name="node" select="$node" />
       <xsl:with-param name="term" select="$coreLongDescription" />
       <xsl:with-param name="termAliased" select="$coreLongDescriptionAliased" />
-      <xsl:with-param name="qualifier" select="$qualifier" />
     </xsl:call-template>
   </xsl:template>
 
