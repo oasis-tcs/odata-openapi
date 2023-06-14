@@ -17,15 +17,19 @@ const exampleFolder = "./tests/";
 fs.readdirSync(exampleFolder)
   .filter((fn) => fn.endsWith(".json"))
   .forEach((jsonFile) => {
-    console.log(jsonFile);
-
     const openapi = JSON.parse(
       fs.readFileSync(exampleFolder + jsonFile, "utf8")
     );
 
     if (openapi.openapi) {
-      if (!validateV3(openapi)) console.log(validateV3.errors);
+      if (!validateV3(openapi)) {
+        console.log(jsonFile);
+        console.log(validateV3.errors);
+      }
     } else {
-      if (!validateV2(openapi)) console.log(validateV2.errors);
+      if (!validateV2(openapi)) {
+        console.log(jsonFile);
+        console.log(validateV2.errors);
+      }
     }
   });
