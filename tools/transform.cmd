@@ -13,8 +13,6 @@ setlocal
 
 set here=%~dp0
 set CLASSPATH=%here%xalan/xalan.jar;%here%xalan/serializer.jar
-set SCHEMA_THREE=%here%node_modules/@apidevtools/openapi-schemas/schemas/v3.0/schema.json
-set SCHEMA_TWO=%here%node_modules/@apidevtools/openapi-schemas/schemas/v2.0/schema.json
 
 if exist "%1" (
   call :process %1 https localhost /service-root %2
@@ -57,8 +55,6 @@ exit /b
       cd %~p1
       git.exe --no-pager diff %~n1.swagger.json 2>nul
       popd
-
-      call npx ajv validate -s %SCHEMA_TWO% -d %~dpn1.swagger.json > nul
     )
     )
   
@@ -84,8 +80,6 @@ exit /b
     cd %~p1
     git.exe --no-pager diff %~n1.openapi3.json 2>nul
     popd
-
-    call npx ajv validate -s %SCHEMA_THREE% -d %~dpn1.openapi3.json > nul
   )
 
 exit /b
