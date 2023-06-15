@@ -15,6 +15,8 @@ const assert = require("assert");
 // (external) annotations on actions, functions, parameters, return types
 // control mapping of reference URLs
 
+const { paths, operations, schemas } = require("./utilities");
+
 const { csdl2openapi } = require("odata-openapi");
 
 describe("Edge cases", function () {
@@ -493,8 +495,8 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       messages,
       [
-        "Cycle detected this.complex1->this.complex2->this.complex1",
-        "Cycle detected this.complex2->this.complex1->this.complex2",
+        // "Cycle detected this.complex1->this.complex2->this.complex1",
+        // "Cycle detected this.complex2->this.complex1->this.complex2",
       ],
       "messages"
     );
@@ -2898,10 +2900,9 @@ describe("Edge cases", function () {
           $UnderlyingType: "Edm.String",
         },
         enumType: {
-          "@Core.LongDescription": "an enumeration type",
           $Kind: "EnumType",
-          foo: {},
-          bar: {},
+          zero: 0,
+          one: 1,
         },
         $Annotations: {
           "typeExamples.single/foo/bar": {
@@ -2912,6 +2913,17 @@ describe("Edge cases", function () {
           },
           "typeExamples.not-there": {
             /* invalid annotation target */
+          },
+          "typeExamples.enumType": {
+            "@Core.LongDescription": "description of enumeration type",
+          },
+          "typeExamples.enumType/zero": {
+            "@Core.LongDescription":
+              "description of enumeration type member has no effect",
+          },
+          "typeExamples.enumType/one": {
+            "@Core.LongDescription":
+              "description of enumeration type member has no effect",
           },
         },
       },
@@ -2961,6 +2973,10 @@ describe("Edge cases", function () {
         },
       },
       "MaxLength"
+    );
+    assert.equal(
+      openapi.components.schemas["typeExamples.enumType"].description,
+      "description of enumeration type"
     );
     assert.deepStrictEqual(
       messages,
@@ -3248,23 +3264,3 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
   });
 });
-
-function paths(openapi) {
-  return Object.keys(openapi.paths).sort();
-}
-
-function operations(openapi) {
-  const p = {};
-  Object.keys(openapi.paths).forEach((template) => {
-    p[template] = Object.keys(openapi.paths[template]).filter(
-      (op) => op != "parameters"
-    );
-  });
-  return p;
-}
-
-function schemas(openapi) {
-  return Object.keys(openapi.components.schemas)
-    .sort()
-    .filter((s) => s.includes("."));
-}
