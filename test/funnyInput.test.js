@@ -70,4 +70,64 @@ describe("Funny input", function () {
       "should end up in title"
     );
   });
+
+  it("Inheritance across schemas", function () {
+    const csdl = {
+      $Version: "4.01",
+      $EntityContainer: "this.Container",
+      this: {
+        Container: {
+          es: {
+            $Type: "other.et",
+            $Collection: true,
+          },
+        },
+        et: {
+          $Kind: "EntityType",
+          $BaseType: "two.bt",
+          data: {},
+        },
+      },
+      other: {
+        $Alias: "two",
+        bt: {
+          $Kind: "EntityType",
+          $Key: ["key"],
+          key: {},
+        },
+      },
+    };
+    const expected = {
+      paths: {
+        "/es": {
+          get: {},
+          post: {},
+        },
+        "/es('{key}')": {
+          get: {},
+          patch: {},
+          delete: {},
+        },
+        "/$batch": { post: {} },
+      },
+      components: {
+        schemas: {
+          "other.et": {},
+          "other.et-create": {},
+          "other.et-update": {},
+        },
+      },
+    };
+    const messages = [];
+
+    const actual = csdl2openapi(csdl, { messages });
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations"
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    assert.deepStrictEqual(messages, [], "messages");
+  });
 });
