@@ -78,7 +78,7 @@ describe("Funny input", function () {
       this: {
         Container: {
           es: {
-            $Type: "other.et",
+            $Type: "two.bt",
             $Collection: true,
           },
         },
@@ -112,9 +112,12 @@ describe("Funny input", function () {
       },
       components: {
         schemas: {
-          "other.et": {},
-          "other.et-create": {},
-          "other.et-update": {},
+          "this.et": {},
+          "this.et-create": {},
+          "this.et-update": {},
+          "other.bt": {},
+          "other.bt-create": {},
+          "other.bt-update": {},
         },
       },
     };
