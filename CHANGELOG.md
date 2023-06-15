@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.23.1] - 2023-06-15
+
+### Changed
+
+- Annotations for model elements on other schemas are now correctly processed
+
 ## [0.23.0] - 2023-03-31
 
 ### Changed

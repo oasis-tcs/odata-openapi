@@ -15,6 +15,8 @@ const assert = require("assert");
 // (external) annotations on actions, functions, parameters, return types
 // control mapping of reference URLs
 
+const { paths, operations, schemas } = require("./utilities");
+
 const { csdl2openapi } = require("odata-openapi");
 
 describe("Edge cases", function () {
@@ -3248,23 +3250,3 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
   });
 });
-
-function paths(openapi) {
-  return Object.keys(openapi.paths).sort();
-}
-
-function operations(openapi) {
-  const p = {};
-  Object.keys(openapi.paths).forEach((template) => {
-    p[template] = Object.keys(openapi.paths[template]).filter(
-      (op) => op != "parameters"
-    );
-  });
-  return p;
-}
-
-function schemas(openapi) {
-  return Object.keys(openapi.components.schemas)
-    .sort()
-    .filter((s) => s.includes("."));
-}
