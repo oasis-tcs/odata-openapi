@@ -4,9 +4,6 @@ const { paths, operations, schemas } = require("./utilities");
 
 const { csdl2openapi } = require("odata-openapi");
 
-//TODO
-// - annotations targeting enumeration member
-
 describe("Funny input", function () {
   it("Annotation for element in later schema", function () {
     const csdl = {

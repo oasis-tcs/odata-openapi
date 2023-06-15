@@ -2900,10 +2900,9 @@ describe("Edge cases", function () {
           $UnderlyingType: "Edm.String",
         },
         enumType: {
-          "@Core.LongDescription": "an enumeration type",
           $Kind: "EnumType",
-          foo: {},
-          bar: {},
+          zero: 0,
+          one: 1,
         },
         $Annotations: {
           "typeExamples.single/foo/bar": {
@@ -2914,6 +2913,17 @@ describe("Edge cases", function () {
           },
           "typeExamples.not-there": {
             /* invalid annotation target */
+          },
+          "typeExamples.enumType": {
+            "@Core.LongDescription": "description of enumeration type",
+          },
+          "typeExamples.enumType/zero": {
+            "@Core.LongDescription":
+              "description of enumeration type member has no effect",
+          },
+          "typeExamples.enumType/one": {
+            "@Core.LongDescription":
+              "description of enumeration type member has no effect",
           },
         },
       },
@@ -2963,6 +2973,10 @@ describe("Edge cases", function () {
         },
       },
       "MaxLength"
+    );
+    assert.equal(
+      openapi.components.schemas["typeExamples.enumType"].description,
+      "description of enumeration type"
     );
     assert.deepStrictEqual(
       messages,
