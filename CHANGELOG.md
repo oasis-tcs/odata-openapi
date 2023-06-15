@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.23.2] - 2023-06-16
+
+### Changed
+
+- Inheritance across schemas is now correctly processed
+
 ## [0.23.1] - 2023-06-15
 
 ### Changed
