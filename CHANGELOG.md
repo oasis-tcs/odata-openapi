@@ -1,8 +1,14 @@
 # Changelog
 
+## [0.23.2] - 2023-06-16
+
+### Fixed
+
+- Inheritance across schemas is now correctly processed
+
 ## [0.23.1] - 2023-06-15
 
-### Changed
+### Fixed
 
 - Annotations for model elements on other schemas are now correctly processed
 
@@ -21,7 +27,7 @@
 
 ## [0.21.4] - 2023-03-14
 
-### Changed
+### Added
 
 - Add cli support for a default title if none is annotated using `--title`
 - Add cli support for a default description if none is annotated using `--description`, works with diagram
@@ -109,7 +115,7 @@
 
 ## [0.11.1] - 2022-02-21
 
-### Changed
+### Fixed
 
 - External annotations targeting a function overload with collection-valued parameters are now correctly recognized.
 
