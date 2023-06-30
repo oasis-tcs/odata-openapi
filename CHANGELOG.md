@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.23.3] - 2023-06-30
+
+### Added
+
+- Add cli support for maximum level of containment navigation properties using `--levels`
+
+### Fixed
+
+- Reduced default maximum level of containment navigation properties from 5 to 4
+
 ## [0.23.2] - 2023-06-16
 
 ### Fixed
