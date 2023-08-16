@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.23.3] - 2023-08-16
+
+### Fixed
+
+- OData V2 EntitySet elements may have Documentation child elements
+
 ## [0.23.3] - 2023-06-30
 
 ### Added
