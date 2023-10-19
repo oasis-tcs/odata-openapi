@@ -20,7 +20,7 @@ Assuming you installed the script globally, and your XML metadata file is `MyMet
 odata-openapi3 MyMetadata.xml
 ```
 
-will create `MyMetadata.openapi.json` next to it.
+will create `MyMetadata.openapi3.json` next to it.
 
 Just type
 
