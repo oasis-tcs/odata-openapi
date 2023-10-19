@@ -6,32 +6,10 @@ It's a pure JavaScript implementation, depending only on [`odata-csdl`](https://
 
 ## Installation
 
-```sh
-npm install odata-openapi
-```
-
 To install globally type
 
 ```sh
 npm install -g odata-openapi
-```
-
-## Direct local usage of the CLI
-
-Switch into the checkout project directory
-
-```sh
-npm install
-npm run build
-npm link
-```
-
-You can verify the installation using `npm list -g`, which should show the installed:
-
-```sh
-npm list -g
-├── npm@9.6.1
-└── odata-openapi@0.21.4 -> .\..\..\your\path\odata-openapi
 ```
 
 ## Usage
@@ -56,22 +34,17 @@ to get usage hints
 Usage: odata-openapi3 <options> <source files>
 Options:
  --basePath              base path (default: /service-root)
+ --description           default description if none is annotated
  -d, --diagram           include YUML diagram
  -h, --help              show this info
  --host                  host (default: localhost)
+ --levels                maximum number of path segments
  -o, --openapi-version   3.0.0 to 3.0.3 or 3.1.0 (default: 3.0.2)
  -p, --pretty            pretty-print JSON result
  --scheme                scheme (default: http)
- -t, --target            target file (default: source file basename + .openapi3.json)
  --skipBatchPath         skips the generation of the $batch path, (default: false)
+ -t, --target            target file (default: source file basename + .openapi3.json)
  --title                 default title if none is annotated
- --description           default description if none is annotated
-```
-
-If you installed the script locally, start it via
-
-```sh
-node lib/cli.js ...
 ```
 
 ## Supported Annotations
