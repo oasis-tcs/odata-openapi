@@ -1277,7 +1277,7 @@
       TODO: evaluate Partner to just have one arrow
       [FeaturedProduct]<0..1-0..1>[Advertisement]
     -->
-    <xsl:if test="$qualifier!='Edm' or local-name='NavigationProperty'">
+    <xsl:if test="($qualifier!='Edm' and $qualifier!='Core') or local-name='NavigationProperty'">
       <xsl:text>,[</xsl:text>
       <xsl:value-of select="../@Name" />
       <xsl:text>]</xsl:text>
@@ -2084,7 +2084,7 @@
           <xsl:text>,"example":"01234567-89ab-cdef-0123-456789abcdef"</xsl:text>
         </xsl:if>
       </xsl:when>
-      <xsl:when test="$singleType='Edm.DateTimeOffset'">
+      <xsl:when test="$singleType='Edm.DateTimeOffset' or $singleType='Core.LocalDateTime'">
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'string'" />
           <xsl:with-param name="nullable" select="$nullable" />
@@ -3848,7 +3848,7 @@
       <xsl:when test="$odata-version='2.0' and $type='Edm.Binary'">
         <xsl:text>binary'</xsl:text>
       </xsl:when>
-      <xsl:when test="$odata-version='2.0' and $type='Edm.Date'">
+      <xsl:when test="$odata-version='2.0' and ($type='Edm.Date' or $type='Core.LocalDateTime')">
         <xsl:text>datetime'</xsl:text>
       </xsl:when>
       <xsl:when test="$odata-version='2.0' and $type='Edm.DateTimeOffset'">
@@ -3878,7 +3878,7 @@
   <xsl:template name="pathValueSuffix">
     <xsl:param name="type" />
     <xsl:choose>
-      <xsl:when test="$odata-version='2.0' and ($type='Edm.Binary' or $type='Edm.Date' or $type='Edm.DateTimeOffset' or $type='Edm.Guid' or $type='Edm.TimeOfDay')">
+      <xsl:when test="$odata-version='2.0' and ($type='Edm.Binary' or $type='Edm.Date' or $type='Core.LocalDateTime' or $type='Edm.DateTimeOffset' or $type='Edm.Guid' or $type='Edm.TimeOfDay')">
         <xsl:text>'</xsl:text>
       </xsl:when>
       <xsl:when test="$type='Edm.Int64' or $type='Edm.Int32' or $type='Edm.Int16' or $type='Edm.SByte' or $type='Edm.Byte'
