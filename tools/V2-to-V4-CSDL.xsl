@@ -290,8 +290,12 @@
         select="../../edm2:Association[@Name=$assoc]/edm2:End[@Role=$torole]/@Multiplicity|../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$torole]/@Multiplicity" />
       <xsl:attribute name="Type">
         <xsl:choose>
-          <xsl:when test="$mult='*'"><xsl:value-of select="concat('Collection(',$type,')')" /></xsl:when>
-          <xsl:otherwise><xsl:value-of select="$type" /></xsl:otherwise>
+          <xsl:when test="$mult='*'">
+            <xsl:value-of select="concat('Collection(',$type,')')" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$type" />
+          </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
       <xsl:if test="$mult='1'">
@@ -325,7 +329,7 @@
     <ReferentialConstraint>
       <xsl:attribute name="Property">
         <xsl:value-of
-        select="../../edm2:Dependent/edm2:PropertyRef[$index]/@Name|../../edm3:Dependent/edm2:PropertyRef[$index]/@Name" />
+          select="../../edm2:Dependent/edm2:PropertyRef[$index]/@Name|../../edm3:Dependent/edm2:PropertyRef[$index]/@Name" />
       </xsl:attribute>
       <xsl:attribute name="ReferencedProperty">
         <xsl:value-of select="@Name" />
@@ -408,7 +412,7 @@
 
       <!-- TODO: un-hack -->
       <xsl:if test="$entityType/@sap:semantics = 'parameters'">
-        <Annotation Term="sap.parameters"/>
+        <Annotation Term="sap.parameters" />
       </xsl:if>
     </EntitySet>
   </xsl:template>
@@ -426,9 +430,9 @@
     <xsl:if test="string($stuff)">
       <Annotation>
         <xsl:attribute name="Term">
-            <xsl:value-of select="$Capabilities" />
-            <xsl:text>.NavigationRestrictions</xsl:text>
-          </xsl:attribute>
+          <xsl:value-of select="$Capabilities" />
+          <xsl:text>.NavigationRestrictions</xsl:text>
+        </xsl:attribute>
         <Record>
           <PropertyValue Property="RestrictedProperties">
             <Collection>
@@ -452,7 +456,7 @@
         <Record>
           <PropertyValue Property="NavigationProperty">
             <xsl:attribute name="NavigationPropertyPath">
-            <xsl:value-of select="$navprop/@Name" />
+              <xsl:value-of select="$navprop/@Name" />
             </xsl:attribute>
           </PropertyValue>
           <PropertyValue Property="ReadRestrictions">
@@ -479,9 +483,13 @@
       <xsl:variable name="typename" select="$navprop/../@Name" />
       <xsl:variable name="type" select="concat($namespace,'.',$typename)" />
       <NavigationPropertyBinding>
-        <xsl:attribute name="Target"><xsl:value-of select="$set" /></xsl:attribute>
+        <xsl:attribute name="Target">
+          <xsl:value-of select="$set" />
+        </xsl:attribute>
         <xsl:attribute name="Path">
-          <xsl:if test="not($type=$entitytype)"><xsl:value-of select="concat($type,'/')" /></xsl:if>
+          <xsl:if test="not($type=$entitytype)">
+            <xsl:value-of select="concat($type,'/')" />
+          </xsl:if>
           <xsl:value-of select="$navprop/@Name" />
         </xsl:attribute>
         <xsl:apply-templates />
@@ -496,7 +504,9 @@
           <FunctionImport>
             <xsl:copy-of select="@Name|@EntitySet" />
             <xsl:attribute name="Function">
-              <xsl:value-of select="../../@Namespace" />.<xsl:value-of select="@Name" />
+              <xsl:value-of select="../../@Namespace" />
+              <xsl:text>.</xsl:text>
+              <xsl:value-of select="@Name" />
             </xsl:attribute>
             <xsl:if test="not(*[local-name()='Parameter'])">
               <xsl:attribute name="IncludeInServiceDocument">true</xsl:attribute>
@@ -508,7 +518,9 @@
           <ActionImport>
             <xsl:copy-of select="@Name|@EntitySet" />
             <xsl:attribute name="Action">
-              <xsl:value-of select="../../@Namespace" />.<xsl:value-of select="@Name" />
+              <xsl:value-of select="../../@Namespace" />
+              <xsl:text>.</xsl:text>
+              <xsl:value-of select="@Name" />
             </xsl:attribute>
             <xsl:apply-templates select="@sap:*" />
           </ActionImport>
@@ -523,12 +535,16 @@
         <Function>
           <xsl:copy-of select="@Name|@EntitySetPath|@IsComposable" />
           <xsl:if test="@IsBindable">
-            <xsl:attribute name="IsBound"><xsl:value-of select="@IsBindable" /></xsl:attribute>
+            <xsl:attribute name="IsBound">
+              <xsl:value-of select="@IsBindable" />
+            </xsl:attribute>
           </xsl:if>
           <xsl:apply-templates />
           <xsl:if test="@ReturnType">
             <ReturnType>
-              <xsl:attribute name="Type"><xsl:value-of select="@ReturnType" /></xsl:attribute>
+              <xsl:attribute name="Type">
+                <xsl:value-of select="@ReturnType" />
+              </xsl:attribute>
               <xsl:attribute name="Nullable">false</xsl:attribute>
             </ReturnType>
           </xsl:if>
@@ -538,12 +554,16 @@
         <Action>
           <xsl:copy-of select="@Name|@EntitySetPath" />
           <xsl:if test="@IsBindable">
-            <xsl:attribute name="IsBound"><xsl:value-of select="@IsBindable" /></xsl:attribute>
+            <xsl:attribute name="IsBound">
+              <xsl:value-of select="@IsBindable" />
+            </xsl:attribute>
           </xsl:if>
           <xsl:apply-templates />
           <xsl:if test="@ReturnType">
             <ReturnType>
-              <xsl:attribute name="Type"><xsl:value-of select="@ReturnType" /></xsl:attribute>
+              <xsl:attribute name="Type">
+                <xsl:value-of select="@ReturnType" />
+              </xsl:attribute>
               <xsl:attribute name="Nullable">false</xsl:attribute>
             </ReturnType>
           </xsl:if>
@@ -599,16 +619,16 @@
     <xsl:if test=".!=''">
       <Annotation>
         <xsl:attribute name="Term">
-      <xsl:value-of select="$Core" />
-      <xsl:text>.LongDescription</xsl:text>
-    </xsl:attribute>
+          <xsl:value-of select="$Core" />
+          <xsl:text>.LongDescription</xsl:text>
+        </xsl:attribute>
         <String>
-        <xsl:call-template name="replace-all">
-          <xsl:with-param name="string" select="." />
-          <xsl:with-param name="old" select="'&#x0A;'" />
-          <xsl:with-param name="new" select="'  &#x0A;'" />
-        </xsl:call-template>
-      </String>
+          <xsl:call-template name="replace-all">
+            <xsl:with-param name="string" select="." />
+            <xsl:with-param name="old" select="'&#x0A;'" />
+            <xsl:with-param name="new" select="'  &#x0A;'" />
+          </xsl:call-template>
+        </String>
       </Annotation>
     </xsl:if>
   </xsl:template>
@@ -627,7 +647,9 @@
 
   <xsl:template match="edm3:TypeAnnotation">
     <Annotation>
-      <xsl:attribute name="Term"><xsl:value-of select="@Term" /></xsl:attribute>
+      <xsl:attribute name="Term">
+        <xsl:value-of select="@Term" />
+      </xsl:attribute>
       <Record>
         <xsl:apply-templates select="node()" />
       </Record>
@@ -669,15 +691,19 @@
   </xsl:template>
 
   <xsl:template match="@Type|@UnderlyingType">
-    <xsl:attribute name="{name()}"> 
+    <xsl:attribute name="{name()}">
       <xsl:choose>
         <xsl:when test=".='Time' or .='Edm.Time'">Edm.TimeOfDay</xsl:when>
         <xsl:when test=".='Float' or .='Edm.Float'">Edm.Single</xsl:when>
         <!-- TODO: better heuristics for parameters -->
         <xsl:when test="(.='DateTime' or .='Edm.DateTime') and (../@sap:display-format='Date' or local-name(..)='Parameter')">Edm.Date</xsl:when>
-        <xsl:when test=".='DateTime' or .='Edm.DateTime'">Edm.DateTimeOffset</xsl:when>
-        <xsl:when test="contains(.,'.')"><xsl:value-of select="." /></xsl:when>
-        <xsl:otherwise><xsl:value-of select="concat('Edm.',.)" /></xsl:otherwise>
+        <xsl:when test=".='DateTime' or .='Edm.DateTime'">Core.LocalDateTime</xsl:when>
+        <xsl:when test="contains(.,'.')">
+          <xsl:value-of select="." />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="concat('Edm.',.)" />
+        </xsl:otherwise>
       </xsl:choose>
     </xsl:attribute>
   </xsl:template>
@@ -1063,8 +1089,8 @@
           <xsl:if test="$excluded-properties">
             <xsl:element name="PropertyValue">
               <xsl:attribute name="Property">
-              <xsl:value-of select="concat('Non',$capability,'ableProperties')" />
-            </xsl:attribute>
+                <xsl:value-of select="concat('Non',$capability,'ableProperties')" />
+              </xsl:attribute>
               <Collection>
                 <xsl:apply-templates select="$excluded-properties" mode="restriction" />
               </Collection>
@@ -1123,9 +1149,9 @@
     <xsl:if test=".='false'">
       <Annotation>
         <xsl:attribute name="Term">
-            <xsl:value-of select="$UI" />
-            <xsl:text>.Hidden</xsl:text>
-          </xsl:attribute>
+          <xsl:value-of select="$UI" />
+          <xsl:text>.Hidden</xsl:text>
+        </xsl:attribute>
       </Annotation>
     </xsl:if>
   </xsl:template>
