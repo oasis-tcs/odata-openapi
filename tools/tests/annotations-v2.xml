@@ -23,8 +23,16 @@
         <Property Name="Example" Type="Edm.String" />
       </EntityType>
 
+      <EntityType Name="PlainDateTimeKey">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.DateTime" Nullable="false" />
+      </EntityType>
+
       <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
         <EntitySet Name="AllSet" EntityType="self.SinglePartKey" />
+        <EntitySet Name="KeyOnlySet" EntityType="self.PlainDateTimeKey" />
 
         <FunctionImport Name="DoStuff" m:HttpMethod="POST">
           <Parameter Name="rating" Type="Edm.Decimal" Precision="5" Scale="2" Mode="In" />

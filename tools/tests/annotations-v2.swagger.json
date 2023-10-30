@@ -3,7 +3,7 @@
     "info": {
         "title": "Service for namespace Supported.Annotations",
         "version": "",
-        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[SinglePartKey{bg:orange}],[AllSet{bg:dodgerblue}]++-*>[SinglePartKey],[DoStuff{bg:dodgerblue}])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[SinglePartKey{bg:orange}],[PlainDateTimeKey{bg:orange}],[AllSet{bg:dodgerblue}]++-*>[SinglePartKey],[KeyOnlySet{bg:dodgerblue}]++-*>[PlainDateTimeKey],[DoStuff{bg:dodgerblue}])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
     },
     "schemes": [
         "https"
@@ -20,6 +20,9 @@
         {
             "name": "AllSet",
             "description": "Entity Set Ext - Description"
+        },
+        {
+            "name": "KeyOnlySet"
         }
     ],
     "paths": {
@@ -241,6 +244,213 @@
                 "description": "Delete Entity Ext - LongDescription",
                 "tags": [
                     "AllSet"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/KeyOnlySet": {
+            "get": {
+                "summary": "Get entities from KeyOnlySet",
+                "tags": [
+                    "KeyOnlySet"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=64)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=65)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "ID desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=68)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Wrapper",
+                            "type": "object",
+                            "properties": {
+                                "d": {
+                                    "title": "Collection of PlainDateTimeKey",
+                                    "type": "object",
+                                    "properties": {
+                                        "__count": {
+                                            "$ref": "#/definitions/count"
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Supported.Annotations.PlainDateTimeKey"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to KeyOnlySet",
+                "tags": [
+                    "KeyOnlySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "PlainDateTimeKey",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Supported.Annotations.PlainDateTimeKey-create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "title": "PlainDateTimeKey",
+                            "type": "object",
+                            "properties": {
+                                "d": {
+                                    "$ref": "#/definitions/Supported.Annotations.PlainDateTimeKey"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/KeyOnlySet(datetime'{ID}')": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Get entity from KeyOnlySet by key",
+                "tags": [
+                    "KeyOnlySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=68)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "title": "PlainDateTimeKey",
+                            "type": "object",
+                            "properties": {
+                                "d": {
+                                    "$ref": "#/definitions/Supported.Annotations.PlainDateTimeKey"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in KeyOnlySet",
+                "tags": [
+                    "KeyOnlySet"
+                ],
+                "parameters": [
+                    {
+                        "name": "PlainDateTimeKey",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "title": "Modified PlainDateTimeKey",
+                            "type": "object",
+                            "properties": {
+                                "d": {
+                                    "$ref": "#/definitions/Supported.Annotations.PlainDateTimeKey-update"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from KeyOnlySet",
+                "tags": [
+                    "KeyOnlySet"
                 ],
                 "responses": {
                     "204": {
@@ -487,6 +697,33 @@
                 }
             },
             "title": "SinglePartKey (for update)"
+        },
+        "Supported.Annotations.PlainDateTimeKey": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string",
+                    "example": "/Date(1492098664000)/"
+                }
+            },
+            "title": "PlainDateTimeKey"
+        },
+        "Supported.Annotations.PlainDateTimeKey-create": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string",
+                    "example": "/Date(1492098664000)/"
+                }
+            },
+            "required": [
+                "ID"
+            ],
+            "title": "PlainDateTimeKey (for create)"
+        },
+        "Supported.Annotations.PlainDateTimeKey-update": {
+            "type": "object",
+            "title": "PlainDateTimeKey (for update)"
         },
         "count": {
             "type": "string",
