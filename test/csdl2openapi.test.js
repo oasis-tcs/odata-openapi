@@ -15,7 +15,7 @@ const assert = require("assert");
 // (external) annotations on actions, functions, parameters, return types
 // control mapping of reference URLs
 
-const { paths, operations, schemas } = require("./utilities");
+const { paths, operations } = require("./utilities");
 
 const { csdl2openapi } = require("odata-openapi");
 
