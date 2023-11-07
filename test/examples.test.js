@@ -129,7 +129,7 @@ function check(actual, expected) {
   assert.deepStrictEqual(
     operations(actual),
     operations(expected),
-    "Operations"
+    "Operations",
   );
   assert.deepStrictEqual(actual, expected, "OpenAPI document");
 }

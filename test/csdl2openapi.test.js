@@ -73,7 +73,7 @@ describe("Edge cases", function () {
         foo: { $Type: "Model.Foo" },
         foos: { $Type: "Model.Foo", $Collection: true },
       },
-      "Entity container of CSDL input"
+      "Entity container of CSDL input",
     );
   });
 
@@ -207,7 +207,7 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       actual.components.schemas["this.entityType"],
       expected.components.schemas["this.entityType"],
-      "entityType schema"
+      "entityType schema",
     );
   });
 
@@ -411,7 +411,7 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
   });
@@ -490,7 +490,7 @@ describe("Edge cases", function () {
 
     assert.deepStrictEqual(
       openapi.paths["/sources"].get.parameters[4],
-      expected_sources_get_param
+      expected_sources_get_param,
     );
     assert.deepStrictEqual(
       messages,
@@ -498,7 +498,7 @@ describe("Edge cases", function () {
         // "Cycle detected this.complex1->this.complex2->this.complex1",
         // "Cycle detected this.complex2->this.complex1->this.complex2",
       ],
-      "messages"
+      "messages",
     );
   });
 
@@ -568,7 +568,7 @@ describe("Edge cases", function () {
           "^[\\w\\.\\-\\/]+$": { type: "string" },
         },
       },
-      "JSON property old-style"
+      "JSON property old-style",
     );
     assert.deepStrictEqual(
       openapi.components.schemas["jsonExamples.typeDefinitionNew"],
@@ -580,7 +580,7 @@ describe("Edge cases", function () {
           "^[\\w\\.\\-\\/]+$": { type: "string" },
         },
       },
-      "JSON property new-style"
+      "JSON property new-style",
     );
     assert.deepStrictEqual(
       openapi.components.schemas["jsonExamples.single"].properties.stream2,
@@ -590,7 +590,7 @@ describe("Edge cases", function () {
           { $ref: "#/components/schemas/jsonExamples.typeDefinitionNew" },
         ],
       },
-      "MaxLength"
+      "MaxLength",
     );
     assert.deepStrictEqual(
       openapi.paths["/f(first=@first,second=@second)"].get.parameters,
@@ -621,13 +621,13 @@ describe("Edge cases", function () {
           schema: { type: "array", items: { type: "string" } },
         },
       ],
-      "stream parameters of function"
+      "stream parameters of function",
     );
     assert.deepStrictEqual(
       openapi.paths["/f(first=@first,second=@second)"].get.responses[200]
         .content["application/json"],
       { schema: { type: "array" } },
-      "stream return type of function"
+      "stream return type of function",
     );
   });
 
@@ -679,7 +679,7 @@ describe("Edge cases", function () {
           "^[\\w\\.\\-\\/]+$": { type: "string" },
         },
       },
-      "JSON property old-style"
+      "JSON property old-style",
     );
     assert.deepStrictEqual(
       openapi.components.schemas["jsonExamples.typeDefinitionNew"],
@@ -691,7 +691,7 @@ describe("Edge cases", function () {
           "^[\\w\\.\\-\\/]+$": { type: "string" },
         },
       },
-      "JSON property new-style"
+      "JSON property new-style",
     );
   });
 
@@ -714,7 +714,7 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
   });
 
@@ -737,7 +737,7 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
   });
 
@@ -761,7 +761,7 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
   });
 
@@ -795,7 +795,7 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
   });
 
@@ -843,17 +843,17 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.strictEqual(
       actual.paths["/$batch"].post.summary,
       "BatchSupport - Description",
-      "Batch summary"
+      "Batch summary",
     );
     assert.strictEqual(
       actual.paths["/$batch"].post.description,
       'BatchSupport - LongDescription\n\n*Please note that "Try it out" is not supported for this request.*',
-      "Batch description"
+      "Batch description",
     );
   });
 
@@ -886,12 +886,12 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.equal(
       actual.paths["/fun()"].get.summary,
       "no parameters",
-      "function summary"
+      "function summary",
     );
   });
 
@@ -1053,7 +1053,7 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.deepStrictEqual(
       actual.paths["/fun(string={string},stringNull={stringNull})"].get
@@ -1080,7 +1080,7 @@ describe("Edge cases", function () {
           },
         },
       ],
-      "String function parameters"
+      "String function parameters",
     );
     assert.deepStrictEqual(
       actual.paths["/fun(typedef={typedef},typedefNull={typedefNull})"].get
@@ -1108,7 +1108,7 @@ describe("Edge cases", function () {
           },
         },
       ],
-      "TypeDefinition function parameters"
+      "TypeDefinition function parameters",
     );
     assert.deepStrictEqual(
       actual.paths["/fun(guid={guid},guidNull={guidNull})"].get.parameters,
@@ -1136,7 +1136,7 @@ describe("Edge cases", function () {
           },
         },
       ],
-      "Guid function parameters"
+      "Guid function parameters",
     );
     assert.deepStrictEqual(
       actual.paths["/fun(int32={int32},int32Null={int32Null})"].get.parameters,
@@ -1162,7 +1162,7 @@ describe("Edge cases", function () {
           },
         },
       ],
-      "Int32 function parameters"
+      "Int32 function parameters",
     );
     assert.deepStrictEqual(
       actual.paths["/fun(binary={binary},binaryNull={binaryNull})"].get
@@ -1189,7 +1189,7 @@ describe("Edge cases", function () {
           },
         },
       ],
-      "Binary function parameters"
+      "Binary function parameters",
     );
     assert.deepStrictEqual(
       actual.paths["/fun(boolean={boolean},booleanNull={booleanNull})"].get
@@ -1214,7 +1214,7 @@ describe("Edge cases", function () {
           },
         },
       ],
-      "Binary function parameters"
+      "Binary function parameters",
     );
     assert.deepStrictEqual(
       actual.paths["/fun(decimal={decimal},decimalNull={decimalNull})"].get
@@ -1243,7 +1243,7 @@ describe("Edge cases", function () {
           },
         },
       ],
-      "Decimal function parameters"
+      "Decimal function parameters",
     );
     assert.deepStrictEqual(
       actual.paths["/fun(duration={duration},durationNull={durationNull})"].get
@@ -1272,7 +1272,7 @@ describe("Edge cases", function () {
           },
         },
       ],
-      "Duration function parameters"
+      "Duration function parameters",
     );
   });
 
@@ -1378,22 +1378,22 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.deepStrictEqual(
       actual.paths[path].get.parameters,
       expected.paths[path].get.parameters,
-      "complex function parameters"
+      "complex function parameters",
     );
     assert.equal(
       actual.paths[path].get.summary,
       "foo",
-      "complex function summary"
+      "complex function summary",
     );
     assert.deepStrictEqual(
       actual.paths["/funO"].get.parameters,
       expected.paths["/funO"].get.parameters,
-      "optional function parameters"
+      "optional function parameters",
     );
     assert.deepStrictEqual(
       actual.info.description.split("\n"),
@@ -1406,7 +1406,7 @@ describe("Edge cases", function () {
         "### Legend",
         "![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
       ],
-      "diagram"
+      "diagram",
     );
   });
 
@@ -1481,17 +1481,17 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.deepStrictEqual(
       actual.paths["/fun()"].get.responses[200],
       expected.paths["/fun()"].get.responses[200],
-      "fun"
+      "fun",
     );
     assert.deepStrictEqual(
       actual.paths["/fun(in={in})"].get.responses[200],
       expected.paths["/fun(in={in})"].get.responses[200],
-      "fun(in)"
+      "fun(in)",
     );
   });
 
@@ -1548,13 +1548,13 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.deepStrictEqual(
       actual.paths["/Set"].get.responses[200].content["application/json"].schema
         .properties,
       expectedGetResponseProperties,
-      "get list with delta"
+      "get list with delta",
     );
   });
 
@@ -1698,27 +1698,27 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.deepStrictEqual(
       actual.paths["/stuff"].get,
       expected.paths["/stuff"].get,
-      "GET set"
+      "GET set",
     );
     assert.deepStrictEqual(
       actual.paths["/stuff"].post,
       expected.paths["/stuff"].post,
-      "POST set"
+      "POST set",
     );
     assert.deepStrictEqual(
       actual.paths["/single"].get,
       expected.paths["/single"].get,
-      "GET single"
+      "GET single",
     );
     assert.deepStrictEqual(
       actual.paths["/single"].patch,
       expected.paths["/single"].patch,
-      "PATCH single"
+      "PATCH single",
     );
   });
 
@@ -1898,12 +1898,12 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.deepStrictEqual(
       actual.paths["/set"].get,
       expected.paths["/set"].get,
-      "GET set"
+      "GET set",
     );
   });
 
@@ -2087,12 +2087,12 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.deepStrictEqual(
       actual.paths["/sources"].get,
       expected.paths["/sources"].get,
-      "GET sources"
+      "GET sources",
     );
   });
 
@@ -2244,12 +2244,12 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.deepStrictEqual(
       actual.paths["/Categories"].get,
       expected.paths["/Categories"].get,
-      "GET Categories"
+      "GET Categories",
     );
   });
 
@@ -2421,17 +2421,17 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.deepStrictEqual(
       actual.paths["/things"].get,
       expected.paths["/things"].get,
-      "GET things"
+      "GET things",
     );
     assert.deepStrictEqual(
       actual.components.schemas["this.thing"].properties.one,
       { type: "string", default: "def" },
-      "Property with default value"
+      "Property with default value",
     );
   });
 
@@ -2524,10 +2524,10 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(actualExpands, expectedExpands, "expands");
     assert.strictEqual(
       actual.paths["/roots"].get.parameters.find(
-        (item) => item.name == "expand"
+        (item) => item.name == "expand",
       ).description,
       "Expanding has some restrictions here.",
-      "expand description"
+      "expand description",
     );
   });
 
@@ -2650,12 +2650,12 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.deepStrictEqual(
       actual.paths["/roots/act"].post,
       expected.paths["/roots/act"].post,
-      "POST /roots/act"
+      "POST /roots/act",
     );
     assert.deepStrictEqual(
       actual.info.description.split("\n"),
@@ -2668,12 +2668,12 @@ describe("Edge cases", function () {
         "### Legend",
         "![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
       ],
-      "diagram"
+      "diagram",
     );
     assert.deepStrictEqual(
       messages,
       ["Ignoring annotations targeting all overloads of 'this.act'"],
-      "messages"
+      "messages",
     );
   });
 
@@ -2773,17 +2773,17 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.deepStrictEqual(
       actual.components.schemas["this.root-update"],
       expected.components.schemas["this.root-update"],
-      "root update structure"
+      "root update structure",
     );
     assert.deepStrictEqual(
       actual.components.schemas["this.child-update"],
       expected.components.schemas["this.child-update"],
-      "child update structure"
+      "child update structure",
     );
   });
 
@@ -2848,12 +2848,12 @@ describe("Edge cases", function () {
           in: "header",
         },
       },
-      "security schemes"
+      "security schemes",
     );
     assert.deepStrictEqual(
       messages,
       ["Unknown Authorization type foo"],
-      "messages"
+      "messages",
     );
   });
 
@@ -2972,11 +2972,11 @@ describe("Edge cases", function () {
           type: "string",
         },
       },
-      "MaxLength"
+      "MaxLength",
     );
     assert.equal(
       openapi.components.schemas["typeExamples.enumType"].description,
-      "description of enumeration type"
+      "description of enumeration type",
     );
     assert.deepStrictEqual(
       messages,
@@ -2989,7 +2989,7 @@ describe("Edge cases", function () {
         "Unknown type: Edm.kaputt",
         "Unknown type: Edm.kaputt",
       ],
-      "messages"
+      "messages",
     );
   });
 
@@ -3118,7 +3118,7 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       openapi.components.schemas["oas31.single"].properties,
       properties,
-      "Schemas"
+      "Schemas",
     );
   });
 
@@ -3259,7 +3259,7 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
   });

@@ -60,14 +60,14 @@ describe("Funny input", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
     assert.deepStrictEqual(messages, [], "messages");
 
     assert.equal(
       actual.components.schemas["other.et"].title,
-      "should end up in title"
+      "should end up in title",
     );
   });
 
@@ -128,7 +128,7 @@ describe("Funny input", function () {
     assert.deepStrictEqual(
       operations(actual),
       operations(expected),
-      "Operations"
+      "Operations",
     );
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
     assert.deepStrictEqual(messages, [], "messages");
