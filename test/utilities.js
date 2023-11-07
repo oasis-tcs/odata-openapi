@@ -8,7 +8,7 @@ function operations(openapi) {
   const p = {};
   Object.keys(openapi.paths).forEach((template) => {
     p[template] = Object.keys(openapi.paths[template]).filter(
-      (op) => op != "parameters"
+      (op) => op != "parameters",
     );
   });
   return p;
