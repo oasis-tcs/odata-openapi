@@ -10,6 +10,7 @@ See [Frequently Asked Questions](FAQ.md) for examples on how to use these annota
 Term | Annotation Target | OpenAPI field
 -----|-------------------|--------------
 `Computed` | Property | omit from Create and Update structures
+`ComputedDefaultValue` | Property | omit from required properties if key
 `DefaultNamespace` | Schema | path templates for actions and functions without namespace prefix
 `Description` | Action, ActionImport, Function, FunctionImport | `summary` of Operation Object
 `Description` | EntitySet, Singleton | `description` of Tag Object
