@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.24.0] - 2023-11-07
+
+### Added
+
+- Core.ComputedDefaultValue means property is not required on create
+
 ## [0.23.4] - 2023-08-16
 
 ### Fixed
