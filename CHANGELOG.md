@@ -4,7 +4,12 @@
 
 ### Added
 
-- Command-line option `--keep` (short `-k`) to specify which root resources to keep. Types referenced by the root resources via structural properties or containment navigation properties are also kept. Non-containment navigation properties to types not kept are changed to use a generic "object" type without properties. The `/$batch` resource is always omitted if `--keep` is specified.
+- Command-line option `--keep` (short `-k`) to specify which root resources (entity sets, singletons, action imports, function imports) to keep.
+  - Paths for the root resources are kept, as are paths to contained entities and bound functions.
+  - Types referenced by the (return) type of root resources via structural properties or containment navigation properties are also kept.
+  - Non-containment navigation properties to entity types not kept are changed to use a generic stub object type without properties.
+  - Deep paths to stubbed entity types are omitted.
+  - The `/$batch` resource is omitted.
 
 ## [0.24.0] - 2023-11-07
 
