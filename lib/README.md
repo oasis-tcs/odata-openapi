@@ -38,6 +38,7 @@ Options:
  -d, --diagram           include YUML diagram
  -h, --help              show this info
  --host                  host (default: localhost)
+ -k, --keep              root resource to keep (can be specified multiple times with one name each)
  --levels                maximum number of path segments
  -o, --openapi-version   3.0.0 to 3.0.3 or 3.1.0 (default: 3.0.2)
  -p, --pretty            pretty-print JSON result
