@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.25.0] - 2023-11-20
+
+### Added
+
+- Command-line option `--keep` (short `-k`) to specify which root resources to keep. Types referenced by the root resources via structural properties or containment navigation properties are also kept. Non-containment navigation properties to types not kept are changed to use a generic "object" type without properties. The `/$batch` resource is always omitted if `--keep` is specified.
+
 ## [0.24.0] - 2023-11-07
 
 ### Added
