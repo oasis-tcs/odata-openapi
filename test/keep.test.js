@@ -91,6 +91,16 @@ describe("Keep", function () {
           complex: { $Type: "this.CT" },
           simple: { $Type: "this.TD" },
           two: { $Kind: "NavigationProperty", $Type: "this.ET2" },
+          twoMany: {
+            $Kind: "NavigationProperty",
+            $Type: "this.ET2",
+            $Collection: true,
+          },
+          twoOptional: {
+            $Kind: "NavigationProperty",
+            $Type: "this.ET2",
+            $Nullable: true,
+          },
         },
         CT: {
           $Kind: "ComplexType",
@@ -123,9 +133,44 @@ describe("Keep", function () {
       },
       components: {
         schemas: {
-          "this.ET": {},
-          "this.ET-create": {},
-          "this.ET-update": {},
+          "this.ET": {
+            title: "ET",
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              complex: { $ref: "#/components/schemas/this.CT" },
+              simple: { $ref: "#/components/schemas/this.TD" },
+              two: { $ref: "#/components/schemas/stub" },
+              twoMany: {
+                type: "array",
+                items: { $ref: "#/components/schemas/stub" },
+              },
+              "twoMany@count": { $ref: "#/components/schemas/count" },
+              twoOptional: {
+                nullable: true,
+                allOf: [{ $ref: "#/components/schemas/stub" }],
+              },
+            },
+          },
+          "this.ET-create": {
+            title: "ET (for create)",
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              complex: { $ref: "#/components/schemas/this.CT-create" },
+              simple: { $ref: "#/components/schemas/this.TD" },
+              two: { $ref: "#/components/schemas/entityReference" },
+            },
+            required: ["id"],
+          },
+          "this.ET-update": {
+            title: "ET (for update)",
+            type: "object",
+            properties: {
+              complex: { $ref: "#/components/schemas/this.CT-update" },
+              simple: { $ref: "#/components/schemas/this.TD" },
+            },
+          },
           "this.CT": {},
           "this.CT-create": {},
           "this.CT-update": {},
@@ -141,5 +186,25 @@ describe("Keep", function () {
       "Operations",
     );
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    assert.deepStrictEqual(
+      actual.components.schemas.stub,
+      { title: "Stub object", type: "object" },
+      "Stub object",
+    );
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ET"],
+      expected.components.schemas["this.ET"],
+      "read structure",
+    );
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ET-create"],
+      expected.components.schemas["this.ET-create"],
+      "create structure",
+    );
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ET-update"],
+      expected.components.schemas["this.ET-update"],
+      "update structure",
+    );
   });
 });
