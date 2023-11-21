@@ -1,5 +1,9 @@
 const assert = require("assert");
 
+//TODO:
+// association to contained entity "bestContained": preserve type
+// keep action import and function import: keep parameter and response types
+
 const { paths, operations, schemas } = require("./utilities");
 
 const { csdl2openapi } = require("odata-openapi");
@@ -222,6 +226,4 @@ describe("Keep", function () {
       "update structure",
     );
   });
-
-  //TODO: keep action import and function import
 });
