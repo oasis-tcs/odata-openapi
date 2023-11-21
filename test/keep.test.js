@@ -90,6 +90,11 @@ describe("Keep", function () {
           id: {},
           complex: { $Type: "this.CT" },
           simple: { $Type: "this.TD" },
+          contained: {
+            $Kind: "NavigationProperty",
+            $Type: "this.CET",
+            $ContainsTarget: true,
+          },
           two: { $Kind: "NavigationProperty", $Type: "this.ET2" },
           twoMany: {
             $Kind: "NavigationProperty",
@@ -107,6 +112,10 @@ describe("Keep", function () {
           foo: {},
         },
         TD: { $Kind: "TypeDefinition", $UnderlyingType: "Edm.DateTimeOffset" },
+        CET: {
+          $Kind: "EntityType",
+          data: {},
+        },
         ET2: {
           $Kind: "EntityType",
           $Key: ["id"],
@@ -130,6 +139,7 @@ describe("Keep", function () {
       paths: {
         "/Set": { get: {}, post: {} },
         "/Set/{id}": { get: {}, patch: {}, delete: {} },
+        "/Set/{id}/contained": { get: {}, patch: {} },
       },
       components: {
         schemas: {
@@ -140,6 +150,7 @@ describe("Keep", function () {
               id: { type: "string" },
               complex: { $ref: "#/components/schemas/this.CT" },
               simple: { $ref: "#/components/schemas/this.TD" },
+              contained: { $ref: "#/components/schemas/this.CET" },
               two: { $ref: "#/components/schemas/stub" },
               twoMany: {
                 type: "array",
@@ -159,6 +170,7 @@ describe("Keep", function () {
               id: { type: "string" },
               complex: { $ref: "#/components/schemas/this.CT-create" },
               simple: { $ref: "#/components/schemas/this.TD" },
+              contained: { $ref: "#/components/schemas/this.CET-create" },
               two: { $ref: "#/components/schemas/entityReference" },
             },
             required: ["id"],
@@ -175,6 +187,9 @@ describe("Keep", function () {
           "this.CT-create": {},
           "this.CT-update": {},
           "this.TD": {},
+          "this.CET": {},
+          "this.CET-create": {},
+          "this.CET-update": {},
         },
       },
     };
