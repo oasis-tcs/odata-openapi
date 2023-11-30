@@ -197,6 +197,8 @@
   <xsl:variable name="odmEntityNameAliased" select="concat($odmAlias,'.entityName')" />
   <xsl:variable name="odmOid" select="concat($odmNamespace,'.oid')" />
   <xsl:variable name="odmOidAliased" select="concat($odmAlias,'.oid')" />
+  <xsl:variable name="odmOidReference" select="concat($odmNamespace,'.oidReference')" />
+  <xsl:variable name="odmOidReferenceAliased" select="concat($odmAlias,'.oidReference')" />
 
   <xsl:variable name="defaultResponse">
     <xsl:text>"</xsl:text>
@@ -3317,6 +3319,7 @@
         <xsl:with-param name="node" select="$target" />
       </xsl:call-template>
     </xsl:variable>
+
     <xsl:variable name="target-path-aliased">
       <xsl:call-template name="annotation-target">
         <xsl:with-param name="node" select="$target" />
@@ -3337,6 +3340,13 @@
     <xsl:if test="$entityName">
       <xsl:text>,"x-sap-odm-entity-name":"</xsl:text>
       <xsl:value-of select="$entityName/@String|$entityName/edm:String" />
+      <xsl:text>"</xsl:text>
+    </xsl:if>
+
+    <xsl:variable name="oidReference" select="$annos/edm:Annotation[@Term=$odmOidReference or @Term=$odmOidReferenceAliased]" />
+    <xsl:if test="$oidReference">
+      <xsl:text>,"x-sap-odm-oid-reference-entity-name":"</xsl:text>
+      <!-- <xsl:value-of select="$entityName/@String|$entityName/edm:String" /> -->
       <xsl:text>"</xsl:text>
     </xsl:if>
 

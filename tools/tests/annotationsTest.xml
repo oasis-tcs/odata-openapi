@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.01">
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/ODM.xml">
+    <edmx:Include Namespace="com.sap.vocabularies.ODM.v1" Alias="ODM" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="Supported.Annotations" Alias="self">
+      <EntityType Name="SinglePartKey">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+        <Property Name="Pattern" Type="Edm.String" />
+        <Property Name="PatternExt" Type="Edm.String" />
+        <Property Name="AllowedValues" Type="Edm.Str" />
+        <Property Name="AllowedValuesExt" Type="Edm.String" />
+        <Property Name="Maximum" Type="Edm.Decimal" Precision="5" Scale="variable" />
+        <Property Name="MaxMinInt" Type="Edm.Int32" />
+        <Property Name="MaxMinFloat" Type="Edm.Double" />
+        <Property Name="MaximumExt" Type="Edm.Decimal" Scale="variable" />
+        <Property Name="Minimum" Type="Edm.Decimal" Precision="5" Scale="2" />
+        <Property Name="MinimumExt" Type="Edm.Decimal" Scale="5" Nullable="false" />
+        <Property Name="Example" Type="Edm.String" />
+        <Property Name="ExampleExt" Type="Edm.String" />
+        <Property Name="Computed" Type="Edm.String" />
+        <Property Name="ComputedExt" Type="Edm.String" />
+        <Property Name="Immutable" Type="Edm.String" />
+        <Property Name="RequiredInFilter" Type="Edm.String" />
+        <Property Name="ImmutableExt" Type="Edm.String" />
+        <Property Name="switch" Type="Edm.Boolean" />
+        <NavigationProperty Name="AllOne" Type="self.TwoPartKey" />
+        <NavigationProperty Name="AllMany" Type="Collection(self.TwoPartKey)" />
+        <NavigationProperty Name="ReadOnlyOne" Type="self.TwoPartKey" />
+        <NavigationProperty Name="ReadOnlyMany" Type="Collection(self.TwoPartKey)" />
+        <NavigationProperty Name="NothingOne" Type="self.TwoPartKey" />
+        <NavigationProperty Name="NothingMany" Type="Collection(self.TwoPartKey)" />
+      </EntityType>
+
+      <EntityType Name="TwoPartKey">
+        <Key>
+          <PropertyRef Name="One" />
+          <PropertyRef Name="Two" />
+        </Key>
+        <Property Name="One" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Two" Type="Edm.TimeOfDay" Nullable="false" />
+        <Annotation Term="ODM.entityName">
+          <String>odmTwo</String>
+        </Annotation>
+        <Annotation Term="ODM.oid">
+          <PropertyPath>One</PropertyPath>
+        </Annotation>
+      </EntityType>
+
+      <EntityContainer Name="Container">
+        <EntitySet Name="AllSet" EntityType="self.SinglePartKey">
+          <NavigationPropertyBinding Path="AllOne" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="AllMany" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="ReadOnlyOne" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="ReadOnlyMany" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="NothingOne" Target="TwoNothingSet" />
+          <NavigationPropertyBinding Path="NothingMany" Target="TwoNothingSet" />
+        </EntitySet>
+        <EntitySet Name="NoNavigationSet" EntityType="self.SinglePartKey">
+        </EntitySet>
+        <EntitySet Name="OneNavigationSet" EntityType="self.SinglePartKey">
+        </EntitySet>
+        <EntitySet Name="ReadListOnlySet" EntityType="self.SinglePartKey">
+          <NavigationPropertyBinding Path="AllOne" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="AllMany" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="ReadOnlyOne" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="ReadOnlyMany" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="NothingOne" Target="TwoNothingSet" />
+          <NavigationPropertyBinding Path="NothingMany" Target="TwoNothingSet" />
+        </EntitySet>
+        <Singleton Name="AllSingleton" Type="self.SinglePartKey">
+          <NavigationPropertyBinding Path="AllOne" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="AllMany" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="ReadOnlyOne" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="ReadOnlyMany" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="NothingOne" Target="TwoNothingSet" />
+          <NavigationPropertyBinding Path="NothingMany" Target="TwoNothingSet" />
+        </Singleton>
+        <Singleton Name="ReadOnlySingleton" Type="self.SinglePartKey">
+          <NavigationPropertyBinding Path="AllOne" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="AllMany" Target="TwoAllSet" />
+          <NavigationPropertyBinding Path="ReadOnlyOne" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="ReadOnlyMany" Target="TwoReadOnlySet" />
+          <NavigationPropertyBinding Path="NothingOne" Target="TwoNothingSet" />
+          <NavigationPropertyBinding Path="NothingMany" Target="TwoNothingSet" />
+        </Singleton>
+        <EntitySet Name="TwoAllSet" EntityType="self.TwoPartKey" />
+        <EntitySet Name="TwoListOnlySet" EntityType="self.TwoPartKey" />
+        <EntitySet Name="TwoReadOnlySet" EntityType="self.TwoPartKey" />
+        <EntitySet Name="TwoReadOnlyByKeySet" EntityType="self.TwoPartKey" />
+        <EntitySet Name="TwoWriteOnlySet" EntityType="self.TwoPartKey" />
+        <EntitySet Name="TwoNothingSet" EntityType="self.TwoPartKey" />
+        <Singleton Name="TwoWriteOnlySingleton" Type="self.TwoPartKey" />
+        <Singleton Name="TwoNothingSingleton" Type="self.TwoPartKey" />
+      </EntityContainer>
+
+	  <Annotations Target="self.SinglePartKey/AllOne">
+        <Annotation Term="ODM.oidReference">
+          <Record>
+            <PropertyValue Property="entityName" String="SontOne" /> 
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="self.SinglePartKey">
+        <Annotation Term="ODM.entityName" String="odmOne" />
+        <Annotation Term="ODM.oid" PropertyPath="Computed" />
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
