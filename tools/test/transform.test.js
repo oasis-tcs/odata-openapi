@@ -4,10 +4,10 @@ const fs = require("fs");
 const path = require("path");
 
 describe("CLI", function () {
-  // this.timeout(20000);
+  this.timeout(20000);
 
-  // const annoV2 = fs.readFileSync("tests/annotations-v2.openapi3.json", "utf8");
-  // const tripPin = fs.readFileSync("tests/TripPin.openapi3.json", "utf8");
+  const annoV2 = fs.readFileSync("tests/annotations-v2.openapi3.json", "utf8");
+  const tripPin = fs.readFileSync("tests/TripPin.openapi3.json", "utf8");
 
   it("help", async () => {
     const result = await cmd(["-h"]);
@@ -65,40 +65,9 @@ describe("CLI", function () {
       "",
     ]);
     assert.equal(fs.existsSync(target), true);
-    // const actual = JSON.parse(fs.readFileSync(target, "utf8"));
-    // const expected = JSON.parse(annoV2);
-    // assert.deepStrictEqual(actual, expected, "produced OpenAPI");
-    fs.unlinkSync(target);
-  });
-
-  it("annotations", async () => {
-    const source = path.resolve("tools/tests/annotationsTest.xml");
-    const target = path.resolve("tools/tests/annotationsTest.openapi.json");
-    if (fs.existsSync(target)) fs.unlinkSync(target);
-
-    const result = await cmd([
-      "-d",
-      "--scheme https",
-      "--verbose",
-      "--pretty",
-      source,
-    ]);
-
-    assert.equal(result.code, 0);
-    assert.equal(result.stderr, "");
-    // assert.deepStrictEqual(result.stdout.split("\n"), [
-    //   "Checking OData version used in source file: tests/annotations-v2.xml",
-    //   "Source file is OData version: 2.0",
-    //   "Transforming tests/annotations-v2.xml to OData V4, target file: tests/annotations-v2.tmp",
-    //   "Transforming tests/annotations-v2.tmp to OpenAPI 3.0.0, target file: tests/annotations-v2.openapi.json",
-    //   "Removing intermediate file: tests/annotations-v2.tmp",
-    //   "Done.",
-    //   "",
-    // ]);
-    assert.equal(fs.existsSync(target), true);
-    // const actual = JSON.parse(fs.readFileSync(target, "utf8"));
-    // const expected = JSON.parse(anno);
-    // assert.deepStrictEqual(actual, expected, "produced OpenAPI");
+    const actual = JSON.parse(fs.readFileSync(target, "utf8"));
+    const expected = JSON.parse(annoV2);
+    assert.deepStrictEqual(actual, expected, "produced OpenAPI");
     fs.unlinkSync(target);
   });
 
@@ -114,17 +83,15 @@ describe("CLI", function () {
     assert.equal(fs.existsSync(target), true);
     const actual = fs.readFileSync(target, "utf8").split("\n");
     actual.push("");
-    // assert.deepStrictEqual(actual, tripPin.split("\r\n"), "produced OpenAPI");
+    assert.deepStrictEqual(actual, tripPin.split("\r\n"), "produced OpenAPI");
     fs.unlinkSync(target);
   });
 });
 
 function cmd(args, cwd) {
-  const transformer = path.resolve("./tools/transform.js");
-
   return new Promise((resolve) => {
     exec(
-      `node ${transformer} ${args.join(" ")}`,
+      `node ${path.resolve("./transform.js")} ${args.join(" ")}`,
       { cwd },
       (error, stdout, stderr) => {
         resolve({
