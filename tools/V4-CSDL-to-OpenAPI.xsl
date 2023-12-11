@@ -2358,7 +2358,8 @@
     <xsl:param name="annos" />
     <xsl:variable name="anno" select="$annos/edm:Annotation[not(@Qualifier) and (@Term=$odmOidReference or @Term=$odmOidReferenceAliased)]" />
     <xsl:if test="$anno/edm:Record">
-      <xsl:variable name="name" select="$sont/edm:Record/edm:PropertyValue[@Property='entityName']" />
+      <xsl:variable name="name" select="$anno/edm:Record/edm:PropertyValue[@Property='entityName']" />
+
       <xsl:text>,"x-sap-odm-oid-reference-entity-name":"</xsl:text>
       <xsl:value-of select="$name/@String|$name/edm:String" />
       <xsl:text>"</xsl:text>
