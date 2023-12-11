@@ -197,6 +197,8 @@
   <xsl:variable name="odmEntityNameAliased" select="concat($odmAlias,'.entityName')" />
   <xsl:variable name="odmOid" select="concat($odmNamespace,'.oid')" />
   <xsl:variable name="odmOidAliased" select="concat($odmAlias,'.oid')" />
+  <xsl:variable name="odmOidReference" select="concat($odmNamespace,'.oidReference')" />
+  <xsl:variable name="odmOidReferenceAliased" select="concat($odmAlias,'.oidReference')" />
 
   <xsl:variable name="defaultResponse">
     <xsl:text>"</xsl:text>
@@ -2226,6 +2228,9 @@
       <xsl:call-template name="Common.SAPObjectNodeTypeReference">
         <xsl:with-param name="annos" select="$annos" />
       </xsl:call-template>
+      <xsl:call-template name="ODM.oidReference">
+        <xsl:with-param name="annos" select="$annos" />
+      </xsl:call-template>
     </xsl:if>
   </xsl:template>
 
@@ -2345,6 +2350,17 @@
     <xsl:if test="$anno">
       <xsl:text>,"x-sap-object-node-type-reference":"</xsl:text>
       <xsl:value-of select="$anno/@String|$anno/edm:String" />
+      <xsl:text>"</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="ODM.oidReference">
+    <xsl:param name="annos" />
+    <xsl:variable name="anno" select="$annos/edm:Annotation[not(@Qualifier) and (@Term=$odmOidReference or @Term=$odmOidReferenceAliased)]" />
+    <xsl:if test="$anno/edm:Record">
+      <xsl:variable name="name" select="$anno/edm:Record/edm:PropertyValue[@Property='entityName']" />
+      <xsl:text>,"x-sap-odm-oid-reference-entity-name":"</xsl:text>
+      <xsl:value-of select="$name/@String|$name/edm:String" />
       <xsl:text>"</xsl:text>
     </xsl:if>
   </xsl:template>
@@ -3317,6 +3333,7 @@
         <xsl:with-param name="node" select="$target" />
       </xsl:call-template>
     </xsl:variable>
+
     <xsl:variable name="target-path-aliased">
       <xsl:call-template name="annotation-target">
         <xsl:with-param name="node" select="$target" />
