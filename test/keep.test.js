@@ -67,7 +67,10 @@ describe("Keep", function () {
         },
       },
     };
-    const actual = csdl2openapi(csdl, { rootResourcesToKeep: ["Set"] });
+    const actual = csdl2openapi(csdl, {
+      rootResourcesToKeep: ["Set"],
+      diagram: true,
+    });
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -75,6 +78,12 @@ describe("Keep", function () {
       "Operations",
     );
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    const diagram = actual.info.description.split("\n")[3];
+    assert.strictEqual(
+      diagram,
+      "![ER Diagram](https://yuml.me/diagram/class/[ET{bg:lightslategray}],[ET]++-[CT{bg:lightslategray}],[ET]++-[TD{bg:lightslategray}],[CT],[Set%20{bg:lawngreen}]++-*>[ET])",
+      "ER diagram",
+    );
   });
 
   it("Keep one of two connected entity sets, keep containment, stub non-containment", function () {
