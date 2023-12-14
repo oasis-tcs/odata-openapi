@@ -1,7 +1,7 @@
 const assert = require("assert");
 
 //TODO:
-// keep action import and function import: keep parameter and response types
+// keep action import: keep parameter and response types
 
 const { paths, operations, schemas } = require("./utilities");
 
@@ -399,6 +399,22 @@ describe("Keep", function () {
           $Kind: "EntityType",
           $Key: ["id"],
           id: {},
+          bestOfContained: {
+            $Kind: "NavigationProperty",
+            $Type: "this.CET",
+            $Nullable: true,
+          },
+          contained: {
+            $Kind: "NavigationProperty",
+            $Type: "this.CET",
+            $Collection: true,
+            $ContainsTarget: true,
+          },
+        },
+        CET: {
+          $Kind: "EntityType",
+          $Key: ["id"],
+          id: {},
         },
         TD: { $Kind: "TypeDefinition", $UnderlyingType: "Edm.DateTimeOffset" },
         fun: [
@@ -406,7 +422,7 @@ describe("Keep", function () {
           {
             $Kind: "Function",
             $Parameter: [{ $Name: "in", $Type: "this.TD" }],
-            $ReturnType: { $Collection: true, $MaxLength: 20 },
+            $ReturnType: { $Type: "this.ET" },
           },
         ],
         Container: {
@@ -423,7 +439,23 @@ describe("Keep", function () {
       },
       components: {
         schemas: {
-          "this.ET": {},
+          "this.ET": {
+            title: "ET",
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              bestOfContained: {
+                allOf: [{ $ref: "#/components/schemas/this.CET" }],
+                nullable: true,
+              },
+              contained: {
+                type: "array",
+                items: { $ref: "#/components/schemas/this.CET" },
+              },
+              "contained@count": { $ref: "#/components/schemas/count" },
+            },
+          },
+          "this.CET": {},
           "this.TD": {},
         },
       },
@@ -436,5 +468,127 @@ describe("Keep", function () {
       "Operations",
     );
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ET"],
+      expected.components.schemas["this.ET"],
+      "read structure",
+    );
+  });
+
+  it("keep action import with parameter and return types", function () {
+    const csdl = {
+      $EntityContainer: "this.Container",
+      this: {
+        ET: {
+          $Kind: "EntityType",
+          $Key: ["id"],
+          id: {},
+          bestOfContained: {
+            $Kind: "NavigationProperty",
+            $Type: "this.CET",
+            $Nullable: true,
+          },
+          contained: {
+            $Kind: "NavigationProperty",
+            $Type: "this.CET",
+            $Collection: true,
+            $ContainsTarget: true,
+          },
+        },
+        CET: {
+          $Kind: "EntityType",
+          $Key: ["id"],
+          id: {},
+        },
+        TD: { $Kind: "TypeDefinition", $UnderlyingType: "Edm.DateTimeOffset" },
+        act: [
+          {
+            $Kind: "Action",
+            $Parameter: [{ $Name: "in", $Type: "this.TD" }],
+            $ReturnType: { $Type: "this.ET", $Collection: true },
+          },
+        ],
+        Container: {
+          Set: { $Collection: true, $Type: "this.ET" },
+          Act: { $Action: "this.act" },
+        },
+      },
+    };
+    const expected = {
+      paths: {
+        "/Act": { post: {} },
+      },
+      components: {
+        schemas: {
+          "this.ET": {
+            title: "ET",
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              bestOfContained: {
+                allOf: [{ $ref: "#/components/schemas/this.CET" }],
+                nullable: true,
+              },
+              contained: {
+                type: "array",
+                items: { $ref: "#/components/schemas/this.CET" },
+              },
+              "contained@count": { $ref: "#/components/schemas/count" },
+            },
+          },
+          "this.CET": {},
+          "this.TD": {},
+        },
+      },
+    };
+    const actual = csdl2openapi(csdl, { rootResourcesToKeep: ["Act"] });
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations",
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ET"],
+      expected.components.schemas["this.ET"],
+      "read structure",
+    );
+  });
+
+  it("keep function import with primitive return type", function () {
+    const csdl = {
+      $EntityContainer: "this.Container",
+      this: {
+        TD: { $Kind: "TypeDefinition", $UnderlyingType: "Edm.DateTimeOffset" },
+        fun: [{ $Kind: "Function", $ReturnType: { $Type: "this.TD" } }],
+        Container: {
+          Fun: { $Function: "this.fun" },
+        },
+      },
+    };
+    const expected = {
+      paths: {
+        "/Fun()": { get: {} },
+      },
+      components: {
+        schemas: {
+          "this.TD": {},
+        },
+      },
+    };
+    const actual = csdl2openapi(csdl, { rootResourcesToKeep: ["Fun"] });
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations",
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ET"],
+      expected.components.schemas["this.ET"],
+      "read structure",
+    );
   });
 });
