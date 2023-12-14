@@ -1,7 +1,7 @@
 const assert = require("assert");
 
 //TODO:
-// keep action import: keep parameter and response types
+// diagram: only kept stuff
 
 const { paths, operations, schemas } = require("./utilities");
 
