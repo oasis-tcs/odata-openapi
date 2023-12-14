@@ -77,7 +77,7 @@ describe("Keep", function () {
     );
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
   });
-  it("Keep one of two connected entity sets, stub the association", function () {
+  it("Keep one of two connected entity sets, keep containment, stub non-containment", function () {
     const csdl = {
       $Reference: {
         dummy: {
@@ -191,6 +191,123 @@ describe("Keep", function () {
           "this.CT-create": {},
           "this.CT-update": {},
           "this.TD": {},
+          "this.CET": {},
+          "this.CET-create": {},
+          "this.CET-update": {},
+        },
+      },
+    };
+    const actual = csdl2openapi(csdl, { rootResourcesToKeep: ["Set"] });
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations",
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    assert.deepStrictEqual(
+      actual.components.schemas.stub,
+      { title: "Stub object", type: "object" },
+      "Stub object",
+    );
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ET"],
+      expected.components.schemas["this.ET"],
+      "read structure",
+    );
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ET-create"],
+      expected.components.schemas["this.ET-create"],
+      "create structure",
+    );
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ET-update"],
+      expected.components.schemas["this.ET-update"],
+      "update structure",
+    );
+  });
+
+  it("Keep non-containment navigation to contained entity", function () {
+    const csdl = {
+      $Reference: {
+        dummy: {
+          $Include: [
+            { $Namespace: "Org.OData.Capabilities.V1", $Alias: "Capabilities" },
+          ],
+        },
+      },
+      $EntityContainer: "this.Container",
+      this: {
+        ET: {
+          $Kind: "EntityType",
+          $Key: ["id"],
+          id: {},
+          bestOfContained: {
+            $Kind: "NavigationProperty",
+            $Type: "this.CET",
+            $Nullable: true,
+          },
+          contained: {
+            $Kind: "NavigationProperty",
+            $Type: "this.CET",
+            $Collection: true,
+            $ContainsTarget: true,
+          },
+        },
+        CET: {
+          $Kind: "EntityType",
+          $Key: ["id"],
+          id: {},
+          data: {},
+        },
+        Container: {
+          "@Capabilities.KeyAsSegmentSupported": true,
+          Set: { $Collection: true, $Type: "this.ET" },
+        },
+      },
+    };
+    const expected = {
+      paths: {
+        "/Set": { get: {}, post: {} },
+        "/Set/{id}": { get: {}, patch: {}, delete: {} },
+        "/Set/{id}/bestOfContained": { get: {} },
+        "/Set/{id}/contained": { get: {}, post: {} },
+        "/Set/{id}/contained/{id_1}": { get: {}, patch: {}, delete: {} },
+      },
+      components: {
+        schemas: {
+          "this.ET": {
+            title: "ET",
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              bestOfContained: {
+                allOf: [{ $ref: "#/components/schemas/this.CET" }],
+                nullable: true,
+              },
+              contained: {
+                type: "array",
+                items: { $ref: "#/components/schemas/this.CET" },
+              },
+              "contained@count": { $ref: "#/components/schemas/count" },
+            },
+          },
+          "this.ET-create": {
+            title: "ET (for create)",
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              contained: {
+                type: "array",
+                items: { $ref: "#/components/schemas/this.CET-create" },
+              },
+            },
+            required: ["id"],
+          },
+          "this.ET-update": {
+            title: "ET (for update)",
+            type: "object",
+          },
           "this.CET": {},
           "this.CET-create": {},
           "this.CET-update": {},
