@@ -1,7 +1,7 @@
 const assert = require("assert");
 
 //TODO:
-// diagram: only kept stuff
+// bound actions and functions
 
 const { paths, operations, schemas } = require("./utilities");
 
