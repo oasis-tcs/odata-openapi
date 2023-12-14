@@ -76,6 +76,7 @@ describe("Keep", function () {
     );
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
   });
+
   it("Keep one of two connected entity sets, keep containment, stub non-containment", function () {
     const csdl = {
       $Reference: {
@@ -381,5 +382,59 @@ describe("Keep", function () {
       expected.components.schemas["this.CET"],
       "read structure of component entity type",
     );
+  });
+
+  it("keep function import with all overloads and their parameter and return types", function () {
+    const csdl = {
+      $Reference: {
+        dummy: {
+          $Include: [
+            { $Namespace: "Org.OData.Capabilities.V1", $Alias: "Capabilities" },
+          ],
+        },
+      },
+      $EntityContainer: "this.Container",
+      this: {
+        ET: {
+          $Kind: "EntityType",
+          $Key: ["id"],
+          id: {},
+        },
+        TD: { $Kind: "TypeDefinition", $UnderlyingType: "Edm.DateTimeOffset" },
+        fun: [
+          { $Kind: "Function", $ReturnType: { $Type: "this.ET" } },
+          {
+            $Kind: "Function",
+            $Parameter: [{ $Name: "in", $Type: "this.TD" }],
+            $ReturnType: { $Collection: true, $MaxLength: 20 },
+          },
+        ],
+        Container: {
+          "@Capabilities.KeyAsSegmentSupported": true,
+          Set: { $Collection: true, $Type: "this.ET" },
+          Fun: { $Function: "this.fun" },
+        },
+      },
+    };
+    const expected = {
+      paths: {
+        "/Fun()": { get: {} },
+        "/Fun(in={in})": { get: {} },
+      },
+      components: {
+        schemas: {
+          "this.ET": {},
+          "this.TD": {},
+        },
+      },
+    };
+    const actual = csdl2openapi(csdl, { rootResourcesToKeep: ["Fun"] });
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations",
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
   });
 });
