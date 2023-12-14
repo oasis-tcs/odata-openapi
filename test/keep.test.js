@@ -81,7 +81,7 @@ describe("Keep", function () {
     const diagram = actual.info.description.split("\n")[3];
     assert.strictEqual(
       diagram,
-      "![ER Diagram](https://yuml.me/diagram/class/[ET{bg:lightslategray}],[ET]++-[CT{bg:lightslategray}],[ET]++-[TD{bg:lightslategray}],[CT],[Set%20{bg:lawngreen}]++-*>[ET])",
+      "![ER Diagram](https://yuml.me/diagram/class/[ET{bg:lightslategray}],[ET]++-[CT{bg:lightslategray}],[ET]++-[TD{bg:lightslategray}],[Set%20{bg:lawngreen}]++-*>[ET])",
       "ER diagram",
     );
   });
