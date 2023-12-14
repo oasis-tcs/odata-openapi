@@ -206,7 +206,10 @@ describe("Keep", function () {
         },
       },
     };
-    const actual = csdl2openapi(csdl, { rootResourcesToKeep: ["Set"] });
+    const actual = csdl2openapi(csdl, {
+      rootResourcesToKeep: ["Set"],
+      diagram: true,
+    });
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -233,6 +236,12 @@ describe("Keep", function () {
       actual.components.schemas["this.ET-update"],
       expected.components.schemas["this.ET-update"],
       "update structure",
+    );
+    const diagram = actual.info.description.split("\n")[3];
+    assert.strictEqual(
+      diagram,
+      "![ER Diagram](https://yuml.me/diagram/class/[ET{bg:lightslategray}],[ET]++-[CT{bg:lightslategray}],[ET]++-[TD{bg:lightslategray}],[ET]++->[CET{bg:lightslategray}],[ET]->[ET2{bg:lightslategray}],[ET]-*>[ET2{bg:lightslategray}],[ET]-0..1>[ET2{bg:lightslategray}],[CET{bg:lightslategray}],[Set%20{bg:lawngreen}]++-*>[ET])",
+      "ER diagram",
     );
   });
 
@@ -363,7 +372,10 @@ describe("Keep", function () {
         },
       },
     };
-    const actual = csdl2openapi(csdl, { rootResourcesToKeep: ["Set"] });
+    const actual = csdl2openapi(csdl, {
+      rootResourcesToKeep: ["Set"],
+      diagram: true,
+    });
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -390,6 +402,12 @@ describe("Keep", function () {
       actual.components.schemas["this.CET"],
       expected.components.schemas["this.CET"],
       "read structure of component entity type",
+    );
+    const diagram = actual.info.description.split("\n")[3];
+    assert.strictEqual(
+      diagram,
+      "![ER Diagram](https://yuml.me/diagram/class/[ET{bg:lightslategray}],[ET]-0..1>[CET{bg:lightslategray}],[ET]++-*>[CET{bg:lightslategray}],[CET{bg:lightslategray}],[CET]-0..1>[CET2{bg:lightslategray}],[CET]++-*>[CET2{bg:lightslategray}],[CET2{bg:lightslategray}],[Set%20{bg:lawngreen}]++-*>[ET])",
+      "ER diagram",
     );
   });
 
@@ -469,7 +487,10 @@ describe("Keep", function () {
         },
       },
     };
-    const actual = csdl2openapi(csdl, { rootResourcesToKeep: ["Fun"] });
+    const actual = csdl2openapi(csdl, {
+      rootResourcesToKeep: ["Fun"],
+      diagram: true,
+    });
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -481,6 +502,12 @@ describe("Keep", function () {
       actual.components.schemas["this.ET"],
       expected.components.schemas["this.ET"],
       "read structure",
+    );
+    const diagram = actual.info.description.split("\n")[3];
+    assert.strictEqual(
+      diagram,
+      "![ER Diagram](https://yuml.me/diagram/class/[ET{bg:lightslategray}],[ET]-0..1>[CET{bg:lightslategray}],[ET]++-*>[CET{bg:lightslategray}],[CET{bg:lightslategray}],[Fun{bg:lawngreen}]->[ET])",
+      "ER diagram",
     );
   });
 
@@ -550,7 +577,10 @@ describe("Keep", function () {
         },
       },
     };
-    const actual = csdl2openapi(csdl, { rootResourcesToKeep: ["Act"] });
+    const actual = csdl2openapi(csdl, {
+      rootResourcesToKeep: ["Act"],
+      diagram: true,
+    });
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -562,6 +592,12 @@ describe("Keep", function () {
       actual.components.schemas["this.ET"],
       expected.components.schemas["this.ET"],
       "read structure",
+    );
+    const diagram = actual.info.description.split("\n")[3];
+    assert.strictEqual(
+      diagram,
+      "![ER Diagram](https://yuml.me/diagram/class/[ET{bg:lightslategray}],[ET]-0..1>[CET{bg:lightslategray}],[ET]++-*>[CET{bg:lightslategray}],[CET{bg:lightslategray}],[Act{bg:lawngreen}]-*>[ET],[Act{bg:lawngreen}]in->[TD])",
+      "ER diagram",
     );
   });
 
@@ -586,7 +622,10 @@ describe("Keep", function () {
         },
       },
     };
-    const actual = csdl2openapi(csdl, { rootResourcesToKeep: ["Fun"] });
+    const actual = csdl2openapi(csdl, {
+      rootResourcesToKeep: ["Fun"],
+      diagram: true,
+    });
     assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
     assert.deepStrictEqual(
       operations(actual),
@@ -598,6 +637,12 @@ describe("Keep", function () {
       actual.components.schemas["this.ET"],
       expected.components.schemas["this.ET"],
       "read structure",
+    );
+    const diagram = actual.info.description.split("\n")[3];
+    assert.strictEqual(
+      diagram,
+      "![ER Diagram](https://yuml.me/diagram/class/[Fun{bg:lawngreen}]->[TD])",
+      "ER diagram",
     );
   });
 });
