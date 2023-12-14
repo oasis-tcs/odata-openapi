@@ -1,7 +1,6 @@
 const assert = require("assert");
 
 //TODO:
-// association to contained entity "bestContained": preserve type
 // keep action import and function import: keep parameter and response types
 
 const { paths, operations, schemas } = require("./utilities");
@@ -258,7 +257,22 @@ describe("Keep", function () {
           $Kind: "EntityType",
           $Key: ["id"],
           id: {},
-          data: {},
+          bestOfContained: {
+            $Kind: "NavigationProperty",
+            $Type: "this.CET2",
+            $Nullable: true,
+          },
+          contained: {
+            $Kind: "NavigationProperty",
+            $Type: "this.CET2",
+            $Collection: true,
+            $ContainsTarget: true,
+          },
+        },
+        CET2: {
+          $Kind: "EntityType",
+          $Key: ["id"],
+          id: {},
         },
         Container: {
           "@Capabilities.KeyAsSegmentSupported": true,
@@ -273,6 +287,13 @@ describe("Keep", function () {
         "/Set/{id}/bestOfContained": { get: {} },
         "/Set/{id}/contained": { get: {}, post: {} },
         "/Set/{id}/contained/{id_1}": { get: {}, patch: {}, delete: {} },
+        "/Set/{id}/contained/{id_1}/bestOfContained": { get: {} },
+        "/Set/{id}/contained/{id_1}/contained": { get: {}, post: {} },
+        "/Set/{id}/contained/{id_1}/contained/{id_2}": {
+          get: {},
+          patch: {},
+          delete: {},
+        },
       },
       components: {
         schemas: {
@@ -308,9 +329,27 @@ describe("Keep", function () {
             title: "ET (for update)",
             type: "object",
           },
-          "this.CET": {},
+          "this.CET": {
+            title: "CET",
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              bestOfContained: {
+                allOf: [{ $ref: "#/components/schemas/this.CET2" }],
+                nullable: true,
+              },
+              contained: {
+                type: "array",
+                items: { $ref: "#/components/schemas/this.CET2" },
+              },
+              "contained@count": { $ref: "#/components/schemas/count" },
+            },
+          },
           "this.CET-create": {},
           "this.CET-update": {},
+          "this.CET2": {},
+          "this.CET2-create": {},
+          "this.CET2-update": {},
         },
       },
     };
@@ -322,11 +361,6 @@ describe("Keep", function () {
       "Operations",
     );
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
-    assert.deepStrictEqual(
-      actual.components.schemas.stub,
-      { title: "Stub object", type: "object" },
-      "Stub object",
-    );
     assert.deepStrictEqual(
       actual.components.schemas["this.ET"],
       expected.components.schemas["this.ET"],
@@ -341,6 +375,11 @@ describe("Keep", function () {
       actual.components.schemas["this.ET-update"],
       expected.components.schemas["this.ET-update"],
       "update structure",
+    );
+    assert.deepStrictEqual(
+      actual.components.schemas["this.CET"],
+      expected.components.schemas["this.CET"],
+      "read structure of component entity type",
     );
   });
 });
