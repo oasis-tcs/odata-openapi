@@ -1,7 +1,8 @@
 const assert = require("assert");
 
 //TODO:
-// bound actions and functions
+// - bound actions and functions
+// - bound operation returning unkept entity type: don't keep it, morph to stub
 
 const { paths, operations, schemas } = require("./utilities");
 
@@ -411,7 +412,7 @@ describe("Keep", function () {
     );
   });
 
-  it("keep function import with all overloads and their parameter and return types", function () {
+  it("keep function import with all unbound overloads and their parameter and return types", function () {
     const csdl = {
       $Reference: {
         dummy: {
@@ -443,6 +444,11 @@ describe("Keep", function () {
           $Key: ["id"],
           id: {},
         },
+        ET2: {
+          $Kind: "EntityType",
+          $Key: ["id"],
+          id: {},
+        },
         TD: { $Kind: "TypeDefinition", $UnderlyingType: "Edm.DateTimeOffset" },
         fun: [
           { $Kind: "Function", $ReturnType: { $Type: "this.ET" } },
@@ -451,10 +457,17 @@ describe("Keep", function () {
             $Parameter: [{ $Name: "in", $Type: "this.TD" }],
             $ReturnType: { $Type: "this.ET" },
           },
+          {
+            $Kind: "Function",
+            $IsBound: true,
+            $Parameter: [{ $Name: "in", $Type: "this.ET" }],
+            $ReturnType: { $Type: "this.ET2" },
+          },
         ],
         Container: {
           "@Capabilities.KeyAsSegmentSupported": true,
           Set: { $Collection: true, $Type: "this.ET" },
+          Set2: { $Collection: true, $Type: "this.ET2" },
           Fun: { $Function: "this.fun" },
         },
       },
@@ -511,7 +524,7 @@ describe("Keep", function () {
     );
   });
 
-  it("keep action import with parameter and return types", function () {
+  it("keep action import and its unbound overload with parameter and return types", function () {
     const csdl = {
       $EntityContainer: "this.Container",
       this: {
