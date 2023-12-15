@@ -1,9 +1,5 @@
 const assert = require("assert");
 
-//TODO:
-// - bound actions and functions
-// - bound operation returning unkept entity type: don't keep it, morph to stub
-
 const { paths, operations, schemas } = require("./utilities");
 
 const { csdl2openapi } = require("odata-openapi");
@@ -87,7 +83,7 @@ describe("Keep", function () {
     );
   });
 
-  it("Keep one of two connected entity sets, keep containment, stub non-containment", function () {
+  it("Keep one of two navigation-connected entity sets, keep containment, stub non-containment", function () {
     const csdl = {
       $Reference: {
         dummy: {
@@ -655,6 +651,127 @@ describe("Keep", function () {
     assert.strictEqual(
       diagram,
       "![ER Diagram](https://yuml.me/diagram/class/[Fun{bg:lawngreen}]->[TD])",
+      "ER diagram",
+    );
+  });
+
+  it("Stub bound action and function return entity types that are not kept", function () {
+    const csdl = {
+      $Reference: {
+        dummy: {
+          $Include: [
+            { $Namespace: "Org.OData.Capabilities.V1", $Alias: "Capabilities" },
+          ],
+        },
+      },
+      $EntityContainer: "this.Container",
+      this: {
+        ET: {
+          $Kind: "EntityType",
+          $Key: ["id"],
+          id: {},
+          data: {},
+        },
+        ET2: {
+          $Kind: "EntityType",
+          $Key: ["id"],
+          id: {},
+          data: {},
+        },
+        act: [
+          {
+            $Kind: "Action",
+            $IsBound: true,
+            $Parameter: [{ $Name: "in", $Type: "this.ET" }],
+            $ReturnType: { $Type: "this.ET2" },
+          },
+        ],
+        fun: [
+          {
+            $Kind: "Function",
+            $IsBound: true,
+            $Parameter: [{ $Name: "in", $Type: "this.ET" }],
+            $ReturnType: { $Type: "this.ET2" },
+          },
+        ],
+        Container: {
+          "@Capabilities.KeyAsSegmentSupported": true,
+          Set: { $Collection: true, $Type: "this.ET" },
+          Set2: { $Collection: true, $Type: "this.ET2" },
+        },
+      },
+    };
+    const expected = {
+      paths: {
+        "/Set": { get: {}, post: {} },
+        "/Set/{id}": { get: {}, patch: {}, delete: {} },
+        "/Set/{id}/this.act": { post: {} },
+        "/Set/{id}/this.fun()": { get: {} },
+      },
+      components: {
+        schemas: {
+          "this.ET": {
+            title: "ET",
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              data: { type: "string" },
+            },
+          },
+          "this.ET-create": {
+            title: "ET (for create)",
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              data: { type: "string" },
+            },
+            required: ["id"],
+          },
+          "this.ET-update": {
+            title: "ET (for update)",
+            type: "object",
+            properties: {
+              data: { type: "string" },
+            },
+          },
+        },
+      },
+    };
+    const actual = csdl2openapi(csdl, {
+      rootResourcesToKeep: ["Set"],
+      diagram: true,
+    });
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations",
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    assert.deepStrictEqual(
+      actual.components.schemas.stub,
+      { title: "Stub object", type: "object" },
+      "Stub object",
+    );
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ET"],
+      expected.components.schemas["this.ET"],
+      "read structure",
+    );
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ET-create"],
+      expected.components.schemas["this.ET-create"],
+      "create structure",
+    );
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ET-update"],
+      expected.components.schemas["this.ET-update"],
+      "update structure",
+    );
+    const diagram = actual.info.description.split("\n")[3];
+    assert.strictEqual(
+      diagram,
+      "![ER Diagram](https://yuml.me/diagram/class/[ET{bg:lightslategray}],[Set%20{bg:lawngreen}]++-*>[ET])",
       "ER diagram",
     );
   });
