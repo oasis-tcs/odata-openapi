@@ -78,7 +78,7 @@ describe("Keep", function () {
     const diagram = actual.info.description.split("\n")[3];
     assert.strictEqual(
       diagram,
-      "![ER Diagram](https://yuml.me/diagram/class/[ET{bg:lightslategray}],[ET]++-[CT{bg:lightslategray}],[ET]++-[TD{bg:lightslategray}],[Set%20{bg:lawngreen}]++-*>[ET])",
+      "![ER Diagram](https://yuml.me/diagram/class/[ET{bg:lightslategray}],[ET]++-[CT],[ET]++-[TD],[Set%20{bg:lawngreen}]++-*>[ET])",
       "ER diagram",
     );
   });
@@ -237,7 +237,7 @@ describe("Keep", function () {
     const diagram = actual.info.description.split("\n")[3];
     assert.strictEqual(
       diagram,
-      "![ER Diagram](https://yuml.me/diagram/class/[ET{bg:lightslategray}],[ET]++-[CT{bg:lightslategray}],[ET]++-[TD{bg:lightslategray}],[ET]++->[CET{bg:lightslategray}],[ET]->[ET2{bg:lightslategray}],[ET]-*>[ET2{bg:lightslategray}],[ET]-0..1>[ET2{bg:lightslategray}],[CET{bg:lightslategray}],[Set%20{bg:lawngreen}]++-*>[ET])",
+      "![ER Diagram](https://yuml.me/diagram/class/[ET{bg:lightslategray}],[ET]++-[CT],[ET]++-[TD],[ET]++->[CET{bg:lightslategray}],[ET]->[ET2{bg:lightslategray}],[ET]-*>[ET2{bg:lightslategray}],[ET]-0..1>[ET2{bg:lightslategray}],[CET{bg:lightslategray}],[Set%20{bg:lawngreen}]++-*>[ET])",
       "ER diagram",
     );
   });
