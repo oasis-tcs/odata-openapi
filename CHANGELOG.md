@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.25.0] - 2023-12-14
+## [0.25.0] - 2024-01-12
 
 ### Added
 
@@ -10,6 +10,12 @@
   - Non-containment navigation properties to entity types not kept are changed to use a generic stub object type without properties.
   - Deep paths to stubbed entity types are omitted.
   - The `/$batch` resource is omitted.
+
+## [0.24.1] - 2023-12-20
+
+### Fixed
+
+- Complex types were sometimes wrongly colored in diagrams
 
 ## [0.24.0] - 2023-11-07
 
