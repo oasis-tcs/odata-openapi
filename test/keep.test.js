@@ -605,7 +605,7 @@ describe("Keep", function () {
     const diagram = actual.info.description.split("\n")[3];
     assert.strictEqual(
       diagram,
-      "![ER Diagram](https://yuml.me/diagram/class/[ET{bg:lightslategray}],[ET]-0..1>[CET{bg:lightslategray}],[ET]++-*>[CET{bg:lightslategray}],[CET{bg:lightslategray}],[Act{bg:lawngreen}]-*>[ET],[Act{bg:lawngreen}]in->[TD])",
+      "![ER Diagram](https://yuml.me/diagram/class/[ET{bg:lightslategray}],[ET]-0..1>[CET{bg:lightslategray}],[ET]++-*>[CET{bg:lightslategray}],[CET{bg:lightslategray}],[Act{bg:lawngreen}]-*>[ET],[Act]in->[TD])",
       "ER diagram",
     );
   });
