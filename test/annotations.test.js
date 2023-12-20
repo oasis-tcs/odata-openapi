@@ -1187,7 +1187,7 @@ describe("Annotations", function () {
         "This service is located at [https://localhost/service-root/](https://localhost/service-root/)",
         "",
         "## Entity Data Model",
-        "![ER Diagram](https://yuml.me/diagram/class/[root{bg:lightslategray}],[act{bg:lawngreen}]->[root],[act{bg:lawngreen}]in->[root],[roots%20{bg:lawngreen}]++-*>[root])",
+        "![ER Diagram](https://yuml.me/diagram/class/[root{bg:lightslategray}],[act{bg:lawngreen}]->[root],[act]in->[root],[roots%20{bg:lawngreen}]++-*>[root])",
         "",
         "### Legend",
         "![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",

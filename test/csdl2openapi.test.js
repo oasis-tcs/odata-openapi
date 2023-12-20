@@ -920,7 +920,7 @@ describe("Edge cases", function () {
         "This service is located at [https://localhost/service-root/](https://localhost/service-root/)",
         "",
         "## Entity Data Model",
-        "![ER Diagram](https://yuml.me/diagram/class/[Complex],[funO{bg:lawngreen}],[funO{bg:lawngreen}]in->[Complex],[funC{bg:lawngreen}],[funC{bg:lawngreen}]in->[Complex])",
+        "![ER Diagram](https://yuml.me/diagram/class/[Complex],[funO{bg:lawngreen}],[funO]in->[Complex],[funC{bg:lawngreen}],[funC]in->[Complex])",
         "",
         "### Legend",
         "![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
