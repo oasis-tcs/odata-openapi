@@ -14,8 +14,9 @@ describe("Keep", function () {
           ],
         },
       },
-      $EntityContainer: "this.Container",
-      this: {
+      $EntityContainer: "Schema.Container",
+      Schema: {
+        $Alias: "this",
         ET: {
           $Kind: "EntityType",
           $Key: ["id"],
@@ -54,13 +55,13 @@ describe("Keep", function () {
       },
       components: {
         schemas: {
-          "this.ET": {},
-          "this.ET-create": {},
-          "this.ET-update": {},
-          "this.CT": {},
-          "this.CT-create": {},
-          "this.CT-update": {},
-          "this.TD": {},
+          "Schema.ET": {},
+          "Schema.ET-create": {},
+          "Schema.ET-update": {},
+          "Schema.CT": {},
+          "Schema.CT-create": {},
+          "Schema.CT-update": {},
+          "Schema.TD": {},
         },
       },
     };
