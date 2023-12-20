@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.24.1] - 2023-12-20
+
+### Fixed
+
+- Complex types were sometimes wrongly colored in diagrams
+
 ## [0.24.0] - 2023-11-07
 
 ### Added
