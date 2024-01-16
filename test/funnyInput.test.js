@@ -134,7 +134,7 @@ describe("Funny input", function () {
     assert.deepStrictEqual(messages, [], "messages");
   });
 
-  it("Action import without action", function () {
+  it("Action/function import without action/function", function () {
     const csdl = {
       $Version: "4.0",
       $EntityContainer: "this.Container",
@@ -143,7 +143,11 @@ describe("Funny input", function () {
           ai: {
             $Action: "not.there",
           },
+          fi: {
+            $Function: "this.ct",
+          },
         },
+        ct: { $Kind: "ComplexType" },
       },
     };
     const expected = {
@@ -166,7 +170,10 @@ describe("Funny input", function () {
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
     assert.deepStrictEqual(
       messages,
-      ["Unknown action not.there in action import ai"],
+      [
+        "Unknown action not.there in action import ai",
+        "Unknown function this.ct in function import fi",
+      ],
       "messages",
     );
   });
