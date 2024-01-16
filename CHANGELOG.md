@@ -11,6 +11,12 @@
   - Deep paths to stubbed entity types are omitted.
   - The `/$batch` resource is omitted.
 
+## [0.24.2] - 2024-01-16
+
+### Fixed
+
+- Action/function imports referencing unknown actions/functions are ignored
+
 ## [0.24.1] - 2023-12-20
 
 ### Fixed

@@ -133,4 +133,48 @@ describe("Funny input", function () {
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
     assert.deepStrictEqual(messages, [], "messages");
   });
+
+  it("Action/function import without action/function", function () {
+    const csdl = {
+      $Version: "4.0",
+      $EntityContainer: "this.Container",
+      this: {
+        Container: {
+          ai: {
+            $Action: "not.there",
+          },
+          fi: {
+            $Function: "this.ct",
+          },
+        },
+        ct: { $Kind: "ComplexType" },
+      },
+    };
+    const expected = {
+      paths: {
+        "/$batch": { post: {} },
+      },
+      components: {
+        schemas: {},
+      },
+    };
+    const messages = [];
+
+    const actual = csdl2openapi(csdl, { messages });
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations",
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    assert.deepStrictEqual(
+      messages,
+      [
+        "Unknown action not.there in action import ai",
+        "Unknown function this.ct in function import fi",
+      ],
+      "messages",
+    );
+  });
 });
