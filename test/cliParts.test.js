@@ -153,7 +153,7 @@ describe("CLI parameters", function () {
       rootResourcesToKeep: ["one"],
     });
     assert.deepStrictEqual(
-      parseArgs(["--k", "first", "--keep", "second", "foo"]).options,
+      parseArgs(["-k", "first", "--keep", "second", "foo"]).options,
       { rootResourcesToKeep: ["first", "second"] },
     );
   });
