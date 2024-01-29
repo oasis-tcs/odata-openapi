@@ -162,15 +162,16 @@ describe("Keep", function () {
               complex: { $ref: "#/components/schemas/this.CT" },
               simple: { $ref: "#/components/schemas/this.TD" },
               contained: { $ref: "#/components/schemas/this.CET" },
-              two: { $ref: "#/components/schemas/stub" },
+              two: { type: "object", description: "Stub for this.ET2" },
               twoMany: {
                 type: "array",
-                items: { $ref: "#/components/schemas/stub" },
+                items: { type: "object", description: "Stub for this.ET2" },
               },
               "twoMany@count": { $ref: "#/components/schemas/count" },
               twoOptional: {
                 nullable: true,
-                allOf: [{ $ref: "#/components/schemas/stub" }],
+                type: "object",
+                description: "Stub for this.ET2",
               },
             },
           },
@@ -215,11 +216,6 @@ describe("Keep", function () {
       "Operations",
     );
     assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
-    assert.deepStrictEqual(
-      actual.components.schemas.stub,
-      { title: "Stub object", type: "object" },
-      "Stub object",
-    );
     assert.deepStrictEqual(
       actual.components.schemas["this.ET"],
       expected.components.schemas["this.ET"],
@@ -748,12 +744,21 @@ describe("Keep", function () {
       operations(expected),
       "Operations",
     );
-    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
     assert.deepStrictEqual(
-      actual.components.schemas.stub,
-      { title: "Stub object", type: "object" },
-      "Stub object",
+      actual.paths["/Set/{id}/this.act"].post.responses["200"].content[
+        "application/json"
+      ].schema,
+      { type: "object", description: "Stub for this.ET2" },
+      "stubbed action return type",
     );
+    assert.deepStrictEqual(
+      actual.paths["/Set/{id}/this.fun()"].get.responses["200"].content[
+        "application/json"
+      ].schema,
+      { type: "object", description: "Stub for this.ET2" },
+      "stubbed function return type",
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
     assert.deepStrictEqual(
       actual.components.schemas["this.ET"],
       expected.components.schemas["this.ET"],
