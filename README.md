@@ -1,3 +1,5 @@
+[![npm Downloads](https://img.shields.io/npm/dw/odata-openapi)](https://www.npmjs.com/package/odata-openapi)
+
 <div>
 <h2>README</h2>
 
