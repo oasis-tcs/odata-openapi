@@ -147,4 +147,14 @@ describe("CLI parameters", function () {
     });
     assert.deepStrictEqual(parseArgs(["--levels", "max", "foo"]).options, {});
   });
+
+  it("root resources to keep", function () {
+    assert.deepStrictEqual(parseArgs(["--keep", "one", "foo"]).options, {
+      rootResourcesToKeep: ["one"],
+    });
+    assert.deepStrictEqual(
+      parseArgs(["-k", "first", "--keep", "second", "foo"]).options,
+      { rootResourcesToKeep: ["first", "second"] },
+    );
+  });
 });
