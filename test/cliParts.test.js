@@ -1,44 +1,42 @@
 const assert = require("assert");
 
-const { parseArgs } = require("../lib/cliParts");
+const { parseArguments } = require("../lib/cliParts");
 
 describe("CLI parameters", function () {
   it("no arguments", function () {
-    const args = parseArgs([]);
-    assert.deepStrictEqual(args.unknown, []);
+    const args = parseArguments([]);
+    assert.deepStrictEqual(args.unknown, undefined);
     assert.match(args.usage, /Usage:/);
   });
 
   it("help", function () {
-    const args = parseArgs(["-h"]);
-    assert.deepStrictEqual(args.unknown, []);
+    const args = parseArguments(["-h"]);
     assert.match(args.usage, /Usage:/);
 
-    const args2 = parseArgs(["--help", "foo"]);
-    assert.deepStrictEqual(args2.unknown, []);
+    const args2 = parseArguments(["--help", "foo"]);
     assert.match(args2.usage, /Usage:/);
   });
 
   it("unknown option", function () {
-    const args = parseArgs(["--do-not-know", "foo", "--whatever", "bar"]);
-    assert.deepStrictEqual(args.unknown, ["--do-not-know", "--whatever"]);
+    const args = parseArguments(["--do-not-know", "foo", "--whatever", "bar"]);
+    assert.match(args.unknown, /--do-not-know/);
     assert.match(args.usage, /Usage:/);
   });
 
   it("just the source", function () {
-    assert.deepStrictEqual(parseArgs(["foo"]), {
+    assert.deepStrictEqual(parseArguments(["foo"]), {
       source: "foo",
       target: "foo.openapi3.json",
       options: {},
     });
 
-    assert.deepStrictEqual(parseArgs([".foo"]), {
+    assert.deepStrictEqual(parseArguments([".foo"]), {
       source: ".foo",
       target: ".foo.openapi3.json",
       options: {},
     });
 
-    assert.deepStrictEqual(parseArgs(["foo.bar"]), {
+    assert.deepStrictEqual(parseArguments(["foo.bar"]), {
       source: "foo.bar",
       target: "foo.openapi3.json",
       options: {},
@@ -46,13 +44,13 @@ describe("CLI parameters", function () {
   });
 
   it("source and target", function () {
-    assert.deepStrictEqual(parseArgs(["foo", "-t", "bar"]), {
+    assert.deepStrictEqual(parseArguments(["foo", "-t", "bar"]), {
       source: "foo",
       target: "bar",
       options: {},
     });
 
-    assert.deepStrictEqual(parseArgs(["-t", "bar", "foo"]), {
+    assert.deepStrictEqual(parseArguments(["-t", "bar", "foo"]), {
       source: "foo",
       target: "bar",
       options: {},
@@ -60,31 +58,31 @@ describe("CLI parameters", function () {
   });
 
   it("two sources", function () {
-    const args = parseArgs(["foo", "bar"]);
-    assert.deepStrictEqual(args.unknown, []);
+    const args = parseArguments(["foo", "bar"]);
+    assert.deepStrictEqual(args.unknown, undefined);
     assert.match(args.usage, /Usage:/);
   });
 
   it("pretty", function () {
-    assert.deepStrictEqual(parseArgs(["foo", "-p"]).options, {
+    assert.deepStrictEqual(parseArguments(["foo", "-p"]).options, {
       pretty: true,
     });
-    assert.deepStrictEqual(parseArgs(["--pretty", "foo"]).options, {
+    assert.deepStrictEqual(parseArguments(["--pretty", "foo"]).options, {
       pretty: true,
     });
   });
 
   it("all flags on", function () {
-    assert.deepStrictEqual(parseArgs(["-dp", "foo"]).options, {
+    assert.deepStrictEqual(parseArguments(["-dp", "foo"]).options, {
       diagram: true,
       pretty: true,
     });
-    assert.deepStrictEqual(parseArgs(["-d", "-p", "foo"]).options, {
+    assert.deepStrictEqual(parseArguments(["-d", "-p", "foo"]).options, {
       diagram: true,
       pretty: true,
     });
     assert.deepStrictEqual(
-      parseArgs(["--diagram", "--pretty", "foo"]).options,
+      parseArguments(["--diagram", "--pretty", "foo"]).options,
       {
         diagram: true,
         pretty: true,
@@ -94,7 +92,7 @@ describe("CLI parameters", function () {
 
   it("service root", function () {
     assert.deepStrictEqual(
-      parseArgs([
+      parseArguments([
         "--scheme",
         "http",
         "--host",
@@ -113,7 +111,7 @@ describe("CLI parameters", function () {
 
   it("title & description & skip batch", function () {
     assert.deepStrictEqual(
-      parseArgs([
+      parseArguments([
         "--title",
         "Title",
         "--description",
@@ -130,11 +128,11 @@ describe("CLI parameters", function () {
   });
 
   it("openapi-version", function () {
-    assert.deepStrictEqual(parseArgs(["-o", "4.0", "foo"]).options, {
+    assert.deepStrictEqual(parseArguments(["-o", "4.0", "foo"]).options, {
       openapiVersion: "4.0",
     });
     assert.deepStrictEqual(
-      parseArgs(["--openapi-version", "4.0", "foo"]).options,
+      parseArguments(["--openapi-version", "4.0", "foo"]).options,
       {
         openapiVersion: "4.0",
       },
@@ -142,18 +140,21 @@ describe("CLI parameters", function () {
   });
 
   it("recursion levels", function () {
-    assert.deepStrictEqual(parseArgs(["--levels", "42", "foo"]).options, {
+    assert.deepStrictEqual(parseArguments(["--levels", "42", "foo"]).options, {
       maxLevels: 42,
     });
-    assert.deepStrictEqual(parseArgs(["--levels", "max", "foo"]).options, {});
+    assert.deepStrictEqual(
+      parseArguments(["--levels", "max", "foo"]).options,
+      {},
+    );
   });
 
   it("root resources to keep", function () {
-    assert.deepStrictEqual(parseArgs(["--keep", "one", "foo"]).options, {
+    assert.deepStrictEqual(parseArguments(["--keep", "one", "foo"]).options, {
       rootResourcesToKeep: ["one"],
     });
     assert.deepStrictEqual(
-      parseArgs(["-k", "first", "--keep", "second", "foo"]).options,
+      parseArguments(["-k", "first", "--keep", "second", "foo"]).options,
       { rootResourcesToKeep: ["first", "second"] },
     );
   });
