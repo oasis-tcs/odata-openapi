@@ -2020,6 +2020,10 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:choose>
+          <xsl:when test="$inKeyParameter and $odata-version='2.0'">
+            <xsl:text>,"pattern":"^[0-9]{4}-[0-9]{2}-[0-9]{2}T00:00$"</xsl:text>
+            <xsl:text>,"example":"2017-04-13T00:00"</xsl:text>
+          </xsl:when>
           <xsl:when test="$inParameter and $odata-version='2.0'">
             <xsl:text>,"pattern":"^datetime'[0-9]{4}-[0-9]{2}-[0-9]{2}T00:00'$"</xsl:text>
           </xsl:when>
@@ -2093,6 +2097,10 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:choose>
+          <xsl:when test="$inKeyParameter and $odata-version='2.0'">
+            <xsl:text>,"pattern":"^[0-9]{4}-[0-9]{2}-[0-9]{2}T([01][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9](\\.[0-9]+)?)?$"</xsl:text>
+            <xsl:text>,"example":"2017-04-13T23:59"</xsl:text>
+          </xsl:when>
           <xsl:when test="$inParameter and $odata-version='2.0'">
             <xsl:text>,"pattern":"^datetime'[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9](\\.[0-9]+)?)?'$"</xsl:text>
           </xsl:when>
