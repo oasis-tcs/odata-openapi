@@ -31,9 +31,9 @@ describe("CLI", function () {
   });
 
   it("file not XML", async () => {
-    const result = await cmd(["test.cmd"]);
+    const result = await cmd(["test.ps1"]);
     assert.equal(result.code, 1);
-    assert.equal(result.stderr, "Source file not XML: test.cmd\n");
+    assert.equal(result.stderr, "Source file not XML: test.ps1\n");
   });
 
   it("file not OData", async () => {
