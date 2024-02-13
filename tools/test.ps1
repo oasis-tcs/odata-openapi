@@ -10,4 +10,4 @@ Foreach-Object {
 
 $processTimer.Stop()
 Write-Output " "
-Write-Output  ("{0} seconds" -f $processTimer.Elapsed.TotalSeconds)
+Write-Output  ("{0:n1} seconds" -f $processTimer.Elapsed.TotalSeconds)
