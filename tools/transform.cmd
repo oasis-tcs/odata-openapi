@@ -5,7 +5,6 @@
 @rem  - Java SE is installed and in the PATH - download from http://www.oracle.com/technetwork/java/javase/downloads/index.html 
 @rem  - git is installed and in the PATH - download from https://git-for-windows.github.io/
 @rem  - python is installed and in the PATH - download from https://www.python.org/downloads/
-@rem  - Node.js is installed and in the PATH - download from https://nodejs.org/
 @rem  - this package is installed - npm install
 
 @echo off 

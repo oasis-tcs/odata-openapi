@@ -54,7 +54,7 @@ let argv = minimist(process.argv.slice(2), {
     "openapi-version": "3.0.0",
     pretty: false,
     references: false,
-    scheme: "http",
+    scheme: "https",
     verbose: false,
   },
   unknown: (arg) => {
@@ -122,7 +122,7 @@ function transform(source) {
     transformV2V3(source, version);
   } else {
     if (argv.verbose) console.log(`Source file is OData version: ${version}`);
-    transformV4(source, "4.0", false);
+    transformV4(source, version, false);
   }
 }
 
@@ -157,7 +157,7 @@ function transformV4(source, version, deleteSource) {
 
   if (argv.verbose)
     console.log(
-      `Transforming ${source} to OpenAPI ${argv.o}, target file: ${target}`
+      `Transforming ${source} to OpenAPI ${argv.o}, target file: ${target}`,
     );
 
   const params = ["-IN", source];
@@ -186,7 +186,7 @@ function transformV4(source, version, deleteSource) {
       if (argv.verbose) console.log(`Writing target file: ${target}`);
       fs.writeFileSync(
         target,
-        JSON.stringify(openapi, null, argv.pretty ? 4 : 0)
+        JSON.stringify(openapi, null, argv.pretty ? 4 : 0),
       );
     } catch (e) {
       if (argv.verbose) console.log("Ooops, something went wrong: ");
