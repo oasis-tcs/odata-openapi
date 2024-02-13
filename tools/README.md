@@ -87,8 +87,7 @@ The prerequisites are listed within [`transform.cmd`](transform.cmd):
 
 - [Java SE](http://www.oracle.com/technetwork/java/javase/downloads/index.html) is installed and in the `PATH`
 - [git](https://git-for-windows.github.io/) is installed and in the `PATH`
-- [YAJL](https://github.com/lloyd/yajl)'s `json_reformat` has been compiled and is in the `PATH`
-- [Node.js](https://nodejs.org/) is installed
+- [Python](https://www.python.org/downloads/) is installed
 
 ### Usage
 
