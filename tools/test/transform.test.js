@@ -14,7 +14,7 @@ describe("CLI", function () {
     assert.equal(result.code, 1);
     assert.match(
       result.stdout,
-      /Usage: odata-openapi <options> <source files>/
+      /Usage: odata-openapi <options> <source files>/,
     );
   });
 
@@ -75,15 +75,14 @@ describe("CLI", function () {
     const target = "tests/TripPin.openapi.json";
     if (fs.existsSync(target)) fs.unlinkSync(target);
 
-    const result = await cmd(["-dpu", "--scheme https", "tests/TripPin.xml"]);
+    const result = await cmd(["-dpu", "tests/TripPin.xml"]);
 
     assert.equal(result.code, 0);
     assert.equal(result.stderr, "");
     assert.equal(result.stdout, "");
     assert.equal(fs.existsSync(target), true);
     const actual = fs.readFileSync(target, "utf8").split("\n");
-    actual.push("");
-    assert.deepStrictEqual(actual, tripPin.split("\r\n"), "produced OpenAPI");
+    assert.deepStrictEqual(actual, tripPin.split("\n"), "produced OpenAPI");
     fs.unlinkSync(target);
   });
 });
@@ -100,7 +99,7 @@ function cmd(args, cwd) {
           stdout,
           stderr,
         });
-      }
+      },
     );
   });
 }
