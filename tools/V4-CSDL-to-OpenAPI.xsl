@@ -416,7 +416,9 @@
         <xsl:text>"swagger":"2.0"</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>"openapi":"3.0.0"</xsl:text>
+        <xsl:text>"openapi":"</xsl:text>
+        <xsl:value-of select="$openapi-version" />
+        <xsl:text>"</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
 
