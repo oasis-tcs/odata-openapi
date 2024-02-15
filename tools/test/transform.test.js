@@ -1,5 +1,5 @@
-const assert = require("assert");
-const exec = require("child_process").exec;
+const assert = require("node:assert");
+const { exec } = require("node:child_process");
 const fs = require("node:fs");
 const path = require("node:path");
 
@@ -28,9 +28,9 @@ describe("CLI", function () {
   });
 
   it("file not XML", async () => {
-    const result = await cmd(["test.ps1"]);
+    const result = await cmd(["build.ps1"]);
     assert.equal(result.code, 1);
-    assert.equal(result.stderr, "Source file not XML: test.ps1\n");
+    assert.equal(result.stderr, "Source file not XML: build.ps1\n");
   });
 
   it("file not OData", async () => {
