@@ -7,7 +7,7 @@ describe("CLI", function () {
   this.timeout(20000);
 
   it("help", async () => {
-    const result = await cmd(["-h"]);
+    const result = await transform(["-h"]);
     assert.equal(result.code, 1);
     assert.match(
       result.stdout,
@@ -16,25 +16,25 @@ describe("CLI", function () {
   });
 
   it("invalid option", async () => {
-    const result = await cmd(["-x"]);
+    const result = await transform(["-x"]);
     assert.equal(result.code, 1);
     assert.equal(result.stderr, "Unknown option: -x\n");
   });
 
   it("non-existing file", async () => {
-    const result = await cmd(["x"]);
+    const result = await transform(["x"]);
     assert.equal(result.code, 1);
     assert.equal(result.stderr, "Source file not found: x\n");
   });
 
   it("file not XML", async () => {
-    const result = await cmd(["build.ps1"]);
+    const result = await transform(["build.ps1"]);
     assert.equal(result.code, 1);
     assert.equal(result.stderr, "Source file not XML: build.ps1\n");
   });
 
   it("file not OData", async () => {
-    const result = await cmd(["OData-Version.xsl"]);
+    const result = await transform(["OData-Version.xsl"]);
     assert.equal(result.code, 1);
     assert.equal(result.stderr, "Source file not OData: OData-Version.xsl\n");
   });
@@ -43,7 +43,7 @@ describe("CLI", function () {
     const target = "tests/annotations-v2.openapi.json";
     if (fs.existsSync(target)) fs.unlinkSync(target);
 
-    const result = await cmd([
+    const result = await transform([
       "-du",
       "--scheme https",
       "--verbose",
@@ -79,33 +79,53 @@ describe("CLI", function () {
     it(base, async () => {
       const target = `tests/${base}.openapi3.json`;
       if (fs.existsSync(target)) fs.unlinkSync(target);
-      const result = await cmd([
+      const result = await transform([
         "-dp",
         "-t",
-        `tests/${base}.openapi3.json`,
+        target,
         `tests/${base}.xml`,
       ]);
       assert.equal(result.code, 0);
       assert.equal(result.stderr, "");
       assert.equal(result.stdout, "");
       assert.equal(fs.existsSync(target), true);
+
+      const d = await diff(target);
+      assert.equal(d.code, 0);
+      if (d.stdout !== "") {
+        console.log(d.stdout);
+        assert.fail("git diff");
+      }
     });
   }
 });
 
-function cmd(args, cwd) {
+function transform(args, cwd) {
   return new Promise((resolve) => {
     exec(
       `node ${path.resolve("./transform.js")} ${args.join(" ")}`,
       { cwd },
       (error, stdout, stderr) => {
         resolve({
-          code: error && error.code ? error.code : 0,
+          code: error?.code || 0,
           error,
           stdout,
           stderr,
         });
       },
     );
+  });
+}
+
+function diff(file) {
+  return new Promise((resolve) => {
+    exec(`git diff ${file}`, {}, (error, stdout, stderr) => {
+      resolve({
+        code: error?.code || 0,
+        error,
+        stdout,
+        stderr,
+      });
+    });
   });
 }
