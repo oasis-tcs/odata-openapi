@@ -5,6 +5,8 @@
 	xmlns:qname="http://docs.oasis-open.org/odata/ns/edm/qname"
 	xmlns:path="http://docs.oasis-open.org/odata/ns/edm/path"
 	xmlns:target="http://docs.oasis-open.org/odata/ns/edm/target">
+	<xsl:strip-space elements="*" />
+	<xsl:output method="xml" indent="yes" />
 
 	<xsl:template name="namespace">
 		<xsl:param name="qname" />
@@ -104,6 +106,36 @@
 		<xsl:copy-of select="." />
 		<xsl:attribute name="qname:{name()}"
 			select="concat(//edmx:Include[@Alias=$namespace or @Namespace=$namespace]/@Namespace,'.',$name)" />
+	</xsl:template>
+
+	<xsl:template
+		match="edm:Annotations/descendant::edm:Annotation" priority="1">
+		<xsl:copy>
+			<xsl:attribute name="target">
+			<xsl:call-template name="name">
+				<xsl:with-param name="qname">
+					<xsl:apply-templates
+				select="ancestor::edm:Schema" mode="path">
+						<xsl:with-param name="p"
+				select="ancestor::edm:Annotations/@Target" />
+					</xsl:apply-templates>
+				</xsl:with-param>
+				<xsl:with-param name="sep" select="' '" />
+			</xsl:call-template>
+		</xsl:attribute>
+			<xsl:apply-templates select="@*|node()" />
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="edm:Annotation">
+		<xsl:copy>
+			<xsl:attribute name="target"
+				select="generate-id(ancestor::edm:*[not(self::edm:Annotation|
+				self::edm:Collection|
+				self::edm:Record|
+				self::edm:PropertyValue)][1])" />
+			<xsl:apply-templates select="@*|node()" />
+		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template

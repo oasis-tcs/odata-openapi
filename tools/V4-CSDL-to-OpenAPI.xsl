@@ -1534,9 +1534,10 @@
         <xsl:when test="$suffix='-update'">
           <!-- only updatable non-key properties -->
           <xsl:for-each select="$structuredType/edm:Property[not(
-            (@Name=$immutable or concat($qualifiedName,'/',@Name) = $immutable-ext or concat($aliasQualifiedName,'/',@Name) = $immutable-ext)
-            and not(@id=//edm:Annotation[@qname:Term='Org.OData.Measures.V1.Unit']/@target:*)
-                                                  or @Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext
+            @id=//edm:Annotation[@qname:Term='Org.OData.Core.V1.Immutable']/@target
+            and not(@id=//edm:Annotation[@qname:Term='Org.OData.Measures.V1.Unit'
+                                      or @qname:Term='Org.OData.Measures.V1.ISOCurrency']/@target:*)
+            or @id=//edm:Annotation[@qname:Term='Org.OData.Core.V1.Computed']/@target
                                                   or @Name=$read-only or @Name=../edm:Key/edm:PropertyRef/@Name)]">
             <xsl:call-template name="property">
               <xsl:with-param name="suffix" select="'-update'" />
