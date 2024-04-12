@@ -85,22 +85,22 @@
 					<xsl:copy>
 						<xsl:if test="string($non-final-segments)">
 							<xsl:attribute name="non-final-segments">
-					<xsl:value-of select="$non-final-segments" />
-					</xsl:attribute>
+								<xsl:value-of select="$non-final-segments" />
+							</xsl:attribute>
 						</xsl:if>
 						<xsl:attribute name="final-segment">
-					<xsl:value-of select="$final-segment" />
-					</xsl:attribute>
+							<xsl:value-of select="$final-segment" />
+						</xsl:attribute>
 					</xsl:copy>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:if test="string($non-final-segments)">
 						<xsl:attribute name="{name()}-non-final-segments">
-					<xsl:value-of select="$non-final-segments" />
-					</xsl:attribute>
+							<xsl:value-of select="$non-final-segments" />
+						</xsl:attribute>
 					</xsl:if>
 					<xsl:attribute name="{name()}-final-segment">
-					<xsl:value-of select="$final-segment" />
+						<xsl:value-of select="$final-segment" />
 					</xsl:attribute>
 				</xsl:otherwise>
 			</xsl:choose>
