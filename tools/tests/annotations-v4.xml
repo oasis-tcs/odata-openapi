@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+	xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+	<edmx:Reference
+		Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+		<edmx:Include Namespace="Org.OData.Measures.V1"
+			Alias="Measures" />
+	</edmx:Reference>
+	<edmx:DataServices>
+		<Schema Namespace="Resolved.Paths" Alias="self"
+			xmlns="http://docs.oasis-open.org/odata/ns/edm">
+			<EntityType Name="Order">
+				<Key>
+					<PropertyRef Name="ID" />
+				</Key>
+				<Property Name="Unit" Type="Edm.String" />
+				<NavigationProperty Name="Items"
+					Type="Collection(self.OrderItem)" />
+			</EntityType>
+			<EntityType Name="OrderItem">
+				<Key>
+					<PropertyRef Name="ID" />
+				</Key>
+				<Property Name="ID" Type="Edm.String" Nullable="false" />
+				<Property Name="Quantity" Type="Edm.Decimal">
+					<Annotation Term="Measures.Unit" Path="Header/Unit" />
+				</Property>
+				<NavigationProperty Name="Header"
+					Type="self.Order" />
+			</EntityType>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>
