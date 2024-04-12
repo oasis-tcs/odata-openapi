@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edm="http://docs.oasis-open.org/odata/ns/edm">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edm="http://docs.oasis-open.org/odata/ns/edm"
+  xmlns:qname="http://docs.oasis-open.org/odata/ns/edm/qname"
+  xmlns:path="http://docs.oasis-open.org/odata/ns/edm/path"
+  xmlns:target="http://docs.oasis-open.org/odata/ns/edm/target">
+
   <!--
     This style sheet transforms OData 4.0 CSDL XML documents into OpenAPI 2.0 or OpenAPI 3.0.0 JSON
 
@@ -1529,7 +1533,9 @@
       <xsl:choose>
         <xsl:when test="$suffix='-update'">
           <!-- only updatable non-key properties -->
-          <xsl:for-each select="$structuredType/edm:Property[not(@Name=$immutable or concat($qualifiedName,'/',@Name) = $immutable-ext or concat($aliasQualifiedName,'/',@Name) = $immutable-ext
+          <xsl:for-each select="$structuredType/edm:Property[not(
+            (@Name=$immutable or concat($qualifiedName,'/',@Name) = $immutable-ext or concat($aliasQualifiedName,'/',@Name) = $immutable-ext)
+            and not(@id=//edm:Annotation[@qname:Term='Org.OData.Measures.V1.Unit']/@target:*)
                                                   or @Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext
                                                   or @Name=$read-only or @Name=../edm:Key/edm:PropertyRef/@Name)]">
             <xsl:call-template name="property">
