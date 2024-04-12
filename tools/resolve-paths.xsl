@@ -61,28 +61,50 @@
 			edm:Annotation/edm:NavigationPropertyPath |
 			edm:Annotation/edm:AnnotationPath |
 			edm:Annotation/edm:ModelElementPath">
-		<xsl:variable name="id">
+		<xsl:copy-of select="." />
+		<xsl:variable name="path">
 			<xsl:apply-templates
 				select="ancestor::edm:ComplexType|ancestor::edm:EntityType"
 				mode="path">
 				<xsl:with-param name="p" select="." />
 			</xsl:apply-templates>
 		</xsl:variable>
-		<xsl:choose>
-			<xsl:when test="$id and self::*">
-				<xsl:copy>
-					<xsl:value-of select="$id" />
-				</xsl:copy>
-			</xsl:when>
-			<xsl:when test="$id">
-				<xsl:attribute name="{name()}">
-					<xsl:value-of select="$id" />
-				</xsl:attribute>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:copy-of select="." />
-			</xsl:otherwise>
-		</xsl:choose>
+		<xsl:if test="string($path)">
+			<xsl:variable name="non-final-segments">
+				<xsl:call-template name="namespace">
+					<xsl:with-param name="qname" select="$path" />
+				</xsl:call-template>
+			</xsl:variable>
+			<xsl:variable name="final-segment">
+				<xsl:call-template name="name">
+					<xsl:with-param name="qname" select="$path" />
+				</xsl:call-template>
+			</xsl:variable>
+			<xsl:choose>
+				<xsl:when test="self::*">
+					<xsl:copy>
+						<xsl:if test="string($non-final-segments)">
+							<xsl:attribute name="non-final-segments">
+					<xsl:value-of select="$non-final-segments" />
+					</xsl:attribute>
+						</xsl:if>
+						<xsl:attribute name="final-segment">
+					<xsl:value-of select="$final-segment" />
+					</xsl:attribute>
+					</xsl:copy>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:if test="string($non-final-segments)">
+						<xsl:attribute name="{name()}-non-final-segments">
+					<xsl:value-of select="$non-final-segments" />
+					</xsl:attribute>
+					</xsl:if>
+					<xsl:attribute name="{name()}-final-segment">
+					<xsl:value-of select="$final-segment" />
+					</xsl:attribute>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="*" mode="path">
@@ -113,14 +135,14 @@
 						<xsl:with-param name="qname" select="$type" />
 					</xsl:call-template>
 				</xsl:variable>
+				<xsl:value-of select="generate-id($prop)" />
+				<xsl:text>.</xsl:text>
 				<xsl:apply-templates
 					select="//edm:Schema[@Alias=$namespace or @Namespace=$namespace]
 						/(edm:ComplexType|edm:EntityType)[@Name=$name]"
 					mode="path">
 					<xsl:with-param name="p" select="$q" />
 				</xsl:apply-templates>
-				<xsl:text>.</xsl:text>
-				<xsl:value-of select="generate-id($prop)" />
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of
