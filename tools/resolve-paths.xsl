@@ -161,8 +161,6 @@
 					select="ancestor::edm:Annotations/@Target" />
 			</xsl:apply-templates>
 		</xsl:variable>
-		<xsl:variable name="first-segment"
-			select="substring-before(concat($target,' '),' ')" />
 		<xsl:variable name="final-segment">
 			<xsl:call-template name="name">
 				<xsl:with-param name="qname" select="$target" />
@@ -171,16 +169,19 @@
 		</xsl:variable>
 		<xsl:apply-templates select="."
 			mode="external-targeting">
-			<xsl:with-param name="root"
-				select="//edm:*[generate-id()=$first-segment]" />
+			<xsl:with-param name="target" select="$target" />
 			<xsl:with-param name="host"
 				select="//edm:*[generate-id()=$final-segment]" />
 		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="*" mode="external-targeting">
-		<xsl:param name="root" />
+		<xsl:param name="target" />
 		<xsl:param name="host" />
+		<xsl:variable name="first-segment"
+			select="substring-before(concat($target,' '),' ')" />
+		<xsl:variable name="root"
+			select="//edm:*[generate-id()=$first-segment]" />
 		<xsl:choose>
 			<xsl:when
 				test="$host/self::edm:Annotation or
@@ -189,7 +190,7 @@
 					$host/self::edm:PropertyValue">
 				<xsl:apply-templates select="."
 					mode="external-targeting">
-					<xsl:with-param name="root" select="$root" />
+					<xsl:with-param name="target" select="$target" />
 					<xsl:with-param name="host"
 						select="$host/ancestor-or-self::edm:Annotation" />
 				</xsl:apply-templates>
@@ -210,6 +211,16 @@
 					($root/self::edm:ComplexType or $root/self::edm:EntityType)">
 				<xsl:apply-templates select="." mode="eval-path">
 					<xsl:with-param name="relative-to" select="$root" />
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:when
+				test="$host/self::edm:Property or
+					$host/self::edm:NavigationProperty">
+				<xsl:apply-templates select="."
+					mode="external-targeting">
+					<xsl:with-param name="target"
+						select="substring-after($target,' ')" />
+					<xsl:with-param name="host" select="$host" />
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
@@ -241,6 +252,31 @@
 					self::edm:Property |
 					self::edm:NavigationProperty
 				)][1]" />
+		</xsl:apply-templates>
+	</xsl:template>
+
+	<xsl:template match="edm:*/@Type | edm:*/@EntityType">
+		<xsl:apply-templates select="." mode="eval-path">
+			<xsl:with-param name="relative-to" select="." />
+		</xsl:apply-templates>
+	</xsl:template>
+
+	<xsl:template match="edm:PropertyRef/@Name">
+		<xsl:apply-templates select="." mode="eval-path">
+			<xsl:with-param name="relative-to" select="../../.." />
+		</xsl:apply-templates>
+	</xsl:template>
+
+	<xsl:template match="edm:NavigationPropertyBinding/@Path">
+		<xsl:apply-templates select="." mode="eval-path">
+			<xsl:with-param name="relative-to" select="../.." />
+		</xsl:apply-templates>
+	</xsl:template>
+
+	<xsl:template
+		match="edm:NavigationPropertyBinding/@Target">
+		<xsl:apply-templates select="." mode="eval-path">
+			<xsl:with-param name="relative-to" select="../../.." />
 		</xsl:apply-templates>
 	</xsl:template>
 
@@ -295,24 +331,6 @@
 				</xsl:copy>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="edm:PropertyRef/@Name">
-		<xsl:apply-templates select="." mode="eval-path">
-			<xsl:with-param name="relative-to" select="../../.." />
-		</xsl:apply-templates>
-	</xsl:template>
-
-	<xsl:template match="edm:NavigationPropertyBinding/@Path">
-		<xsl:apply-templates select="." mode="eval-path">
-			<xsl:with-param name="relative-to" select="../.." />
-		</xsl:apply-templates>
-	</xsl:template>
-
-	<xsl:template match="edm:NavigationPropertyBinding/@Target">
-		<xsl:apply-templates select="." mode="eval-path">
-			<xsl:with-param name="relative-to" select="../../.." />
-		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="@*|*" mode="path">
