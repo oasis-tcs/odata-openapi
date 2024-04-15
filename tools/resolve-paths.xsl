@@ -4,7 +4,8 @@
 	xmlns:edm="http://docs.oasis-open.org/odata/ns/edm"
 	xmlns:qname="http://docs.oasis-open.org/odata/ns/edm/qname"
 	xmlns:p0="http://docs.oasis-open.org/odata/ns/edm/non-final-segments"
-	xmlns:p1="http://docs.oasis-open.org/odata/ns/edm/final-segment">
+	xmlns:p1="http://docs.oasis-open.org/odata/ns/edm/final-segment"
+	exclude-result-prefixes="edm">
 	<xsl:strip-space elements="*" />
 	<xsl:output method="xml" indent="yes" />
 
