@@ -342,7 +342,7 @@
 							<xsl:attribute name="p1:{name()}">
 								<xsl:value-of select="$final-segment" />
 							</xsl:attribute>
-							<xsl:apply-templates select="@*|node()" />
+							<xsl:apply-templates select="@*|node()" mode="ids" />
 						</xsl:copy>
 					</xsl:when>
 					<xsl:otherwise>
