@@ -1847,7 +1847,7 @@
               <xsl:text>,"x-sap-precision":</xsl:text>
               <xsl:value-of select="$target/@Precision" />
             </xsl:if>
-            <xsl:if test="number($target/@Scale)=$target/@Scale">
+            <xsl:if test="$target/@Scale!='floating' and $target/@Scale!='variable' and number($target/@Scale)=$target/@Scale">
               <xsl:text>,"x-sap-scale":</xsl:text>
               <xsl:value-of select="$target/@Scale" />
             </xsl:if>
@@ -1857,14 +1857,14 @@
           <xsl:when test="not($target/@Scale) or $target/@Scale='0'">
             <xsl:text>,"multipleOf":1</xsl:text>
           </xsl:when>
-          <xsl:when test="number($target/@Scale)=$target/@Scale">
+          <xsl:when test="$target/@Scale!='floating' and $target/@Scale!='variable' and number($target/@Scale)=$target/@Scale">
             <xsl:text>,"multipleOf":1.0e-</xsl:text>
             <xsl:value-of select="$target/@Scale" />
           </xsl:when>
         </xsl:choose>
         <xsl:variable name="scale">
           <xsl:choose>
-            <xsl:when test="number($target/@Scale)=$target/@Scale">
+            <xsl:when test="$target/@Scale!='floating' and $target/@Scale!='variable' and number($target/@Scale)=$target/@Scale">
               <xsl:value-of select="$target/@Scale" />
             </xsl:when>
             <xsl:otherwise>
