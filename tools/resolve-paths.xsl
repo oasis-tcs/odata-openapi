@@ -176,7 +176,7 @@
 		</xsl:apply-templates>
 	</xsl:template>
 
-	<xsl:template match="*" mode="external-targeting">
+	<xsl:template match="@*|*" mode="external-targeting">
 		<xsl:param name="target" />
 		<xsl:param name="host" />
 		<xsl:variable name="first-segment"
