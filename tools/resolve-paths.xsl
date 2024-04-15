@@ -9,6 +9,12 @@
 	<xsl:strip-space elements="*" />
 	<xsl:output method="xml" indent="yes" />
 
+	<xsl:template match="/">
+		<xsl:apply-templates select="." mode="ids" />
+	</xsl:template>
+
+	<!-- All templates below this line can be used for a first-pass transformation -->
+
 	<xsl:template name="namespace">
 		<xsl:param name="qname" />
 		<xsl:param name="sep" select="'.'" />
@@ -47,26 +53,31 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="@*|node()">
+	<xsl:template match="@*|node()" mode="ids">
 		<xsl:copy>
-			<xsl:apply-templates select="@*|node()" />
+			<xsl:apply-templates select="@*|node()"
+				mode="ids" />
 		</xsl:copy>
 	</xsl:template>
 
-	<xsl:template match="edmx:Edmx">
+	<xsl:template match="edmx:Edmx" mode="ids">
 		<edmx:Edmx>
-			<xsl:apply-templates select="@*|node()" />
+			<xsl:apply-templates select="@*|node()"
+				mode="ids" />
 		</edmx:Edmx>
 	</xsl:template>
 
-	<xsl:template match="edm:*">
+	<xsl:template match="edm:*" mode="ids">
 		<xsl:copy>
-			<xsl:attribute name="id" select="generate-id()" />
-			<xsl:apply-templates select="@*|node()" />
+			<xsl:attribute name="id">
+				<xsl:value-of select="generate-id()" />
+			</xsl:attribute>
+			<xsl:apply-templates select="@*|node()"
+				mode="ids" />
 		</xsl:copy>
 	</xsl:template>
 
-	<xsl:template match="edm:Annotations/@Target">
+	<xsl:template match="edm:Annotations/@Target" mode="ids">
 		<xsl:variable name="target">
 			<xsl:apply-templates
 				select="ancestor::edm:Schema" mode="path">
@@ -82,7 +93,9 @@
 		</xsl:variable>
 		<xsl:copy-of select="." />
 		<xsl:if test="string($namespace)">
-			<xsl:attribute name="p0:Target" select="$namespace" />
+			<xsl:attribute name="p0:Target">
+				<xsl:value-of select="$namespace" />
+			</xsl:attribute>
 		</xsl:if>
 		<xsl:attribute name="p1:Target">
 			<xsl:call-template name="name">
@@ -92,7 +105,7 @@
 		</xsl:attribute>
 	</xsl:template>
 
-	<xsl:template match="edm:Annotation/@Term">
+	<xsl:template match="edm:Annotation/@Term" mode="ids">
 		<xsl:variable name="namespace">
 			<xsl:call-template name="namespace">
 				<xsl:with-param name="qname" select="." />
@@ -109,10 +122,12 @@
 		</xsl:attribute>
 	</xsl:template>
 
-	<xsl:template
-		match="edm:Annotations/descendant::edm:Annotation" priority="1">
+	<xsl:template match="edm:Annotations//edm:Annotation"
+		mode="ids" priority="1">
 		<xsl:copy>
-			<xsl:attribute name="id" select="generate-id()" />
+			<xsl:attribute name="id">
+				<xsl:value-of select="generate-id()" />
+			</xsl:attribute>
 			<xsl:attribute name="target">
 				<xsl:call-template name="name">
 					<xsl:with-param name="qname">
@@ -125,36 +140,44 @@
 					<xsl:with-param name="sep" select="' '" />
 				</xsl:call-template>
 			</xsl:attribute>
-			<xsl:apply-templates select="@*|node()" />
+			<xsl:apply-templates select="@*|node()"
+				mode="ids" />
 		</xsl:copy>
 	</xsl:template>
 
-	<xsl:template match="edm:Annotation">
+	<xsl:template match="edm:Annotation" mode="ids">
 		<xsl:copy>
-			<xsl:attribute name="id" select="generate-id()" />
-			<xsl:attribute name="target"
+			<xsl:attribute name="id">
+				<xsl:value-of select="generate-id()" />
+			</xsl:attribute>
+			<xsl:attribute name="target">
+				<xsl:value-of
 				select="generate-id(ancestor::edm:*[not(
 					self::edm:Annotation |
 					self::edm:Collection |
 					self::edm:Record |
 					self::edm:PropertyValue
 				)][1])" />
-			<xsl:apply-templates select="@*|node()" />
+			</xsl:attribute>
+			<xsl:apply-templates select="@*|node()"
+				mode="ids" />
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template
-		match="edm:Annotations/descendant::edm:Annotation/@Path |
-			edm:Annotations/descendant::edm:Annotation/@PropertyPath |
-			edm:Annotations/descendant::edm:Annotation/@NavigationPropertyPath |
-			edm:Annotations/descendant::edm:Annotation/@AnnotationPath |
-			edm:Annotations/descendant::edm:Annotation/@ModelElementPath |
-			edm:Annotations/descendant::edm:Annotation/edm:Path |
-			edm:Annotations/descendant::edm:Annotation/edm:PropertyPath |
-			edm:Annotations/descendant::edm:Annotation/edm:NavigationPropertyPath |
-			edm:Annotations/descendant::edm:Annotation/edm:AnnotationPath |
-			edm:Annotations/descendant::edm:Annotation/edm:ModelElementPath"
-		priority="1">
+		match="edm:Annotations//edm:Annotation/@Path |
+			edm:Annotations//edm:Annotation/@PropertyPath |
+			edm:Annotations//edm:Annotation/@NavigationPropertyPath |
+			edm:Annotations//edm:Annotation/@AnyPropertyPath |
+			edm:Annotations//edm:Annotation/@AnnotationPath |
+			edm:Annotations//edm:Annotation/@ModelElementPath |
+			edm:Annotations//edm:Annotation/edm:Path |
+			edm:Annotations//edm:Annotation/edm:PropertyPath |
+			edm:Annotations//edm:Annotation/edm:NavigationPropertyPath |
+			edm:Annotations//edm:Annotation/edm:AnyPropertyPath |
+			edm:Annotations//edm:Annotation/edm:AnnotationPath |
+			edm:Annotations//edm:Annotation/edm:ModelElementPath"
+		mode="ids" priority="1">
 		<xsl:variable name="target">
 			<xsl:apply-templates
 				select="ancestor::edm:Schema" mode="path">
@@ -236,13 +259,16 @@
 		match="edm:Annotation/@Path |
 			edm:Annotation/@PropertyPath |
 			edm:Annotation/@NavigationPropertyPath |
+			edm:Annotation/@AnyPropertyPath |
 			edm:Annotation/@AnnotationPath |
 			edm:Annotation/@ModelElementPath |
 			edm:Annotation/edm:Path |
 			edm:Annotation/edm:PropertyPath |
 			edm:Annotation/edm:NavigationPropertyPath |
+			edm:Annotation/edm:AnyPropertyPath |
 			edm:Annotation/edm:AnnotationPath |
-			edm:Annotation/edm:ModelElementPath">
+			edm:Annotation/edm:ModelElementPath"
+		mode="ids">
 		<xsl:apply-templates select="." mode="eval-path">
 			<xsl:with-param name="relative-to"
 				select="ancestor::edm:*[not(
@@ -256,26 +282,28 @@
 		</xsl:apply-templates>
 	</xsl:template>
 
-	<xsl:template match="edm:*/@Type | edm:*/@EntityType">
+	<xsl:template match="edm:*/@Type | edm:*/@EntityType"
+		mode="ids">
 		<xsl:apply-templates select="." mode="eval-path">
 			<xsl:with-param name="relative-to" select="." />
 		</xsl:apply-templates>
 	</xsl:template>
 
-	<xsl:template match="edm:PropertyRef/@Name">
+	<xsl:template match="edm:PropertyRef/@Name" mode="ids">
 		<xsl:apply-templates select="." mode="eval-path">
 			<xsl:with-param name="relative-to" select="../../.." />
 		</xsl:apply-templates>
 	</xsl:template>
 
-	<xsl:template match="edm:NavigationPropertyBinding/@Path">
+	<xsl:template match="edm:NavigationPropertyBinding/@Path"
+		mode="ids">
 		<xsl:apply-templates select="." mode="eval-path">
 			<xsl:with-param name="relative-to" select="../.." />
 		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template
-		match="edm:NavigationPropertyBinding/@Target">
+		match="edm:NavigationPropertyBinding/@Target" mode="ids">
 		<xsl:apply-templates select="." mode="eval-path">
 			<xsl:with-param name="relative-to" select="../../.." />
 		</xsl:apply-templates>
@@ -307,28 +335,33 @@
 					<xsl:when test="self::*">
 						<xsl:copy>
 							<xsl:if test="string($non-final-segments)">
-								<xsl:attribute name="p0:{name()}"
-									select="$non-final-segments" />
+								<xsl:attribute name="p0:{name()}">
+									<xsl:value-of select="$non-final-segments" />
+								</xsl:attribute>
 							</xsl:if>
-							<xsl:attribute name="p1:{name()}"
-								select="$final-segment" />
+							<xsl:attribute name="p1:{name()}">
+								<xsl:value-of select="$final-segment" />
+							</xsl:attribute>
 							<xsl:apply-templates select="@*|node()" />
 						</xsl:copy>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:copy-of select="." />
 						<xsl:if test="string($non-final-segments)">
-							<xsl:attribute name="p0:{name()}"
-								select="$non-final-segments" />
+							<xsl:attribute name="p0:{name()}">
+								<xsl:value-of select="$non-final-segments" />
+							</xsl:attribute>
 						</xsl:if>
-						<xsl:attribute name="p1:{name()}"
-							select="$final-segment" />
+						<xsl:attribute name="p1:{name()}">
+							<xsl:value-of select="$final-segment" />
+						</xsl:attribute>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:copy>
-					<xsl:apply-templates select="@*|node()" />
+					<xsl:apply-templates select="@*|node()"
+						mode="ids" />
 				</xsl:copy>
 			</xsl:otherwise>
 		</xsl:choose>
