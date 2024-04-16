@@ -395,6 +395,7 @@
 						select="substring-before(substring-after($q,'Collection('),')')" />
 				</xsl:apply-templates>
 			</xsl:when>
+			<xsl:when test="contains($q,'(')" />
 			<xsl:when test="contains($q,'.')">
 				<xsl:variable name="namespace">
 					<xsl:call-template name="namespace">
