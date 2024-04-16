@@ -384,17 +384,12 @@
 						<xsl:with-param name="qname" select="$q" />
 					</xsl:call-template>
 				</xsl:variable>
-				<xsl:variable name="top"
+				<xsl:apply-templates
 					select="//edm:Schema[@Alias=$namespace or @Namespace=$namespace]
-						/*[@Name=$name]" />
-				<xsl:value-of select="generate-id($top)" />
-				<xsl:if test="contains($p,'/')">
-					<xsl:text> </xsl:text>
-					<xsl:apply-templates select="$top" mode="path">
-						<xsl:with-param name="p"
-							select="substring-after($p,'/')" />
-					</xsl:apply-templates>
-				</xsl:if>
+						/*[@Name=$name]"
+					mode="path-remainder">
+					<xsl:with-param name="p" select="$p" />
+				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:when test="@Type | @EntityType">
 				<xsl:variable name="type">
@@ -428,29 +423,30 @@
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:when test="$q='$ReturnType'">
-				<xsl:value-of select="generate-id(edm:ReturnType)" />
-				<xsl:if test="contains($p,'/')">
-					<xsl:text> </xsl:text>
-					<xsl:apply-templates select="edm:ReturnType"
-						mode="path">
-						<xsl:with-param name="p"
-							select="substring-after($p,'/')" />
-					</xsl:apply-templates>
-				</xsl:if>
+				<xsl:apply-templates select="edm:ReturnType"
+					mode="path-remainder">
+					<xsl:with-param name="p" select="$p" />
+				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:variable name="member" select="*[@Name=$q]" />
-				<xsl:value-of select="generate-id($member)" />
-				<xsl:if test="contains($p,'/')">
-					<xsl:text> </xsl:text>
-					<xsl:apply-templates select="$member"
-						mode="path">
-						<xsl:with-param name="p"
-							select="substring-after($p,'/')" />
-					</xsl:apply-templates>
-				</xsl:if>
+				<xsl:apply-templates select="*[@Name=$q]"
+					mode="path-remainder">
+					<xsl:with-param name="p" select="$p" />
+				</xsl:apply-templates>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="*" mode="path-remainder">
+		<xsl:param name="p" />
+		<xsl:value-of select="generate-id()" />
+		<xsl:if test="contains($p,'/')">
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates select="." mode="path">
+				<xsl:with-param name="p"
+					select="substring-after($p,'/')" />
+			</xsl:apply-templates>
+		</xsl:if>
 	</xsl:template>
 
 </xsl:stylesheet>
