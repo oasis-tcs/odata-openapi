@@ -364,9 +364,11 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:copy>
-					<xsl:attribute name="id">
-						<xsl:value-of select="generate-id()" />
-					</xsl:attribute>
+					<xsl:if test="self::*">
+						<xsl:attribute name="id">
+							<xsl:value-of select="generate-id()" />
+						</xsl:attribute>
+					</xsl:if>
 					<xsl:apply-templates select="@*|node()"
 						mode="ids" />
 				</xsl:copy>
