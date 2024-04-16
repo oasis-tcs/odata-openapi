@@ -317,51 +317,66 @@
 				<xsl:with-param name="p" select="." />
 			</xsl:apply-templates>
 		</xsl:variable>
-		<xsl:if test="string($path)">
-			<xsl:variable name="non-final-segments">
-				<xsl:call-template name="namespace">
-					<xsl:with-param name="qname" select="$path" />
-					<xsl:with-param name="sep" select="' '" />
-				</xsl:call-template>
-			</xsl:variable>
-			<xsl:variable name="final-segment">
-				<xsl:call-template name="name">
-					<xsl:with-param name="qname" select="$path" />
-					<xsl:with-param name="sep" select="' '" />
-				</xsl:call-template>
-			</xsl:variable>
-			<xsl:choose>
-				<xsl:when test="self::*">
-					<xsl:copy>
-						<xsl:attribute name="id">
+		<xsl:choose>
+			<xsl:when test="string($path)">
+				<xsl:variable name="non-final-segments">
+					<xsl:call-template name="namespace">
+						<xsl:with-param name="qname" select="$path" />
+						<xsl:with-param name="sep" select="' '" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:variable name="final-segment">
+					<xsl:call-template name="name">
+						<xsl:with-param name="qname" select="$path" />
+						<xsl:with-param name="sep" select="' '" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:choose>
+					<xsl:when test="self::*">
+						<xsl:copy>
+							<xsl:attribute name="id">
 								<xsl:value-of select="generate-id()" />
 							</xsl:attribute>
-						<xsl:if test="string($non-final-segments)">
-							<xsl:attribute name="p0:{name()}">
+							<xsl:if test="string($non-final-segments)">
+								<xsl:attribute name="p0:{name()}">
 									<xsl:value-of select="$non-final-segments" />
 								</xsl:attribute>
-						</xsl:if>
-						<xsl:attribute name="p1:{name()}">
+							</xsl:if>
+							<xsl:attribute name="p1:{name()}">
 								<xsl:value-of select="$final-segment" />
 							</xsl:attribute>
-						<xsl:apply-templates select="@*|node()"
-							mode="ids" />
-					</xsl:copy>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:copy-of select="." />
-					<xsl:if test="string($non-final-segments)">
-						<xsl:attribute name="p0:{name()}">
+							<xsl:apply-templates select="@*|node()"
+								mode="ids" />
+						</xsl:copy>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:copy-of select="." />
+						<xsl:if test="string($non-final-segments)">
+							<xsl:attribute name="p0:{name()}">
 								<xsl:value-of select="$non-final-segments" />
 							</xsl:attribute>
-					</xsl:if>
-					<xsl:attribute name="p1:{name()}">
+						</xsl:if>
+						<xsl:attribute name="p1:{name()}">
 							<xsl:value-of select="$final-segment" />
 						</xsl:attribute>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:copy>
+					<xsl:if test="edm:*">
+						<xsl:attribute name="id">
+							<xsl:value-of select="generate-id()" />
+						</xsl:attribute>
+					</xsl:if>
+					<xsl:apply-templates select="@*|node()"
+						mode="ids" />
+				</xsl:copy>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
+
+	<xsl:template match="@*" mode="path" />
 
 	<xsl:template match="*" mode="path">
 		<xsl:param name="p" />
