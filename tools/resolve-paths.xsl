@@ -334,6 +334,9 @@
 				<xsl:choose>
 					<xsl:when test="self::*">
 						<xsl:copy>
+							<xsl:attribute name="id">
+								<xsl:value-of select="generate-id()" />
+							</xsl:attribute>
 							<xsl:if test="string($non-final-segments)">
 								<xsl:attribute name="p0:{name()}">
 									<xsl:value-of select="$non-final-segments" />
@@ -361,6 +364,9 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:copy>
+					<xsl:attribute name="id">
+						<xsl:value-of select="generate-id()" />
+					</xsl:attribute>
 					<xsl:apply-templates select="@*|node()"
 						mode="ids" />
 				</xsl:copy>
