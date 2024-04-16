@@ -342,7 +342,8 @@
 							<xsl:attribute name="p1:{name()}">
 								<xsl:value-of select="$final-segment" />
 							</xsl:attribute>
-							<xsl:apply-templates select="@*|node()" mode="ids" />
+							<xsl:apply-templates select="@*|node()"
+								mode="ids" />
 						</xsl:copy>
 					</xsl:when>
 					<xsl:otherwise>
@@ -369,97 +370,85 @@
 
 	<xsl:template match="@*|*" mode="path">
 		<xsl:param name="p" />
+		<xsl:variable name="q"
+			select="substring-before(concat($p,'/'),'/')" />
 		<xsl:choose>
+			<xsl:when test="contains($q,'.')">
+				<xsl:variable name="namespace">
+					<xsl:call-template name="namespace">
+						<xsl:with-param name="qname" select="$q" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:variable name="name">
+					<xsl:call-template name="name">
+						<xsl:with-param name="qname" select="$q" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:variable name="top"
+					select="//edm:Schema[@Alias=$namespace or @Namespace=$namespace]
+						/*[@Name=$name]" />
+				<xsl:value-of select="generate-id($top)" />
+				<xsl:if test="contains($p,'/')">
+					<xsl:text> </xsl:text>
+					<xsl:apply-templates select="$top" mode="path">
+						<xsl:with-param name="p"
+							select="substring-after($p,'/')" />
+					</xsl:apply-templates>
+				</xsl:if>
+			</xsl:when>
 			<xsl:when test="@Type | @EntityType">
 				<xsl:variable name="type">
-					<xsl:apply-templates
-						select="@Type | @EntityType" mode="path">
-						<xsl:with-param name="p"
-							select="@Type | @EntityType" />
-					</xsl:apply-templates>
+					<xsl:choose>
+						<xsl:when
+							test="starts-with(@Type | @EntityType,'Collection(')">
+							<xsl:value-of
+								select="substring-before(substring-after(@Type | @EntityType,
+									'Collection('),')')" />
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="@Type | @EntityType" />
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				<xsl:variable name="namespace">
+					<xsl:call-template name="namespace">
+						<xsl:with-param name="qname" select="$type" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:variable name="name">
+					<xsl:call-template name="name">
+						<xsl:with-param name="qname" select="$type" />
+					</xsl:call-template>
 				</xsl:variable>
 				<xsl:apply-templates
-					select="//edm:*[generate-id()=$type]" mode="path">
+					select="//edm:Schema[@Alias=$namespace or @Namespace=$namespace]
+						/*[@Name=$name]"
+					mode="path">
 					<xsl:with-param name="p" select="$p" />
 				</xsl:apply-templates>
 			</xsl:when>
+			<xsl:when test="$q='$ReturnType'">
+				<xsl:value-of select="generate-id(edm:ReturnType)" />
+				<xsl:if test="contains($p,'/')">
+					<xsl:text> </xsl:text>
+					<xsl:apply-templates select="edm:ReturnType"
+						mode="path">
+						<xsl:with-param name="p"
+							select="substring-after($p,'/')" />
+					</xsl:apply-templates>
+				</xsl:if>
+			</xsl:when>
 			<xsl:otherwise>
-				<xsl:variable name="q"
-					select="substring-before($p,'/')" />
-				<xsl:choose>
-					<xsl:when test="contains($q,'.')">
-						<xsl:variable name="top">
-							<xsl:apply-templates select="." mode="path">
-								<xsl:with-param name="p" select="$q" />
-							</xsl:apply-templates>
-						</xsl:variable>
-						<xsl:value-of select="$top" />
-						<xsl:text> </xsl:text>
-						<xsl:apply-templates
-							select="//edm:*[generate-id()=$top]" mode="path">
-							<xsl:with-param name="p"
-								select="substring-after($p,'/')" />
-						</xsl:apply-templates>
-					</xsl:when>
-					<xsl:when
-						test="$q and (self::edm:ComplexType or self::edm:EntityType)">
-						<xsl:variable name="prop" select="*[@Name=$q]" />
-						<xsl:value-of select="generate-id($prop)" />
-						<xsl:text> </xsl:text>
-						<xsl:variable name="type">
-							<xsl:apply-templates select="." mode="path">
-								<xsl:with-param name="p">
-									<xsl:choose>
-										<xsl:when
-											test="starts-with($prop/@Type | $prop/@EntityType,
-												'Collection(')">
-											<xsl:value-of
-												select="substring-before(substring-after($prop/@Type | $prop/@EntityType,
-													'Collection('),')')" />
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:value-of
-												select="$prop/@Type | $prop/@EntityType" />
-										</xsl:otherwise>
-									</xsl:choose>
-								</xsl:with-param>
-							</xsl:apply-templates>
-						</xsl:variable>
-						<xsl:apply-templates
-							select="//edm:*[generate-id()=$type]" mode="path">
-							<xsl:with-param name="p"
-								select="substring-after($p,'/')" />
-						</xsl:apply-templates>
-					</xsl:when>
-					<xsl:when test="$q">
-						<xsl:variable name="member" select="*[@Name=$q]" />
-						<xsl:value-of select="generate-id($member)" />
-						<xsl:text> </xsl:text>
-						<xsl:apply-templates select="$member"
-							mode="path">
-							<xsl:with-param name="p"
-								select="substring-after($p,'/')" />
-						</xsl:apply-templates>
-					</xsl:when>
-					<xsl:when test="contains($p,'.')">
-						<xsl:variable name="namespace">
-							<xsl:call-template name="namespace">
-								<xsl:with-param name="qname" select="$p" />
-							</xsl:call-template>
-						</xsl:variable>
-						<xsl:variable name="name">
-							<xsl:call-template name="name">
-								<xsl:with-param name="qname" select="$p" />
-							</xsl:call-template>
-						</xsl:variable>
-						<xsl:value-of
-							select="generate-id(//edm:Schema[@Alias=$namespace or @Namespace=$namespace]
-								/*[@Name=$name])" />
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="generate-id(*[@Name=$p])" />
-					</xsl:otherwise>
-				</xsl:choose>
+				<xsl:variable name="member" select="*[@Name=$q]" />
+				<xsl:value-of select="generate-id($member)" />
+				<xsl:if test="contains($p,'/')">
+					<xsl:text> </xsl:text>
+					<xsl:apply-templates select="$member"
+						mode="path">
+						<xsl:with-param name="p"
+							select="substring-after($p,'/')" />
+					</xsl:apply-templates>
+				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
