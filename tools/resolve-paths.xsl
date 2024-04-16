@@ -383,6 +383,18 @@
 		<xsl:variable name="q"
 			select="substring-before(concat($p,'/'),'/')" />
 		<xsl:choose>
+			<xsl:when test="$q=''">
+				<xsl:apply-templates select="." mode="path">
+					<xsl:with-param name="p"
+						select="substring-after($p,'/')" />
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:when test="starts-with($q,'Collection(')">
+				<xsl:apply-templates select="." mode="path">
+					<xsl:with-param name="p"
+						select="substring-before(substring-after($q,'Collection('),')')" />
+				</xsl:apply-templates>
+			</xsl:when>
 			<xsl:when test="contains($q,'.')">
 				<xsl:variable name="namespace">
 					<xsl:call-template name="namespace">
