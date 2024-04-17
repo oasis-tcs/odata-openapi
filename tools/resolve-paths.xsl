@@ -7,7 +7,8 @@
 	xmlns:p1="http://docs.oasis-open.org/odata/ns/edm/final-segment"
 	exclude-result-prefixes="edm">
 	<xsl:strip-space elements="*" />
-	<xsl:output method="xml" indent="yes" />
+	<xsl:output doctype-system="csdl-ext.dtd" method="xml"
+		indent="yes" />
 
 	<xsl:template match="/">
 		<xsl:apply-templates select="." mode="ids" />
@@ -462,14 +463,23 @@
 
 	<xsl:template match="*" mode="path-remainder">
 		<xsl:param name="p" />
-		<xsl:value-of select="generate-id()" />
-		<xsl:if test="contains($p,'/')">
-			<xsl:text> </xsl:text>
-			<xsl:apply-templates select="." mode="path">
-				<xsl:with-param name="p"
-					select="substring-after($p,'/')" />
-			</xsl:apply-templates>
-		</xsl:if>
+		<xsl:choose>
+			<xsl:when test="contains($p,'/')">
+				<xsl:variable name="remainder">
+					<xsl:apply-templates select="." mode="path">
+						<xsl:with-param name="p"
+							select="substring-after($p,'/')" />
+					</xsl:apply-templates>
+				</xsl:variable>
+				<xsl:if test="string($remainder)">
+					<xsl:value-of
+						select="concat(generate-id(),' ',$remainder)" />
+				</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="generate-id()" />
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 </xsl:stylesheet>
