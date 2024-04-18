@@ -2,7 +2,6 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
 	xmlns:edm="http://docs.oasis-open.org/odata/ns/edm"
-	xmlns:qname="http://docs.oasis-open.org/odata/ns/edm/qname"
 	xmlns:p0="http://docs.oasis-open.org/odata/ns/edm/non-final-segments"
 	xmlns:p1="http://docs.oasis-open.org/odata/ns/edm/final-segment"
 	xmlns:p2="http://docs.oasis-open.org/odata/ns/edm/termcast-segment"
@@ -114,7 +113,7 @@
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:copy-of select="." />
-		<xsl:attribute name="qname:Term">
+		<xsl:attribute name="p2:Term">
 			<xsl:value-of
 			select="concat(//edmx:Include[@Alias=$namespace or @Namespace=$namespace]
 				/@Namespace,'.')" />
@@ -382,8 +381,23 @@
 		</xsl:if>
 		<xsl:choose>
 			<xsl:when test="starts-with($final-segment,'@')">
+				<xsl:variable name="term"
+					select="substring-after(substring-before(concat($final-segment,'/'),'/'),'@')" />
+				<xsl:variable name="namespace">
+					<xsl:call-template name="namespace">
+						<xsl:with-param name="qname" select="$term" />
+					</xsl:call-template>
+				</xsl:variable>
 				<xsl:attribute name="p2:{name()}">
-					<xsl:value-of select="$final-segment" />
+					<xsl:value-of
+					select="concat(//edmx:Include[@Alias=$namespace or @Namespace=$namespace]
+						/@Namespace,'.')" />
+					<xsl:call-template name="name">
+						<xsl:with-param name="qname" select="$term" />
+					</xsl:call-template>
+					<xsl:if test="contains($final-segment,'/')">
+						<xsl:value-of select="concat('/',$final-segment)" />
+					</xsl:if>
 				</xsl:attribute>
 			</xsl:when>
 			<xsl:otherwise>
