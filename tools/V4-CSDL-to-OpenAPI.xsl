@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edm="http://docs.oasis-open.org/odata/ns/edm"
-  xmlns:p0="http://docs.oasis-open.org/odata/ns/edm/non-final-segments"
   xmlns:p1="http://docs.oasis-open.org/odata/ns/edm/final-segment"
   xmlns:p2="http://docs.oasis-open.org/odata/ns/edm/termcast-segment">
 

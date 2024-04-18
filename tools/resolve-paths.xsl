@@ -5,6 +5,7 @@
 	xmlns:p0="http://docs.oasis-open.org/odata/ns/edm/non-final-segments"
 	xmlns:p1="http://docs.oasis-open.org/odata/ns/edm/final-segment"
 	xmlns:p2="http://docs.oasis-open.org/odata/ns/edm/termcast-segment"
+	xmlns:p3="http://docs.oasis-open.org/odata/ns/edm/after-termcast-segment"
 	exclude-result-prefixes="edm">
 	<xsl:strip-space elements="*" />
 	<xsl:output doctype-system="csdl-ext.dtd" method="xml"
@@ -395,10 +396,13 @@
 					<xsl:call-template name="name">
 						<xsl:with-param name="qname" select="$term" />
 					</xsl:call-template>
-					<xsl:if test="contains($final-segment,'/')">
-						<xsl:value-of select="concat('/',$final-segment)" />
-					</xsl:if>
 				</xsl:attribute>
+				<xsl:if test="contains($final-segment,'/')">
+					<xsl:attribute name="p3:{name()}">
+						<xsl:value-of
+						select="substring-after($final-segment,'/')" />
+					</xsl:attribute>
+				</xsl:if>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:attribute name="p1:{name()}">
@@ -427,9 +431,30 @@
 						select="substring-before(substring-after($q,'Collection('),')')" />
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="contains($q,'(')" />
 			<xsl:when test="starts-with($q,'@')">
 				<xsl:value-of select="$p" />
+			</xsl:when>
+			<xsl:when test="contains($q,'(')">
+				<xsl:variable name="namespace">
+					<xsl:call-template name="namespace">
+						<xsl:with-param name="qname"
+							select="substring-before($q,'(')" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:variable name="name">
+					<xsl:call-template name="name">
+						<xsl:with-param name="qname"
+							select="substring-before($q,'(')" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:apply-templates
+					select="//edm:Schema[@Alias=$namespace or @Namespace=$namespace]
+						/*[@Name=$name]"
+					mode="path-overload">
+					<xsl:with-param name="parameters"
+						select="substring-before(substring-after($q,'('),')')" />
+					<xsl:with-param name="p" select="$p" />
+				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:when test="contains($q,'.')">
 				<xsl:variable name="namespace">
@@ -487,11 +512,69 @@
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="*[@Name=$q]"
+				<xsl:apply-templates select="*[@Name=$q][1]"
 					mode="path-remainder">
 					<xsl:with-param name="p" select="$p" />
 				</xsl:apply-templates>
 			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="@*|*" mode="path-overload" />
+
+	<xsl:template match="edm:Action | edm:Function"
+		mode="path-overload">
+		<xsl:param name="parameters" />
+		<xsl:param name="parameter-count" select="1" />
+		<xsl:param name="p" />
+		<xsl:choose>
+			<xsl:when
+				test="$parameters='' and count(edm:Parameter)=$parameter-count - 1">
+				<xsl:apply-templates select="."
+					mode="path-remainder">
+					<xsl:with-param name="p" select="$p" />
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:when test="$parameters!=''">
+				<xsl:variable name="param-namespace">
+					<xsl:call-template name="namespace">
+						<xsl:with-param name="qname"
+							select="substring-before(concat($parameters,','),',')" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:variable name="param-name">
+					<xsl:call-template name="name">
+						<xsl:with-param name="qname"
+							select="substring-before(concat($parameters,','),',')" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:variable name="type-namespace">
+					<xsl:call-template name="namespace">
+						<xsl:with-param name="qname"
+							select="edm:Parameter[$parameter-count]/@Type" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:variable name="type-name">
+					<xsl:call-template name="name">
+						<xsl:with-param name="qname"
+							select="edm:Parameter[$parameter-count]/@Type" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:if
+					test="$param-name=$type-name and (
+						$param-namespace='Edm' and $type-namespace='Edm' or
+						//edm:Schema[@Alias=$param-namespace or @Namespace=$param-namespace]/@Namespace=
+						//edm:Schema[@Alias=$type-namespace or @Namespace=$type-namespace]/@Namespace)">
+					<xsl:apply-templates select="."
+						mode="path-overload">
+						<xsl:with-param name="parameters"
+							select="substring-after($parameters,',')" />
+						<xsl:with-param name="parameter-count"
+							select="$parameter-count + 1" />
+						<xsl:with-param name="p" select="$p" />
+					</xsl:apply-templates>
+				</xsl:if>
+			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
 
