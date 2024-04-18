@@ -5,6 +5,7 @@
 	xmlns:qname="http://docs.oasis-open.org/odata/ns/edm/qname"
 	xmlns:p0="http://docs.oasis-open.org/odata/ns/edm/non-final-segments"
 	xmlns:p1="http://docs.oasis-open.org/odata/ns/edm/final-segment"
+	xmlns:p2="http://docs.oasis-open.org/odata/ns/edm/termcast-segment"
 	exclude-result-prefixes="edm">
 	<xsl:strip-space elements="*" />
 	<xsl:output doctype-system="csdl-ext.dtd" method="xml"
@@ -325,52 +326,30 @@
 		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="string($path)">
-				<xsl:variable name="non-final-segments">
-					<xsl:call-template name="namespace">
-						<xsl:with-param name="qname" select="$path" />
-						<xsl:with-param name="sep" select="' '" />
-					</xsl:call-template>
-				</xsl:variable>
-				<xsl:variable name="final-segment">
-					<xsl:call-template name="name">
-						<xsl:with-param name="qname" select="$path" />
-						<xsl:with-param name="sep" select="' '" />
-					</xsl:call-template>
-				</xsl:variable>
 				<xsl:choose>
 					<xsl:when test="self::*">
 						<xsl:copy>
 							<xsl:attribute name="id">
 								<xsl:value-of select="generate-id()" />
 							</xsl:attribute>
-							<xsl:if test="string($non-final-segments)">
-								<xsl:attribute name="p0:{name()}">
-									<xsl:value-of select="$non-final-segments" />
-								</xsl:attribute>
-							</xsl:if>
-							<xsl:attribute name="p1:{name()}">
-								<xsl:value-of select="$final-segment" />
-							</xsl:attribute>
+							<xsl:call-template name="path-attributes">
+								<xsl:with-param name="path" select="$path" />
+							</xsl:call-template>
 							<xsl:apply-templates select="@*|node()"
 								mode="ids" />
 						</xsl:copy>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:copy-of select="." />
-						<xsl:if test="string($non-final-segments)">
-							<xsl:attribute name="p0:{name()}">
-								<xsl:value-of select="$non-final-segments" />
-							</xsl:attribute>
-						</xsl:if>
-						<xsl:attribute name="p1:{name()}">
-							<xsl:value-of select="$final-segment" />
-						</xsl:attribute>
+						<xsl:call-template name="path-attributes">
+							<xsl:with-param name="path" select="$path" />
+						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:copy>
-					<xsl:if test="edm:*">
+					<xsl:if test="self::*">
 						<xsl:attribute name="id">
 							<xsl:value-of select="generate-id()" />
 						</xsl:attribute>
@@ -378,6 +357,39 @@
 					<xsl:apply-templates select="@*|node()"
 						mode="ids" />
 				</xsl:copy>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="path-attributes">
+		<xsl:param name="path" />
+		<xsl:variable name="non-final-segments">
+			<xsl:call-template name="namespace">
+				<xsl:with-param name="qname" select="$path" />
+				<xsl:with-param name="sep" select="' '" />
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="final-segment">
+			<xsl:call-template name="name">
+				<xsl:with-param name="qname" select="$path" />
+				<xsl:with-param name="sep" select="' '" />
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:if test="string($non-final-segments)">
+			<xsl:attribute name="p0:{name()}">
+				<xsl:value-of select="$non-final-segments" />
+			</xsl:attribute>
+		</xsl:if>
+		<xsl:choose>
+			<xsl:when test="starts-with($final-segment,'@')">
+				<xsl:attribute name="p2:{name()}">
+					<xsl:value-of select="$final-segment" />
+				</xsl:attribute>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:attribute name="p1:{name()}">
+					<xsl:value-of select="$final-segment" />
+				</xsl:attribute>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -402,6 +414,9 @@
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:when test="contains($q,'(')" />
+			<xsl:when test="starts-with($q,'@')">
+				<xsl:value-of select="$p" />
+			</xsl:when>
 			<xsl:when test="contains($q,'.')">
 				<xsl:variable name="namespace">
 					<xsl:call-template name="namespace">
@@ -453,6 +468,13 @@
 			</xsl:when>
 			<xsl:when test="$q='$ReturnType'">
 				<xsl:apply-templates select="edm:ReturnType"
+					mode="path-remainder">
+					<xsl:with-param name="p" select="$p" />
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:when test="ancestor-or-self::edm:Annotation">
+				<xsl:apply-templates
+					select="descendant::edm:PropertyValue[@Property=$q]"
 					mode="path-remainder">
 					<xsl:with-param name="p" select="$p" />
 				</xsl:apply-templates>
