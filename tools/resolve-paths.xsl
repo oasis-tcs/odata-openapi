@@ -115,8 +115,8 @@
 		<xsl:copy-of select="." />
 		<xsl:attribute name="qname:Term">
 			<xsl:value-of
-			select="//edmx:Include[@Alias=$namespace or @Namespace=$namespace]/@Namespace" />
-			<xsl:text>.</xsl:text>
+			select="concat(//edmx:Include[@Alias=$namespace or @Namespace=$namespace]
+				/@Namespace,'.')" />
 			<xsl:call-template name="name">
 				<xsl:with-param name="qname" select="." />
 			</xsl:call-template>
