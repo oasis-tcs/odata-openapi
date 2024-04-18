@@ -283,28 +283,33 @@
 		</xsl:apply-templates>
 	</xsl:template>
 
-	<xsl:template match="edm:*/@Type | edm:*/@EntityType"
+	<!-- Absolute references -->
+	<xsl:template
+		match="edm:*/@Type | edm:*/@EntityType | edm:*/@BaseType |
+			edm:Term/@BaseTerm |
+			edm:ActionImport/@Action | edm:FunctionImport/@Function"
 		mode="ids">
 		<xsl:apply-templates select="." mode="eval-path">
 			<xsl:with-param name="relative-to" select=".." />
 		</xsl:apply-templates>
 	</xsl:template>
 
-	<xsl:template match="edm:PropertyRef/@Name" mode="ids">
-		<xsl:apply-templates select="." mode="eval-path">
-			<xsl:with-param name="relative-to" select="../../.." />
-		</xsl:apply-templates>
-	</xsl:template>
-
-	<xsl:template match="edm:NavigationPropertyBinding/@Path"
+	<!-- Paths relative to a property of a structured type -->
+	<xsl:template
+		match="edm:NavigationPropertyBinding/@Path |
+			edm:ReferentialConstraint/@Property"
 		mode="ids">
 		<xsl:apply-templates select="." mode="eval-path">
 			<xsl:with-param name="relative-to" select="../.." />
 		</xsl:apply-templates>
 	</xsl:template>
 
+	<!-- Paths relative to a structured type -->
 	<xsl:template
-		match="edm:NavigationPropertyBinding/@Target" mode="ids">
+		match="edm:PropertyRef/@Name |
+			edm:NavigationPropertyBinding/@Target |
+			edm:ReferentialConstraint/@ReferencedProperty"
+		mode="ids">
 		<xsl:apply-templates select="." mode="eval-path">
 			<xsl:with-param name="relative-to" select="../../.." />
 		</xsl:apply-templates>
