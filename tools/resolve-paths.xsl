@@ -486,13 +486,6 @@
 					<xsl:with-param name="p" select="$p" />
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="ancestor-or-self::edm:Annotation">
-				<xsl:apply-templates
-					select="descendant::edm:PropertyValue[@Property=$q]"
-					mode="path-remainder">
-					<xsl:with-param name="p" select="$p" />
-				</xsl:apply-templates>
-			</xsl:when>
 			<xsl:otherwise>
 				<xsl:apply-templates select="*[@Name=$q]"
 					mode="path-remainder">
