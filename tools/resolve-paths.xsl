@@ -108,23 +108,31 @@
 	</xsl:template>
 
 	<xsl:template match="edm:Annotation/@Term" mode="ids">
-		<xsl:variable name="namespace">
-			<xsl:call-template name="namespace">
-				<xsl:with-param name="qname" select="." />
-			</xsl:call-template>
-		</xsl:variable>
 		<xsl:copy-of select="." />
 		<xsl:attribute name="p2:Term">
-			<xsl:value-of
-			select="concat(//edmx:Include[@Alias=$namespace or @Namespace=$namespace]
-				/@Namespace,'.')" />
-			<xsl:call-template name="name">
+			<xsl:call-template name="p2-attribute">
 				<xsl:with-param name="qname" select="." />
 			</xsl:call-template>
 		</xsl:attribute>
 	</xsl:template>
 
-	<xsl:template match="edm:Annotations//edm:Annotation"
+	<xsl:template name="p2-attribute">
+		<xsl:param name="qname" />
+		<xsl:variable name="namespace">
+			<xsl:call-template name="namespace">
+				<xsl:with-param name="qname" select="$qname" />
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:value-of
+			select="concat(//edmx:Include[@Alias=$namespace or @Namespace=$namespace]
+				/@Namespace,'.')" />
+		<xsl:call-template name="name">
+			<xsl:with-param name="qname" select="." />
+		</xsl:call-template>
+	</xsl:template>
+
+	<xsl:template
+		match="edm:Annotations//edm:Annotation[not(ancestor::edm:Annotation)]"
 		mode="ids" priority="1">
 		<xsl:copy>
 			<xsl:attribute name="id">
@@ -167,18 +175,18 @@
 	</xsl:template>
 
 	<xsl:template
-		match="edm:Annotations//edm:Annotation/@Path |
-			edm:Annotations//edm:Annotation/@PropertyPath |
-			edm:Annotations//edm:Annotation/@NavigationPropertyPath |
-			edm:Annotations//edm:Annotation/@AnyPropertyPath |
-			edm:Annotations//edm:Annotation/@AnnotationPath |
-			edm:Annotations//edm:Annotation/@ModelElementPath |
-			edm:Annotations//edm:Annotation/edm:Path |
-			edm:Annotations//edm:Annotation/edm:PropertyPath |
-			edm:Annotations//edm:Annotation/edm:NavigationPropertyPath |
-			edm:Annotations//edm:Annotation/edm:AnyPropertyPath |
-			edm:Annotations//edm:Annotation/edm:AnnotationPath |
-			edm:Annotations//edm:Annotation/edm:ModelElementPath"
+		match="edm:Annotations//edm:Annotation[not(ancestor::edm:Annotation)]/@Path |
+			edm:Annotations//edm:Annotation[not(ancestor::edm:Annotation)]/@PropertyPath |
+			edm:Annotations//edm:Annotation[not(ancestor::edm:Annotation)]/@NavigationPropertyPath |
+			edm:Annotations//edm:Annotation[not(ancestor::edm:Annotation)]/@AnyPropertyPath |
+			edm:Annotations//edm:Annotation[not(ancestor::edm:Annotation)]/@AnnotationPath |
+			edm:Annotations//edm:Annotation[not(ancestor::edm:Annotation)]/@ModelElementPath |
+			edm:Annotations//edm:Annotation[not(ancestor::edm:Annotation)]/edm:Path |
+			edm:Annotations//edm:Annotation[not(ancestor::edm:Annotation)]/edm:PropertyPath |
+			edm:Annotations//edm:Annotation[not(ancestor::edm:Annotation)]/edm:NavigationPropertyPath |
+			edm:Annotations//edm:Annotation[not(ancestor::edm:Annotation)]/edm:AnyPropertyPath |
+			edm:Annotations//edm:Annotation[not(ancestor::edm:Annotation)]/edm:AnnotationPath |
+			edm:Annotations//edm:Annotation[not(ancestor::edm:Annotation)]/edm:ModelElementPath"
 		mode="ids" priority="1">
 		<xsl:variable name="target">
 			<xsl:apply-templates
@@ -382,19 +390,10 @@
 		</xsl:if>
 		<xsl:choose>
 			<xsl:when test="starts-with($final-segment,'@')">
-				<xsl:variable name="term"
-					select="substring-after(substring-before(concat($final-segment,'/'),'/'),'@')" />
-				<xsl:variable name="namespace">
-					<xsl:call-template name="namespace">
-						<xsl:with-param name="qname" select="$term" />
-					</xsl:call-template>
-				</xsl:variable>
 				<xsl:attribute name="p2:{name()}">
-					<xsl:value-of
-					select="concat(//edmx:Include[@Alias=$namespace or @Namespace=$namespace]
-						/@Namespace,'.')" />
-					<xsl:call-template name="name">
-						<xsl:with-param name="qname" select="$term" />
+					<xsl:call-template name="p2-attribute">
+						<xsl:with-param name="qname"
+					select="substring-after(substring-before(concat($final-segment,'/'),'/'),'@')" />
 					</xsl:call-template>
 				</xsl:attribute>
 				<xsl:if test="contains($final-segment,'/')">
@@ -428,7 +427,7 @@
 			<xsl:when test="starts-with($q,'Collection(')">
 				<xsl:apply-templates select="." mode="path">
 					<xsl:with-param name="p"
-						select="substring-before(substring-after($q,'Collection('),')')" />
+						select="substring($q,12,string-length($q)-12)" />
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:when test="starts-with($q,'@')">
@@ -452,7 +451,7 @@
 						/*[@Name=$name]"
 					mode="path-overload">
 					<xsl:with-param name="parameters"
-						select="substring-before(substring-after($q,'('),')')" />
+						select="substring-after(substring($q,1,string-length($q)-1),'(')" />
 					<xsl:with-param name="p" select="$p" />
 				</xsl:apply-templates>
 			</xsl:when>
@@ -469,7 +468,7 @@
 				</xsl:variable>
 				<xsl:apply-templates
 					select="//edm:Schema[@Alias=$namespace or @Namespace=$namespace]
-						/*[@Name=$name]"
+						/*[@Name=$name][1]"
 					mode="path-remainder">
 					<xsl:with-param name="p" select="$p" />
 				</xsl:apply-templates>
@@ -480,8 +479,7 @@
 						<xsl:when
 							test="starts-with(@Type | @EntityType,'Collection(')">
 							<xsl:value-of
-								select="substring-before(substring-after(@Type | @EntityType,
-									'Collection('),')')" />
+								select="substring(@Type | @EntityType,12,string-length(@Type | @EntityType)-12)" />
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="@Type | @EntityType" />
@@ -512,7 +510,7 @@
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="*[@Name=$q][1]"
+				<xsl:apply-templates select="*[@Name=$q]"
 					mode="path-remainder">
 					<xsl:with-param name="p" select="$p" />
 				</xsl:apply-templates>
@@ -536,35 +534,19 @@
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:when test="$parameters!=''">
-				<xsl:variable name="param-namespace">
-					<xsl:call-template name="namespace">
-						<xsl:with-param name="qname"
+				<xsl:variable name="param">
+					<xsl:call-template name="normalize-type">
+						<xsl:with-param name="type"
 							select="substring-before(concat($parameters,','),',')" />
 					</xsl:call-template>
 				</xsl:variable>
-				<xsl:variable name="param-name">
-					<xsl:call-template name="name">
-						<xsl:with-param name="qname"
-							select="substring-before(concat($parameters,','),',')" />
-					</xsl:call-template>
-				</xsl:variable>
-				<xsl:variable name="type-namespace">
-					<xsl:call-template name="namespace">
-						<xsl:with-param name="qname"
+				<xsl:variable name="type">
+					<xsl:call-template name="normalize-type">
+						<xsl:with-param name="type"
 							select="edm:Parameter[$parameter-count]/@Type" />
 					</xsl:call-template>
 				</xsl:variable>
-				<xsl:variable name="type-name">
-					<xsl:call-template name="name">
-						<xsl:with-param name="qname"
-							select="edm:Parameter[$parameter-count]/@Type" />
-					</xsl:call-template>
-				</xsl:variable>
-				<xsl:if
-					test="$param-name=$type-name and (
-						$param-namespace='Edm' and $type-namespace='Edm' or
-						//edm:Schema[@Alias=$param-namespace or @Namespace=$param-namespace]/@Namespace=
-						//edm:Schema[@Alias=$type-namespace or @Namespace=$type-namespace]/@Namespace)">
+				<xsl:if test="$param=$type">
 					<xsl:apply-templates select="."
 						mode="path-overload">
 						<xsl:with-param name="parameters"
@@ -575,6 +557,42 @@
 					</xsl:apply-templates>
 				</xsl:if>
 			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="normalize-type">
+		<xsl:param name="type" />
+		<xsl:choose>
+			<xsl:when test="starts-with($type,'Collection(')">
+				<xsl:text>Collection(</xsl:text>
+				<xsl:call-template name="normalize-type">
+					<xsl:with-param name="type"
+						select="substring($type,12,string-length($type)-12)" />
+				</xsl:call-template>
+				<xsl:text>)</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:variable name="namespace">
+					<xsl:call-template name="namespace">
+						<xsl:with-param name="qname" select="$type" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:variable name="name">
+					<xsl:call-template name="name">
+						<xsl:with-param name="qname" select="$type" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:choose>
+					<xsl:when test="$namespace='Edm'">
+						<xsl:text>Edm</xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of
+							select="//edm:Schema[@Alias=$namespace or @Namespace=$namespace]
+								/@Namespace" />
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
