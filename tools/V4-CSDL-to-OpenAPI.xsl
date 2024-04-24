@@ -3627,7 +3627,17 @@
             </xsl:otherwise>
           </xsl:choose>
 
-          <xsl:call-template name="responses" />
+          <xsl:choose>
+            <xsl:when test="$odata-version='2.0' or $odata-version='3.0'">
+              <xsl:call-template name="responses" />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:call-template name="responses">
+                <xsl:with-param name="type" select="$qualifiedType" />
+                <xsl:with-param name="description" select="'Updated entity'" />
+              </xsl:call-template>
+            </xsl:otherwise>
+          </xsl:choose>
 
           <xsl:text>}</xsl:text>
         </xsl:if>
