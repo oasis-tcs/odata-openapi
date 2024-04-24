@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /* TODO:
-- glob for source file patterns   
+- glob for source file patterns
 - arguments for
      - info-title/description/version?
      - externalDocs-url/description?
@@ -25,12 +25,9 @@ try {
   argv = parseArgs({
     options: {
       basePath: { type: "string", default: "/service-root" },
-      description: { type: "string" },
       diagram: { type: "boolean", short: "d" },
       help: { type: "boolean", short: "h" },
       host: { type: "string", default: "localhost" },
-      keep: { type: "string", short: "k", multiple: true },
-      levels: { type: "string" },
       "odata-version": { type: "string", short: "v", default: "4.0" },
       "openapi-version": { type: "string", short: "o", default: "3.0.0" },
       pretty: { type: "boolean", short: "p" },
@@ -38,7 +35,6 @@ try {
       scheme: { type: "string", default: "https" },
       skipBatchPath: { type: "boolean" },
       target: { type: "string", short: "t" },
-      title: { type: "string" },
       "used-schemas-only": { type: "boolean", short: "u" },
       verbose: { type: "boolean" },
     },
