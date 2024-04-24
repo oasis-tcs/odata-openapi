@@ -15,7 +15,6 @@
     - @Extends for entity container: include /paths from referenced container
     - both "clickable" and freestyle $expand, $select, $orderby - does not work yet, open issue for Swagger UI
     - system query options for actions/functions/imports depending on "Collection("
-    - 200 response for PATCH if $odata-version!='2.0'
     - ETag for GET / If-Match for PATCH and DELETE depending on @Core.OptimisticConcurrency
     - external targeting for Core.Permission/Read
     - example values via Core.Example: Int
