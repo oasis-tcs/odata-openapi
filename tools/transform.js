@@ -6,11 +6,10 @@
      - info-title/description/version?
      - externalDocs-url/description?
 */
-//console.dir(argv);
 
 "use strict";
 
-const minimist = require("minimist");
+const { parseArgs } = require("node:util");
 const path = require("path");
 const fs = require("fs");
 const { spawnSync } = require("child_process");
@@ -20,55 +19,42 @@ const toolsPath = path.dirname(require.main.filename) + path.sep;
 const classPath = `${toolsPath}xalan/xalan.jar${path.delimiter}${toolsPath}xalan/serializer.jar`;
 
 let unknown = false;
+let argv;
 
-let argv = minimist(process.argv.slice(2), {
-  string: ["o", "openapi-version", "t", "target", "scheme", "host", "basePath"],
-  boolean: [
-    "d",
-    "diagram",
-    "h",
-    "help",
-    "p",
-    "pretty",
-    "r",
-    "references",
-    "u",
-    "used-schemas-only",
-    "verbose",
-  ],
-  alias: {
-    d: "diagram",
-    h: "help",
-    o: "openapi-version",
-    p: "pretty",
-    r: "references",
-    t: "target",
-    u: "used-schemas-only",
-    v: "odata-version",
-  },
-  default: {
-    basePath: "/service-root",
-    diagram: false,
-    host: "localhost",
-    "odata-version": "4.0",
-    "openapi-version": "3.0.0",
-    pretty: false,
-    references: false,
-    scheme: "https",
-    verbose: false,
-  },
-  unknown: (arg) => {
-    if (arg.substring(0, 1) == "-") {
-      console.error(`Unknown option: ${arg}`);
-      unknown = true;
-      return false;
-    }
-  },
-});
-if (argv.o == "2") argv.o = "2.0";
-if (argv.o == "3") argv.o = "3.0.0";
+try {
+  argv = parseArgs({
+    options: {
+      basePath: { type: "string", default: "/service-root" },
+      description: { type: "string" },
+      diagram: { type: "boolean", short: "d" },
+      help: { type: "boolean", short: "h" },
+      host: { type: "string", default: "localhost" },
+      keep: { type: "string", short: "k", multiple: true },
+      levels: { type: "string" },
+      "odata-version": { type: "string", short: "v", default: "4.0" },
+      "openapi-version": { type: "string", short: "o", default: "3.0.0" },
+      pretty: { type: "boolean", short: "p" },
+      references: { type: "boolean", short: "r" },
+      scheme: { type: "string", default: "https" },
+      skipBatchPath: { type: "boolean" },
+      target: { type: "string", short: "t" },
+      title: { type: "string" },
+      "used-schemas-only": { type: "boolean", short: "u" },
+      verbose: { type: "boolean" },
+    },
+    allowPositionals: true,
+  });
+} catch (e) {
+  console.error(e.message);
+  unknown = true;
+}
 
-if (unknown || argv._.length == 0 || argv.h) {
+if (argv.values["openapi-version"] == "2")
+  argv.values["openapi-version"] = "2.0";
+if (argv.values["openapi-version"] == "3")
+  argv.values["openapi-version"] = "3.0.0";
+
+if (unknown || argv.positionals.length == 0 || argv.values.help) {
   console.log(`Usage: odata-openapi <options> <source files>
 Options:
  --basePath              base path (default: /service-root)
@@ -84,8 +70,8 @@ Options:
  --verbose               output additional progress information`);
   process.exit(1);
 } else {
-  for (let i = 0; i < argv._.length; i++) {
-    transform(argv._[i]);
+  for (let i = 0; i < argv.positionals.length; i++) {
+    transform(argv.positionals[i]);
   }
 }
 
@@ -95,7 +81,7 @@ function transform(source) {
     process.exit(1);
   }
 
-  if (argv.verbose)
+  if (argv.values.verbose)
     console.log(`Checking OData version used in source file: ${source}`);
 
   const result = xalan("OData-Version.xsl", "-IN", source);
@@ -107,7 +93,7 @@ function transform(source) {
 
   if (result.stderr.length) {
     console.error(`Source file not XML: ${source}`);
-    if (argv.verbose) console.log(result.stderr.toString());
+    if (argv.values.verbose) console.log(result.stderr.toString());
     process.exit(1);
   }
 
@@ -118,10 +104,12 @@ function transform(source) {
   }
 
   if (version == "2.0" || version == "3.0") {
-    if (argv.verbose) console.log(`Source file is OData version: ${version}`);
+    if (argv.values.verbose)
+      console.log(`Source file is OData version: ${version}`);
     transformV2V3(source, version);
   } else {
-    if (argv.verbose) console.log(`Source file is OData version: ${version}`);
+    if (argv.values.verbose)
+      console.log(`Source file is OData version: ${version}`);
     transformV4(source, version, false);
   }
 }
@@ -140,7 +128,7 @@ function xalan(xslt, ...args) {
 function transformV2V3(source, version) {
   const target = source.substring(0, source.lastIndexOf(".") + 1) + "tmp";
 
-  if (argv.verbose)
+  if (argv.values.verbose)
     console.log(`Transforming ${source} to OData V4, target file: ${target}`);
 
   const result = xalan("V2-to-V4-CSDL.xsl", "-IN", source, "-OUT", target);
@@ -153,52 +141,58 @@ function transformV2V3(source, version) {
 
 function transformV4(source, version, deleteSource) {
   const target =
-    argv.t || source.substring(0, source.lastIndexOf(".") + 1) + "openapi.json";
+    argv.values.target ||
+    source.substring(0, source.lastIndexOf(".") + 1) + "openapi.json";
 
-  if (argv.verbose)
+  if (argv.values.verbose)
     console.log(
-      `Transforming ${source} to OpenAPI ${argv.o}, target file: ${target}`,
+      `Transforming ${source} to OpenAPI ${argv.values["openapi-version"]}, target file: ${target}`,
     );
 
   const params = ["-IN", source];
-  if (!argv.u && !argv.pretty) params.push("-OUT", target);
-  if (argv.basePath) params.push("-PARAM", "basePath", argv.basePath);
-  if (argv.diagram) params.push("-PARAM", "diagram", argv.diagram);
-  if (argv.host) params.push("-PARAM", "host", argv.host);
+  if (!argv.values["used-schemas-only"] && !argv.values.pretty)
+    params.push("-OUT", target);
+  if (argv.values.basePath)
+    params.push("-PARAM", "basePath", argv.values.basePath);
+  if (argv.values.diagram)
+    params.push("-PARAM", "diagram", argv.values.diagram);
+  if (argv.values.host) params.push("-PARAM", "host", argv.values.host);
   params.push("-PARAM", "odata-version", version);
-  params.push("-PARAM", "openapi-version", argv.o);
-  if (argv.references) params.push("-PARAM", "references", argv.references);
-  if (argv.scheme) params.push("-PARAM", "scheme", argv.scheme);
+  params.push("-PARAM", "openapi-version", argv.values["openapi-version"]);
+  if (argv.values.references)
+    params.push("-PARAM", "references", argv.values.references);
+  if (argv.values.scheme) params.push("-PARAM", "scheme", argv.values.scheme);
 
   const result = xalan("V4-CSDL-to-OpenAPI.xsl", ...params);
 
   if (result.stderr.length) console.error(result.stderr.toString());
   if (result.status !== 0) process.exit(1);
 
-  if (argv.pretty || argv.u) {
+  if (argv.values.pretty || argv.values["used-schemas-only"]) {
     try {
       let openapi = JSON.parse(result.stdout);
 
-      if (argv.u) {
-        if (argv.verbose) console.log("Deleting unused schemas");
+      if (argv.values["used-schemas-only"]) {
+        if (argv.values.verbose) console.log("Deleting unused schemas");
         deleteUnusedSchemas(openapi);
       }
-      if (argv.verbose) console.log(`Writing target file: ${target}`);
+      if (argv.values.verbose) console.log(`Writing target file: ${target}`);
       fs.writeFileSync(
         target,
-        JSON.stringify(openapi, null, argv.pretty ? 4 : 0),
+        JSON.stringify(openapi, null, argv.values.pretty ? 4 : 0),
       );
     } catch (e) {
-      if (argv.verbose) console.log("Ooops, something went wrong: ");
+      if (argv.values.verbose) console.log("Ooops, something went wrong: ");
       console.log(e);
       fs.writeFileSync(target, result.stdout);
     }
   }
 
   if (deleteSource) {
-    if (argv.verbose) console.log(`Removing intermediate file: ${source}`);
+    if (argv.values.verbose)
+      console.log(`Removing intermediate file: ${source}`);
     fs.unlinkSync(source);
   }
 
-  if (argv.verbose) console.log("Done.");
+  if (argv.values.verbose) console.log("Done.");
 }
