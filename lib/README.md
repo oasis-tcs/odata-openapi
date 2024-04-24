@@ -50,4 +50,4 @@ Options:
 
 ## Supported Annotations
 
-The mapping can be fine-tuned via [annotations](../doc/Annotations.md) in the CSDL (`$metadata`) XML documents.
+The mapping can be fine-tuned via [annotations](https://github.com/oasis-tcs/odata-openapi/blob/main/doc/Annotations.md) in the CSDL (`$metadata`) XML documents.
