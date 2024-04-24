@@ -28,7 +28,6 @@ try {
       diagram: { type: "boolean", short: "d" },
       help: { type: "boolean", short: "h" },
       host: { type: "string", default: "localhost" },
-      "odata-version": { type: "string", short: "v", default: "4.0" },
       "openapi-version": { type: "string", short: "o", default: "3.0.0" },
       pretty: { type: "boolean", short: "p" },
       references: { type: "boolean", short: "r" },
