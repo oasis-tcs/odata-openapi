@@ -356,6 +356,16 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
+				<xsl:if test="not(starts-with(.,'Edm.'))">
+					<xsl:message>
+						<xsl:text>Invalid </xsl:text>
+						<xsl:if test="not(self::*)">
+							<xsl:text>@</xsl:text>
+						</xsl:if>
+						<xsl:value-of
+							select="concat(name(),' ',.,' in ',generate-id(self::* | ..))" />
+					</xsl:message>
+				</xsl:if>
 				<xsl:copy>
 					<xsl:if test="self::*">
 						<xsl:attribute name="id">
