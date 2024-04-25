@@ -18,7 +18,7 @@ describe("CLI", function () {
   it("invalid option", async () => {
     const result = await transform(["-x"]);
     assert.equal(result.code, 1);
-    assert.equal(result.stderr, "Unknown option: -x\n");
+    assert.match(result.stderr, /Unknown option '-x'/);
   });
 
   it("non-existing file", async () => {
