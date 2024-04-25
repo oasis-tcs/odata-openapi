@@ -363,7 +363,7 @@
 							<xsl:text>@</xsl:text>
 						</xsl:if>
 						<xsl:value-of
-							select="concat(name(),' ',.,' in ',generate-id(self::* | ..))" />
+							select="concat(name(),' ',.,' in ',generate-id(ancestor-or-self::*[1]))" />
 					</xsl:message>
 				</xsl:if>
 				<xsl:copy>
