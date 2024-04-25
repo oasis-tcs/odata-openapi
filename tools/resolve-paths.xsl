@@ -123,12 +123,23 @@
 				<xsl:with-param name="qname" select="$qname" />
 			</xsl:call-template>
 		</xsl:variable>
-		<xsl:value-of
-			select="concat(//edmx:Include[@Alias=$namespace or @Namespace=$namespace]
-				/@Namespace,'.')" />
-		<xsl:call-template name="name">
-			<xsl:with-param name="qname" select="." />
-		</xsl:call-template>
+		<xsl:variable name="ns"
+			select="//edmx:Include[@Alias=$namespace or @Namespace=$namespace]
+				/@Namespace" />
+		<xsl:choose>
+			<xsl:when test="$ns">
+				<xsl:value-of select="concat($ns,'.')" />
+				<xsl:call-template name="name">
+					<xsl:with-param name="qname" select="." />
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:message>
+					<xsl:value-of
+						select="concat('Invalid namespace in qualified name ',$qname,' in ',generate-id(ancestor-or-self::*[1]))" />
+				</xsl:message>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template
