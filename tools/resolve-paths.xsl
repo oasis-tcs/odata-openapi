@@ -367,7 +367,7 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="not(starts-with(.,'Edm.'))">
+				<xsl:if test="not(starts-with(.,'Edm.') or starts-with(.,'Collection(Edm.'))">
 					<xsl:message>
 						<xsl:text>Invalid </xsl:text>
 						<xsl:if test="not(self::*)">
