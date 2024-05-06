@@ -70,41 +70,19 @@
 	</xsl:template>
 
 	<xsl:template match="edm:*" mode="ids">
+		<xsl:call-template name="copy-ids" />
+	</xsl:template>
+
+	<xsl:template name="copy-ids">
 		<xsl:copy>
-			<xsl:attribute name="id">
-				<xsl:value-of select="generate-id()" />
-			</xsl:attribute>
+			<xsl:if test="self::*">
+				<xsl:attribute name="id">
+					<xsl:value-of select="generate-id()" />
+				</xsl:attribute>
+			</xsl:if>
 			<xsl:apply-templates select="@*|node()"
 				mode="ids" />
 		</xsl:copy>
-	</xsl:template>
-
-	<xsl:template match="edm:Annotations/@Target" mode="ids">
-		<xsl:variable name="target">
-			<xsl:apply-templates
-				select="ancestor::edm:Schema" mode="path">
-				<xsl:with-param name="p"
-					select="ancestor::edm:Annotations/@Target" />
-			</xsl:apply-templates>
-		</xsl:variable>
-		<xsl:variable name="namespace">
-			<xsl:call-template name="namespace">
-				<xsl:with-param name="qname" select="$target" />
-				<xsl:with-param name="sep" select="' '" />
-			</xsl:call-template>
-		</xsl:variable>
-		<xsl:copy-of select="." />
-		<xsl:if test="string($namespace)">
-			<xsl:attribute name="p0:Target">
-				<xsl:value-of select="$namespace" />
-			</xsl:attribute>
-		</xsl:if>
-		<xsl:attribute name="p1:Target">
-			<xsl:call-template name="name">
-				<xsl:with-param name="qname" select="$target" />
-				<xsl:with-param name="sep" select="' '" />
-			</xsl:call-template>
-		</xsl:attribute>
 	</xsl:template>
 
 	<xsl:template match="edm:Annotation/@Term" mode="ids">
@@ -142,25 +120,45 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template
-		match="edm:Annotations//edm:Annotation[not(ancestor::edm:Annotation)]"
+	<xsl:template match="edm:Annotations/edm:Annotation"
 		mode="ids" priority="1">
 		<xsl:copy>
 			<xsl:attribute name="id">
 				<xsl:value-of select="generate-id()" />
 			</xsl:attribute>
-			<xsl:attribute name="target">
-				<xsl:call-template name="name">
-					<xsl:with-param name="qname">
-						<xsl:apply-templates
-				select="ancestor::edm:Schema" mode="path">
-							<xsl:with-param name="p"
-				select="ancestor::edm:Annotations/@Target" />
-						</xsl:apply-templates>
-					</xsl:with-param>
-					<xsl:with-param name="sep" select="' '" />
-				</xsl:call-template>
-			</xsl:attribute>
+			<xsl:variable name="target">
+				<xsl:apply-templates
+					select="ancestor::edm:Schema" mode="path">
+					<xsl:with-param name="p" select="../@Target" />
+				</xsl:apply-templates>
+			</xsl:variable>
+			<xsl:choose>
+				<xsl:when test="string($target)">
+					<xsl:variable name="namespace">
+						<xsl:call-template name="namespace">
+							<xsl:with-param name="qname" select="$target" />
+							<xsl:with-param name="sep" select="' '" />
+						</xsl:call-template>
+					</xsl:variable>
+					<xsl:if test="string($namespace)">
+						<xsl:attribute name="path-to-target">
+							<xsl:value-of select="$namespace" />
+						</xsl:attribute>
+					</xsl:if>
+					<xsl:attribute name="target">
+						<xsl:call-template name="name">
+							<xsl:with-param name="qname" select="$target" />
+							<xsl:with-param name="sep" select="' '" />
+						</xsl:call-template>
+					</xsl:attribute>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:message>
+						<xsl:value-of
+							select="concat('Invalid @Target ',../@Target,' in ',generate-id(..))" />
+					</xsl:message>
+				</xsl:otherwise>
+			</xsl:choose>
 			<xsl:apply-templates select="@*|node()"
 				mode="ids" />
 		</xsl:copy>
@@ -206,18 +204,25 @@
 					select="ancestor::edm:Annotations/@Target" />
 			</xsl:apply-templates>
 		</xsl:variable>
-		<xsl:variable name="final-segment">
-			<xsl:call-template name="name">
-				<xsl:with-param name="qname" select="$target" />
-				<xsl:with-param name="sep" select="' '" />
-			</xsl:call-template>
-		</xsl:variable>
-		<xsl:apply-templates select="."
-			mode="external-targeting">
-			<xsl:with-param name="target" select="$target" />
-			<xsl:with-param name="host"
-				select="//edm:*[generate-id()=$final-segment]" />
-		</xsl:apply-templates>
+		<xsl:choose>
+			<xsl:when test="string($target)">
+				<xsl:variable name="final-segment">
+					<xsl:call-template name="name">
+						<xsl:with-param name="qname" select="$target" />
+						<xsl:with-param name="sep" select="' '" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:apply-templates select="."
+					mode="external-targeting">
+					<xsl:with-param name="target" select="$target" />
+					<xsl:with-param name="host"
+						select="//edm:*[generate-id()=$final-segment]" />
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="copy-ids" />
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="@*|*" mode="external-targeting">
@@ -367,7 +372,8 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="not(starts-with(.,'Edm.') or starts-with(.,'Collection(Edm.'))">
+				<xsl:if
+					test="not(starts-with(.,'Edm.') or starts-with(.,'Collection(Edm.'))">
 					<xsl:message>
 						<xsl:text>Invalid </xsl:text>
 						<xsl:if test="not(self::*)">
@@ -377,15 +383,7 @@
 							select="concat(name(),' ',.,' in ',generate-id(ancestor-or-self::*[1]))" />
 					</xsl:message>
 				</xsl:if>
-				<xsl:copy>
-					<xsl:if test="self::*">
-						<xsl:attribute name="id">
-							<xsl:value-of select="generate-id()" />
-						</xsl:attribute>
-					</xsl:if>
-					<xsl:apply-templates select="@*|node()"
-						mode="ids" />
-				</xsl:copy>
+				<xsl:call-template name="copy-ids" />
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
