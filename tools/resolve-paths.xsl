@@ -114,7 +114,7 @@
 			<xsl:otherwise>
 				<xsl:message>
 					<xsl:value-of
-						select="concat('Invalid namespace in qualified name ',$qname,' in ',generate-id(ancestor-or-self::*[1]))" />
+						select="concat('Invalid qualifier in name &quot;',$qname,'&quot; in ',generate-id(ancestor-or-self::*[1]))" />
 				</xsl:message>
 			</xsl:otherwise>
 		</xsl:choose>
