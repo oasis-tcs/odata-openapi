@@ -120,6 +120,17 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template match="@*|*" mode="invalid">
+		<xsl:message>
+			<xsl:text>Invalid </xsl:text>
+			<xsl:if test="not(self::*)">
+				<xsl:text>@</xsl:text>
+			</xsl:if>
+			<xsl:value-of
+				select="concat(name(),' &quot;',.,'&quot; in ',generate-id(ancestor-or-self::*[1]))" />
+		</xsl:message>
+	</xsl:template>
+
 	<xsl:template match="edm:Annotations/edm:Annotation"
 		mode="ids" priority="1">
 		<xsl:copy>
@@ -152,12 +163,10 @@
 						</xsl:call-template>
 					</xsl:attribute>
 				</xsl:when>
-				<xsl:otherwise>
-					<xsl:message>
-						<xsl:value-of
-							select="concat('Invalid @Target ',../@Target,' in ',generate-id(..))" />
-					</xsl:message>
-				</xsl:otherwise>
+				<xsl:when test="not(preceding-sibling::edm:Annotation)">
+					<xsl:apply-templates select="../@Target"
+						mode="invalid" />
+				</xsl:when>
 			</xsl:choose>
 			<xsl:apply-templates select="@*|node()"
 				mode="ids" />
@@ -315,7 +324,7 @@
 			edm:ActionImport/@Action | edm:FunctionImport/@Function"
 		mode="ids">
 		<xsl:apply-templates select="." mode="eval-path">
-			<xsl:with-param name="relative-to" select=".." />
+			<xsl:with-param name="relative-to" select="/" />
 		</xsl:apply-templates>
 	</xsl:template>
 
@@ -342,47 +351,63 @@
 
 	<xsl:template match="@*|*" mode="eval-path">
 		<xsl:param name="relative-to" />
-		<xsl:variable name="path">
-			<xsl:apply-templates select="$relative-to"
-				mode="path">
-				<xsl:with-param name="p" select="." />
-			</xsl:apply-templates>
+		<xsl:variable name="relative">
+			<xsl:if test="$relative-to/self::edm:*">
+				<xsl:value-of
+					select="concat(generate-id($relative-to),' ')" />
+			</xsl:if>
 		</xsl:variable>
 		<xsl:choose>
-			<xsl:when test="string($path)">
+			<xsl:when test="string(.)">
+				<xsl:variable name="path">
+					<xsl:apply-templates select="$relative-to"
+						mode="path">
+						<xsl:with-param name="p" select="." />
+					</xsl:apply-templates>
+				</xsl:variable>
 				<xsl:choose>
-					<xsl:when test="self::*">
-						<xsl:copy>
-							<xsl:attribute name="id">
-								<xsl:value-of select="generate-id()" />
-							</xsl:attribute>
-							<xsl:call-template name="path-attributes">
-								<xsl:with-param name="path" select="$path" />
-							</xsl:call-template>
-							<xsl:apply-templates select="@*|node()"
-								mode="ids" />
-						</xsl:copy>
+					<xsl:when test="string($path)">
+						<xsl:choose>
+							<xsl:when test="self::*">
+								<xsl:copy>
+									<xsl:attribute name="id">
+										<xsl:value-of select="generate-id()" />
+									</xsl:attribute>
+									<xsl:call-template name="path-attributes">
+										<xsl:with-param name="path"
+											select="concat($relative,$path)" />
+									</xsl:call-template>
+									<xsl:apply-templates select="@*|node()"
+										mode="ids" />
+								</xsl:copy>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:copy-of select="." />
+								<xsl:call-template name="path-attributes">
+									<xsl:with-param name="path"
+										select="concat($relative,$path)" />
+								</xsl:call-template>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:copy-of select="." />
-						<xsl:call-template name="path-attributes">
-							<xsl:with-param name="path" select="$path" />
-						</xsl:call-template>
+						<xsl:if
+							test="not(starts-with(.,'Edm.') or starts-with(.,'Collection(Edm.'))">
+							<xsl:apply-templates select="."
+								mode="invalid" />
+						</xsl:if>
+						<xsl:call-template name="copy-ids" />
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
+			<xsl:when test="$relative-to/self::edm:*">
+				<xsl:call-template name="path-attributes">
+					<xsl:with-param name="path"
+						select="generate-id($relative-to)" />
+				</xsl:call-template>
+			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if
-					test="not(starts-with(.,'Edm.') or starts-with(.,'Collection(Edm.'))">
-					<xsl:message>
-						<xsl:text>Invalid </xsl:text>
-						<xsl:if test="not(self::*)">
-							<xsl:text>@</xsl:text>
-						</xsl:if>
-						<xsl:value-of
-							select="concat(name(),' ',.,' in ',generate-id(ancestor-or-self::*[1]))" />
-					</xsl:message>
-				</xsl:if>
+				<xsl:apply-templates select="." mode="invalid" />
 				<xsl:call-template name="copy-ids" />
 			</xsl:otherwise>
 		</xsl:choose>
