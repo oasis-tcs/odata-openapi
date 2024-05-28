@@ -194,6 +194,8 @@
 		</xsl:copy>
 	</xsl:template>
 
+	<xsl:template match="edm:*" mode="toattr" />
+
 	<xsl:template
 		match="edm:Binary |
 			edm:Bool |
