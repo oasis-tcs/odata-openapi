@@ -168,6 +168,7 @@
 						mode="invalid" />
 				</xsl:when>
 			</xsl:choose>
+			<xsl:apply-templates select="edm:*" mode="toattr" />
 			<xsl:apply-templates select="@*|node()"
 				mode="ids" />
 		</xsl:copy>
@@ -187,9 +188,29 @@
 					self::edm:PropertyValue
 				)][1])" />
 			</xsl:attribute>
+			<xsl:apply-templates select="edm:*" mode="toattr" />
 			<xsl:apply-templates select="@*|node()"
 				mode="ids" />
 		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template
+		match="edm:Binary |
+			edm:Bool |
+			edm:Date |
+			edm:DateTimeOffset |
+			edm:Decimal |
+			edm:Duration |
+			edm:EnumMember |
+			edm:Float |
+			edm:Guid |
+			edm:Int |
+			edm:String |
+			edm:TimeOfDay"
+		mode="toattr">
+		<xsl:attribute name="{local-name()}">
+			<xsl:value-of select="." />
+		</xsl:attribute>
 	</xsl:template>
 
 	<xsl:template
