@@ -177,4 +177,75 @@ describe("Funny input", function () {
       "messages",
     );
   });
+
+  it("OData V2 Edm.DateTime and Edm.Time", function () {
+    const csdl = {
+      $Version: "2.0",
+      $EntityContainer: "this.Container",
+      this: {
+        Container: {
+          fi: {
+            $Function: "this.f",
+          },
+        },
+        f: [
+          {
+            $Kind: "Function",
+            $Parameter: [],
+            $ReturnType: { $Type: "this.ct" },
+          },
+        ],
+        ct: {
+          $Kind: "ComplexType",
+          date: { $Type: "Edm.DateTime" },
+          time: { $Type: "Edm.Time" },
+          timeWithMilliSeconds: { $Type: "Edm.Time", $Precision: 3 },
+        },
+      },
+    };
+    const expected = {
+      paths: {
+        "/$batch": { post: {} },
+        "/fi": { get: {} },
+      },
+      components: {
+        schemas: {
+          "this.ct": {
+            type: "object",
+            title: "ct",
+            properties: {
+              date: {
+                type: "string",
+                example: "/Date(1492098664000)/",
+              },
+              time: {
+                type: "string",
+                example: "PT15H51M04S",
+              },
+              timeWithMilliSeconds: {
+                type: "string",
+                example: "PT15H51M04.000S",
+              },
+            },
+          },
+        },
+      },
+    };
+    const messages = [];
+
+    const actual = csdl2openapi(csdl, { messages });
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations",
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ct"],
+      expected.components.schemas["this.ct"],
+      "this.ct",
+    );
+    assert.deepStrictEqual(messages, [], "messages");
+  });
 });
