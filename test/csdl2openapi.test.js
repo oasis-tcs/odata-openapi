@@ -15,7 +15,7 @@ const assert = require("assert");
 // (external) annotations on actions, functions, parameters, return types
 // control mapping of reference URLs
 
-const { paths, operations } = require("./utilities");
+const { paths, operations, schemas } = require("./utilities");
 
 const { csdl2openapi } = require("odata-openapi");
 
@@ -1707,6 +1707,137 @@ describe("Edge cases", function () {
       expected.paths["/Categories"].get,
       "GET Categories",
     );
+  });
+
+  it("OData V2 Edm.Binary, Edm.DateTime, and Edm.Time", function () {
+    const csdl = {
+      $Version: "2.0",
+      $EntityContainer: "this.Container",
+      this: {
+        Container: {
+          fi: {
+            $Function: "this.f",
+          },
+        },
+        f: [
+          {
+            $Kind: "Function",
+            $Parameter: [],
+            $ReturnType: { $Type: "this.ct" },
+          },
+        ],
+        ct: {
+          $Kind: "ComplexType",
+          bin: { $Type: "Edm.Binary" },
+          date: { $Type: "Edm.DateTime" },
+          time: { $Type: "Edm.Time" },
+          timeWithMilliSeconds: { $Type: "Edm.Time", $Precision: 3 },
+        },
+      },
+    };
+    const expected = {
+      paths: {
+        "/$batch": { post: {} },
+        "/fi": { get: {} },
+      },
+      components: {
+        schemas: {
+          "this.ct": {
+            type: "object",
+            title: "ct",
+            properties: {
+              bin: { type: "string", format: "byte" },
+              date: {
+                type: "string",
+                example: "/Date(1492098664000)/",
+              },
+              time: {
+                type: "string",
+                example: "PT15H51M04S",
+              },
+              timeWithMilliSeconds: {
+                type: "string",
+                example: "PT15H51M04.000S",
+              },
+            },
+          },
+        },
+      },
+    };
+    const messages = [];
+
+    const actual = csdl2openapi(csdl, { messages });
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations",
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ct"],
+      expected.components.schemas["this.ct"],
+      "this.ct",
+    );
+    assert.deepStrictEqual(messages, [], "messages");
+  });
+
+  it("OData V2 Edm.Binary in OpenAPI 3.1.0", function () {
+    const csdl = {
+      $Version: "2.0",
+      $EntityContainer: "this.Container",
+      this: {
+        Container: {
+          fi: {
+            $Function: "this.f",
+          },
+        },
+        f: [
+          {
+            $Kind: "Function",
+            $Parameter: [],
+            $ReturnType: { $Type: "this.ct" },
+          },
+        ],
+        ct: {
+          $Kind: "ComplexType",
+          bin: { $Type: "Edm.Binary" },
+        },
+      },
+    };
+    const expected = {
+      paths: {
+        "/$batch": { post: {} },
+        "/fi": { get: {} },
+      },
+      components: {
+        schemas: {
+          "this.ct": {
+            type: "object",
+            title: "ct",
+            properties: {
+              bin: { type: "string", contentEncoding: "base64" },
+            },
+          },
+        },
+      },
+    };
+    const messages = [];
+
+    const actual = csdl2openapi(csdl, { messages, openapiVersion: "3.1.0" });
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations",
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ct"],
+      expected.components.schemas["this.ct"],
+      "this.ct",
+    );
+    assert.deepStrictEqual(messages, [], "messages");
   });
 
   it("OpenAPI 3.1.0", function () {
