@@ -1,6 +1,12 @@
 # Changelog
 
-## 0.26.0 - 2024-01-12
+## 0.26.1 - 2024-07-09
+
+### Fixed
+
+- OData V2 type `Edm.Binary` is base64-encoded, not base64url
+
+## 0.26.0 - 2024-07-04
 
 ### Added
 
