@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.27.0
+
+### Changed
+
+- OpenAPI 3.1.x: use `examples` in Schema Objects instead of the deprecated `example`
+
 ## 0.26.1 - 2024-07-09
 
 ### Fixed
