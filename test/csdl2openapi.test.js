@@ -1845,6 +1845,7 @@ describe("Edge cases", function () {
       $Reference: {
         dummy: {
           $Include: [
+            { $Namespace: "Org.OData.Capabilities.V1", $Alias: "Capabilities" },
             { $Namespace: "Org.OData.Core.V1", $Alias: "Core" },
             { $Namespace: "Org.OData.Validation.V1", $Alias: "Validation" },
           ],
@@ -1853,7 +1854,15 @@ describe("Edge cases", function () {
       $EntityContainer: "oas31.Container",
       oas31: {
         Container: {
-          sing: { $Type: "oas31.single" },
+          set: {
+            $Type: "oas31.single",
+            $Collection: true,
+            "@Capabilities.ChangeTracking": { Supported: true },
+          },
+          sing: {
+            $Type: "oas31.single",
+            "@Capabilities.ChangeTracking": { Supported: true }, // has currently no effect
+          },
         },
         single: {
           $Kind: "EntityType",
@@ -1904,7 +1913,7 @@ describe("Edge cases", function () {
     const properties = {
       binary: { type: "string", contentEncoding: "base64url" },
       stream: { type: "string", contentEncoding: "base64url" },
-      date: { type: "string", format: "date", example: "2017-04-13" }, // example is deprecated but still allowed
+      date: { type: "string", format: "date", examples: ["2017-04-13"] },
       nullableString: { type: ["string", "null"] },
       primitive: { type: ["boolean", "number", "string"] },
       ref: { $ref: "#/components/schemas/oas31.typeDef" },
@@ -1922,7 +1931,7 @@ describe("Edge cases", function () {
       },
       refEx: {
         allOf: [{ $ref: "#/components/schemas/oas31.typeDef" }],
-        example: 11,
+        examples: [11],
       },
       refMax: {
         allOf: [{ $ref: "#/components/schemas/oas31.typeDef" }],
@@ -1942,19 +1951,19 @@ describe("Edge cases", function () {
       exclusiveMin: {
         type: ["integer", "string"],
         format: "int64",
-        example: "42",
+        examples: ["42"],
         exclusiveMinimum: 0,
       },
       max: {
         type: ["number", "string", "null"],
         format: "decimal",
-        example: 0,
+        examples: [0],
         maximum: 42,
       },
       exclusiveMax: {
         type: "number",
         format: "double",
-        example: 3.14,
+        examples: [3.14],
         exclusiveMaximum: 42,
       },
     };
@@ -1966,6 +1975,17 @@ describe("Edge cases", function () {
       openapi.components.schemas["oas31.single"].properties,
       properties,
       "Schemas",
+    );
+    assert.deepStrictEqual(
+      openapi.paths["/set"].get.responses[200].content["application/json"]
+        .schema.properties["@odata.deltaLink"],
+      {
+        type: "string",
+        examples: [
+          "/service-root/set?$deltatoken=opaque server-generated token for fetching the delta",
+        ],
+      },
+      "delta link",
     );
   });
 });
