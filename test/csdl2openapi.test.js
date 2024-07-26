@@ -954,8 +954,11 @@ describe("Edge cases", function () {
                 content: {
                   "application/json": {
                     schema: {
-                      type: "string",
-                      maxLength: 20,
+                      type: "object",
+                      title: "String",
+                      properties: {
+                        value: { type: "string", maxLength: 20 },
+                      },
                     },
                   },
                 },
