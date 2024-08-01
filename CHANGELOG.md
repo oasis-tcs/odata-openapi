@@ -1,6 +1,12 @@
 # Changelog
 
-## 0.27.0
+## 0.27.1 - 2024-08-01
+
+### Fixed
+
+- Action or function returning a primitive type returns a `value` wrapper
+
+## 0.27.0 - 2024-07-17
 
 ### Changed
 
