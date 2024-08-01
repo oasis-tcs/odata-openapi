@@ -934,38 +934,28 @@ describe("Edge cases", function () {
       $EntityContainer: "this.Container",
       this: {
         fun: [
-          { $Kind: "Function", $ReturnType: { $MaxLength: 20 } },
           {
             $Kind: "Function",
             $Parameter: [{ $Name: "in" }],
             $ReturnType: { $Collection: true, $MaxLength: 20 },
           },
         ],
-        Container: { fun: { $Function: "this.fun" } },
+        fun2: [{ $Kind: "Function", $ReturnType: { $MaxLength: 20 } }],
+        fun3: [{ $Kind: "Function", $ReturnType: { $Type: "this.typedef" } }],
+        typedef: {
+          $Kind: "TypeDefinition",
+          $UnderlyingType: "Edm.String",
+          $MaxLength: 15,
+        },
+        Container: {
+          fun: { $Function: "this.fun" },
+          fun2: { $Function: "this.fun2" },
+          fun3: { $Function: "this.fun3" },
+        },
       },
     };
     const expected = {
       paths: {
-        "/fun()": {
-          get: {
-            responses: {
-              200: {
-                description: "Success",
-                content: {
-                  "application/json": {
-                    schema: {
-                      type: "object",
-                      title: "String",
-                      properties: {
-                        value: { type: "string", maxLength: 20 },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
         "/fun(in={in})": {
           get: {
             responses: {
@@ -995,6 +985,41 @@ describe("Edge cases", function () {
             },
           },
         },
+        "/fun2()": {
+          get: {
+            responses: {
+              200: {
+                description: "Success",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: { value: { type: "string", maxLength: 20 } },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        "/fun3()": {
+          get: {
+            responses: {
+              200: {
+                description: "Success",
+                content: {
+                  "application/json": {
+                    schema: {
+                      // Note: the "value" wrapper is missing because the generator doesn't recognize/resolve the type definition
+                      $ref: "#/components/schemas/this.typedef",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+
         "/$batch": { post: {} },
       },
     };
@@ -1006,14 +1031,19 @@ describe("Edge cases", function () {
       "Operations",
     );
     assert.deepStrictEqual(
-      actual.paths["/fun()"].get.responses[200],
-      expected.paths["/fun()"].get.responses[200],
+      actual.paths["/fun(in={in})"].get.responses[200],
+      expected.paths["/fun(in={in})"].get.responses[200],
       "fun",
     );
     assert.deepStrictEqual(
-      actual.paths["/fun(in={in})"].get.responses[200],
-      expected.paths["/fun(in={in})"].get.responses[200],
-      "fun(in)",
+      actual.paths["/fun2()"].get.responses[200],
+      expected.paths["/fun2()"].get.responses[200],
+      "fun2",
+    );
+    assert.deepStrictEqual(
+      actual.paths["/fun3()"].get.responses[200],
+      expected.paths["/fun3()"].get.responses[200],
+      "fun3",
     );
   });
 
