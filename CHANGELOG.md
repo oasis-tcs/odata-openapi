@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.28.0 - 2024-08-06
+
+### Added
+
+- Support [SAP OData V2 annotations](https://github.com/SAP/odata-vocabularies/blob/main/docs/v2-annotations.md#element-edmproperty) `label` and `quickinfo` on properties, and `label` on entity types and parameters
+
 ## 0.27.1 - 2024-08-01
 
 ### Fixed
