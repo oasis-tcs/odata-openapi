@@ -648,7 +648,7 @@ describe("Edge cases", function () {
           required: true,
           schema: {
             type: "string",
-            format: "uuid,null",
+            format: "uuid",
             nullable: true,
             default: "null",
             example: "01234567-89ab-cdef-0123-456789abcdef",
@@ -674,8 +674,8 @@ describe("Edge cases", function () {
           name: "int32Null",
           required: true,
           schema: {
-            type: "string",
-            format: "int32,null",
+            type: "integer",
+            format: "int32",
             nullable: true,
             default: "null",
           },
@@ -702,7 +702,7 @@ describe("Edge cases", function () {
           required: true,
           schema: {
             type: "string",
-            format: "base64url,null",
+            format: "base64url",
             nullable: true,
             default: "null",
           },
@@ -727,7 +727,7 @@ describe("Edge cases", function () {
           name: "booleanNull",
           required: true,
           schema: {
-            type: "string",
+            type: "boolean",
             nullable: true,
             default: "null",
           },
@@ -755,7 +755,7 @@ describe("Edge cases", function () {
           required: true,
           schema: {
             anyOf: [{ type: "number" }, { type: "string" }],
-            format: "decimal,null",
+            format: "decimal",
             nullable: true,
             default: "null",
             example: 0,
@@ -784,7 +784,7 @@ describe("Edge cases", function () {
           required: true,
           schema: {
             type: "string",
-            format: "duration,null",
+            format: "duration",
             nullable: true,
             default: "null",
             example: "'P4DT15H51M04S'",

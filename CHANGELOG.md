@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.28.1 - 2024-08-29
+
+### Fixed
+
+- Nullable function parameters no longer get a funny format and a wrong type
+
 ## 0.28.0 - 2024-08-06
 
 ### Added
