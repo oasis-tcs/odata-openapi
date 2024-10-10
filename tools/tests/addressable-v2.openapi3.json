@@ -1,0 +1,731 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Service for namespace ZE_API_DEMO_SRV",
+        "version": "",
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[Head{bg:orange}],[Head]-*>[Address{bg:orange}],[Address{bg:orange}],[HeadSet{bg:dodgerblue}]++-*>[Head],[AddressSet{bg:dodgerblue}]++-*>[Address])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
+    },
+    "servers": [
+        {
+            "url": "https://localhost/service-root"
+        }
+    ],
+    "tags": [
+        {
+            "name": "HeadSet"
+        },
+        {
+            "name": "AddressSet"
+        }
+    ],
+    "paths": {
+        "/HeadSet": {
+            "get": {
+                "summary": "Get entities from HeadSet",
+                "tags": [
+                    "HeadSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=64)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=68)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "BusinessPartner",
+                                    "Type",
+                                    "Grouping",
+                                    "Title",
+                                    "FirstName",
+                                    "LastName",
+                                    "IsBlocked",
+                                    "ETag",
+                                    "to_Address"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=63)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "to_Address"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Wrapper",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "title": "Collection of Head",
+                                            "type": "object",
+                                            "properties": {
+                                                "__count": {
+                                                    "$ref": "#/components/schemas/count"
+                                                },
+                                                "results": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Head"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to HeadSet",
+                "tags": [
+                    "HeadSet"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Head-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Head",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Head"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/HeadSet('{BusinessPartner}')": {
+            "parameters": [
+                {
+                    "name": "BusinessPartner",
+                    "in": "path",
+                    "required": true,
+                    "description": "Geschäftspartnernummer",
+                    "schema": {
+                        "type": "string",
+                        "maxLength": 10
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get entity from HeadSet by key",
+                "tags": [
+                    "HeadSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=68)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "BusinessPartner",
+                                    "Type",
+                                    "Grouping",
+                                    "Title",
+                                    "FirstName",
+                                    "LastName",
+                                    "IsBlocked",
+                                    "ETag",
+                                    "to_Address"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=63)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "to_Address"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Head",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Head"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/HeadSet('{BusinessPartner}')/to_Address": {
+            "parameters": [
+                {
+                    "name": "BusinessPartner",
+                    "in": "path",
+                    "required": true,
+                    "description": "Geschäftspartnernummer",
+                    "schema": {
+                        "type": "string",
+                        "maxLength": 10
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get entities from related to_Address",
+                "tags": [
+                    "HeadSet",
+                    "AddressSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=64)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=68)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "BusinessPartner",
+                                    "AddressId",
+                                    "District",
+                                    "Street",
+                                    "HouseNumber",
+                                    "PostalCode",
+                                    "City",
+                                    "Country",
+                                    "ETag"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Wrapper",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "title": "Collection of Address",
+                                            "type": "object",
+                                            "properties": {
+                                                "__count": {
+                                                    "$ref": "#/components/schemas/count"
+                                                },
+                                                "results": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Address"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to related to_Address",
+                "tags": [
+                    "HeadSet",
+                    "AddressSet"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Address-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Address",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Address"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/AddressSet": {
+            "post": {
+                "summary": "Add new entity to AddressSet",
+                "tags": [
+                    "AddressSet"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Address-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Address",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Address"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/$batch": {
+            "post": {
+                "summary": "Send a group of requests",
+                "description": "Group multiple requests into a single request payload, see [Batch Requests](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=152).\n\n*Please note that \"Try it out\" is not supported for this request.*",
+                "tags": [
+                    "Batch Requests"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Batch request",
+                    "content": {
+                        "multipart/mixed;boundary=request-separator": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "example": "--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET HeadSet HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Batch response",
+                        "content": {
+                            "multipart/mixed": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{...}\n--response-separator--"
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ZE_API_DEMO_SRV.Head": {
+                "type": "object",
+                "properties": {
+                    "BusinessPartner": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "title": "GeschPartner",
+                        "description": "Geschäftspartnernummer"
+                    },
+                    "Type": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "title": "Partnerart",
+                        "description": "Geschäftspartnerart"
+                    },
+                    "Grouping": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "title": "Gruppierung",
+                        "description": "Geschäftspartnergruppierung"
+                    },
+                    "Title": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "title": "Anrede",
+                        "description": "Anredeschlüssel"
+                    },
+                    "FirstName": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "title": "Vorname",
+                        "description": "Vorname des Geschäftspartners (Person)"
+                    },
+                    "LastName": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "title": "Nachname",
+                        "description": "Nachname des Geschäftspartners (Person)"
+                    },
+                    "IsBlocked": {
+                        "type": "boolean",
+                        "title": "Zentrale Sperre",
+                        "description": "Zentrale Sperre für den Geschäftspartner"
+                    },
+                    "ETag": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "title": "Hash-Wert",
+                        "description": "Hash-Wert (160 Bits)"
+                    },
+                    "to_Address": {
+                        "type": "object",
+                        "properties": {
+                            "results": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Address"
+                                }
+                            }
+                        }
+                    }
+                },
+                "title": "Head"
+            },
+            "ZE_API_DEMO_SRV.Head-create": {
+                "type": "object",
+                "properties": {
+                    "Title": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "title": "Anrede",
+                        "description": "Anredeschlüssel"
+                    },
+                    "FirstName": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "title": "Vorname",
+                        "description": "Vorname des Geschäftspartners (Person)"
+                    },
+                    "LastName": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "title": "Nachname",
+                        "description": "Nachname des Geschäftspartners (Person)"
+                    },
+                    "to_Address": {
+                        "type": "object",
+                        "properties": {
+                            "results": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Address-create"
+                                }
+                            }
+                        }
+                    }
+                },
+                "title": "Head (for create)"
+            },
+            "ZE_API_DEMO_SRV.Head-update": {
+                "type": "object",
+                "title": "Head (for update)"
+            },
+            "ZE_API_DEMO_SRV.Address": {
+                "type": "object",
+                "properties": {
+                    "BusinessPartner": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "title": "GeschPartner",
+                        "description": "Geschäftspartnernummer"
+                    },
+                    "AddressId": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "title": "Adressnummer"
+                    },
+                    "District": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "title": "Ortsteil"
+                    },
+                    "Street": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "title": "Straße"
+                    },
+                    "HouseNumber": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "title": "Hausnummer"
+                    },
+                    "PostalCode": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "title": "Postleitzahl",
+                        "description": "Postleitzahl des Orts"
+                    },
+                    "City": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "title": "Ort"
+                    },
+                    "Country": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "title": "ISO-Code",
+                        "description": "ISO-Code des Landes"
+                    },
+                    "ETag": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "title": "Hash-Wert",
+                        "description": "Hash-Wert (160 Bits)"
+                    }
+                },
+                "title": "Address"
+            },
+            "ZE_API_DEMO_SRV.Address-create": {
+                "type": "object",
+                "properties": {
+                    "District": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "title": "Ortsteil"
+                    },
+                    "Street": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "title": "Straße"
+                    },
+                    "HouseNumber": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "title": "Hausnummer"
+                    },
+                    "PostalCode": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "title": "Postleitzahl",
+                        "description": "Postleitzahl des Orts"
+                    },
+                    "City": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "title": "Ort"
+                    }
+                },
+                "title": "Address (for create)"
+            },
+            "ZE_API_DEMO_SRV.Address-update": {
+                "type": "object",
+                "title": "Address (for update)"
+            },
+            "count": {
+                "type": "string",
+                "description": "The number of entities in the collection. Available when using the [$inlinecount](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=67) query option."
+            },
+            "error": {
+                "type": "object",
+                "required": [
+                    "error"
+                ],
+                "properties": {
+                    "error": {
+                        "type": "object",
+                        "required": [
+                            "code",
+                            "message"
+                        ],
+                        "properties": {
+                            "code": {
+                                "type": "string"
+                            },
+                            "message": {
+                                "type": "object",
+                                "required": [
+                                    "lang",
+                                    "value"
+                                ],
+                                "properties": {
+                                    "lang": {
+                                        "type": "string"
+                                    },
+                                    "value": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "innererror": {
+                                "type": "object",
+                                "description": "The structure of this object is service-specific"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "top": {
+                "name": "$top",
+                "in": "query",
+                "description": "Show only the first n items, see [Paging - Top](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=66)",
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "example": 50
+            },
+            "skip": {
+                "name": "$skip",
+                "in": "query",
+                "description": "Skip the first n items, see [Paging - Skip](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=65)",
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            },
+            "count": {
+                "name": "$inlinecount",
+                "in": "query",
+                "description": "Include count of items, see [Inlinecount](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=67)",
+                "schema": {
+                    "type": "string",
+                    "enum": [
+                        "allpages",
+                        "none"
+                    ]
+                }
+            }
+        },
+        "responses": {
+            "error": {
+                "description": "Error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/error"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
