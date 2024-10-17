@@ -364,6 +364,75 @@
                 }
             }
         },
+        "/AddressSet(BusinessPartner='{BusinessPartner}',AddressId='{AddressId}')": {
+            "parameters": [
+                {
+                    "name": "BusinessPartner",
+                    "in": "path",
+                    "required": true,
+                    "description": "Geschäftspartnernummer",
+                    "schema": {
+                        "type": "string",
+                        "maxLength": 10
+                    }
+                },
+                {
+                    "name": "AddressId",
+                    "in": "path",
+                    "required": true,
+                    "description": "Adressnummer",
+                    "schema": {
+                        "type": "string",
+                        "maxLength": 10
+                    }
+                }
+            ],
+            "patch": {
+                "summary": "Update entity in AddressSet",
+                "tags": [
+                    "AddressSet"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New property values",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "title": "Modified Address",
+                                "type": "object",
+                                "properties": {
+                                    "d": {
+                                        "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Address-update"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from AddressSet",
+                "tags": [
+                    "AddressSet"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
         "/$batch": {
             "post": {
                 "summary": "Send a group of requests",

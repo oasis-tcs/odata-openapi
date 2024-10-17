@@ -1050,24 +1050,6 @@
           <PropertyValue Property="Insertable" Bool="false" />
         </Record>
       </Annotation>
-      <Annotation>
-        <xsl:attribute name="Term">
-          <xsl:value-of select="$Capabilities" />
-          <xsl:text>.UpdateRestrictions</xsl:text>
-        </xsl:attribute>
-        <Record>
-          <PropertyValue Property="Updatable" Bool="false" />
-        </Record>
-      </Annotation>
-      <Annotation>
-        <xsl:attribute name="Term">
-          <xsl:value-of select="$Capabilities" />
-          <xsl:text>.DeleteRestrictions</xsl:text>
-        </xsl:attribute>
-        <Record>
-          <PropertyValue Property="Deletable" Bool="false" />
-        </Record>
-      </Annotation>
     </xsl:if>
   </xsl:template>
 
