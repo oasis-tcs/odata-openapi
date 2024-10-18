@@ -1021,12 +1021,16 @@
           <xsl:choose>
             <xsl:when test="$openapi-version!='2.0'">
               <array name="anyOf">
-                <str name="type">number</object>
-                <str name="type">string</object>
+                <object>
+                  <str name="type">number</str>
+                </object>
+                <object>
+                  <str name="type">string</str>
+                </object>
               </array>
             </xsl:when>
             <xsl:otherwise>
-              <str name="type">string</object>
+              <str name="type">string</str>
             </xsl:otherwise>
           </xsl:choose>
           <str name="description">The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option.</str>
