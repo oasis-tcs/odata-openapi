@@ -1210,12 +1210,6 @@
     </xsl:attribute>
   </xsl:template>
 
-  <xsl:template match="@sap:containstarget">
-    <xsl:attribute name="ContainsTarget">
-      <xsl:value-of select="." />
-    </xsl:attribute>
-  </xsl:template>
-
   <xsl:template match="@sap:*">
     <xsl:message>
       <xsl:value-of select="name(..)" />
