@@ -1011,44 +1011,131 @@
 
   <!-- definitions for standard error response - only needed if there's an entity container -->
   <xsl:template match="edm:EntityContainer" mode="hashpair">
-    <xsl:text>"count":</xsl:text>
-    <xsl:choose>
-      <xsl:when test="$odata-version='2.0'">
-        <xsl:text>{"type":"string","description":"The number of entities in the collection. Available when using the [$inlinecount](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=67) query option."}</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>{</xsl:text>
-        <xsl:if test="$openapi-version!='2.0'">
-          <xsl:text>"anyOf":[{"type":"number"},{</xsl:text>
-        </xsl:if>
-        <xsl:text>"type":"string"</xsl:text>
-        <xsl:if test="$openapi-version!='2.0'">
-          <xsl:text>}]</xsl:text>
-        </xsl:if>
-        <xsl:text>,"description":"The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option."}</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>,</xsl:text>
+    <obj name="count">
+      <xsl:choose>
+        <xsl:when test="$odata-version='2.0'">
+         <str name="type">string</str>
+         <str name="description">The number of entities in the collection. Available when using the [$inlinecount](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=67) query option.</str>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:choose>
+            <xsl:when test="$openapi-version!='2.0'">
+              <array name="anyOf">
+                <str name="type">number</object>
+                <str name="type">string</object>
+              </array>
+            </xsl:when>
+            <xsl:otherwise>
+              <str name="type">string</object>
+            </xsl:otherwise>
+          </xsl:choose>
+          <str name="description">The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option.</str>
+        </xsl:otherwise>
+      </xsl:choose>
+    </obj>
     <xsl:if test="//@Type[.='Edm.GeographyPoint' or .='Edm.GeometryPoint']">
-      <xsl:text>"geoPoint":{"type":"object","properties":{"type":{"type":"string","enum":["Point"],"default":"Point"},"coordinates":{"$ref":"</xsl:text>
-      <xsl:value-of select="$reuse-schemas" />
-      <xsl:text>geoPosition"}},"required":["type","coordinates"]},</xsl:text>
+      <object name="geoPoint">
+        <str name="type">object</str>
+        <object name="properties">
+          <object name="type">
+            <str name="type">string</str>
+            <array name="enum">
+              <str>Point</str>
+            </array>
+            <str name="default">Point</str>
+          </object>
+          <object name="coordinates">
+            <str name="$ref">
+              <xsl:value-of select="$reuse-schemas" />
+              <xsl:text>geoPosition</xsl:text>
+            </str>
+          </object>
+        </object>
+        <array name="required">
+          <str>type</str>
+          <str>coordinates</str>
+        </array>
+      </object>
     </xsl:if>
     <xsl:if test="//@Type[starts-with(.,'Edm.Geo')]">
-      <xsl:text>"geoPosition":{"type":"array","items":{"type":"number"},"minItems":2},</xsl:text>
+      <object name="geoPosition">
+        <str name="type">array</str>
+        <object name="items">
+          <str name="type">number</str>
+        </object>
+        <num name="minItems">2</num>
+      </object>
     </xsl:if>
-    <xsl:text>"error":{"type":"object","required":["error"],"properties":{"error":</xsl:text>
-    <xsl:text>{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":</xsl:text>
-    <xsl:choose>
-      <xsl:when test="substring($odata-version,1,3)='4.0'">
-        <xsl:text>{"type":"string"},"target":{"type":"string"},"details":</xsl:text>
-        <xsl:text>{"type":"array","items":{"type":"object","required":["code","message"],"properties":{"code":{"type":"string"},"message":{"type":"string"},"target":{"type":"string"}}}}</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>{"type":"object","required":["lang","value"],"properties":{"lang":{"type":"string"},"value":{"type":"string"}}}</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>,"innererror":{"type":"object","description":"The structure of this object is service-specific"}}}}}</xsl:text>
+    <object name="error">
+      <str name="type">object</str>
+      <array name="required">
+        <str>error</str>
+      </array>
+      <object name="properties">
+        <object name="error">
+          <str name="type">object</str>
+          <array name="required">
+            <str>code</str>
+            <str>message</str>
+          </array>
+          <object name="properties">
+            <object name="code">
+              <str name="type">string</str>
+            </object>
+            <object name="message">
+              <xsl:choose>
+                <xsl:when test="substring($odata-version,1,3)='4.0'">
+                  <str name="type">string</str>
+                  <object name="target">
+                    <str name="type">string</str>
+                  </object>
+                  <object name="details">
+                    <str name="type">array</str>
+                    <object name="items">
+                      <str name="type">object</str>
+                    </object>
+                    <array name="required">
+                      <str>code</str>
+                      <str>message</str>
+                    </array>
+                    <object name="properties">
+                      <object name="code">
+                        <str name="type">string</str>
+                      </object>
+                      <object name="message">
+                        <str name="type">string</str>
+                      </object>
+                      <object name="target">
+                        <str name="type">string</str>
+                      </object>
+                    </object>
+                  </object>
+                </xsl:when>
+                <xsl:otherwise>
+                  <str name="type">object</str>
+                  <array name="required">
+                    <str>lang</str>
+                    <str>value</str>
+                  </array>
+                  <object name="properties">
+                    <object name="lang">
+                      <str name="type">string</str>
+                    </object>
+                    <object name="value">
+                      <str name="type">string</str>
+                    </object>
+                  </object>
+                </xsl:otherwise>
+              </xsl:choose>
+            </object>
+          </object>
+        </object>
+        <object name="innererror">
+          <str name="type">object</str>
+          <str name="description">The structure of this object is service-specific"</str>
+        </object>
+      </object>
+    </object>
   </xsl:template>
 
   <xsl:template match="edm:EntitySet|edm:Singleton" mode="diagram">
