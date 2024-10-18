@@ -1,0 +1,112 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+  xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+  xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+  <edmx:DataServices m:DataServiceVersion="2.0">
+    <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="ZE_API_DEMO_SRV"
+      xml:lang="de" sap:schema-version="1">
+      <EntityType Name="Head" sap:content-version="1">
+        <Key>
+          <PropertyRef Name="BusinessPartner" />
+        </Key>
+        <Property Name="BusinessPartner" Type="Edm.String" Nullable="false" MaxLength="10"
+          sap:unicode="false" sap:label="GeschPartner" sap:heading="Geschäftspartner"
+          sap:quickinfo="Geschäftspartnernummer" sap:creatable="false"
+          sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+        <Property Name="Type" Type="Edm.String" Nullable="false" MaxLength="4"
+          sap:unicode="false" sap:label="Partnerart" sap:heading="Art"
+          sap:quickinfo="Geschäftspartnerart" sap:creatable="false" sap:updatable="false"
+          sap:sortable="false" sap:filterable="false" />
+        <Property Name="Grouping" Type="Edm.String" Nullable="false" MaxLength="4"
+          sap:unicode="false" sap:label="Gruppierung" sap:heading="Grp."
+          sap:quickinfo="Geschäftspartnergruppierung" sap:creatable="false"
+          sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+        <Property Name="Title" Type="Edm.String" Nullable="false" MaxLength="4"
+          sap:unicode="false" sap:label="Anrede" sap:heading="Schlüssel"
+          sap:quickinfo="Anredeschlüssel" sap:updatable="false" sap:sortable="false"
+          sap:filterable="false" />
+        <Property Name="FirstName" Type="Edm.String" Nullable="false" MaxLength="40"
+          sap:unicode="false" sap:label="Vorname"
+          sap:quickinfo="Vorname des Geschäftspartners (Person)" sap:updatable="false"
+          sap:sortable="false" sap:filterable="false" />
+        <Property Name="LastName" Type="Edm.String" Nullable="false" MaxLength="40"
+          sap:unicode="false" sap:label="Nachname"
+          sap:quickinfo="Nachname des Geschäftspartners (Person)" sap:updatable="false"
+          sap:sortable="false" sap:filterable="false" />
+        <Property Name="IsBlocked" Type="Edm.Boolean" Nullable="false" sap:unicode="false"
+          sap:label="Zentrale Sperre"
+          sap:quickinfo="Zentrale Sperre für den Geschäftspartner" sap:creatable="false"
+          sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+        <Property Name="ETag" Type="Edm.String" Nullable="false" MaxLength="40"
+          ConcurrencyMode="Fixed" sap:unicode="false" sap:label="Hash-Wert"
+          sap:heading="Hash-Wert (160 Bits)" sap:quickinfo="Hash-Wert (160 Bits)"
+          sap:creatable="false" sap:updatable="false" sap:sortable="false"
+          sap:filterable="false" />
+        <NavigationProperty Name="to_Address" Relationship="ZE_API_DEMO_SRV.to_Address"
+          FromRole="FromRole_to_Address" ToRole="ToRole_to_Address" />
+      </EntityType>
+      <EntityType Name="Address" sap:content-version="1">
+        <Key>
+          <PropertyRef Name="BusinessPartner" />
+          <PropertyRef Name="AddressId" />
+        </Key>
+        <Property Name="BusinessPartner" Type="Edm.String" Nullable="false" MaxLength="10"
+          sap:unicode="false" sap:label="GeschPartner" sap:heading="Geschäftspartner"
+          sap:quickinfo="Geschäftspartnernummer" sap:creatable="false"
+          sap:updatable="false" sap:sortable="false" sap:filterable="false" />
+        <Property Name="AddressId" Type="Edm.String" Nullable="false" MaxLength="10"
+          sap:unicode="false" sap:label="Adressnummer" sap:heading="Adressnum."
+          sap:creatable="false" sap:updatable="false" sap:sortable="false"
+          sap:filterable="false" />
+        <Property Name="District" Type="Edm.String" Nullable="false" MaxLength="40"
+          sap:unicode="false" sap:label="Ortsteil" sap:updatable="false"
+          sap:sortable="false" sap:filterable="false" />
+        <Property Name="Street" Type="Edm.String" Nullable="false" MaxLength="60"
+          sap:unicode="false" sap:label="Straße" sap:updatable="false"
+          sap:sortable="false" sap:filterable="false" />
+        <Property Name="HouseNumber" Type="Edm.String" Nullable="false" MaxLength="10"
+          sap:unicode="false" sap:label="Hausnummer" sap:updatable="false"
+          sap:sortable="false" sap:filterable="false" />
+        <Property Name="PostalCode" Type="Edm.String" Nullable="false" MaxLength="10"
+          sap:unicode="false" sap:label="Postleitzahl" sap:heading="PLZ"
+          sap:quickinfo="Postleitzahl des Orts" sap:updatable="false" sap:sortable="false"
+          sap:filterable="false" />
+        <Property Name="City" Type="Edm.String" Nullable="false" MaxLength="40"
+          sap:unicode="false" sap:label="Ort" sap:updatable="false" sap:sortable="false"
+          sap:filterable="false" />
+        <Property Name="Country" Type="Edm.String" Nullable="false" MaxLength="2"
+          sap:unicode="false" sap:label="ISO-Code" sap:quickinfo="ISO-Code des Landes"
+          sap:creatable="false" sap:updatable="false" sap:sortable="false"
+          sap:filterable="false" />
+        <Property Name="ETag" Type="Edm.String" Nullable="false" MaxLength="40"
+          ConcurrencyMode="Fixed" sap:unicode="false" sap:label="Hash-Wert"
+          sap:heading="Hash-Wert (160 Bits)" sap:quickinfo="Hash-Wert (160 Bits)"
+          sap:creatable="false" sap:updatable="false" sap:sortable="false"
+          sap:filterable="false" />
+      </EntityType>
+      <Association Name="to_Address" sap:content-version="1">
+        <End Type="ZE_API_DEMO_SRV.Head" Multiplicity="1" Role="FromRole_to_Address" />
+        <End Type="ZE_API_DEMO_SRV.Address" Multiplicity="*" Role="ToRole_to_Address" />
+        <ReferentialConstraint>
+          <Principal Role="FromRole_to_Address">
+            <PropertyRef Name="BusinessPartner" />
+          </Principal>
+          <Dependent Role="ToRole_to_Address">
+            <PropertyRef Name="BusinessPartner" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <EntityContainer Name="ZE_API_DEMO_SRV_Entities" m:IsDefaultEntityContainer="true"
+        sap:supported-formats="atom json xlsx">
+        <EntitySet Name="HeadSet" EntityType="ZE_API_DEMO_SRV.Head" sap:updatable="false"
+          sap:deletable="false" sap:pageable="false" sap:content-version="1" />
+        <EntitySet Name="AddressSet" EntityType="ZE_API_DEMO_SRV.Address" sap:pageable="false"
+          sap:addressable="false" sap:content-version="1" />
+        <AssociationSet Name="to_AddressSet" Association="ZE_API_DEMO_SRV.to_Address"
+          sap:content-version="1">
+          <End EntitySet="HeadSet" Role="FromRole_to_Address" />
+          <End EntitySet="AddressSet" Role="ToRole_to_Address" />
+        </AssociationSet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

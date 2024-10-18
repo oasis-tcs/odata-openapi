@@ -466,6 +466,15 @@
               </PropertyValue>
             </Record>
           </PropertyValue>
+          <xsl:if test="not($targetSet/@sap:creatable='false')">
+            <PropertyValue Property="InsertRestrictions">
+              <Record>
+                <PropertyValue Property="Insertable">
+                  <Bool>true</Bool>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+          </xsl:if>
         </Record>
       </xsl:if>
     </xsl:if>
@@ -1032,6 +1041,15 @@
           </xsl:if>
         </Record>
       </Annotation>
+      <Annotation>
+        <xsl:attribute name="Term">
+          <xsl:value-of select="$Capabilities" />
+          <xsl:text>.InsertRestrictions</xsl:text>
+        </xsl:attribute>
+        <Record>
+          <PropertyValue Property="Insertable" Bool="false" />
+        </Record>
+      </Annotation>
     </xsl:if>
   </xsl:template>
 
@@ -1188,12 +1206,6 @@
 
   <xsl:template match="@sap:default">
     <xsl:attribute name="DefaultValue">
-      <xsl:value-of select="." />
-    </xsl:attribute>
-  </xsl:template>
-
-  <xsl:template match="@sap:containstarget">
-    <xsl:attribute name="ContainsTarget">
       <xsl:value-of select="." />
     </xsl:attribute>
   </xsl:template>
