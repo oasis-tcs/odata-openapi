@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.28.2 - 2024-10-30
+
+### Fixed
+
+- Term `Validation.AllowedValues` can be applied to all (primitive) types
+
 ## 0.28.1 - 2024-08-29
 
 ### Fixed
