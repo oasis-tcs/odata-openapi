@@ -1561,7 +1561,8 @@
         <!-- non-computed key properties are required, as are properties marked with Common.FieldControl=Mandatory -->
         <xsl:for-each select="$structuredType/edm:Property[
           (@Name=../edm:Key/edm:PropertyRef/@Name and not(@Name=$read-only or @Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext)) 
-          or concat($qualifiedName,'/',@Name)=$mandatory or concat($aliasQualifiedName,'/',@Name)=$mandatory]">          <xsl:if test="position()>1">
+          or concat($qualifiedName,'/',@Name)=$mandatory or concat($aliasQualifiedName,'/',@Name)=$mandatory]">
+          <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
           </xsl:if>
           <xsl:text>"</xsl:text>
