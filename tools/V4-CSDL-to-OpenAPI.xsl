@@ -1532,10 +1532,10 @@
         <xsl:when test="$suffix='-update'">
           <!-- only updatable non-key properties -->
           <xsl:for-each select="$structuredType/edm:Property[not(
-            @id=//edm:Annotation[@p2:Term='Org.OData.Core.V1.Immutable']/@target
+            @id=//edm:Annotation[@p2:Term='Org.OData.Core.V1.Immutable' and not(@Bool='false')]/@target
             and not(@id=//edm:Annotation[@p2:Term='Org.OData.Measures.V1.Unit'
                                       or @p2:Term='Org.OData.Measures.V1.ISOCurrency']//@p1:*)
-            or @id=//edm:Annotation[@p2:Term='Org.OData.Core.V1.Computed']/@target
+            or @id=//edm:Annotation[@p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false')]/@target
                                                   or @Name=$read-only or @Name=../edm:Key/edm:PropertyRef/@Name)]">
             <xsl:call-template name="property">
               <xsl:with-param name="suffix" select="'-update'" />
@@ -1564,8 +1564,11 @@
       <xsl:if test="$suffix='-create'">
         <!-- non-computed key properties are required, as are properties marked with Common.FieldControl=Mandatory -->
         <xsl:for-each select="$structuredType/edm:Property[
-          (@Name=../edm:Key/edm:PropertyRef/@Name and not(@Name=$read-only or @Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext)) 
-          or concat($qualifiedName,'/',@Name)=$mandatory or concat($aliasQualifiedName,'/',@Name)=$mandatory]">
+          @Name=../edm:Key/edm:PropertyRef/@Name and not(@id=//edm:Annotation[
+          @p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false') or
+          @p2:Term='Org.OData.Core.V1.ComputedDefaultValue' and not(@Bool='false') or
+          @p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/ReadOnly']/@target]) or
+          @id=//edm:Annotation[@p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/Mandatory']/@target]">
           <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
           </xsl:if>

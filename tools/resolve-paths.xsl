@@ -80,14 +80,21 @@
 					<xsl:value-of select="generate-id()" />
 				</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="edm:EnumMember">
+				<xsl:attribute name="p2:EnumMember">
+					<xsl:call-template name="p2-attribute">
+						<xsl:with-param name="qname" select="edm:EnumMember" />
+					</xsl:call-template>
+				</xsl:attribute>
+			</xsl:if>
 			<xsl:apply-templates select="@*|node()"
 				mode="ids" />
 		</xsl:copy>
 	</xsl:template>
 
-	<xsl:template match="edm:Annotation/@Term" mode="ids">
+	<xsl:template match="edm:Annotation/@Term | edm:*/@EnumMember" mode="ids">
 		<xsl:copy-of select="." />
-		<xsl:attribute name="p2:Term">
+		<xsl:attribute name="p2:{local-name()}">
 			<xsl:call-template name="p2-attribute">
 				<xsl:with-param name="qname" select="." />
 			</xsl:call-template>
@@ -203,7 +210,6 @@
 			edm:DateTimeOffset |
 			edm:Decimal |
 			edm:Duration |
-			edm:EnumMember |
 			edm:Float |
 			edm:Guid |
 			edm:Int |
