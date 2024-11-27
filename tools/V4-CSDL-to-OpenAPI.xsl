@@ -108,6 +108,8 @@
   <xsl:variable name="coreAcceptableMediaTypesAliased" select="concat($coreAlias,'.AcceptableMediaTypes')" />
   <xsl:variable name="coreComputed" select="concat($coreNamespace,'.Computed')" />
   <xsl:variable name="coreComputedAliased" select="concat($coreAlias,'.Computed')" />
+  <xsl:variable name="coreComputedDefaultValue" select="concat($coreNamespace,'.ComputedDefaultValue')" />
+  <xsl:variable name="coreComputedDefaultValueAliased" select="concat($coreAlias,'.ComputedDefaultValue')" />
   <xsl:variable name="coreDefaultNamespace" select="concat($coreNamespace,'.DefaultNamespace')" />
   <xsl:variable name="coreDefaultNamespaceAliased" select="concat($coreAlias,'.DefaultNamespace')" />
   <xsl:variable name="coreDescription" select="concat($coreNamespace,'.Description')" />
@@ -1490,9 +1492,9 @@
     <xsl:variable name="qualifiedName" select="concat($structuredType/../@Namespace,'.',$structuredType/@Name)" />
     <xsl:variable name="aliasQualifiedName" select="concat($structuredType/../@Alias,'.',$structuredType/@Name)" />
 
-    <xsl:variable name="computed" select="$structuredType/edm:Property[edm:Annotation[@Term=$coreComputed or @Term=$coreComputedAliased]]/@Name" />
+    <xsl:variable name="computed" select="$structuredType/edm:Property[edm:Annotation[@Term=$coreComputed or @Term=$coreComputedAliased or @Term=$coreComputedDefaultValue or @Term=$coreComputedDefaultValueAliased]]/@Name" />
     <xsl:variable name="computed-ext" select="(key('externalPropertyAnnotations',$qualifiedName)|key('externalPropertyAnnotations',$aliasQualifiedName))
-                                              [edm:Annotation[@Term=$coreComputed or @Term=$coreComputedAliased]]/@Target" />
+                                              [edm:Annotation[@Term=$coreComputed or @Term=$coreComputedAliased or @Term=$coreComputedDefaultValue or @Term=$coreComputedDefaultValueAliased]]/@Target" />
 
     <xsl:variable name="immutable" select="$structuredType/edm:Property[edm:Annotation[@Term=$coreImmutable or @Term=$coreImmutableAliased]]/@Name" />
     <xsl:variable name="immutable-ext" select="(key('externalPropertyAnnotations',$qualifiedName)|key('externalPropertyAnnotations',$aliasQualifiedName))
@@ -1556,10 +1558,10 @@
     </xsl:variable>
     <xsl:variable name="required">
       <xsl:if test="$suffix='-create'">
-        <!-- properties are required if marked with Common.FieldControl=Mandatory -->
+        <!-- non-computed key properties are required, as are properties marked with Common.FieldControl=Mandatory -->
         <xsl:for-each select="$structuredType/edm:Property[
-          concat($qualifiedName,'/',@Name)=$mandatory or concat($aliasQualifiedName,'/',@Name)=$mandatory]">
-          <xsl:if test="position()>1">
+          (@Name=../edm:Key/edm:PropertyRef/@Name and not(@Name=$read-only or @Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext)) 
+          or concat($qualifiedName,'/',@Name)=$mandatory or concat($aliasQualifiedName,'/',@Name)=$mandatory]">          <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
           </xsl:if>
           <xsl:text>"</xsl:text>
