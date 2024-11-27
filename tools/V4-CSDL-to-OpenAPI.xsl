@@ -1492,9 +1492,12 @@
     <xsl:variable name="qualifiedName" select="concat($structuredType/../@Namespace,'.',$structuredType/@Name)" />
     <xsl:variable name="aliasQualifiedName" select="concat($structuredType/../@Alias,'.',$structuredType/@Name)" />
 
-    <xsl:variable name="computed" select="$structuredType/edm:Property[edm:Annotation[@Term=$coreComputed or @Term=$coreComputedAliased or @Term=$coreComputedDefaultValue or @Term=$coreComputedDefaultValueAliased]]/@Name" />
+    <xsl:variable name="computed" select="$structuredType/edm:Property[edm:Annotation[@Term=$coreComputed or @Term=$coreComputedAliased]]/@Name" />
     <xsl:variable name="computed-ext" select="(key('externalPropertyAnnotations',$qualifiedName)|key('externalPropertyAnnotations',$aliasQualifiedName))
-                                              [edm:Annotation[@Term=$coreComputed or @Term=$coreComputedAliased or @Term=$coreComputedDefaultValue or @Term=$coreComputedDefaultValueAliased]]/@Target" />
+                                              [edm:Annotation[@Term=$coreComputed or @Term=$coreComputedAliased]]/@Target" />
+    <xsl:variable name="computeddefaultvalue" select="$structuredType/edm:Property[edm:Annotation[@Term=$coreComputedDefaultValue or @Term=$coreComputedDefaultValueAliased]]/@Name" />
+    <xsl:variable name="computeddefaultvalue-ext" select="(key('externalPropertyAnnotations',$qualifiedName)|key('externalPropertyAnnotations',$aliasQualifiedName))
+                                              [edm:Annotation[@Term=$coreComputedDefaultValue or @Term=$coreComputedDefaultValueAliased]]/@Target" />
 
     <xsl:variable name="immutable" select="$structuredType/edm:Property[edm:Annotation[@Term=$coreImmutable or @Term=$coreImmutableAliased]]/@Name" />
     <xsl:variable name="immutable-ext" select="(key('externalPropertyAnnotations',$qualifiedName)|key('externalPropertyAnnotations',$aliasQualifiedName))
@@ -1560,7 +1563,9 @@
       <xsl:if test="$suffix='-create'">
         <!-- non-computed key properties are required, as are properties marked with Common.FieldControl=Mandatory -->
         <xsl:for-each select="$structuredType/edm:Property[
-          (@Name=../edm:Key/edm:PropertyRef/@Name and not(@Name=$read-only or @Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext)) 
+          (@Name=../edm:Key/edm:PropertyRef/@Name and not(@Name=$read-only
+          or @Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext
+          or @Name=$computeddefaultvalue or concat($qualifiedName,'/',@Name) = $computeddefaultvalue-ext or concat($aliasQualifiedName,'/',@Name) = $computeddefaultvalue-ext))
           or concat($qualifiedName,'/',@Name)=$mandatory or concat($aliasQualifiedName,'/',@Name)=$mandatory]">
           <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
