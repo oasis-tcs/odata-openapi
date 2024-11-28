@@ -1490,30 +1490,6 @@
     <xsl:param name="suffix" select="null" />
     <xsl:param name="direct" select="true()" />
 
-    <xsl:variable name="qualifiedName" select="concat($structuredType/../@Namespace,'.',$structuredType/@Name)" />
-    <xsl:variable name="aliasQualifiedName" select="concat($structuredType/../@Alias,'.',$structuredType/@Name)" />
-
-    <xsl:variable name="computed" select="$structuredType/edm:Property[edm:Annotation[@Term=$coreComputed or @Term=$coreComputedAliased]]/@Name" />
-    <xsl:variable name="computed-ext" select="(key('externalPropertyAnnotations',$qualifiedName)|key('externalPropertyAnnotations',$aliasQualifiedName))
-                                              [edm:Annotation[@Term=$coreComputed or @Term=$coreComputedAliased]]/@Target" />
-
-    <xsl:variable name="immutable" select="$structuredType/edm:Property[edm:Annotation[@Term=$coreImmutable or @Term=$coreImmutableAliased]]/@Name" />
-    <xsl:variable name="immutable-ext" select="(key('externalPropertyAnnotations',$qualifiedName)|key('externalPropertyAnnotations',$aliasQualifiedName))
-                                               [edm:Annotation[@Term=$coreImmutable or @Term=$coreImmutableAliased]]/@Target" />
-
-    <!-- TODO: also @EnumMember and external targeting -->
-    <xsl:variable name="read-only" select="$structuredType/edm:Property[edm:Annotation[@Term=$corePermissions or @Term=$corePermissionsAliased]
-                                           /edm:EnumMember[.=$corePermissionRead or .=$corePermissionReadAliased]]/@Name" />
-    <!-- TODO: also nested annotations -->
-    <!-- TODO: also edm:EnumMember -->
-    <xsl:variable name="mandatory" select="(key('externalPropertyAnnotations',$qualifiedName)|key('externalPropertyAnnotations',$aliasQualifiedName))
-                                           [edm:Annotation[(@Term=$commonFieldControl or @Term=$commonFieldControlAliased)
-                                            and (@EnumMember=$commonFieldControlMandatory or @EnumMember=$commonFieldControlMandatoryAliased)]]/@Target" />
-    <!-- TODO: also nested annotations -->
-    <!-- TODO: also edm:EnumMember -->
-    <xsl:variable name="navprop-read-only" select="(key('externalPropertyAnnotations',$qualifiedName)|key('externalPropertyAnnotations',$aliasQualifiedName))
-                                                   [edm:Annotation[(@Term=$corePermissions or @Term=$corePermissionsAliased)
-                                                    and (@EnumMember=$corePermissionRead or @EnumMember=$corePermissionReadAliased)]]/@Target" />
     <xsl:variable name="basetypeinfo">
       <xsl:if test="$structuredType/@BaseType">
         <!-- recurse to base type -->
@@ -1535,8 +1511,11 @@
             @id=//edm:Annotation[@p2:Term='Org.OData.Core.V1.Immutable' and not(@Bool='false')]/@target
             and not(@id=//edm:Annotation[@p2:Term='Org.OData.Measures.V1.Unit'
                                       or @p2:Term='Org.OData.Measures.V1.ISOCurrency']//@p1:*)
-            or @id=//edm:Annotation[@p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false')]/@target
-                                                  or @Name=$read-only or @Name=../edm:Key/edm:PropertyRef/@Name)]">
+            or @id=//edm:Annotation[
+            @p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false') or
+            @p2:Term='Org.OData.Core.V1.Permissions' and @p2:EnumMember='Org.OData.Core.V1.Permission/Read' or
+            @p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/ReadOnly']/@target
+            or @Name=../edm:Key/edm:PropertyRef/@Name)]">
             <xsl:call-template name="property">
               <xsl:with-param name="suffix" select="'-update'" />
             </xsl:call-template>
@@ -1544,8 +1523,12 @@
         </xsl:when>
         <xsl:when test="$suffix='-create'">
           <!-- everything except computed and read-only properties -->
-          <xsl:for-each select="$structuredType/edm:Property[not(@Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext or @Name=$read-only)]
-                               |$structuredType/edm:NavigationProperty[not(concat($qualifiedName,'/',@Name)=$navprop-read-only or concat($aliasQualifiedName,'/',@Name)=$navprop-read-only)]">
+          <xsl:for-each select="$structuredType/edm:Property[not(@id=//edm:Annotation[
+          @p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false') or
+          @p2:Term='Org.OData.Core.V1.Permissions' and @p2:EnumMember='Org.OData.Core.V1.Permission/Read' or
+          @p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/ReadOnly']/@target)]
+          |$structuredType/edm:NavigationProperty[not(@id=//edm:Annotation[
+          @p2:Term='Org.OData.Core.V1.Permissions' and @p2:EnumMember='Org.OData.Core.V1.Permission/Read']/@target)]">
             <xsl:call-template name="property">
               <xsl:with-param name="suffix" select="'-create'" />
             </xsl:call-template>
@@ -1567,7 +1550,8 @@
           @Name=../edm:Key/edm:PropertyRef/@Name and not(@id=//edm:Annotation[
           @p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false') or
           @p2:Term='Org.OData.Core.V1.ComputedDefaultValue' and not(@Bool='false') or
-          @p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/ReadOnly']/@target]) or
+          @p2:Term='Org.OData.Core.V1.Permissions' and @p2:EnumMember='Org.OData.Core.V1.Permission/Read' or
+          @p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/ReadOnly']/@target) or
           @id=//edm:Annotation[@p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/Mandatory']/@target]">
           <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
