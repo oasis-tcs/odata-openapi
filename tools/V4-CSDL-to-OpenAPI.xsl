@@ -179,10 +179,6 @@
 
   <xsl:variable name="commonNamespace" select="'com.sap.vocabularies.Common.v1'" />
   <xsl:variable name="commonAlias" select="/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$commonNamespace]/@Alias" />
-  <xsl:variable name="commonFieldControl" select="concat($commonNamespace,'.FieldControl')" />
-  <xsl:variable name="commonFieldControlAliased" select="concat($commonAlias,'.FieldControl')" />
-  <xsl:variable name="commonFieldControlMandatory" select="concat($commonNamespace,'.FieldControlType/Mandatory')" />
-  <xsl:variable name="commonFieldControlMandatoryAliased" select="concat($commonAlias,'.FieldControlType/Mandatory')" />
   <xsl:variable name="commonLabel" select="concat($commonNamespace,'.Label')" />
   <xsl:variable name="commonLabelAliased" select="concat($commonAlias,'.Label')" />
   <xsl:variable name="commonQuickInfo" select="concat($commonNamespace,'.QuickInfo')" />
@@ -1508,11 +1504,6 @@
                                            /edm:EnumMember[.=$corePermissionRead or .=$corePermissionReadAliased]]/@Name" />
     <!-- TODO: also nested annotations -->
     <!-- TODO: also edm:EnumMember -->
-    <xsl:variable name="mandatory" select="(key('externalPropertyAnnotations',$qualifiedName)|key('externalPropertyAnnotations',$aliasQualifiedName))
-                                           [edm:Annotation[(@Term=$commonFieldControl or @Term=$commonFieldControlAliased)
-                                            and (@EnumMember=$commonFieldControlMandatory or @EnumMember=$commonFieldControlMandatoryAliased)]]/@Target" />
-    <!-- TODO: also nested annotations -->
-    <!-- TODO: also edm:EnumMember -->
     <xsl:variable name="navprop-read-only" select="(key('externalPropertyAnnotations',$qualifiedName)|key('externalPropertyAnnotations',$aliasQualifiedName))
                                                    [edm:Annotation[(@Term=$corePermissions or @Term=$corePermissionsAliased)
                                                     and (@EnumMember=$corePermissionRead or @EnumMember=$corePermissionReadAliased)]]/@Target" />
@@ -1561,12 +1552,11 @@
     </xsl:variable>
     <xsl:variable name="required">
       <xsl:if test="$suffix='-create'">
-        <!-- non-computed key properties are required, as are properties marked with Common.FieldControl=Mandatory -->
+        <!-- non-computed key properties are required -->
         <xsl:for-each select="$structuredType/edm:Property[
-          (@Name=../edm:Key/edm:PropertyRef/@Name and not(@Name=$read-only
+          @Name=../edm:Key/edm:PropertyRef/@Name and not(@Name=$read-only
           or @Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext
-          or @Name=$computeddefaultvalue or concat($qualifiedName,'/',@Name) = $computeddefaultvalue-ext or concat($aliasQualifiedName,'/',@Name) = $computeddefaultvalue-ext))
-          or concat($qualifiedName,'/',@Name)=$mandatory or concat($aliasQualifiedName,'/',@Name)=$mandatory]">
+          or @Name=$computeddefaultvalue or concat($qualifiedName,'/',@Name) = $computeddefaultvalue-ext or concat($aliasQualifiedName,'/',@Name) = $computeddefaultvalue-ext)]">
           <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
           </xsl:if>
