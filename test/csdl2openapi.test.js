@@ -15,7 +15,7 @@ const assert = require("assert");
 // (external) annotations on actions, functions, parameters, return types
 // control mapping of reference URLs
 
-const { paths, operations } = require("./utilities");
+const { paths, operations, schemas } = require("./utilities");
 
 const { csdl2openapi } = require("odata-openapi");
 
@@ -648,7 +648,7 @@ describe("Edge cases", function () {
           required: true,
           schema: {
             type: "string",
-            format: "uuid,null",
+            format: "uuid",
             nullable: true,
             default: "null",
             example: "01234567-89ab-cdef-0123-456789abcdef",
@@ -674,8 +674,8 @@ describe("Edge cases", function () {
           name: "int32Null",
           required: true,
           schema: {
-            type: "string",
-            format: "int32,null",
+            type: "integer",
+            format: "int32",
             nullable: true,
             default: "null",
           },
@@ -702,7 +702,7 @@ describe("Edge cases", function () {
           required: true,
           schema: {
             type: "string",
-            format: "base64url,null",
+            format: "base64url",
             nullable: true,
             default: "null",
           },
@@ -727,7 +727,7 @@ describe("Edge cases", function () {
           name: "booleanNull",
           required: true,
           schema: {
-            type: "string",
+            type: "boolean",
             nullable: true,
             default: "null",
           },
@@ -755,7 +755,7 @@ describe("Edge cases", function () {
           required: true,
           schema: {
             anyOf: [{ type: "number" }, { type: "string" }],
-            format: "decimal,null",
+            format: "decimal",
             nullable: true,
             default: "null",
             example: 0,
@@ -784,7 +784,7 @@ describe("Edge cases", function () {
           required: true,
           schema: {
             type: "string",
-            format: "duration,null",
+            format: "duration",
             nullable: true,
             default: "null",
             example: "'P4DT15H51M04S'",
@@ -934,35 +934,28 @@ describe("Edge cases", function () {
       $EntityContainer: "this.Container",
       this: {
         fun: [
-          { $Kind: "Function", $ReturnType: { $MaxLength: 20 } },
           {
             $Kind: "Function",
             $Parameter: [{ $Name: "in" }],
             $ReturnType: { $Collection: true, $MaxLength: 20 },
           },
         ],
-        Container: { fun: { $Function: "this.fun" } },
+        fun2: [{ $Kind: "Function", $ReturnType: { $MaxLength: 20 } }],
+        fun3: [{ $Kind: "Function", $ReturnType: { $Type: "this.typedef" } }],
+        typedef: {
+          $Kind: "TypeDefinition",
+          $UnderlyingType: "Edm.String",
+          $MaxLength: 15,
+        },
+        Container: {
+          fun: { $Function: "this.fun" },
+          fun2: { $Function: "this.fun2" },
+          fun3: { $Function: "this.fun3" },
+        },
       },
     };
     const expected = {
       paths: {
-        "/fun()": {
-          get: {
-            responses: {
-              200: {
-                description: "Success",
-                content: {
-                  "application/json": {
-                    schema: {
-                      type: "string",
-                      maxLength: 20,
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
         "/fun(in={in})": {
           get: {
             responses: {
@@ -992,6 +985,41 @@ describe("Edge cases", function () {
             },
           },
         },
+        "/fun2()": {
+          get: {
+            responses: {
+              200: {
+                description: "Success",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: { value: { type: "string", maxLength: 20 } },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        "/fun3()": {
+          get: {
+            responses: {
+              200: {
+                description: "Success",
+                content: {
+                  "application/json": {
+                    schema: {
+                      // Note: the "value" wrapper is missing because the generator doesn't recognize/resolve the type definition
+                      $ref: "#/components/schemas/this.typedef",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+
         "/$batch": { post: {} },
       },
     };
@@ -1003,14 +1031,19 @@ describe("Edge cases", function () {
       "Operations",
     );
     assert.deepStrictEqual(
-      actual.paths["/fun()"].get.responses[200],
-      expected.paths["/fun()"].get.responses[200],
+      actual.paths["/fun(in={in})"].get.responses[200],
+      expected.paths["/fun(in={in})"].get.responses[200],
       "fun",
     );
     assert.deepStrictEqual(
-      actual.paths["/fun(in={in})"].get.responses[200],
-      expected.paths["/fun(in={in})"].get.responses[200],
-      "fun(in)",
+      actual.paths["/fun2()"].get.responses[200],
+      expected.paths["/fun2()"].get.responses[200],
+      "fun2",
+    );
+    assert.deepStrictEqual(
+      actual.paths["/fun3()"].get.responses[200],
+      expected.paths["/fun3()"].get.responses[200],
+      "fun3",
     );
   });
 
@@ -1709,11 +1742,143 @@ describe("Edge cases", function () {
     );
   });
 
+  it("OData V2 Edm.Binary, Edm.DateTime, and Edm.Time", function () {
+    const csdl = {
+      $Version: "2.0",
+      $EntityContainer: "this.Container",
+      this: {
+        Container: {
+          fi: {
+            $Function: "this.f",
+          },
+        },
+        f: [
+          {
+            $Kind: "Function",
+            $Parameter: [],
+            $ReturnType: { $Type: "this.ct" },
+          },
+        ],
+        ct: {
+          $Kind: "ComplexType",
+          bin: { $Type: "Edm.Binary" },
+          date: { $Type: "Edm.DateTime" },
+          time: { $Type: "Edm.Time" },
+          timeWithMilliSeconds: { $Type: "Edm.Time", $Precision: 3 },
+        },
+      },
+    };
+    const expected = {
+      paths: {
+        "/$batch": { post: {} },
+        "/fi": { get: {} },
+      },
+      components: {
+        schemas: {
+          "this.ct": {
+            type: "object",
+            title: "ct",
+            properties: {
+              bin: { type: "string", format: "byte" },
+              date: {
+                type: "string",
+                example: "/Date(1492098664000)/",
+              },
+              time: {
+                type: "string",
+                example: "PT15H51M04S",
+              },
+              timeWithMilliSeconds: {
+                type: "string",
+                example: "PT15H51M04.000S",
+              },
+            },
+          },
+        },
+      },
+    };
+    const messages = [];
+
+    const actual = csdl2openapi(csdl, { messages });
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations",
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ct"],
+      expected.components.schemas["this.ct"],
+      "this.ct",
+    );
+    assert.deepStrictEqual(messages, [], "messages");
+  });
+
+  it("OData V2 Edm.Binary in OpenAPI 3.1.0", function () {
+    const csdl = {
+      $Version: "2.0",
+      $EntityContainer: "this.Container",
+      this: {
+        Container: {
+          fi: {
+            $Function: "this.f",
+          },
+        },
+        f: [
+          {
+            $Kind: "Function",
+            $Parameter: [],
+            $ReturnType: { $Type: "this.ct" },
+          },
+        ],
+        ct: {
+          $Kind: "ComplexType",
+          bin: { $Type: "Edm.Binary" },
+        },
+      },
+    };
+    const expected = {
+      paths: {
+        "/$batch": { post: {} },
+        "/fi": { get: {} },
+      },
+      components: {
+        schemas: {
+          "this.ct": {
+            type: "object",
+            title: "ct",
+            properties: {
+              bin: { type: "string", contentEncoding: "base64" },
+            },
+          },
+        },
+      },
+    };
+    const messages = [];
+
+    const actual = csdl2openapi(csdl, { messages, openapiVersion: "3.1.0" });
+    assert.deepStrictEqual(paths(actual), paths(expected), "Paths");
+    assert.deepStrictEqual(
+      operations(actual),
+      operations(expected),
+      "Operations",
+    );
+    assert.deepStrictEqual(schemas(actual), schemas(expected), "Schemas");
+    assert.deepStrictEqual(
+      actual.components.schemas["this.ct"],
+      expected.components.schemas["this.ct"],
+      "this.ct",
+    );
+    assert.deepStrictEqual(messages, [], "messages");
+  });
+
   it("OpenAPI 3.1.0", function () {
     const csdl = {
       $Reference: {
         dummy: {
           $Include: [
+            { $Namespace: "Org.OData.Capabilities.V1", $Alias: "Capabilities" },
             { $Namespace: "Org.OData.Core.V1", $Alias: "Core" },
             { $Namespace: "Org.OData.Validation.V1", $Alias: "Validation" },
           ],
@@ -1722,7 +1887,15 @@ describe("Edge cases", function () {
       $EntityContainer: "oas31.Container",
       oas31: {
         Container: {
-          sing: { $Type: "oas31.single" },
+          set: {
+            $Type: "oas31.single",
+            $Collection: true,
+            "@Capabilities.ChangeTracking": { Supported: true },
+          },
+          sing: {
+            $Type: "oas31.single",
+            "@Capabilities.ChangeTracking": { Supported: true }, // has currently no effect
+          },
         },
         single: {
           $Kind: "EntityType",
@@ -1773,7 +1946,7 @@ describe("Edge cases", function () {
     const properties = {
       binary: { type: "string", contentEncoding: "base64url" },
       stream: { type: "string", contentEncoding: "base64url" },
-      date: { type: "string", format: "date", example: "2017-04-13" }, // example is deprecated but still allowed
+      date: { type: "string", format: "date", examples: ["2017-04-13"] },
       nullableString: { type: ["string", "null"] },
       primitive: { type: ["boolean", "number", "string"] },
       ref: { $ref: "#/components/schemas/oas31.typeDef" },
@@ -1791,7 +1964,7 @@ describe("Edge cases", function () {
       },
       refEx: {
         allOf: [{ $ref: "#/components/schemas/oas31.typeDef" }],
-        example: 11,
+        examples: [11],
       },
       refMax: {
         allOf: [{ $ref: "#/components/schemas/oas31.typeDef" }],
@@ -1811,19 +1984,19 @@ describe("Edge cases", function () {
       exclusiveMin: {
         type: ["integer", "string"],
         format: "int64",
-        example: "42",
+        examples: ["42"],
         exclusiveMinimum: 0,
       },
       max: {
         type: ["number", "string", "null"],
         format: "decimal",
-        example: 0,
+        examples: [0],
         maximum: 42,
       },
       exclusiveMax: {
         type: "number",
         format: "double",
-        example: 3.14,
+        examples: [3.14],
         exclusiveMaximum: 42,
       },
     };
@@ -1835,6 +2008,17 @@ describe("Edge cases", function () {
       openapi.components.schemas["oas31.single"].properties,
       properties,
       "Schemas",
+    );
+    assert.deepStrictEqual(
+      openapi.paths["/set"].get.responses[200].content["application/json"]
+        .schema.properties["@odata.deltaLink"],
+      {
+        type: "string",
+        examples: [
+          "/service-root/set?$deltatoken=opaque server-generated token for fetching the delta",
+        ],
+      },
+      "delta link",
     );
   });
 });

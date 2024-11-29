@@ -1,9 +1,9 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Service for namespace Supported.Annotations",
+        "title": "Service for namespace ZE_API_DEMO_SRV",
         "version": "",
-        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[SinglePartKey{bg:orange}],[PlainDateTimeKey{bg:orange}],[AllSet{bg:dodgerblue}]++-*>[SinglePartKey],[KeyOnlySet{bg:dodgerblue}]++-*>[PlainDateTimeKey],[DoStuff{bg:dodgerblue}])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[Head{bg:orange}],[Head]-*>[Address{bg:orange}],[Address{bg:orange}],[HeadSet{bg:dodgerblue}]++-*>[Head],[AddressSet{bg:dodgerblue}]++-*>[Address])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
     },
     "servers": [
         {
@@ -12,289 +12,20 @@
     ],
     "tags": [
         {
-            "name": "AllSet",
-            "description": "Entity Set Ext - Description"
+            "name": "HeadSet"
         },
         {
-            "name": "KeyOnlySet"
+            "name": "AddressSet"
         }
     ],
     "paths": {
-        "/AllSet": {
+        "/HeadSet": {
             "get": {
-                "summary": "Query Entity Set Ext - Description",
-                "description": "Query Entity Set Ext - LongDescription",
+                "summary": "Get entities from HeadSet",
                 "tags": [
-                    "AllSet"
+                    "HeadSet"
                 ],
                 "parameters": [
-                    {
-                        "$ref": "#/components/parameters/top"
-                    },
-                    {
-                        "$ref": "#/components/parameters/skip"
-                    },
-                    {
-                        "name": "$filter",
-                        "in": "query",
-                        "description": "Filter items by property values, see [Filtering](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=64)",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "$orderby",
-                        "in": "query",
-                        "description": "Order items by property values, see [Sorting](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=65)",
-                        "explode": false,
-                        "schema": {
-                            "type": "array",
-                            "uniqueItems": true,
-                            "items": {
-                                "type": "string",
-                                "enum": [
-                                    "ID",
-                                    "ID desc",
-                                    "CreationTime",
-                                    "CreationTime desc",
-                                    "Pattern",
-                                    "Pattern desc",
-                                    "AllowedValues",
-                                    "AllowedValues desc",
-                                    "Maximum",
-                                    "Maximum desc",
-                                    "Minimum",
-                                    "Minimum desc",
-                                    "Example",
-                                    "Example desc"
-                                ]
-                            }
-                        }
-                    },
-                    {
-                        "name": "$select",
-                        "in": "query",
-                        "description": "Select properties to be returned, see [Select](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=68)",
-                        "explode": false,
-                        "schema": {
-                            "type": "array",
-                            "uniqueItems": true,
-                            "items": {
-                                "type": "string",
-                                "enum": [
-                                    "ID",
-                                    "CreationTime",
-                                    "Pattern",
-                                    "AllowedValues",
-                                    "Maximum",
-                                    "Minimum",
-                                    "Example"
-                                ]
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Retrieved entities",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "title": "Wrapper",
-                                    "type": "object",
-                                    "properties": {
-                                        "d": {
-                                            "title": "Collection of SinglePartKey",
-                                            "type": "object",
-                                            "properties": {
-                                                "__count": {
-                                                    "$ref": "#/components/schemas/count"
-                                                },
-                                                "results": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "$ref": "#/components/schemas/Supported.Annotations.SinglePartKey"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            },
-            "post": {
-                "summary": "Create Entity Ext - Description",
-                "description": "Create Entity Ext - LongDescription",
-                "tags": [
-                    "AllSet"
-                ],
-                "requestBody": {
-                    "required": true,
-                    "description": "New entity",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Supported.Annotations.SinglePartKey-create"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Created entity",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "title": "SinglePartKey",
-                                    "type": "object",
-                                    "properties": {
-                                        "d": {
-                                            "$ref": "#/components/schemas/Supported.Annotations.SinglePartKey"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            }
-        },
-        "/AllSet(datetime'{ID}')": {
-            "parameters": [
-                {
-                    "name": "ID",
-                    "in": "path",
-                    "required": true,
-                    "description": "key: ID",
-                    "schema": {
-                        "type": "string",
-                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T00:00$",
-                        "example": "2017-04-13T00:00"
-                    }
-                }
-            ],
-            "get": {
-                "summary": "Read Entity Set by Key Ext - Description",
-                "description": "Read Entity Set by Key Ext - LongDescription",
-                "tags": [
-                    "AllSet"
-                ],
-                "parameters": [
-                    {
-                        "name": "$select",
-                        "in": "query",
-                        "description": "Select properties to be returned, see [Select](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=68)",
-                        "explode": false,
-                        "schema": {
-                            "type": "array",
-                            "uniqueItems": true,
-                            "items": {
-                                "type": "string",
-                                "enum": [
-                                    "ID",
-                                    "CreationTime",
-                                    "Pattern",
-                                    "AllowedValues",
-                                    "Maximum",
-                                    "Minimum",
-                                    "Example"
-                                ]
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Retrieved entity",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "title": "SinglePartKey",
-                                    "type": "object",
-                                    "properties": {
-                                        "d": {
-                                            "$ref": "#/components/schemas/Supported.Annotations.SinglePartKey"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            },
-            "patch": {
-                "summary": "Update Entity Ext - Description",
-                "description": "Update Entity Ext - LongDescription",
-                "tags": [
-                    "AllSet"
-                ],
-                "requestBody": {
-                    "required": true,
-                    "description": "New property values",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "title": "Modified SinglePartKey",
-                                "type": "object",
-                                "properties": {
-                                    "d": {
-                                        "$ref": "#/components/schemas/Supported.Annotations.SinglePartKey-update"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "204": {
-                        "description": "Success"
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            },
-            "delete": {
-                "summary": "Delete Entity Ext - Description",
-                "description": "Delete Entity Ext - LongDescription",
-                "tags": [
-                    "AllSet"
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Success"
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            }
-        },
-        "/KeyOnlySet": {
-            "get": {
-                "summary": "Get entities from KeyOnlySet",
-                "tags": [
-                    "KeyOnlySet"
-                ],
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/top"
-                    },
-                    {
-                        "$ref": "#/components/parameters/skip"
-                    },
                     {
                         "name": "$filter",
                         "in": "query",
@@ -307,23 +38,6 @@
                         "$ref": "#/components/parameters/count"
                     },
                     {
-                        "name": "$orderby",
-                        "in": "query",
-                        "description": "Order items by property values, see [Sorting](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=65)",
-                        "explode": false,
-                        "schema": {
-                            "type": "array",
-                            "uniqueItems": true,
-                            "items": {
-                                "type": "string",
-                                "enum": [
-                                    "ID",
-                                    "ID desc"
-                                ]
-                            }
-                        }
-                    },
-                    {
                         "name": "$select",
                         "in": "query",
                         "description": "Select properties to be returned, see [Select](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=68)",
@@ -334,7 +48,31 @@
                             "items": {
                                 "type": "string",
                                 "enum": [
-                                    "ID"
+                                    "BusinessPartner",
+                                    "Type",
+                                    "Grouping",
+                                    "Title",
+                                    "FirstName",
+                                    "LastName",
+                                    "IsBlocked",
+                                    "ETag",
+                                    "to_Address"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=63)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "to_Address"
                                 ]
                             }
                         }
@@ -350,7 +88,7 @@
                                     "type": "object",
                                     "properties": {
                                         "d": {
-                                            "title": "Collection of PlainDateTimeKey",
+                                            "title": "Collection of Head",
                                             "type": "object",
                                             "properties": {
                                                 "__count": {
@@ -359,7 +97,7 @@
                                                 "results": {
                                                     "type": "array",
                                                     "items": {
-                                                        "$ref": "#/components/schemas/Supported.Annotations.PlainDateTimeKey"
+                                                        "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Head"
                                                     }
                                                 }
                                             }
@@ -375,9 +113,9 @@
                 }
             },
             "post": {
-                "summary": "Add new entity to KeyOnlySet",
+                "summary": "Add new entity to HeadSet",
                 "tags": [
-                    "KeyOnlySet"
+                    "HeadSet"
                 ],
                 "requestBody": {
                     "required": true,
@@ -385,7 +123,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Supported.Annotations.PlainDateTimeKey-create"
+                                "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Head-create"
                             }
                         }
                     }
@@ -396,11 +134,11 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "PlainDateTimeKey",
+                                    "title": "Head",
                                     "type": "object",
                                     "properties": {
                                         "d": {
-                                            "$ref": "#/components/schemas/Supported.Annotations.PlainDateTimeKey"
+                                            "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Head"
                                         }
                                     }
                                 }
@@ -413,24 +151,23 @@
                 }
             }
         },
-        "/KeyOnlySet(datetime'{ID}')": {
+        "/HeadSet('{BusinessPartner}')": {
             "parameters": [
                 {
-                    "name": "ID",
+                    "name": "BusinessPartner",
                     "in": "path",
                     "required": true,
-                    "description": "key: ID",
+                    "description": "Geschäftspartnernummer",
                     "schema": {
                         "type": "string",
-                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T([01][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9](\\.[0-9]+)?)?$",
-                        "example": "2017-04-13T23:59"
+                        "maxLength": 10
                     }
                 }
             ],
             "get": {
-                "summary": "Get entity from KeyOnlySet by key",
+                "summary": "Get entity from HeadSet by key",
                 "tags": [
-                    "KeyOnlySet"
+                    "HeadSet"
                 ],
                 "parameters": [
                     {
@@ -444,7 +181,31 @@
                             "items": {
                                 "type": "string",
                                 "enum": [
-                                    "ID"
+                                    "BusinessPartner",
+                                    "Type",
+                                    "Grouping",
+                                    "Title",
+                                    "FirstName",
+                                    "LastName",
+                                    "IsBlocked",
+                                    "ETag",
+                                    "to_Address"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=63)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "to_Address"
                                 ]
                             }
                         }
@@ -456,11 +217,102 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "PlainDateTimeKey",
+                                    "title": "Head",
                                     "type": "object",
                                     "properties": {
                                         "d": {
-                                            "$ref": "#/components/schemas/Supported.Annotations.PlainDateTimeKey"
+                                            "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Head"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/HeadSet('{BusinessPartner}')/to_Address": {
+            "parameters": [
+                {
+                    "name": "BusinessPartner",
+                    "in": "path",
+                    "required": true,
+                    "description": "Geschäftspartnernummer",
+                    "schema": {
+                        "type": "string",
+                        "maxLength": 10
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get entities from related to_Address",
+                "tags": [
+                    "HeadSet",
+                    "AddressSet"
+                ],
+                "parameters": [
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=64)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=68)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "BusinessPartner",
+                                    "AddressId",
+                                    "District",
+                                    "Street",
+                                    "HouseNumber",
+                                    "PostalCode",
+                                    "City",
+                                    "Country",
+                                    "ETag"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Wrapper",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "title": "Collection of Address",
+                                            "type": "object",
+                                            "properties": {
+                                                "__count": {
+                                                    "$ref": "#/components/schemas/count"
+                                                },
+                                                "results": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Address"
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -472,10 +324,73 @@
                     }
                 }
             },
-            "patch": {
-                "summary": "Update entity in KeyOnlySet",
+            "post": {
+                "summary": "Add new entity to related to_Address",
                 "tags": [
-                    "KeyOnlySet"
+                    "HeadSet",
+                    "AddressSet"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New entity",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Address-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Address",
+                                    "type": "object",
+                                    "properties": {
+                                        "d": {
+                                            "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Address"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/AddressSet(BusinessPartner='{BusinessPartner}',AddressId='{AddressId}')": {
+            "parameters": [
+                {
+                    "name": "BusinessPartner",
+                    "in": "path",
+                    "required": true,
+                    "description": "Geschäftspartnernummer",
+                    "schema": {
+                        "type": "string",
+                        "maxLength": 10
+                    }
+                },
+                {
+                    "name": "AddressId",
+                    "in": "path",
+                    "required": true,
+                    "description": "Adressnummer",
+                    "schema": {
+                        "type": "string",
+                        "maxLength": 10
+                    }
+                }
+            ],
+            "patch": {
+                "summary": "Update entity in AddressSet",
+                "tags": [
+                    "AddressSet"
                 ],
                 "requestBody": {
                     "required": true,
@@ -483,11 +398,11 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "title": "Modified PlainDateTimeKey",
+                                "title": "Modified Address",
                                 "type": "object",
                                 "properties": {
                                     "d": {
-                                        "$ref": "#/components/schemas/Supported.Annotations.PlainDateTimeKey-update"
+                                        "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Address-update"
                                     }
                                 }
                             }
@@ -504,41 +419,9 @@
                 }
             },
             "delete": {
-                "summary": "Delete entity from KeyOnlySet",
+                "summary": "Delete entity from AddressSet",
                 "tags": [
-                    "KeyOnlySet"
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Success"
-                    },
-                    "4XX": {
-                        "$ref": "#/components/responses/error"
-                    }
-                }
-            }
-        },
-        "/DoStuff": {
-            "post": {
-                "summary": "Invoke action DoStuff",
-                "tags": [
-                    "Service Operations"
-                ],
-                "parameters": [
-                    {
-                        "name": "rating",
-                        "in": "query",
-                        "required": true,
-                        "description": "Value needs to be suffixed with `M`",
-                        "schema": {
-                            "type": "string",
-                            "pattern": "^[-]?[0-9]+(\\.[0-9]+)?[mM]$",
-                            "multipleOf": 0.01,
-                            "minimum": -999.99,
-                            "maximum": 999.99,
-                            "example": "0M"
-                        }
-                    }
+                    "AddressSet"
                 ],
                 "responses": {
                     "204": {
@@ -565,7 +448,7 @@
                             "schema": {
                                 "type": "string"
                             },
-                            "example": "--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET AllSet HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
+                            "example": "--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET HeadSet HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
                         }
                     }
                 },
@@ -590,190 +473,199 @@
     },
     "components": {
         "schemas": {
-            "Supported.Annotations.SinglePartKey": {
+            "ZE_API_DEMO_SRV.Head": {
                 "type": "object",
                 "properties": {
-                    "ID": {
+                    "BusinessPartner": {
                         "type": "string",
-                        "example": "/Date(1492041600000)/"
+                        "maxLength": 10,
+                        "title": "GeschPartner",
+                        "description": "Geschäftspartnernummer"
                     },
-                    "CreationTime": {
+                    "Type": {
                         "type": "string",
-                        "nullable": true,
-                        "example": "PT15H51M04S",
-                        "title": "Time",
-                        "description": "Entry time"
+                        "maxLength": 4,
+                        "title": "Partnerart",
+                        "description": "Geschäftspartnerart"
                     },
-                    "Pattern": {
+                    "Grouping": {
                         "type": "string",
-                        "nullable": true,
-                        "pattern": "^.+$"
+                        "maxLength": 4,
+                        "title": "Gruppierung",
+                        "description": "Geschäftspartnergruppierung"
                     },
-                    "AllowedValues": {
+                    "Title": {
                         "type": "string",
-                        "nullable": true,
-                        "enum": [
-                            "red",
-                            "green",
-                            "blue"
-                        ]
+                        "maxLength": 4,
+                        "title": "Anrede",
+                        "description": "Anredeschlüssel"
                     },
-                    "Maximum": {
+                    "FirstName": {
                         "type": "string",
-                        "nullable": true,
-                        "format": "decimal",
-                        "multipleOf": 1,
-                        "maximum": -1,
-                        "example": "-1"
+                        "maxLength": 40,
+                        "title": "Vorname",
+                        "description": "Vorname des Geschäftspartners (Person)"
                     },
-                    "Minimum": {
+                    "LastName": {
                         "type": "string",
-                        "format": "decimal",
-                        "x-sap-scale": 5,
-                        "multipleOf": 0.00001,
-                        "minimum": 0,
-                        "exclusiveMinimum": true,
-                        "example": "1"
+                        "maxLength": 40,
+                        "title": "Nachname",
+                        "description": "Nachname des Geschäftspartners (Person)"
                     },
-                    "Example": {
+                    "IsBlocked": {
+                        "type": "boolean",
+                        "title": "Zentrale Sperre",
+                        "description": "Zentrale Sperre für den Geschäftspartner"
+                    },
+                    "ETag": {
                         "type": "string",
-                        "nullable": true,
-                        "example": "Hello World"
+                        "maxLength": 40,
+                        "title": "Hash-Wert",
+                        "description": "Hash-Wert (160 Bits)"
+                    },
+                    "to_Address": {
+                        "type": "object",
+                        "properties": {
+                            "results": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Address"
+                                }
+                            }
+                        }
                     }
                 },
-                "title": "SinglePartKey"
+                "title": "Head"
             },
-            "Supported.Annotations.SinglePartKey-create": {
+            "ZE_API_DEMO_SRV.Head-create": {
                 "type": "object",
                 "properties": {
-                    "ID": {
+                    "Title": {
                         "type": "string",
-                        "example": "/Date(1492041600000)/"
+                        "maxLength": 4,
+                        "title": "Anrede",
+                        "description": "Anredeschlüssel"
                     },
-                    "CreationTime": {
+                    "FirstName": {
                         "type": "string",
-                        "nullable": true,
-                        "example": "PT15H51M04S",
-                        "title": "Time",
-                        "description": "Entry time"
+                        "maxLength": 40,
+                        "title": "Vorname",
+                        "description": "Vorname des Geschäftspartners (Person)"
                     },
-                    "Pattern": {
+                    "LastName": {
                         "type": "string",
-                        "nullable": true,
-                        "pattern": "^.+$"
+                        "maxLength": 40,
+                        "title": "Nachname",
+                        "description": "Nachname des Geschäftspartners (Person)"
                     },
-                    "AllowedValues": {
-                        "type": "string",
-                        "nullable": true,
-                        "enum": [
-                            "red",
-                            "green",
-                            "blue"
-                        ]
-                    },
-                    "Maximum": {
-                        "type": "string",
-                        "nullable": true,
-                        "format": "decimal",
-                        "multipleOf": 1,
-                        "maximum": -1,
-                        "example": "-1"
-                    },
-                    "Minimum": {
-                        "type": "string",
-                        "format": "decimal",
-                        "x-sap-scale": 5,
-                        "multipleOf": 0.00001,
-                        "minimum": 0,
-                        "exclusiveMinimum": true,
-                        "example": "1"
-                    },
-                    "Example": {
-                        "type": "string",
-                        "nullable": true,
-                        "example": "Hello World"
+                    "to_Address": {
+                        "type": "object",
+                        "properties": {
+                            "results": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ZE_API_DEMO_SRV.Address-create"
+                                }
+                            }
+                        }
                     }
                 },
-                "required": [
-                    "ID"
-                ],
-                "title": "SinglePartKey (for create)"
+                "title": "Head (for create)"
             },
-            "Supported.Annotations.SinglePartKey-update": {
+            "ZE_API_DEMO_SRV.Head-update": {
+                "type": "object",
+                "title": "Head (for update)"
+            },
+            "ZE_API_DEMO_SRV.Address": {
                 "type": "object",
                 "properties": {
-                    "CreationTime": {
+                    "BusinessPartner": {
                         "type": "string",
-                        "nullable": true,
-                        "example": "PT15H51M04S",
-                        "title": "Time",
-                        "description": "Entry time"
+                        "maxLength": 10,
+                        "title": "GeschPartner",
+                        "description": "Geschäftspartnernummer"
                     },
-                    "Pattern": {
+                    "AddressId": {
                         "type": "string",
-                        "nullable": true,
-                        "pattern": "^.+$"
+                        "maxLength": 10,
+                        "title": "Adressnummer"
                     },
-                    "AllowedValues": {
+                    "District": {
                         "type": "string",
-                        "nullable": true,
-                        "enum": [
-                            "red",
-                            "green",
-                            "blue"
-                        ]
+                        "maxLength": 40,
+                        "title": "Ortsteil"
                     },
-                    "Maximum": {
+                    "Street": {
                         "type": "string",
-                        "nullable": true,
-                        "format": "decimal",
-                        "multipleOf": 1,
-                        "maximum": -1,
-                        "example": "-1"
+                        "maxLength": 60,
+                        "title": "Straße"
                     },
-                    "Minimum": {
+                    "HouseNumber": {
                         "type": "string",
-                        "format": "decimal",
-                        "x-sap-scale": 5,
-                        "multipleOf": 0.00001,
-                        "minimum": 0,
-                        "exclusiveMinimum": true,
-                        "example": "1"
+                        "maxLength": 10,
+                        "title": "Hausnummer"
                     },
-                    "Example": {
+                    "PostalCode": {
                         "type": "string",
-                        "nullable": true,
-                        "example": "Hello World"
+                        "maxLength": 10,
+                        "title": "Postleitzahl",
+                        "description": "Postleitzahl des Orts"
+                    },
+                    "City": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "title": "Ort"
+                    },
+                    "Country": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "title": "ISO-Code",
+                        "description": "ISO-Code des Landes"
+                    },
+                    "ETag": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "title": "Hash-Wert",
+                        "description": "Hash-Wert (160 Bits)"
                     }
                 },
-                "title": "SinglePartKey (for update)"
+                "title": "Address"
             },
-            "Supported.Annotations.PlainDateTimeKey": {
+            "ZE_API_DEMO_SRV.Address-create": {
                 "type": "object",
                 "properties": {
-                    "ID": {
+                    "District": {
                         "type": "string",
-                        "example": "/Date(1492098664000)/"
+                        "maxLength": 40,
+                        "title": "Ortsteil"
+                    },
+                    "Street": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "title": "Straße"
+                    },
+                    "HouseNumber": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "title": "Hausnummer"
+                    },
+                    "PostalCode": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "title": "Postleitzahl",
+                        "description": "Postleitzahl des Orts"
+                    },
+                    "City": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "title": "Ort"
                     }
                 },
-                "title": "PlainDateTimeKey"
+                "title": "Address (for create)"
             },
-            "Supported.Annotations.PlainDateTimeKey-create": {
+            "ZE_API_DEMO_SRV.Address-update": {
                 "type": "object",
-                "properties": {
-                    "ID": {
-                        "type": "string",
-                        "example": "/Date(1492098664000)/"
-                    }
-                },
-                "required": [
-                    "ID"
-                ],
-                "title": "PlainDateTimeKey (for create)"
-            },
-            "Supported.Annotations.PlainDateTimeKey-update": {
-                "type": "object",
-                "title": "PlainDateTimeKey (for update)"
+                "title": "Address (for update)"
             },
             "count": {
                 "type": "string",
