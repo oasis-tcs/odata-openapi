@@ -6,6 +6,10 @@
 		<edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
 	</edmx:Reference>
 	<edmx:Reference
+		Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+		<edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
+	</edmx:Reference>
+	<edmx:Reference
 		Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.xml">
 		<edmx:Include Namespace="Org.OData.Measures.V1"
 			Alias="Measures" />
@@ -47,6 +51,27 @@
 				<Annotation Term="Core.Description">
 					<Path>Quantity/@Measures.Unit</Path>
 				</Annotation>
+			</Annotations>
+			<Annotations Target="self.Container/Orders">
+				<Annotation Term="Capabilities.NavigationRestrictions">
+					<Record>
+						<PropertyValue Property="RestrictedProperties">
+							<Collection>
+								<Record>
+									<PropertyValue Property="NavigationProperty" NavigationPropertyPath="Items" />
+									<PropertyValue Property="InsertRestrictions">
+										<Record>
+											<PropertyValue Property="Insertable" Bool="false" />
+										</Record>
+									</PropertyValue>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="self.Container/Orders/Items">
+				<Annotation Term="Core.Description" String="contained entity set" />
 			</Annotations>
 		</Schema>
 	</edmx:DataServices>

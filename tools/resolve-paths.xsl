@@ -222,18 +222,18 @@
 	</xsl:template>
 
 	<xsl:template
-		match="edm:Annotations/edm:Annotation/@Path |
-			edm:Annotations/edm:Annotation/@PropertyPath |
-			edm:Annotations/edm:Annotation/@NavigationPropertyPath |
-			edm:Annotations/edm:Annotation/@AnyPropertyPath |
-			edm:Annotations/edm:Annotation/@AnnotationPath |
-			edm:Annotations/edm:Annotation/@ModelElementPath |
-			edm:Annotations/edm:Annotation/edm:Path |
-			edm:Annotations/edm:Annotation/edm:PropertyPath |
-			edm:Annotations/edm:Annotation/edm:NavigationPropertyPath |
-			edm:Annotations/edm:Annotation/edm:AnyPropertyPath |
-			edm:Annotations/edm:Annotation/edm:AnnotationPath |
-			edm:Annotations/edm:Annotation/edm:ModelElementPath"
+		match="edm:Annotations/edm:Annotation//@Path |
+			edm:Annotations/edm:Annotation//@PropertyPath |
+			edm:Annotations/edm:Annotation//@NavigationPropertyPath |
+			edm:Annotations/edm:Annotation//@AnyPropertyPath |
+			edm:Annotations/edm:Annotation//@AnnotationPath |
+			edm:Annotations/edm:Annotation//@ModelElementPath |
+			edm:Annotations/edm:Annotation//edm:Path |
+			edm:Annotations/edm:Annotation//edm:PropertyPath |
+			edm:Annotations/edm:Annotation//edm:NavigationPropertyPath |
+			edm:Annotations/edm:Annotation//edm:AnyPropertyPath |
+			edm:Annotations/edm:Annotation//edm:AnnotationPath |
+			edm:Annotations/edm:Annotation//edm:ModelElementPath"
 		mode="ids" priority="1">
 		<xsl:variable name="target">
 			<xsl:apply-templates
@@ -320,19 +320,46 @@
 	</xsl:template>
 
 	<xsl:template
-		match="edm:Annotation/@Path |
-			edm:Annotation/@PropertyPath |
-			edm:Annotation/@NavigationPropertyPath |
-			edm:Annotation/@AnyPropertyPath |
-			edm:Annotation/@AnnotationPath |
-			edm:Annotation/@ModelElementPath |
-			edm:Annotation/edm:Path |
-			edm:Annotation/edm:PropertyPath |
-			edm:Annotation/edm:NavigationPropertyPath |
-			edm:Annotation/edm:AnyPropertyPath |
-			edm:Annotation/edm:AnnotationPath |
-			edm:Annotation/edm:ModelElementPath"
+		match="edm:Annotation//@Path |
+			edm:Annotation//@PropertyPath |
+			edm:Annotation//@NavigationPropertyPath |
+			edm:Annotation//@AnyPropertyPath |
+			edm:Annotation//@AnnotationPath |
+			edm:Annotation//@ModelElementPath |
+			edm:Annotation//edm:Path |
+			edm:Annotation//edm:PropertyPath |
+			edm:Annotation//edm:NavigationPropertyPath |
+			edm:Annotation//edm:AnyPropertyPath |
+			edm:Annotation//edm:AnnotationPath |
+			edm:Annotation//edm:ModelElementPath |
+			edm:Annotations/edm:Annotation//@Path"
 		mode="ids">
+		<xsl:apply-templates select="." mode="eval-path">
+			<xsl:with-param name="relative-to"
+				select="ancestor::edm:*[not(
+					self::edm:Annotation |
+					self::edm:Collection |
+					self::edm:Record |
+					self::edm:PropertyValue |
+					self::edm:Property |
+					self::edm:NavigationProperty
+				)][1]" />
+		</xsl:apply-templates>
+	</xsl:template>
+
+	<xsl:template
+		match="edm:Annotations/edm:Annotation//edm:Annotation//@PropertyPath |
+			edm:Annotations/edm:Annotation//edm:Annotation//@NavigationPropertyPath |
+			edm:Annotations/edm:Annotation//edm:Annotation//@AnyPropertyPath |
+			edm:Annotations/edm:Annotation//edm:Annotation//@AnnotationPath |
+			edm:Annotations/edm:Annotation//edm:Annotation//@ModelElementPath |
+			edm:Annotations/edm:Annotation//edm:Annotation//edm:Path |
+			edm:Annotations/edm:Annotation//edm:Annotation//edm:PropertyPath |
+			edm:Annotations/edm:Annotation//edm:Annotation//edm:NavigationPropertyPath |
+			edm:Annotations/edm:Annotation//edm:Annotation//edm:AnyPropertyPath |
+			edm:Annotations/edm:Annotation//edm:Annotation//edm:AnnotationPath |
+			edm:Annotations/edm:Annotation//edm:Annotation//edm:ModelElementPath"
+		mode="ids" priority="2">
 		<xsl:apply-templates select="." mode="eval-path">
 			<xsl:with-param name="relative-to"
 				select="ancestor::edm:*[not(

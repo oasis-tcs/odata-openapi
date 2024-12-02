@@ -109,22 +109,14 @@
   </xsl:variable>
   <xsl:variable name="coreAcceptableMediaTypes" select="concat($coreNamespace,'.AcceptableMediaTypes')" />
   <xsl:variable name="coreAcceptableMediaTypesAliased" select="concat($coreAlias,'.AcceptableMediaTypes')" />
-  <xsl:variable name="coreComputed" select="concat($coreNamespace,'.Computed')" />
-  <xsl:variable name="coreComputedAliased" select="concat($coreAlias,'.Computed')" />
   <xsl:variable name="coreDefaultNamespace" select="concat($coreNamespace,'.DefaultNamespace')" />
   <xsl:variable name="coreDefaultNamespaceAliased" select="concat($coreAlias,'.DefaultNamespace')" />
   <xsl:variable name="coreDescription" select="concat($coreNamespace,'.Description')" />
   <xsl:variable name="coreDescriptionAliased" select="concat($coreAlias,'.Description')" />
   <xsl:variable name="coreExample" select="concat($coreNamespace,'.Example')" />
   <xsl:variable name="coreExampleAliased" select="concat($coreAlias,'.Example')" />
-  <xsl:variable name="coreImmutable" select="concat($coreNamespace,'.Immutable')" />
-  <xsl:variable name="coreImmutableAliased" select="concat($coreAlias,'.Immutable')" />
   <xsl:variable name="coreLongDescription" select="concat($coreNamespace,'.LongDescription')" />
   <xsl:variable name="coreLongDescriptionAliased" select="concat($coreAlias,'.LongDescription')" />
-  <xsl:variable name="corePermissions" select="concat($coreNamespace,'.Permissions')" />
-  <xsl:variable name="corePermissionsAliased" select="concat($coreAlias,'.Permissions')" />
-  <xsl:variable name="corePermissionRead" select="concat($coreNamespace,'.Permission/Read')" />
-  <xsl:variable name="corePermissionReadAliased" select="concat($coreAlias,'.Permission/Read')" />
 
   <xsl:variable name="authorizationNamespace" select="'Org.OData.Authorization.V1'" />
   <xsl:variable name="authorizationAlias" select="/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$authorizationNamespace]/@Alias" />
@@ -219,7 +211,7 @@
     <xsl:text>responses/error"}</xsl:text>
   </xsl:variable>
 
-  <xsl:variable name="key-as-segment" select="//edm:Annotation[
+  <xsl:variable name="key-as-segment" select="//edm:Annotation[not(@Qualifier) and
     @target=/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer/@id and
     @p2:Term='Org.OData.Capabilities.V1.KeyAsSegmentSupported' and not(@Bool='false')]" />
 
@@ -229,79 +221,11 @@
   <xsl:key name="namespaceQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Namespace,'.',@Name)" />
   <xsl:key name="aliasQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Alias,'.',@Name)" />
 
-  <!-- TODO: collect all annotations for target once in caller and pass them here -->
-  <xsl:template name="capability">
-    <xsl:param name="term" />
-    <xsl:param name="property" select="false()" />
-    <xsl:param name="target" select="." />
-
-    <xsl:variable name="target-path">
-      <xsl:call-template name="annotation-target">
-        <xsl:with-param name="node" select="$target" />
-        <xsl:with-param name="qualifier" select="$target/ancestor::edm:Schema/@Namespace" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="target-path-aliased">
-      <xsl:call-template name="annotation-target">
-        <xsl:with-param name="node" select="$target" />
-        <xsl:with-param name="qualifier" select="$target/ancestor::edm:Schema/@Alias" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="annos" select="key('externalAnnotations',$target-path)|key('externalAnnotations',$target-path-aliased)|$target" />
-
-    <xsl:variable name="qTerm" select="concat($capabilitiesNamespace,'.',$term)" />
-    <xsl:variable name="qTermAliased" select="concat($capabilitiesAlias,'.',$term)" />
-    <xsl:variable name="anno" select="$annos/edm:Annotation[@Term=$qTerm or @Term=$qTermAliased]" />
-
-    <xsl:choose>
-      <xsl:when test="$property">
-        <xsl:variable name="prop" select="$anno/edm:Record/edm:PropertyValue[@Property=$property]" />
-        <xsl:value-of select="$prop/@Bool|$prop/edm:Bool" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$anno/@Bool|$anno/edm:Bool" />
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <xsl:template name="capability-indexablebykey">
-    <xsl:param name="target" select="." />
-    <xsl:variable name="term" select="'IndexableByKey'" />
-    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',$target/@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',$target/@Name)" />
-    <xsl:variable name="annos" select="key('externalAnnotations',$target-path)|key('externalAnnotations',$target-path-aliased)|$target" />
-    <xsl:variable name="qTerm" select="concat($capabilitiesNamespace,'.',$term)" />
-    <xsl:variable name="qTermAliased" select="concat($capabilitiesAlias,'.',$term)" />
-    <xsl:variable name="anno" select="$annos/edm:Annotation[@Term=$qTerm or @Term=$qTermAliased]" />
-    <xsl:choose>
-      <xsl:when test="$anno/@Bool|$anno/edm:Bool">
-        <xsl:value-of select="$anno/@Bool|$anno/edm:Bool" />
-      </xsl:when>
-      <xsl:when test="$anno">
-        <xsl:text>true</xsl:text>
-      </xsl:when>
-    </xsl:choose>
-  </xsl:template>
-
   <xsl:template name="annotation-string">
     <xsl:param name="node" />
     <xsl:param name="term" />
-    <xsl:param name="termAliased" />
-    <xsl:variable name="target-path">
-      <xsl:call-template name="annotation-target">
-        <xsl:with-param name="node" select="$node" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="target-path-aliased">
-      <xsl:call-template name="annotation-target">
-        <xsl:with-param name="node" select="$node" />
-        <xsl:with-param name="qualifier" select="$node/ancestor::edm:Schema/@Alias" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="annos" select="key('externalAnnotations',$target-path)|key('externalAnnotations',$target-path-aliased)|$node" />
-    <xsl:variable name="annotationExt" select="$annos/edm:Annotation[not(@Qualifier) and (@Term=$term or @Term=$termAliased)]" />
     <xsl:call-template name="escape">
-      <xsl:with-param name="string" select="$annotationExt/@String|$annotationExt/edm:String" />
+      <xsl:with-param name="string" select="//edm:Annotation[not(@Qualifier) and @target=$node/@id and @p2:Term=$term]/@String" />
     </xsl:call-template>
   </xsl:template>
 
@@ -364,7 +288,6 @@
     <xsl:call-template name="annotation-string">
       <xsl:with-param name="node" select="$node" />
       <xsl:with-param name="term" select="$coreDescription" />
-      <xsl:with-param name="termAliased" select="$coreDescriptionAliased" />
     </xsl:call-template>
   </xsl:template>
 
@@ -373,7 +296,6 @@
     <xsl:call-template name="annotation-string">
       <xsl:with-param name="node" select="$node" />
       <xsl:with-param name="term" select="$coreLongDescription" />
-      <xsl:with-param name="termAliased" select="$coreLongDescriptionAliased" />
     </xsl:call-template>
   </xsl:template>
 
@@ -382,7 +304,6 @@
     <xsl:call-template name="annotation-string">
       <xsl:with-param name="node" select="$node" />
       <xsl:with-param name="term" select="$commonLabel" />
-      <xsl:with-param name="termAliased" select="$commonLabelAliased" />
     </xsl:call-template>
   </xsl:template>
 
@@ -391,7 +312,6 @@
     <xsl:call-template name="annotation-string">
       <xsl:with-param name="node" select="$node" />
       <xsl:with-param name="term" select="$commonQuickInfo" />
-      <xsl:with-param name="termAliased" select="$commonQuickInfoAliased" />
     </xsl:call-template>
   </xsl:template>
 
@@ -448,7 +368,6 @@
         <xsl:call-template name="annotation-string">
           <xsl:with-param name="node" select="/edmx:Edmx/edmx:DataServices/edm:Schema" />
           <xsl:with-param name="term" select="concat($coreNamespace,'.SchemaVersion')" />
-          <xsl:with-param name="termAliased" select="concat($coreAlias,'.SchemaVersion')" />
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
@@ -1492,13 +1411,13 @@
         <xsl:when test="$suffix='-update'">
           <!-- only updatable non-key properties -->
           <xsl:for-each select="$structuredType/edm:Property[not(
-            @id=//edm:Annotation[@p2:Term='Org.OData.Core.V1.Immutable' and not(@Bool='false')]/@target
-            and not(@id=//edm:Annotation[@p2:Term='Org.OData.Measures.V1.Unit'
-                                      or @p2:Term='Org.OData.Measures.V1.ISOCurrency']//@p1:*)
-            or @id=//edm:Annotation[
-            @p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false') or
+            @id=//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Core.V1.Immutable' and not(@Bool='false')]/@target
+            and not(@id=//edm:Annotation[not(@Qualifier) and
+            (@p2:Term='Org.OData.Measures.V1.Unit' or @p2:Term='Org.OData.Measures.V1.ISOCurrency')]//@p1:*)
+            or @id=//edm:Annotation[not(@Qualifier) and
+            (@p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false') or
             @p2:Term='Org.OData.Core.V1.Permissions' and @p2:EnumMember='Org.OData.Core.V1.Permission/Read' or
-            @p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/ReadOnly']/@target
+            @p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/ReadOnly')]/@target
             or @Name=../edm:Key/edm:PropertyRef/@Name)]">
             <xsl:call-template name="property">
               <xsl:with-param name="suffix" select="'-update'" />
@@ -1507,11 +1426,11 @@
         </xsl:when>
         <xsl:when test="$suffix='-create'">
           <!-- everything except computed and read-only properties -->
-          <xsl:for-each select="$structuredType/edm:Property[not(@id=//edm:Annotation[
-          @p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false') or
+          <xsl:for-each select="$structuredType/edm:Property[not(@id=//edm:Annotation[not(@Qualifier) and
+          (@p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false') or
           @p2:Term='Org.OData.Core.V1.Permissions' and @p2:EnumMember='Org.OData.Core.V1.Permission/Read' or
-          @p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/ReadOnly']/@target)]
-          |$structuredType/edm:NavigationProperty[not(@id=//edm:Annotation[
+          @p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/ReadOnly')]/@target)]
+          |$structuredType/edm:NavigationProperty[not(@id=//edm:Annotation[not(@Qualifier) and
           @p2:Term='Org.OData.Core.V1.Permissions' and @p2:EnumMember='Org.OData.Core.V1.Permission/Read']/@target)]">
             <xsl:call-template name="property">
               <xsl:with-param name="suffix" select="'-create'" />
@@ -1531,12 +1450,16 @@
       <xsl:if test="$suffix='-create'">
         <!-- non-computed key properties are required, as are Capabilities.InsertRestrictions/RequiredProperties -->
         <xsl:for-each select="$structuredType/edm:Property[
-          (@Name=../edm:Key/edm:PropertyRef/@Name and not(@id=//edm:Annotation[
-          @p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false') or
+          (@Name=../edm:Key/edm:PropertyRef/@Name and not(@id=//edm:Annotation[not(@Qualifier) and
+          (@p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false') or
           @p2:Term='Org.OData.Core.V1.ComputedDefaultValue' and not(@Bool='false') or
           @p2:Term='Org.OData.Core.V1.Permissions' and @p2:EnumMember='Org.OData.Core.V1.Permission/Read' or
-          @p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/ReadOnly']/@target)) or
-          @Name=//edm:Annotation[id(@target)/@p1:EntityType=$structuredType/@id and @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions']
+          @p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/ReadOnly')]/@target)) or
+          @Name=//edm:Annotation[not(@Qualifier) and id(@target)/@p1:EntityType=$structuredType/@id and @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions']
+          /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath or
+          @Name=//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
+          /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
+          /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and id(@p1:NavigationPropertyPath)/@p1:Type=$structuredType/@id]]/edm:PropertyValue[@Property='InsertRestrictions']
           /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath]">
           <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
@@ -1549,7 +1472,11 @@
       <xsl:if test="$suffix='-update'">
         <!-- required are Capabilities.UpdateRestrictions/RequiredProperties -->
         <xsl:for-each select="$structuredType/edm:Property[
-          @Name=//edm:Annotation[id(@target)/@p1:EntityType=$structuredType/@id and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions']
+          @Name=//edm:Annotation[not(@Qualifier) and id(@target)/@p1:EntityType=$structuredType/@id and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions']
+          /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath or
+          @Name=//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
+          /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
+          /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and id(@p1:NavigationPropertyPath)/@p1:Type=$structuredType/@id]]/edm:PropertyValue[@Property='UpdateRestrictions']
           /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath]">
           <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
@@ -2549,7 +2476,7 @@
   </xsl:template>
 
   <xsl:template name="batch">
-    <xsl:variable name="batch-supported" select="//edm:Annotation[@target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.BatchSupported']
+    <xsl:variable name="batch-supported" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.BatchSupported']
       /edm:Record/edm:PropertyValue[@Property='Supported' and not(@Bool='false')]" />
     <xsl:text>"/$batch":{</xsl:text>
     <xsl:if test="$batch-supported">
@@ -2716,8 +2643,8 @@
   </xsl:template>
 
   <xsl:template match="edm:EntitySet">
-    <xsl:variable name="readRestrictions" select="//edm:Annotation[@target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.ReadRestrictions']" />
-    <xsl:variable name="insertRestrictions" select="//edm:Annotation[@target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions']" />
+    <xsl:variable name="readRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.ReadRestrictions']" />
+    <xsl:variable name="insertRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions']" />
 
     <xsl:variable name="readable" select="$readRestrictions
       /edm:Record/edm:PropertyValue[@Property='Readable' and not(@Bool='false')]" />
@@ -2740,11 +2667,10 @@
       <xsl:with-param name="with-post" select="not($insertable)" />
     </xsl:call-template>
 
-    <xsl:variable name="indexable">
-      <xsl:call-template name="capability-indexablebykey" />
-    </xsl:variable>
+    <xsl:variable name="indexable" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and
+      @p2:Term='Org.OData.Capabilities.V1.IndexableByKey' and not(@Bool='false')]" />
 
-    <xsl:if test="not($indexable='false')">
+    <xsl:if test="$indexable">
       <xsl:call-template name="pathItem-single-entity">
         <xsl:with-param name="type" select="@EntityType" />
         <xsl:with-param name="with-key" select="true()" />
@@ -2752,13 +2678,13 @@
         <xsl:with-param name="path-prefix" select="@Name" />
         <xsl:with-param name="prefix-parameters" select="''" />
         <xsl:with-param name="level" select="0" />
-        <xsl:with-param name="navigationRestrictions" select="//edm:Annotation[@target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']" />
+        <xsl:with-param name="navigationRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']" />
         <xsl:with-param name="navigation-prefix" select="''" />
         <xsl:with-param name="readRestrictions" select="$readRestrictions" />
-        <xsl:with-param name="selectSupport" select="//edm:Annotation[@target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.SelectSupport']" />
-        <xsl:with-param name="expandRestrictions" select="//edm:Annotation[@target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.ExpandRestrictions']" />
-        <xsl:with-param name="updateRestrictions" select="//edm:Annotation[@target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions']" />
-        <xsl:with-param name="deleteRestrictions" select="//edm:Annotation[@target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.DeleteRestrictions']" />
+        <xsl:with-param name="selectSupport" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.SelectSupport']" />
+        <xsl:with-param name="expandRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.ExpandRestrictions']" />
+        <xsl:with-param name="updateRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions']" />
+        <xsl:with-param name="deleteRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.DeleteRestrictions']" />
       </xsl:call-template>
     </xsl:if>
   </xsl:template>
@@ -2771,13 +2697,13 @@
       <xsl:with-param name="path-prefix" select="@Name" />
       <xsl:with-param name="prefix-parameters" select="''" />
       <xsl:with-param name="level" select="0" />
-      <xsl:with-param name="navigationRestrictions" select="//edm:Annotation[@target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']" />
+      <xsl:with-param name="navigationRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']" />
       <xsl:with-param name="navigation-prefix" select="''" />
-      <xsl:with-param name="readRestrictions" select="//edm:Annotation[@target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.ReadRestrictions']" />
-      <xsl:with-param name="selectSupport" select="//edm:Annotation[@target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.SelectSupport']" />
-      <xsl:with-param name="expandRestrictions" select="//edm:Annotation[@target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.ExpandRestrictions']" />
-      <xsl:with-param name="updateRestrictions" select="//edm:Annotation[@target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions']" />
-      <xsl:with-param name="deleteRestrictions" select="//edm:Annotation[@target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.DeleteRestrictions']" />
+      <xsl:with-param name="readRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.ReadRestrictions']" />
+      <xsl:with-param name="selectSupport" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.SelectSupport']" />
+      <xsl:with-param name="expandRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.ExpandRestrictions']" />
+      <xsl:with-param name="updateRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions']" />
+      <xsl:with-param name="deleteRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.DeleteRestrictions']" />
     </xsl:call-template>
   </xsl:template>
 
@@ -2837,25 +2763,17 @@
       </xsl:variable>
 
       <xsl:if test="$collection or not(@ContainsTarget='true')">
-        <xsl:variable name="readable">
-          <xsl:call-template name="capability">
-            <xsl:with-param name="term" select="'ReadRestrictions'" />
-            <xsl:with-param name="property" select="'Readable'" />
-            <xsl:with-param name="target" select="$targetSet" />
-          </xsl:call-template>
-        </xsl:variable>
+        <xsl:variable name="readable" select="not(//edm:Annotation[not(@Qualifier) and @target=$targetSet/@id and
+          @p2:Name='Org.OData.Capabilities.V1.ReadRestrictions']
+          /edm:Record/edm:PropertyValue[@Property='Readable' and @Bool='false'])" />
 
         <!-- ReadRestrictions on source for this navigation property -->
         <xsl:variable name="readRestrictions" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ReadRestrictions']/edm:Record/edm:PropertyValue[@Property='Readable']" />
         <xsl:variable name="navigation-readable" select="$readRestrictions/@Bool|$readRestrictions/edm:Bool" />
 
-        <xsl:variable name="insertable">
-          <xsl:call-template name="capability">
-            <xsl:with-param name="term" select="'InsertRestrictions'" />
-            <xsl:with-param name="property" select="'Insertable'" />
-            <xsl:with-param name="target" select="$targetSet" />
-          </xsl:call-template>
-        </xsl:variable>
+        <xsl:variable name="insertable" select="not(//edm:Annotation[not(@Qualifier) and @target=$targetSet/@id and
+          @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions']
+          /edm:Record/edm:PropertyValue[@Property='Insertable' and @Bool='false'])" />
 
         <!-- InsertRestrictions on source for this navigation property -->
         <xsl:variable name="insertRestrictions" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='InsertRestrictions']/edm:Record/edm:PropertyValue[@Property='Insertable']" />
@@ -2872,13 +2790,13 @@
           <xsl:with-param name="readRestrictions" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ReadRestrictions']" />
           <xsl:with-param name="insertRestrictions" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='InsertRestrictions']" />
           <xsl:with-param name="targetSet" select="$targetSet" />
-          <xsl:with-param name="with-get" select="$navigation-readable='true' or (not($navigation-readable) and not($readable='false'))" />
+          <xsl:with-param name="with-get" select="$navigation-readable='true' or (not($navigation-readable) and $readable)" />
           <!-- TODO: need to look at both navigation restrictions and annotations on target set, same as with readable and insertable above.
             combine them either here or in template
             <xsl:with-param name="selectSupport"
             select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SelectSupport']" />
           -->
-          <xsl:with-param name="with-post" select="$collection and ($targetSet or @ContainsTarget='true') and ($navigation-insertable!='false' or (not($navigation-insertable) and not($insertable='false')))" />
+          <xsl:with-param name="with-post" select="$collection and ($targetSet or @ContainsTarget='true') and ($navigation-insertable!='false' or (not($navigation-insertable) and $insertable))" />
         </xsl:call-template>
       </xsl:if>
 
@@ -3154,12 +3072,9 @@
         </xsl:call-template>
         <xsl:text>]</xsl:text>
 
-        <xsl:variable name="delta">
-          <xsl:call-template name="capability">
-            <xsl:with-param name="term" select="'ChangeTracking'" />
-            <xsl:with-param name="property" select="'Supported'" />
-          </xsl:call-template>
-        </xsl:variable>
+        <xsl:variable name="delta" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and
+          @p2:Term='Org.OData.Capabilities.V1.ChangeTracking' and
+          not(edm:Record/edm:PropertyValue[@Property='Supported' and @Bool='false'])]" />
 
         <xsl:call-template name="responses">
           <xsl:with-param name="code" select="'200'" />
@@ -3476,13 +3391,10 @@
 
           <xsl:text>,"parameters":[</xsl:text>
 
-          <xsl:variable name="delta">
-            <xsl:call-template name="capability">
-              <xsl:with-param name="term" select="'ChangeTracking'" />
-              <xsl:with-param name="property" select="'Supported'" />
-            </xsl:call-template>
-          </xsl:variable>
-          <xsl:if test="$delta='true'">
+          <xsl:variable name="delta" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and
+            @p2:Term='Org.OData.Capabilities.V1.ChangeTracking' and
+            not(edm:Record/edm:PropertyValue[@Property='Supported' and @Bool='false'])]" />
+          <xsl:if test="$delta">
             <!-- TODO: Prefer, Preference-Applied -->
           </xsl:if>
 
@@ -3492,7 +3404,7 @@
           <xsl:if test="not($selectable='false')">
             <xsl:for-each select="$selectable-properties">
               <xsl:call-template name="select-property">
-                <!-- TODO: $delta='true' -->
+                <!-- TODO: $delta -->
                 <xsl:with-param name="after" select="false()" />
               </xsl:call-template>
             </xsl:for-each>
@@ -3505,7 +3417,7 @@
             <!-- TODO: exclude properties that are listed in NonExpandableProperties -->
             <xsl:for-each select="$entityType/edm:NavigationProperty|$entityType/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']">
               <xsl:call-template name="expand-property">
-                <!-- TODO: $delta='true' -->
+                <!-- TODO: $delta -->
                 <xsl:with-param name="after" select="(not($selectable='false') and $selectable-properties)" />
               </xsl:call-template>
             </xsl:for-each>
@@ -4378,7 +4290,7 @@
     <xsl:param name="type" select="null" />
     <xsl:param name="nullableFacet" select="'false'" />
     <xsl:param name="target" select="null" />
-    <xsl:param name="delta" select="'false'" />
+    <xsl:param name="delta" />
     <xsl:param name="description" select="'Success'" />
     <xsl:param name="functionImport" select="null" />
 
@@ -4459,7 +4371,7 @@
           </xsl:choose>
           <xsl:text>":{</xsl:text>
         </xsl:if>
-        <xsl:if test="$delta='true' and not($collection)">
+        <xsl:if test="$delta and not($collection)">
           <xsl:text>"allOf":[{</xsl:text>
         </xsl:if>
         <xsl:variable name="schema">
@@ -4483,7 +4395,7 @@
           <xsl:text>}]</xsl:text>
         </xsl:if>
         <xsl:value-of select="$text" />
-        <xsl:if test="$delta='true'">
+        <xsl:if test="$delta">
           <xsl:text>},</xsl:text>
           <xsl:if test="not($collection)">
             <xsl:text>{"properties":{</xsl:text>
