@@ -513,7 +513,7 @@
 
 	<xsl:template match="@*" mode="path" />
 
-	<xsl:template match="*" mode="path">
+	<xsl:template match="/ | *" mode="path">
 		<xsl:param name="p" />
 		<xsl:variable name="q"
 			select="substring-before(concat($p,'/'),'/')" />
