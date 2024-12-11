@@ -580,7 +580,7 @@
           </xsl:call-template>
           <xsl:text>}</xsl:text>
         </xsl:when>
-        <xsl:when test="//edm:Annotation[@p2:Term='Org.OData.Capabilities.V1.SearchRestrictions']/edm:Record/edm:PropertyValue[@Property='Searchable' and @Bool='true']">
+        <xsl:when test="//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.SearchRestrictions']/edm:Record/edm:PropertyValue[@Property='Searchable' and @Bool='true']">
           <xsl:text>,"search":{"name":"search","in":"query","description":"Search items by search phrases</xsl:text>
           <xsl:text>, see [Searching](https://wiki.scn.sap.com/wiki/display/EmTech/SAP+Annotations+for+OData+Version+2.0#SAPAnnotationsforODataVersion2.0-Query_Option_searchQueryOptionsearch)",</xsl:text>
           <xsl:call-template name="parameter-type">
@@ -616,7 +616,7 @@
   </xsl:template>
 
   <xsl:template name="security-schemes">
-    <xsl:variable name="anno" select="//edm:Annotation[@target=/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer/@id and
+    <xsl:variable name="anno" select="//edm:Annotation[not(@Qualifier) and @target=/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer/@id and
       @p2:Term='Org.OData.Authorization.V1.Authorizations']" />
     <xsl:if test="$anno">
       <xsl:text>,"</xsl:text>
@@ -846,7 +846,7 @@
   </xsl:template>
 
   <xsl:template name="security">
-    <xsl:variable name="anno" select="//edm:Annotation[@target=/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer/@id and
+    <xsl:variable name="anno" select="//edm:Annotation[not(@Qualifier) and @target=/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer/@id and
       @p2:Term='Org.OData.Authorization.V1.SecuritySchemes']" />
     <xsl:if test="$anno">
       <xsl:text>,"security":[</xsl:text>
@@ -2780,7 +2780,7 @@
 
   <xsl:template name="filter-RequiredProperties">
     <xsl:param name="target" select="." />
-    <xsl:variable name="required-properties" select="//edm:Annotation[@target=$target/@id and
+    <xsl:variable name="required-properties" select="//edm:Annotation[not(@Qualifier) and @target=$target/@id and
       @p2:Term='Org.OData.Capabilities.V1.FilterRestrictions']
       /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath" />
     <xsl:for-each select="$required-properties">
@@ -4144,10 +4144,13 @@
       </xsl:if>
 
       <xsl:if test="$with-sort">
-        <xsl:variable name="navigation-non-sortable" select="$navigation-sortRestrictions/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
-        <xsl:variable name="target-non-sortable" select="$target-sortRestrictions/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath" />
-        <xsl:variable name="non-sortable" select="$navigation-non-sortable|$target-non-sortable[not($navigation-non-sortable)]" />
-        <xsl:for-each select="$entityType/edm:Property[not(@Name=$non-sortable)]">
+        <xsl:for-each select="$entityType/edm:Property[not(
+          @id=//edm:Annotation[not(@Qualifier) and id(@target)/@p1:EntityType=$entityType/@id and @p2:Term='Org.OData.Capabilities.V1.SortRestrictions']
+          /edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath/@p1:PropertyPath or
+          @id=//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
+          /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
+          /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and id(@p1:NavigationPropertyPath)/@p1:Type=$entityType/@id]]/edm:PropertyValue[@Property='SortRestrictions']
+          /edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath/@p1:PropertyPath)]">
           <xsl:call-template name="orderby-property">
             <xsl:with-param name="after" select="$with-top or $with-skip or $with-search or $with-filter or $with-count" />
           </xsl:call-template>
