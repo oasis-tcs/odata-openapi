@@ -145,8 +145,7 @@
 				<xsl:value-of select="generate-id()" />
 			</xsl:attribute>
 			<xsl:variable name="target">
-				<xsl:apply-templates
-					select="ancestor::edm:Schema" mode="path">
+				<xsl:apply-templates select="/" mode="path">
 					<xsl:with-param name="p" select="../@Target" />
 				</xsl:apply-templates>
 			</xsl:variable>
@@ -236,8 +235,7 @@
 			edm:Annotations/edm:Annotation//edm:ModelElementPath"
 		mode="ids" priority="1">
 		<xsl:variable name="target">
-			<xsl:apply-templates
-				select="ancestor::edm:Schema" mode="path">
+			<xsl:apply-templates select="/" mode="path">
 				<xsl:with-param name="p"
 					select="ancestor::edm:Annotations/@Target" />
 			</xsl:apply-templates>
@@ -387,7 +385,7 @@
 	<!-- Paths relative to a property of a structured type -->
 	<xsl:template
 		match="edm:NavigationPropertyBinding/@Path |
-			edm:ReferentialConstraint/@Property"
+			edm:ReferentialConstraint/@ReferencedProperty"
 		mode="ids">
 		<xsl:apply-templates select="." mode="eval-path">
 			<xsl:with-param name="relative-to" select="../.." />
@@ -398,7 +396,7 @@
 	<xsl:template
 		match="edm:PropertyRef/@Name |
 			edm:NavigationPropertyBinding/@Target |
-			edm:ReferentialConstraint/@ReferencedProperty"
+			edm:ReferentialConstraint/@Property"
 		mode="ids">
 		<xsl:apply-templates select="." mode="eval-path">
 			<xsl:with-param name="relative-to" select="../../.." />
@@ -446,12 +444,19 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:when>
-					<xsl:otherwise>
+					<xsl:when test="not(self::*) and $relative='' and contains(.,'.')">
+						<xsl:copy-of select="." />
 						<xsl:if
 							test="not(starts-with(.,'Edm.') or starts-with(.,'Collection(Edm.'))">
-							<xsl:apply-templates select="."
-								mode="invalid" />
+							<xsl:attribute name="p2:{name()}">
+								<xsl:call-template name="p2-attribute">
+									<xsl:with-param name="qname" select="." />
+								</xsl:call-template>
+							</xsl:attribute>
 						</xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select="." mode="invalid" />
 						<xsl:call-template name="copy-ids" />
 					</xsl:otherwise>
 				</xsl:choose>
@@ -620,7 +625,41 @@
 
 	<xsl:template match="@*|*" mode="path-overload" />
 
-	<xsl:template match="edm:Action | edm:Function"
+	<xsl:template match="edm:Action"
+		mode="path-overload">
+		<xsl:param name="parameters" />
+		<xsl:param name="p" />
+		<xsl:choose>
+			<xsl:when
+				test="$parameters='' and not(@IsBound='true')">
+				<xsl:apply-templates select="."
+					mode="path-remainder">
+					<xsl:with-param name="p" select="$p" />
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:when test="$parameters!=''">
+				<xsl:variable name="param">
+					<xsl:call-template name="normalize-type">
+						<xsl:with-param name="type" select="$parameters" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:variable name="type">
+					<xsl:call-template name="normalize-type">
+						<xsl:with-param name="type"
+							select="edm:Parameter[1]/@Type" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:if test="$param=$type">
+					<xsl:apply-templates select="."
+						mode="path-remainder">
+						<xsl:with-param name="p" select="$p" />
+					</xsl:apply-templates>
+				</xsl:if>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="edm:Function"
 		mode="path-overload">
 		<xsl:param name="parameters" />
 		<xsl:param name="parameter-count" select="1" />

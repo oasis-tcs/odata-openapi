@@ -118,35 +118,20 @@
   <xsl:variable name="coreLongDescription" select="concat($coreNamespace,'.LongDescription')" />
   <xsl:variable name="coreLongDescriptionAliased" select="concat($coreAlias,'.LongDescription')" />
 
-  <xsl:variable name="authorizationNamespace" select="'Org.OData.Authorization.V1'" />
-  <xsl:variable name="authorizationAlias" select="/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$authorizationNamespace]/@Alias" />
-  <xsl:variable name="authorizationSecuritySchemes" select="concat($authorizationNamespace,'.SecuritySchemes')" />
-  <xsl:variable name="authorizationSecuritySchemesAliased" select="concat($authorizationAlias,'.SecuritySchemes')" />
-
   <xsl:variable name="capabilitiesNamespace" select="'Org.OData.Capabilities.V1'" />
   <xsl:variable name="capabilitiesAlias" select="/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$capabilitiesNamespace]/@Alias" />
   <xsl:variable name="capabilitiesCountRestrictions" select="concat($capabilitiesNamespace,'.CountRestrictions')" />
   <xsl:variable name="capabilitiesCountRestrictionsAliased" select="concat($capabilitiesAlias,'.CountRestrictions')" />
-  <xsl:variable name="capabilitiesDeleteRestrictions" select="concat($capabilitiesNamespace,'.DeleteRestrictions')" />
-  <xsl:variable name="capabilitiesDeleteRestrictionsAliased" select="concat($capabilitiesAlias,'.DeleteRestrictions')" />
   <xsl:variable name="capabilitiesExpandRestrictions" select="concat($capabilitiesNamespace,'.ExpandRestrictions')" />
   <xsl:variable name="capabilitiesExpandRestrictionsAliased" select="concat($capabilitiesAlias,'.ExpandRestrictions')" />
   <xsl:variable name="capabilitiesFilterRestrictions" select="concat($capabilitiesNamespace,'.FilterRestrictions')" />
   <xsl:variable name="capabilitiesFilterRestrictionsAliased" select="concat($capabilitiesAlias,'.FilterRestrictions')" />
-  <xsl:variable name="capabilitiesInsertRestrictions" select="concat($capabilitiesNamespace,'.InsertRestrictions')" />
-  <xsl:variable name="capabilitiesInsertRestrictionsAliased" select="concat($capabilitiesAlias,'.InsertRestrictions')" />
-  <xsl:variable name="capabilitiesNavigationRestrictions" select="concat($capabilitiesNamespace,'.NavigationRestrictions')" />
-  <xsl:variable name="capabilitiesNavigationRestrictionsAliased" select="concat($capabilitiesAlias,'.NavigationRestrictions')" />
-  <xsl:variable name="capabilitiesReadRestrictions" select="concat($capabilitiesNamespace,'.ReadRestrictions')" />
-  <xsl:variable name="capabilitiesReadRestrictionsAliased" select="concat($capabilitiesAlias,'.ReadRestrictions')" />
   <xsl:variable name="capabilitiesSearchRestrictions" select="concat($capabilitiesNamespace,'.SearchRestrictions')" />
   <xsl:variable name="capabilitiesSearchRestrictionsAliased" select="concat($capabilitiesAlias,'.SearchRestrictions')" />
   <xsl:variable name="capabilitiesSelectSupport" select="concat($capabilitiesNamespace,'.SelectSupport')" />
   <xsl:variable name="capabilitiesSelectSupportAliased" select="concat($capabilitiesAlias,'.SelectSupport')" />
   <xsl:variable name="capabilitiesSortRestrictions" select="concat($capabilitiesNamespace,'.SortRestrictions')" />
   <xsl:variable name="capabilitiesSortRestrictionsAliased" select="concat($capabilitiesAlias,'.SortRestrictions')" />
-  <xsl:variable name="capabilitiesUpdateRestrictions" select="concat($capabilitiesNamespace,'.UpdateRestrictions')" />
-  <xsl:variable name="capabilitiesUpdateRestrictionsAliased" select="concat($capabilitiesAlias,'.UpdateRestrictions')" />
   <xsl:variable name="capabilitiesSkipSupported" select="concat($capabilitiesNamespace,'.SkipSupported')" />
   <xsl:variable name="capabilitiesSkipSupportedAliased" select="concat($capabilitiesAlias,'.SkipSupported')" />
   <xsl:variable name="capabilitiesTopSupported" select="concat($capabilitiesNamespace,'.TopSupported')" />
@@ -595,7 +580,7 @@
           </xsl:call-template>
           <xsl:text>}</xsl:text>
         </xsl:when>
-        <xsl:when test="//edm:Annotation[@Term=$capabilitiesSearchRestrictions or @Term=$capabilitiesSearchRestrictionsAliased]/edm:Record/edm:PropertyValue[@Property='Searchable' and @Bool='true']">
+        <xsl:when test="//edm:Annotation[@p2:Term='Org.OData.Capabilities.V1.SearchRestrictions']/edm:Record/edm:PropertyValue[@Property='Searchable' and @Bool='true']">
           <xsl:text>,"search":{"name":"search","in":"query","description":"Search items by search phrases</xsl:text>
           <xsl:text>, see [Searching](https://wiki.scn.sap.com/wiki/display/EmTech/SAP+Annotations+for+OData+Version+2.0#SAPAnnotationsforODataVersion2.0-Query_Option_searchQueryOptionsearch)",</xsl:text>
           <xsl:call-template name="parameter-type">
@@ -631,13 +616,8 @@
   </xsl:template>
 
   <xsl:template name="security-schemes">
-    <xsl:variable name="target" select="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer" />
-    <xsl:variable name="target-path" select="concat($target/../@Namespace,'.',$target/@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat($target/../@Alias,'.',$target/@Name)" />
-    <xsl:variable name="annos" select="key('externalAnnotations',$target-path)|key('externalAnnotations',$target-path-aliased)|$target" />
-    <xsl:variable name="term" select="concat($authorizationNamespace,'.Authorizations')" />
-    <xsl:variable name="termAliased" select="concat($authorizationAlias,'.Authorizations')" />
-    <xsl:variable name="anno" select="$annos/edm:Annotation[@Term=$term or @Term=$termAliased]" />
+    <xsl:variable name="anno" select="//edm:Annotation[@target=/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer/@id and
+      @p2:Term='Org.OData.Authorization.V1.Authorizations']" />
     <xsl:if test="$anno">
       <xsl:text>,"</xsl:text>
       <xsl:choose>
@@ -866,11 +846,8 @@
   </xsl:template>
 
   <xsl:template name="security">
-    <xsl:variable name="target" select="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer" />
-    <xsl:variable name="target-path" select="concat($target/../@Namespace,'.',$target/@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat($target/../@Alias,'.',$target/@Name)" />
-    <xsl:variable name="annos" select="key('externalAnnotations',$target-path)|key('externalAnnotations',$target-path-aliased)|$target" />
-    <xsl:variable name="anno" select="$annos/edm:Annotation[@Term=$authorizationSecuritySchemes or @Term=$authorizationSecuritySchemesAliased]" />
+    <xsl:variable name="anno" select="//edm:Annotation[@target=/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer/@id and
+      @p2:Term='Org.OData.Authorization.V1.SecuritySchemes']" />
     <xsl:if test="$anno">
       <xsl:text>,"security":[</xsl:text>
       <xsl:for-each select="$anno/edm:Collection/edm:Record">
@@ -2803,11 +2780,9 @@
 
   <xsl:template name="filter-RequiredProperties">
     <xsl:param name="target" select="." />
-    <xsl:variable name="target-path" select="concat($target/../../@Namespace,'.',$target/../@Name,'/',$target/@Name)" />
-    <xsl:variable name="target-path-aliased" select="concat($target/../../@Alias,'.',$target/../@Name,'/',$target/@Name)" />
-    <xsl:variable name="annos" select="key('externalAnnotations',$target-path)|key('externalAnnotations',$target-path-aliased)|$target" />
-    <xsl:variable name="filter-restrictions" select="$annos/edm:Annotation[@Term=$capabilitiesFilterRestrictions or @Term=$capabilitiesFilterRestrictionsAliased]" />
-    <xsl:variable name="required-properties" select="$filter-restrictions/edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath" />
+    <xsl:variable name="required-properties" select="//edm:Annotation[@target=$target/@id and
+      @p2:Term='Org.OData.Capabilities.V1.FilterRestrictions']
+      /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath" />
     <xsl:for-each select="$required-properties">
       <xsl:if test="position()=1">
         <xsl:text>\n\nRequired filter properties:</xsl:text>
