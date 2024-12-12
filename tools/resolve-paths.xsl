@@ -108,9 +108,8 @@
 				<xsl:with-param name="qname" select="$qname" />
 			</xsl:call-template>
 		</xsl:variable>
-		<xsl:variable name="ns"
-			select="//edmx:Include[@Alias=$namespace or @Namespace=$namespace]
-				/@Namespace" />
+		<xsl:variable name="ns" select="//edmx:Include[@Alias=$namespace or @Namespace=$namespace]
+			/@Namespace" />
 		<xsl:choose>
 			<xsl:when test="$ns">
 				<xsl:value-of select="concat($ns,'.')" />
@@ -160,6 +159,7 @@
 					<xsl:if test="string($namespace)">
 						<xsl:attribute name="path-to-target">
 							<xsl:value-of select="$namespace" />
+							<xsl:text> </xsl:text>
 						</xsl:attribute>
 					</xsl:if>
 					<xsl:attribute name="target">
@@ -405,12 +405,6 @@
 
 	<xsl:template match="@*|*" mode="eval-path">
 		<xsl:param name="relative-to" />
-		<xsl:variable name="relative">
-			<xsl:if test="$relative-to/self::edm:*">
-				<xsl:value-of
-					select="concat(generate-id($relative-to),' ')" />
-			</xsl:if>
-		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="string(.)">
 				<xsl:variable name="path">
@@ -428,8 +422,7 @@
 										<xsl:value-of select="generate-id()" />
 									</xsl:attribute>
 									<xsl:call-template name="path-attributes">
-										<xsl:with-param name="path"
-											select="concat($relative,$path)" />
+										<xsl:with-param name="path" select="$path" />
 									</xsl:call-template>
 									<xsl:apply-templates select="@*|node()"
 										mode="ids" />
@@ -438,13 +431,12 @@
 							<xsl:otherwise>
 								<xsl:copy-of select="." />
 								<xsl:call-template name="path-attributes">
-									<xsl:with-param name="path"
-										select="concat($relative,$path)" />
+									<xsl:with-param name="path" select="$path" />
 								</xsl:call-template>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:when>
-					<xsl:when test="not(self::*) and $relative='' and contains(.,'.')">
+					<xsl:when test="not(self::*) and contains(.,'.')">
 						<xsl:copy-of select="." />
 						<xsl:if
 							test="not(starts-with(.,'Edm.') or starts-with(.,'Collection(Edm.'))">
@@ -491,6 +483,7 @@
 		<xsl:if test="string($non-final-segments)">
 			<xsl:attribute name="p0:{name()}">
 				<xsl:value-of select="$non-final-segments" />
+				<xsl:text> </xsl:text>
 			</xsl:attribute>
 		</xsl:if>
 		<xsl:choose>
