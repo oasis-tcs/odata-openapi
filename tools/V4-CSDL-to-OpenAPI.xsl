@@ -4081,11 +4081,16 @@
       /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and
       contains(concat(' ',$navigation-path,'$'),concat(' ',../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath,'$'))]]" />
 
-    <xsl:variable name="with-sort" select="not($navigation-restrictions) and
-      not($capabilities[@p2:Term='Org.OData.Capabilities.V1.SortRestrictions']
-      /edm:Record/edm:PropertyValue[@Property='Sortable' and @Bool='false']) or
-      $navigation-restrictions[not(edm:PropertyValue[@Property='SortRestrictions']
-      /edm:Record/edm:PropertyValue[@Property='Sortable' and @Bool='false'])]" />
+    <xsl:variable name="navigation-sortable" select="$capabilities[not($navigation-restrictions) and
+      @p2:Term='Org.OData.Capabilities.V1.SortRestrictions']
+      /edm:Record/edm:PropertyValue[@Property='Sortable']/@Bool |
+      $navigation-restrictions/edm:PropertyValue[@Property='SortRestrictions']
+      /edm:Record/edm:PropertyValue[@Property='Sortable']/@Bool" />
+    <xsl:variable name="with-sort" select="not($navigation-sortable='false' or
+      not($navigation-sortable) and
+      //edm:Annotation[not(@Qualifier) and @target=$target/@id and
+      @p2:Term='Org.OData.Capabilities.V1.SortRestrictions']
+      /edm:Record/edm:PropertyValue[@Property='Sortable' and @Bool='false'])" />
 
     <xsl:variable name="target-selectable-p" select="$target-annotations[@Term=$capabilitiesSelectSupport or @Term=$capabilitiesSelectSupportAliased]/edm:Record/edm:PropertyValue[@Property='Supported']" />
     <xsl:variable name="target-selectable" select="$target-selectable-p/@Bool|$target-selectable-p/edm:Bool" />
