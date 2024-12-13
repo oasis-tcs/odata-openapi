@@ -1,0 +1,624 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE edmx:Edmx
+ SYSTEM "csdl-ext.dtd">
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:p0="http://docs.oasis-open.org/odata/ns/edm/non-final-segments" xmlns:p1="http://docs.oasis-open.org/odata/ns/edm/final-segment" xmlns:p2="http://docs.oasis-open.org/odata/ns/edm/termcast-segment" xmlns:p3="http://docs.oasis-open.org/odata/ns/edm/after-termcast-segment" Version="4.01"><!-- TODO:
+    minimum, maximum, exclusive, example, and multipleOf interact
+    - inclusive maximum: take as example
+    - inclusive minimum: take as example
+    - exclusive maximum and no minimum: subtract 1 for example
+    - exclusive minimum and no maximum: add 1 for example
+    - both exclusive minimum and maximum: take average, round to multipleOf if present
+  --><edmx:Reference xmlns="http://docs.oasis-open.org/odata/ns/edm" Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+      <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core">
+         <Annotation id="d187aAbAa" target="" Term="Core.DefaultNamespace" p2:Term="Org.OData.Core.V1.DefaultNamespace"/>
+      </edmx:Include>
+   </edmx:Reference>
+   <edmx:Reference xmlns="http://docs.oasis-open.org/odata/ns/edm" Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+      <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+   </edmx:Reference>
+   <edmx:Reference xmlns="http://docs.oasis-open.org/odata/ns/edm" Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+      <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+   </edmx:Reference>
+   <edmx:Reference xmlns="http://docs.oasis-open.org/odata/ns/edm" Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+      <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+   </edmx:Reference>
+   <edmx:Reference xmlns="http://docs.oasis-open.org/odata/ns/edm" Uri="https://sap.github.io/odata-vocabularies/vocabularies/ODM.xml">
+      <edmx:Include Namespace="com.sap.vocabularies.ODM.v1" Alias="ODM"/>
+   </edmx:Reference>
+   <edmx:DataServices xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Schema id="d187aAgA" Namespace="Supported.Annotations" Alias="self">
+         <EntityType id="d187aAgAa" Name="SinglePartKey">
+            <Key id="d187aAgAaA">
+               <PropertyRef id="d187aAgAaAa" Name="ID" p1:Name="d187aAgAaB"/>
+            </Key>
+            <Property id="d187aAgAaB" Name="ID" Type="Edm.String" Nullable="false"/>
+            <Property id="d187aAgAaC" Name="Pattern" Type="Edm.String">
+               <Annotation id="d187aAgAaCa" target="d187aAgAaC" Term="Validation.Pattern" p2:Term="Org.OData.Validation.V1.Pattern" String="^.+$"/>
+            </Property>
+            <Property id="d187aAgAaD" Name="PatternExt" Type="Edm.String"/>
+            <Property id="d187aAgAaE" Name="AllowedValues" Type="Edm.String">
+               <Annotation id="d187aAgAaEa" target="d187aAgAaE" Term="Validation.AllowedValues" p2:Term="Org.OData.Validation.V1.AllowedValues">
+                  <Collection id="d187aAgAaEaA">
+                     <Record id="d187aAgAaEaAa">
+                        <PropertyValue id="d187aAgAaEaAaA" Property="Value" String="red"/>
+                     </Record>
+                     <Record id="d187aAgAaEaAb">
+                        <PropertyValue id="d187aAgAaEaAbA" Property="Value" String="green"/>
+                     </Record>
+                     <Record id="d187aAgAaEaAc">
+                        <PropertyValue id="d187aAgAaEaAcA" Property="Value" String="blue"/>
+                     </Record>
+                  </Collection>
+               </Annotation>
+            </Property>
+            <Property id="d187aAgAaF" Name="AllowedValuesExt" Type="Edm.String"/>
+            <Property id="d187aAgAaG" Name="Maximum" Type="Edm.Decimal" Precision="5" Scale="variable">
+               <Annotation id="d187aAgAaGa" target="d187aAgAaG" Term="Validation.Maximum" p2:Term="Org.OData.Validation.V1.Maximum" Decimal="0">
+                  <Annotation id="d187aAgAaGaA" target="d187aAgAaG" Term="Validation.Exclusive" p2:Term="Org.OData.Validation.V1.Exclusive" Bool="true"/>
+               </Annotation>
+            </Property>
+            <Property id="d187aAgAaH" Name="MaxMinInt" Type="Edm.Int32">
+               <Annotation id="d187aAgAaHa" target="d187aAgAaH" Term="Validation.Maximum" p2:Term="Org.OData.Validation.V1.Maximum" Int="42">
+                  <Annotation id="d187aAgAaHaA" target="d187aAgAaH" Term="Validation.Exclusive" p2:Term="Org.OData.Validation.V1.Exclusive" Bool="true"/>
+               </Annotation>
+               <Annotation id="d187aAgAaHb" target="d187aAgAaH" Term="Validation.Minimum" p2:Term="Org.OData.Validation.V1.Minimum" Int="-42">
+                  <Annotation id="d187aAgAaHbA" target="d187aAgAaH" Term="Validation.Exclusive" p2:Term="Org.OData.Validation.V1.Exclusive" Bool="true"/>
+               </Annotation>
+            </Property>
+            <Property id="d187aAgAaI" Name="MaxMinFloat" Type="Edm.Double">
+               <Annotation id="d187aAgAaIa" target="d187aAgAaI" Term="Validation.Maximum" p2:Term="Org.OData.Validation.V1.Maximum" Float="4.2">
+                  <Annotation id="d187aAgAaIaA" target="d187aAgAaI" Term="Validation.Exclusive" p2:Term="Org.OData.Validation.V1.Exclusive" Bool="true"/>
+               </Annotation>
+               <Annotation id="d187aAgAaIb" target="d187aAgAaI" Term="Validation.Minimum" p2:Term="Org.OData.Validation.V1.Minimum" Float="-4.2">
+                  <Annotation id="d187aAgAaIbA" target="d187aAgAaI" Term="Validation.Exclusive" p2:Term="Org.OData.Validation.V1.Exclusive" Bool="true"/>
+               </Annotation>
+            </Property>
+            <Property id="d187aAgAaJ" Name="MaximumExt" Type="Edm.Decimal" Scale="variable"/>
+            <Property id="d187aAgAaK" Name="Minimum" Type="Edm.Decimal" Precision="5" Scale="2">
+               <Annotation id="d187aAgAaKa" target="d187aAgAaK" Term="Validation.Minimum" p2:Term="Org.OData.Validation.V1.Minimum" Decimal="1"/>
+            </Property>
+            <Property id="d187aAgAaL" Name="MinimumExt" Type="Edm.Decimal" Scale="5" Nullable="false"/>
+            <Property id="d187aAgAaM" Name="Example" Type="Edm.String">
+               <Annotation id="d187aAgAaMa" target="d187aAgAaM" Term="Core.Example" p2:Term="Org.OData.Core.V1.Example">
+                  <Record id="d187aAgAaMaA" Type="Core.PrimitiveExampleValue" p2:Type="Org.OData.Core.V1.PrimitiveExampleValue">
+                     <PropertyValue id="d187aAgAaMaAa" Property="Description" String="Primitive example value"/>
+                     <PropertyValue id="d187aAgAaMaAb" Property="Value" String="Hello World"/>
+                  </Record>
+               </Annotation>
+               <Annotation id="d187aAgAaMb" target="d187aAgAaM" Term="Validation.Minimum" p2:Term="Org.OData.Validation.V1.Minimum" String="one"/>
+               <Annotation id="d187aAgAaMc" target="d187aAgAaM" Term="Validation.Maximum" p2:Term="Org.OData.Validation.V1.Maximum" String="two"/>
+            </Property>
+            <Property id="d187aAgAaN" Name="ExampleExt" Type="Edm.String"/>
+            <Property id="d187aAgAaO" Name="Computed" Type="Edm.String">
+               <Annotation id="d187aAgAaOa" target="d187aAgAaO" Term="Core.Computed" p2:Term="Org.OData.Core.V1.Computed"/>
+            </Property>
+            <Property id="d187aAgAaP" Name="ComputedExt" Type="Edm.String"/>
+            <Property id="d187aAgAaQ" Name="Immutable" Type="Edm.String">
+               <Annotation id="d187aAgAaQa" target="d187aAgAaQ" Term="Core.Immutable" p2:Term="Org.OData.Core.V1.Immutable"/>
+            </Property>
+            <Property id="d187aAgAaR" Name="RequiredInFilter" Type="Edm.String"/>
+            <Property id="d187aAgAaS" Name="ImmutableExt" Type="Edm.String"/>
+            <Property id="d187aAgAaT" Name="switch" Type="Edm.Boolean"/>
+            <NavigationProperty id="d187aAgAaU" Name="AllOne" Type="self.TwoPartKey" p1:Type="d187aAgAb"/>
+            <NavigationProperty id="d187aAgAaV" Name="AllMany" Type="Collection(self.TwoPartKey)" p1:Type="d187aAgAb"/>
+            <NavigationProperty id="d187aAgAaW" Name="ReadOnlyOne" Type="self.TwoPartKey" p1:Type="d187aAgAb"/>
+            <NavigationProperty id="d187aAgAaX" Name="ReadOnlyMany" Type="Collection(self.TwoPartKey)" p1:Type="d187aAgAb"/>
+            <NavigationProperty id="d187aAgAaY" Name="NothingOne" Type="self.TwoPartKey" p1:Type="d187aAgAb"/>
+            <NavigationProperty id="d187aAgAaZ" Name="NothingMany" Type="Collection(self.TwoPartKey)" p1:Type="d187aAgAb"/>
+         </EntityType>
+         <EntityType id="d187aAgAb" Name="TwoPartKey">
+            <Key id="d187aAgAbA">
+               <PropertyRef id="d187aAgAbAa" Name="One" p1:Name="d187aAgAbB"/>
+               <PropertyRef id="d187aAgAbAb" Name="Two" p1:Name="d187aAgAbC"/>
+            </Key>
+            <Property id="d187aAgAbB" Name="One" Type="Edm.Int32" Nullable="false"/>
+            <Property id="d187aAgAbC" Name="Two" Type="Edm.TimeOfDay" Nullable="false"/>
+            <Annotation id="d187aAgAbD" target="d187aAgAb" String="odmTwo" Term="ODM.entityName" p2:Term="com.sap.vocabularies.ODM.v1.entityName">
+               <String id="d187aAgAbDa">odmTwo</String>
+            </Annotation>
+            <Annotation id="d187aAgAbE" target="d187aAgAb" Term="ODM.oid" p2:Term="com.sap.vocabularies.ODM.v1.oid">
+               <PropertyPath id="d187aAgAbEa" p1:PropertyPath="d187aAgAbB">One</PropertyPath>
+            </Annotation>
+         </EntityType>
+         <EntityContainer id="d187aAgAc" Name="Container">
+            <Annotation id="d187aAgAcA" target="d187aAgAc" Term="Capabilities.BatchSupport" p2:Term="Org.OData.Capabilities.V1.BatchSupport">
+               <Record id="d187aAgAcAa">
+                  <PropertyValue id="d187aAgAcAaA" Property="Supported" Bool="false"/>
+               </Record>
+            </Annotation>
+            <EntitySet id="d187aAgAcB" Name="AllSet" EntityType="self.SinglePartKey" p1:EntityType="d187aAgAa">
+               <NavigationPropertyBinding id="d187aAgAcBa" Path="AllOne" p1:Path="d187aAgAaU" Target="TwoAllSet" p1:Target="d187aAgAcH"/>
+               <NavigationPropertyBinding id="d187aAgAcBb" Path="AllMany" p1:Path="d187aAgAaV" Target="TwoAllSet" p1:Target="d187aAgAcH"/>
+               <NavigationPropertyBinding id="d187aAgAcBc" Path="ReadOnlyOne" p1:Path="d187aAgAaW" Target="TwoReadOnlySet" p1:Target="d187aAgAcJ"/>
+               <NavigationPropertyBinding id="d187aAgAcBd" Path="ReadOnlyMany" p1:Path="d187aAgAaX" Target="TwoReadOnlySet" p1:Target="d187aAgAcJ"/>
+               <NavigationPropertyBinding id="d187aAgAcBe" Path="NothingOne" p1:Path="d187aAgAaY" Target="TwoNothingSet" p1:Target="d187aAgAcM"/>
+               <NavigationPropertyBinding id="d187aAgAcBf" Path="NothingMany" p1:Path="d187aAgAaZ" Target="TwoNothingSet" p1:Target="d187aAgAcM"/>
+               <Annotation id="d187aAgAcBg" target="d187aAgAcB" Term="Capabilities.FilterRestrictions" p2:Term="Org.OData.Capabilities.V1.FilterRestrictions">
+                  <Record id="d187aAgAcBgA">
+                     <PropertyValue id="d187aAgAcBgAa" Property="RequiresFilter" Bool="true"/>
+                     <PropertyValue id="d187aAgAcBgAb" Property="RequiredProperties">
+                        <Collection id="d187aAgAcBgAbA">
+                           <PropertyPath id="d187aAgAcBgAbAa" p1:PropertyPath="d187aAgAaR">RequiredInFilter</PropertyPath>
+                        </Collection>
+                     </PropertyValue>
+                  </Record>
+               </Annotation>
+               <Annotation id="d187aAgAcBh" target="d187aAgAcB" Term="Capabilities.SortRestrictions" p2:Term="Org.OData.Capabilities.V1.SortRestrictions">
+                  <Record id="d187aAgAcBhA">
+                     <PropertyValue id="d187aAgAcBhAa" Property="NonSortableProperties">
+                        <Collection id="d187aAgAcBhAaA">
+                           <PropertyPath id="d187aAgAcBhAaAa" p1:PropertyPath="d187aAgAaM">Example</PropertyPath>
+                        </Collection>
+                     </PropertyValue>
+                  </Record>
+               </Annotation>
+            </EntitySet>
+            <EntitySet id="d187aAgAcC" Name="NoNavigationSet" EntityType="self.SinglePartKey" p1:EntityType="d187aAgAa">
+               <Annotation id="d187aAgAcCa" target="d187aAgAcC" Term="Capabilities.NavigationRestrictions" p2:Term="Org.OData.Capabilities.V1.NavigationRestrictions">
+                  <Record id="d187aAgAcCaA">
+                     <PropertyValue id="d187aAgAcCaAa" Property="Navigability" EnumMember="Capabilities.NavigationType/None" p2:EnumMember="Org.OData.Capabilities.V1.NavigationType/None"/>
+                  </Record>
+               </Annotation>
+            </EntitySet>
+            <EntitySet id="d187aAgAcD" Name="OneNavigationSet" EntityType="self.SinglePartKey" p1:EntityType="d187aAgAa">
+               <Annotation id="d187aAgAcDa" target="d187aAgAcD" Term="Capabilities.NavigationRestrictions" p2:Term="Org.OData.Capabilities.V1.NavigationRestrictions">
+                  <Record id="d187aAgAcDaA">
+                     <PropertyValue id="d187aAgAcDaAa" Property="Navigability" EnumMember="Capabilities.NavigationType/None" p2:EnumMember="Org.OData.Capabilities.V1.NavigationType/None"/>
+                     <PropertyValue id="d187aAgAcDaAb" Property="RestrictedProperties">
+                        <Collection id="d187aAgAcDaAbA">
+                           <Record id="d187aAgAcDaAbAa">
+                              <PropertyValue id="d187aAgAcDaAbAaA" Property="NavigationProperty" NavigationPropertyPath="AllMany" p1:NavigationPropertyPath="d187aAgAaV"/>
+                              <PropertyValue id="d187aAgAcDaAbAaB" Property="Navigability" EnumMember="Capabilities.NavigationType/Recursive" p2:EnumMember="Org.OData.Capabilities.V1.NavigationType/Recursive"/>
+                           </Record>
+                        </Collection>
+                     </PropertyValue>
+                  </Record>
+               </Annotation>
+               <Annotation id="d187aAgAcDb" target="d187aAgAcD" Term="Capabilities.InsertRestrictions" p2:Term="Org.OData.Capabilities.V1.InsertRestrictions">
+                  <Record id="d187aAgAcDbA">
+                     <PropertyValue id="d187aAgAcDbAa" Bool="false" Property="Insertable"/>
+                  </Record>
+               </Annotation>
+               <Annotation id="d187aAgAcDc" target="d187aAgAcD" Term="Capabilities.UpdateRestrictions" p2:Term="Org.OData.Capabilities.V1.UpdateRestrictions">
+                  <Record id="d187aAgAcDcA">
+                     <PropertyValue id="d187aAgAcDcAa" Path="switch" p1:Path="d187aAgAaT" Property="Updatable"/>
+                  </Record>
+               </Annotation>
+               <Annotation id="d187aAgAcDd" target="d187aAgAcD" Term="Capabilities.DeleteRestrictions" p2:Term="Org.OData.Capabilities.V1.DeleteRestrictions">
+                  <Record id="d187aAgAcDdA">
+                     <PropertyValue id="d187aAgAcDdAa" Path="switch" p1:Path="d187aAgAaT" Property="Deletable"/>
+                  </Record>
+               </Annotation>
+            </EntitySet>
+            <EntitySet id="d187aAgAcE" Name="ReadListOnlySet" EntityType="self.SinglePartKey" p1:EntityType="d187aAgAa">
+               <NavigationPropertyBinding id="d187aAgAcEa" Path="AllOne" p1:Path="d187aAgAaU" Target="TwoAllSet" p1:Target="d187aAgAcH"/>
+               <NavigationPropertyBinding id="d187aAgAcEb" Path="AllMany" p1:Path="d187aAgAaV" Target="TwoAllSet" p1:Target="d187aAgAcH"/>
+               <NavigationPropertyBinding id="d187aAgAcEc" Path="ReadOnlyOne" p1:Path="d187aAgAaW" Target="TwoReadOnlySet" p1:Target="d187aAgAcJ"/>
+               <NavigationPropertyBinding id="d187aAgAcEd" Path="ReadOnlyMany" p1:Path="d187aAgAaX" Target="TwoReadOnlySet" p1:Target="d187aAgAcJ"/>
+               <NavigationPropertyBinding id="d187aAgAcEe" Path="NothingOne" p1:Path="d187aAgAaY" Target="TwoNothingSet" p1:Target="d187aAgAcM"/>
+               <NavigationPropertyBinding id="d187aAgAcEf" Path="NothingMany" p1:Path="d187aAgAaZ" Target="TwoNothingSet" p1:Target="d187aAgAcM"/>
+               <Annotation id="d187aAgAcEg" target="d187aAgAcE" Term="Capabilities.InsertRestrictions" p2:Term="Org.OData.Capabilities.V1.InsertRestrictions">
+                  <Record id="d187aAgAcEgA">
+                     <PropertyValue id="d187aAgAcEgAa" Bool="false" Property="Insertable"/>
+                  </Record>
+               </Annotation>
+               <Annotation id="d187aAgAcEh" target="d187aAgAcE" Term="Capabilities.ReadRestrictions" p2:Term="Org.OData.Capabilities.V1.ReadRestrictions">
+                  <Record id="d187aAgAcEhA">
+                     <PropertyValue id="d187aAgAcEhAa" Property="Description" String="Supports only read-list"/>
+                     <PropertyValue id="d187aAgAcEhAb" Property="LongDescription" String="Does not support any query options"/>
+                  </Record>
+               </Annotation>
+               <!-- Note: "not indexable by key" implies "no update, no delete" --><Annotation id="d187aAgAcEj" target="d187aAgAcE" Term="Capabilities.IndexableByKey" p2:Term="Org.OData.Capabilities.V1.IndexableByKey" Bool="false"/>
+               <Annotation id="d187aAgAcEk" target="d187aAgAcE" Term="Capabilities.SkipSupported" p2:Term="Org.OData.Capabilities.V1.SkipSupported" Bool="false"/>
+               <Annotation id="d187aAgAcEl" target="d187aAgAcE" Term="Capabilities.TopSupported" p2:Term="Org.OData.Capabilities.V1.TopSupported" Bool="false"/>
+               <Annotation id="d187aAgAcEm" target="d187aAgAcE" Term="Capabilities.CountRestrictions" p2:Term="Org.OData.Capabilities.V1.CountRestrictions">
+                  <Record id="d187aAgAcEmA">
+                     <PropertyValue id="d187aAgAcEmAa" Bool="false" Property="Countable"/>
+                  </Record>
+               </Annotation>
+               <Annotation id="d187aAgAcEn" target="d187aAgAcE" Term="Capabilities.FilterRestrictions" p2:Term="Org.OData.Capabilities.V1.FilterRestrictions">
+                  <Record id="d187aAgAcEnA">
+                     <PropertyValue id="d187aAgAcEnAa" Bool="false" Property="Filterable"/>
+                  </Record>
+               </Annotation>
+               <Annotation id="d187aAgAcEo" target="d187aAgAcE" Term="Capabilities.SearchRestrictions" p2:Term="Org.OData.Capabilities.V1.SearchRestrictions">
+                  <Record id="d187aAgAcEoA">
+                     <PropertyValue id="d187aAgAcEoAa" Bool="false" Property="Searchable"/>
+                  </Record>
+               </Annotation>
+               <Annotation id="d187aAgAcEp" target="d187aAgAcE" Term="Capabilities.SortRestrictions" p2:Term="Org.OData.Capabilities.V1.SortRestrictions">
+                  <Record id="d187aAgAcEpA">
+                     <PropertyValue id="d187aAgAcEpAa" Bool="false" Property="Sortable"/>
+                  </Record>
+               </Annotation>
+               <Annotation id="d187aAgAcEq" target="d187aAgAcE" Term="Capabilities.SelectSupport" p2:Term="Org.OData.Capabilities.V1.SelectSupport">
+                  <Record id="d187aAgAcEqA">
+                     <PropertyValue id="d187aAgAcEqAa" Bool="false" Property="Supported"/>
+                  </Record>
+               </Annotation>
+               <Annotation id="d187aAgAcEr" target="d187aAgAcE" Term="Capabilities.ExpandRestrictions" p2:Term="Org.OData.Capabilities.V1.ExpandRestrictions">
+                  <Record id="d187aAgAcErA">
+                     <PropertyValue id="d187aAgAcErAa" Bool="false" Property="Expandable"/>
+                  </Record>
+               </Annotation>
+            </EntitySet>
+            <Singleton id="d187aAgAcF" Name="AllSingleton" Type="self.SinglePartKey" p1:Type="d187aAgAa">
+               <Annotation id="d187aAgAcFa" target="d187aAgAcF" Term="Core.Description" p2:Term="Org.OData.Core.V1.Description" String="First Singleton"/>
+               <NavigationPropertyBinding id="d187aAgAcFb" Path="AllOne" p1:Path="d187aAgAaU" Target="TwoAllSet" p1:Target="d187aAgAcH"/>
+               <NavigationPropertyBinding id="d187aAgAcFc" Path="AllMany" p1:Path="d187aAgAaV" Target="TwoAllSet" p1:Target="d187aAgAcH"/>
+               <NavigationPropertyBinding id="d187aAgAcFd" Path="ReadOnlyOne" p1:Path="d187aAgAaW" Target="TwoReadOnlySet" p1:Target="d187aAgAcJ"/>
+               <NavigationPropertyBinding id="d187aAgAcFe" Path="ReadOnlyMany" p1:Path="d187aAgAaX" Target="TwoReadOnlySet" p1:Target="d187aAgAcJ"/>
+               <NavigationPropertyBinding id="d187aAgAcFf" Path="NothingOne" p1:Path="d187aAgAaY" Target="TwoNothingSet" p1:Target="d187aAgAcM"/>
+               <NavigationPropertyBinding id="d187aAgAcFg" Path="NothingMany" p1:Path="d187aAgAaZ" Target="TwoNothingSet" p1:Target="d187aAgAcM"/>
+            </Singleton>
+            <Singleton id="d187aAgAcG" Name="ReadOnlySingleton" Type="self.SinglePartKey" p1:Type="d187aAgAa">
+               <NavigationPropertyBinding id="d187aAgAcGa" Path="AllOne" p1:Path="d187aAgAaU" Target="TwoAllSet" p1:Target="d187aAgAcH"/>
+               <NavigationPropertyBinding id="d187aAgAcGb" Path="AllMany" p1:Path="d187aAgAaV" Target="TwoAllSet" p1:Target="d187aAgAcH"/>
+               <NavigationPropertyBinding id="d187aAgAcGc" Path="ReadOnlyOne" p1:Path="d187aAgAaW" Target="TwoReadOnlySet" p1:Target="d187aAgAcJ"/>
+               <NavigationPropertyBinding id="d187aAgAcGd" Path="ReadOnlyMany" p1:Path="d187aAgAaX" Target="TwoReadOnlySet" p1:Target="d187aAgAcJ"/>
+               <NavigationPropertyBinding id="d187aAgAcGe" Path="NothingOne" p1:Path="d187aAgAaY" Target="TwoNothingSet" p1:Target="d187aAgAcM"/>
+               <NavigationPropertyBinding id="d187aAgAcGf" Path="NothingMany" p1:Path="d187aAgAaZ" Target="TwoNothingSet" p1:Target="d187aAgAcM"/>
+               <Annotation id="d187aAgAcGg" target="d187aAgAcG" Term="Capabilities.UpdateRestrictions" p2:Term="Org.OData.Capabilities.V1.UpdateRestrictions">
+                  <Record id="d187aAgAcGgA">
+                     <PropertyValue id="d187aAgAcGgAa" Bool="false" Property="Updatable"/>
+                  </Record>
+               </Annotation>
+               <Annotation id="d187aAgAcGh" target="d187aAgAcG" Term="Capabilities.ExpandRestrictions" p2:Term="Org.OData.Capabilities.V1.ExpandRestrictions">
+                  <Record id="d187aAgAcGhA">
+                     <PropertyValue id="d187aAgAcGhAa" Bool="false" Property="Expandable"/>
+                  </Record>
+               </Annotation>
+               <Annotation id="d187aAgAcGi" target="d187aAgAcG" Term="Capabilities.ReadRestrictions" p2:Term="Org.OData.Capabilities.V1.ReadRestrictions">
+                  <Record id="d187aAgAcGiA">
+                     <PropertyValue id="d187aAgAcGiAa" Property="Description" String="Supports only read"/>
+                     <PropertyValue id="d187aAgAcGiAb" Property="LongDescription" String="Does not support `$select` and `$expand`"/>
+                  </Record>
+               </Annotation>
+               <Annotation id="d187aAgAcGj" target="d187aAgAcG" Term="Capabilities.SelectSupport" p2:Term="Org.OData.Capabilities.V1.SelectSupport">
+                  <Record id="d187aAgAcGjA">
+                     <PropertyValue id="d187aAgAcGjAa" Bool="false" Property="Supported"/>
+                  </Record>
+               </Annotation>
+               <Annotation id="d187aAgAcGk" target="d187aAgAcG" Term="Capabilities.NavigationRestrictions" p2:Term="Org.OData.Capabilities.V1.NavigationRestrictions">
+                  <Record id="d187aAgAcGkA">
+                     <PropertyValue id="d187aAgAcGkAa" Property="RestrictedProperties">
+                        <Collection id="d187aAgAcGkAaA">
+                           <Record id="d187aAgAcGkAaAa">
+                              <PropertyValue id="d187aAgAcGkAaAaA" Property="NavigationProperty" NavigationPropertyPath="AllMany" p1:NavigationPropertyPath="d187aAgAaV"/>
+                              <PropertyValue id="d187aAgAcGkAaAaB" Property="InsertRestrictions">
+                                 <Record id="d187aAgAcGkAaAaBa">
+                                    <PropertyValue id="d187aAgAcGkAaAaBaA" Property="Insertable" Bool="false"/>
+                                 </Record>
+                              </PropertyValue>
+                              <PropertyValue id="d187aAgAcGkAaAaC" Property="SortRestrictions">
+                                 <Record id="d187aAgAcGkAaAaCa">
+                                    <PropertyValue id="d187aAgAcGkAaAaCaA" Property="NonSortableProperties">
+                                       <Collection id="d187aAgAcGkAaAaCaAa">
+                                          <PropertyPath id="d187aAgAcGkAaAaCaAaA" p0:PropertyPath="d187aAgAaV " p1:PropertyPath="d187aAgAbB">AllMany/One</PropertyPath>
+                                       </Collection>
+                                    </PropertyValue>
+                                 </Record>
+                              </PropertyValue>
+                           </Record>
+                           <Record id="d187aAgAcGkAaAb">
+                              <PropertyValue id="d187aAgAcGkAaAbA" Property="NavigationProperty" NavigationPropertyPath="ReadOnlyMany" p1:NavigationPropertyPath="d187aAgAaX"/>
+                              <PropertyValue id="d187aAgAcGkAaAbB" Property="InsertRestrictions">
+                                 <Record id="d187aAgAcGkAaAbBa">
+                                    <PropertyValue id="d187aAgAcGkAaAbBaA" Property="Insertable" Path="switch" p1:Path="d187aAgAaT"/>
+                                 </Record>
+                              </PropertyValue>
+                           </Record>
+                           <Record id="d187aAgAcGkAaAc">
+                              <PropertyValue id="d187aAgAcGkAaAcA" Property="NavigationProperty" NavigationPropertyPath="NothingMany" p1:NavigationPropertyPath="d187aAgAaZ"/>
+                              <PropertyValue id="d187aAgAcGkAaAcB" Property="ReadRestrictions">
+                                 <Record id="d187aAgAcGkAaAcBa">
+                                    <PropertyValue id="d187aAgAcGkAaAcBaA" Property="Readable" Bool="true"/>
+                                 </Record>
+                              </PropertyValue>
+                           </Record>
+                        </Collection>
+                     </PropertyValue>
+                  </Record>
+               </Annotation>
+            </Singleton>
+            <EntitySet id="d187aAgAcH" Name="TwoAllSet" EntityType="self.TwoPartKey" p1:EntityType="d187aAgAb"/>
+            <EntitySet id="d187aAgAcI" Name="TwoListOnlySet" EntityType="self.TwoPartKey" p1:EntityType="d187aAgAb"/>
+            <EntitySet id="d187aAgAcJ" Name="TwoReadOnlySet" EntityType="self.TwoPartKey" p1:EntityType="d187aAgAb"/>
+            <EntitySet id="d187aAgAcK" Name="TwoReadOnlyByKeySet" EntityType="self.TwoPartKey" p1:EntityType="d187aAgAb"/>
+            <EntitySet id="d187aAgAcL" Name="TwoWriteOnlySet" EntityType="self.TwoPartKey" p1:EntityType="d187aAgAb"/>
+            <EntitySet id="d187aAgAcM" Name="TwoNothingSet" EntityType="self.TwoPartKey" p1:EntityType="d187aAgAb"/>
+            <Singleton id="d187aAgAcN" Name="TwoWriteOnlySingleton" Type="self.TwoPartKey" p1:Type="d187aAgAb"/>
+            <Singleton id="d187aAgAcO" Name="TwoNothingSingleton" Type="self.TwoPartKey" p1:Type="d187aAgAb"/>
+         </EntityContainer>
+         <Annotations id="d187aAgAd" Target="self.Container">
+            <Annotation id="d187aAgAdA" target="d187aAgAc" Term="Capabilities.KeyAsSegmentSupported" p2:Term="Org.OData.Capabilities.V1.KeyAsSegmentSupported"/>
+         </Annotations>
+         <Annotations id="d187aAgAe" Target="Supported.Annotations.SinglePartKey/PatternExt">
+            <Annotation id="d187aAgAeA" path-to-target="d187aAgAa " target="d187aAgAaD" Term="Validation.Pattern" p2:Term="Org.OData.Validation.V1.Pattern" String="^.+$"/>
+            <Annotation id="d187aAgAeB" path-to-target="d187aAgAa " target="d187aAgAaD" Term="Common.FieldControl" p2:Term="com.sap.vocabularies.Common.v1.FieldControl" EnumMember="Common.FieldControlType/Mandatory" p2:EnumMember="com.sap.vocabularies.Common.v1.FieldControlType/Mandatory"/>
+         </Annotations>
+         <Annotations id="d187aAgAf" Target="self.SinglePartKey/AllowedValuesExt">
+            <Annotation id="d187aAgAfA" path-to-target="d187aAgAa " target="d187aAgAaF" Term="Validation.AllowedValues" p2:Term="Org.OData.Validation.V1.AllowedValues">
+               <Collection id="d187aAgAfAa">
+                  <Record id="d187aAgAfAaA">
+                     <PropertyValue id="d187aAgAfAaAa" Property="Value" String="red"/>
+                  </Record>
+                  <Record id="d187aAgAfAaB">
+                     <PropertyValue id="d187aAgAfAaBa" Property="Value" String="green"/>
+                  </Record>
+                  <Record id="d187aAgAfAaC">
+                     <PropertyValue id="d187aAgAfAaCa" Property="Value" String="blue"/>
+                  </Record>
+               </Collection>
+            </Annotation>
+            <Annotation id="d187aAgAfB" path-to-target="d187aAgAa " target="d187aAgAaF" Term="Common.FieldControl" p2:Term="com.sap.vocabularies.Common.v1.FieldControl" EnumMember="Common.FieldControlType/Mandatory" p2:EnumMember="com.sap.vocabularies.Common.v1.FieldControlType/Mandatory"/>
+         </Annotations>
+         <Annotations id="d187aAgAg" Target="self.SinglePartKey/MaximumExt">
+            <Annotation id="d187aAgAgA" path-to-target="d187aAgAa " target="d187aAgAaJ" Term="Validation.Maximum" p2:Term="Org.OData.Validation.V1.Maximum" Decimal="-1"/>
+            <Annotation id="d187aAgAgB" path-to-target="d187aAgAa " target="d187aAgAaJ" Term="Core.Example" p2:Term="Org.OData.Core.V1.Example">
+               <Record id="d187aAgAgBa" Type="Core.PrimitiveExampleValue" p2:Type="Org.OData.Core.V1.PrimitiveExampleValue">
+                  <PropertyValue id="d187aAgAgBaA" Property="Value" Decimal="-1"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations id="d187aAgAh" Target="self.SinglePartKey/MinimumExt">
+            <Annotation id="d187aAgAhA" path-to-target="d187aAgAa " target="d187aAgAaL" Term="Validation.Minimum" p2:Term="Org.OData.Validation.V1.Minimum" Decimal="0">
+               <Annotation id="d187aAgAhAa" target="d187aAgAh" Term="Validation.Exclusive" p2:Term="Org.OData.Validation.V1.Exclusive" Bool="true"/>
+            </Annotation>
+            <Annotation id="d187aAgAhB" path-to-target="d187aAgAa " target="d187aAgAaL" Term="Core.Example" p2:Term="Org.OData.Core.V1.Example">
+               <Record id="d187aAgAhBa" Type="Core.PrimitiveExampleValue" p2:Type="Org.OData.Core.V1.PrimitiveExampleValue">
+                  <PropertyValue id="d187aAgAhBaA" Property="Value" Decimal="1"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations id="d187aAgAi" Target="self.SinglePartKey/ExampleExt">
+            <Annotation id="d187aAgAiA" path-to-target="d187aAgAa " target="d187aAgAaN" Term="Core.Example" p2:Term="Org.OData.Core.V1.Example">
+               <Record id="d187aAgAiAa" Type="Core.PrimitiveExampleValue" p2:Type="Org.OData.Core.V1.PrimitiveExampleValue">
+                  <PropertyValue id="d187aAgAiAaA" Property="Description" String="Primitive example value"/>
+                  <PropertyValue id="d187aAgAiAaB" Property="Value" String="Hello external World"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations id="d187aAgAj" Target="self.SinglePartKey/ComputedExt">
+            <Annotation id="d187aAgAjA" path-to-target="d187aAgAa " target="d187aAgAaP" Term="Core.Computed" p2:Term="Org.OData.Core.V1.Computed"/>
+         </Annotations>
+         <Annotations id="d187aAgAk" Target="self.SinglePartKey/ImmutableExt">
+            <Annotation id="d187aAgAkA" path-to-target="d187aAgAa " target="d187aAgAaS" Term="Core.Immutable" p2:Term="Org.OData.Core.V1.Immutable"/>
+         </Annotations>
+         <Annotations id="d187aAgAl" Target="self.SinglePartKey/AllOne">
+            <Annotation id="d187aAgAlA" path-to-target="d187aAgAa " target="d187aAgAaU" Term="Core.Permissions" p2:Term="Org.OData.Core.V1.Permissions" EnumMember="Core.Permission/Read" p2:EnumMember="Org.OData.Core.V1.Permission/Read"/>
+         </Annotations>
+         <Annotations id="d187aAgAm" Target="self.Container/TwoAllSet">
+            <Annotation id="d187aAgAmA" path-to-target="d187aAgAc " target="d187aAgAcH" Term="Capabilities.SortRestrictions" p2:Term="Org.OData.Capabilities.V1.SortRestrictions">
+               <Record id="d187aAgAmAa">
+                  <PropertyValue id="d187aAgAmAaA" Property="NonSortableProperties">
+                     <Collection id="d187aAgAmAaAa">
+                        <PropertyPath id="d187aAgAmAaAaA" p1:PropertyPath="d187aAgAbC">Two</PropertyPath>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+            <!-- redundant, just to test the conditional logic --><Annotation id="d187aAgAmC" path-to-target="d187aAgAc " target="d187aAgAcH" Term="Capabilities.InsertRestrictions" p2:Term="Org.OData.Capabilities.V1.InsertRestrictions">
+               <Record id="d187aAgAmCa">
+                  <PropertyValue id="d187aAgAmCaA" Bool="true" Property="Insertable"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations id="d187aAgAn" Target="self.Container/TwoListOnlySet">
+            <Annotation id="d187aAgAnA" path-to-target="d187aAgAc " target="d187aAgAcI" Term="Capabilities.UpdateRestrictions" p2:Term="Org.OData.Capabilities.V1.UpdateRestrictions">
+               <Record id="d187aAgAnAa">
+                  <PropertyValue id="d187aAgAnAaA" Bool="false" Property="Updatable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAnB" path-to-target="d187aAgAc " target="d187aAgAcI" Term="Capabilities.DeleteRestrictions" p2:Term="Org.OData.Capabilities.V1.DeleteRestrictions">
+               <Record id="d187aAgAnBa">
+                  <PropertyValue id="d187aAgAnBaA" Bool="false" Property="Deletable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAnC" path-to-target="d187aAgAc " target="d187aAgAcI" Term="Capabilities.ReadRestrictions" p2:Term="Org.OData.Capabilities.V1.ReadRestrictions">
+               <Record id="d187aAgAnCa">
+                  <PropertyValue id="d187aAgAnCaA" Property="Description" String="Supports read-list"/>
+                  <PropertyValue id="d187aAgAnCaB" Property="LongDescription" String="Does not support any query options"/>
+                  <PropertyValue id="d187aAgAnCaC" Property="ReadByKeyRestrictions">
+                     <Record id="d187aAgAnCaCa">
+                        <PropertyValue id="d187aAgAnCaCaA" Property="Readable" Bool="false"/>
+                     </Record>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAnD" path-to-target="d187aAgAc " target="d187aAgAcI" Term="Capabilities.SkipSupported" p2:Term="Org.OData.Capabilities.V1.SkipSupported" Bool="false"/>
+            <Annotation id="d187aAgAnE" path-to-target="d187aAgAc " target="d187aAgAcI" Term="Capabilities.TopSupported" p2:Term="Org.OData.Capabilities.V1.TopSupported" Bool="false"/>
+            <Annotation id="d187aAgAnF" path-to-target="d187aAgAc " target="d187aAgAcI" Term="Capabilities.CountRestrictions" p2:Term="Org.OData.Capabilities.V1.CountRestrictions">
+               <Record id="d187aAgAnFa">
+                  <PropertyValue id="d187aAgAnFaA" Bool="false" Property="Countable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAnG" path-to-target="d187aAgAc " target="d187aAgAcI" Term="Capabilities.FilterRestrictions" p2:Term="Org.OData.Capabilities.V1.FilterRestrictions">
+               <Record id="d187aAgAnGa">
+                  <PropertyValue id="d187aAgAnGaA" Bool="false" Property="Filterable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAnH" path-to-target="d187aAgAc " target="d187aAgAcI" Term="Capabilities.SortRestrictions" p2:Term="Org.OData.Capabilities.V1.SortRestrictions">
+               <Record id="d187aAgAnHa">
+                  <PropertyValue id="d187aAgAnHaA" Bool="false" Property="Sortable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAnI" path-to-target="d187aAgAc " target="d187aAgAcI" Term="Capabilities.SearchRestrictions" p2:Term="Org.OData.Capabilities.V1.SearchRestrictions">
+               <Record id="d187aAgAnIa">
+                  <PropertyValue id="d187aAgAnIaA" Bool="false" Property="Searchable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAnJ" path-to-target="d187aAgAc " target="d187aAgAcI" Term="Capabilities.SelectSupport" p2:Term="Org.OData.Capabilities.V1.SelectSupport">
+               <Record id="d187aAgAnJa">
+                  <PropertyValue id="d187aAgAnJaA" Bool="false" Property="Supported"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAnK" path-to-target="d187aAgAc " target="d187aAgAcI" Term="Capabilities.ExpandRestrictions" p2:Term="Org.OData.Capabilities.V1.ExpandRestrictions">
+               <Record id="d187aAgAnKa">
+                  <PropertyValue id="d187aAgAnKaA" Bool="false" Property="Expandable"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations id="d187aAgAo" Target="self.Container/TwoReadOnlySet">
+            <Annotation id="d187aAgAoA" path-to-target="d187aAgAc " target="d187aAgAcJ" Term="Capabilities.InsertRestrictions" p2:Term="Org.OData.Capabilities.V1.InsertRestrictions">
+               <Record id="d187aAgAoAa">
+                  <PropertyValue id="d187aAgAoAaA" Bool="false" Property="Insertable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAoB" path-to-target="d187aAgAc " target="d187aAgAcJ" Term="Capabilities.UpdateRestrictions" p2:Term="Org.OData.Capabilities.V1.UpdateRestrictions">
+               <Record id="d187aAgAoBa">
+                  <PropertyValue id="d187aAgAoBaA" Bool="false" Property="Updatable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAoC" path-to-target="d187aAgAc " target="d187aAgAcJ" Term="Capabilities.DeleteRestrictions" p2:Term="Org.OData.Capabilities.V1.DeleteRestrictions">
+               <Record id="d187aAgAoCa">
+                  <PropertyValue id="d187aAgAoCaA" Bool="false" Property="Deletable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAoD" path-to-target="d187aAgAc " target="d187aAgAcJ" Term="Capabilities.ReadRestrictions" p2:Term="Org.OData.Capabilities.V1.ReadRestrictions">
+               <Record id="d187aAgAoDa">
+                  <PropertyValue id="d187aAgAoDaA" Property="Description" String="Supports read-list"/>
+                  <PropertyValue id="d187aAgAoDaB" Property="LongDescription" String="Does not support any query options"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAoE" path-to-target="d187aAgAc " target="d187aAgAcJ" Term="Capabilities.SkipSupported" p2:Term="Org.OData.Capabilities.V1.SkipSupported" Bool="false"/>
+            <Annotation id="d187aAgAoF" path-to-target="d187aAgAc " target="d187aAgAcJ" Term="Capabilities.TopSupported" p2:Term="Org.OData.Capabilities.V1.TopSupported" Bool="false"/>
+            <Annotation id="d187aAgAoG" path-to-target="d187aAgAc " target="d187aAgAcJ" Term="Capabilities.CountRestrictions" p2:Term="Org.OData.Capabilities.V1.CountRestrictions">
+               <Record id="d187aAgAoGa">
+                  <PropertyValue id="d187aAgAoGaA" Bool="false" Property="Countable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAoH" path-to-target="d187aAgAc " target="d187aAgAcJ" Term="Capabilities.FilterRestrictions" p2:Term="Org.OData.Capabilities.V1.FilterRestrictions">
+               <Record id="d187aAgAoHa">
+                  <PropertyValue id="d187aAgAoHaA" Bool="false" Property="Filterable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAoI" path-to-target="d187aAgAc " target="d187aAgAcJ" Term="Capabilities.SortRestrictions" p2:Term="Org.OData.Capabilities.V1.SortRestrictions">
+               <Record id="d187aAgAoIa">
+                  <PropertyValue id="d187aAgAoIaA" Bool="false" Property="Sortable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAoJ" path-to-target="d187aAgAc " target="d187aAgAcJ" Term="Capabilities.SearchRestrictions" p2:Term="Org.OData.Capabilities.V1.SearchRestrictions">
+               <Record id="d187aAgAoJa">
+                  <PropertyValue id="d187aAgAoJaA" Bool="false" Property="Searchable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAoK" path-to-target="d187aAgAc " target="d187aAgAcJ" Term="Capabilities.SelectSupport" p2:Term="Org.OData.Capabilities.V1.SelectSupport">
+               <Record id="d187aAgAoKa">
+                  <PropertyValue id="d187aAgAoKaA" Bool="false" Property="Supported"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAoL" path-to-target="d187aAgAc " target="d187aAgAcJ" Term="Capabilities.ExpandRestrictions" p2:Term="Org.OData.Capabilities.V1.ExpandRestrictions">
+               <Record id="d187aAgAoLa">
+                  <PropertyValue id="d187aAgAoLaA" Bool="false" Property="Expandable"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations id="d187aAgAp" Target="self.Container/TwoReadOnlyByKeySet">
+            <Annotation id="d187aAgApA" path-to-target="d187aAgAc " target="d187aAgAcK" Term="Capabilities.InsertRestrictions" p2:Term="Org.OData.Capabilities.V1.InsertRestrictions">
+               <Record id="d187aAgApAa">
+                  <PropertyValue id="d187aAgApAaA" Bool="false" Property="Insertable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgApB" path-to-target="d187aAgAc " target="d187aAgAcK" Term="Capabilities.UpdateRestrictions" p2:Term="Org.OData.Capabilities.V1.UpdateRestrictions">
+               <Record id="d187aAgApBa">
+                  <PropertyValue id="d187aAgApBaA" Bool="false" Property="Updatable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgApC" path-to-target="d187aAgAc " target="d187aAgAcK" Term="Capabilities.DeleteRestrictions" p2:Term="Org.OData.Capabilities.V1.DeleteRestrictions">
+               <Record id="d187aAgApCa">
+                  <PropertyValue id="d187aAgApCaA" Bool="false" Property="Deletable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgApD" path-to-target="d187aAgAc " target="d187aAgAcK" Term="Capabilities.ReadRestrictions" p2:Term="Org.OData.Capabilities.V1.ReadRestrictions">
+               <Record id="d187aAgApDa">
+                  <PropertyValue id="d187aAgApDaA" Property="Readable" Bool="false"/>
+                  <PropertyValue id="d187aAgApDaB" Property="ReadByKeyRestrictions">
+                     <Record id="d187aAgApDaBa">
+                        <PropertyValue id="d187aAgApDaBaA" Property="Readable" Bool="true"/>
+                     </Record>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations id="d187aAgAq" Target="self.Container/TwoWriteOnlySet">
+            <Annotation id="d187aAgAqA" path-to-target="d187aAgAc " target="d187aAgAcL" Term="Capabilities.ReadRestrictions" p2:Term="Org.OData.Capabilities.V1.ReadRestrictions">
+               <Record id="d187aAgAqAa">
+                  <PropertyValue id="d187aAgAqAaA" Bool="false" Property="Readable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAqB" path-to-target="d187aAgAc " target="d187aAgAcL" Term="Capabilities.InsertRestrictions" p2:Term="Org.OData.Capabilities.V1.InsertRestrictions">
+               <Record id="d187aAgAqBa">
+                  <PropertyValue id="d187aAgAqBaA" Property="Description" String="Supports insert"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAqC" path-to-target="d187aAgAc " target="d187aAgAcL" Term="Capabilities.UpdateRestrictions" p2:Term="Org.OData.Capabilities.V1.UpdateRestrictions">
+               <Record id="d187aAgAqCa">
+                  <PropertyValue id="d187aAgAqCaA" Property="Description" String="Supports update"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAqD" path-to-target="d187aAgAc " target="d187aAgAcL" Term="Capabilities.DeleteRestrictions" p2:Term="Org.OData.Capabilities.V1.DeleteRestrictions">
+               <Record id="d187aAgAqDa">
+                  <PropertyValue id="d187aAgAqDaA" Property="Description" String="Supports delete"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations id="d187aAgAr" Target="self.Container/TwoNothingSet">
+            <Annotation id="d187aAgArA" path-to-target="d187aAgAc " target="d187aAgAcM" Term="Capabilities.InsertRestrictions" p2:Term="Org.OData.Capabilities.V1.InsertRestrictions">
+               <Record id="d187aAgArAa">
+                  <PropertyValue id="d187aAgArAaA" Bool="false" Property="Insertable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgArB" path-to-target="d187aAgAc " target="d187aAgAcM" Term="Capabilities.ReadRestrictions" p2:Term="Org.OData.Capabilities.V1.ReadRestrictions">
+               <Record id="d187aAgArBa">
+                  <PropertyValue id="d187aAgArBaA" Bool="false" Property="Readable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgArC" path-to-target="d187aAgAc " target="d187aAgAcM" Term="Capabilities.IndexableByKey" p2:Term="Org.OData.Capabilities.V1.IndexableByKey" Bool="false"/>
+         </Annotations>
+         <Annotations id="d187aAgAs" Target="self.Container/TwoWriteOnlySingleton">
+            <Annotation id="d187aAgAsA" path-to-target="d187aAgAc " target="d187aAgAcN" Term="Capabilities.ReadRestrictions" p2:Term="Org.OData.Capabilities.V1.ReadRestrictions">
+               <Record id="d187aAgAsAa">
+                  <PropertyValue id="d187aAgAsAaA" Bool="false" Property="Readable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAsB" path-to-target="d187aAgAc " target="d187aAgAcN" Term="Capabilities.UpdateRestrictions" p2:Term="Org.OData.Capabilities.V1.UpdateRestrictions">
+               <Record id="d187aAgAsBa">
+                  <PropertyValue id="d187aAgAsBaA" Property="Description" String="Supports update"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations id="d187aAgAt" Target="self.Container/TwoNothingSingleton">
+            <Annotation id="d187aAgAtA" path-to-target="d187aAgAc " target="d187aAgAcO" Term="Capabilities.ReadRestrictions" p2:Term="Org.OData.Capabilities.V1.ReadRestrictions">
+               <Record id="d187aAgAtAa">
+                  <PropertyValue id="d187aAgAtAaA" Bool="false" Property="Readable"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAtB" path-to-target="d187aAgAc " target="d187aAgAcO" Term="Capabilities.UpdateRestrictions" p2:Term="Org.OData.Capabilities.V1.UpdateRestrictions">
+               <Record id="d187aAgAtBa">
+                  <PropertyValue id="d187aAgAtBaA" Bool="false" Property="Updatable"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations id="d187aAgAu" Target="self.SinglePartKey">
+            <Annotation id="d187aAgAuA" target="d187aAgAa" Term="Common.SAPObjectNodeType" p2:Term="com.sap.vocabularies.Common.v1.SAPObjectNodeType">
+               <Record id="d187aAgAuAa">
+                  <PropertyValue id="d187aAgAuAaA" Property="Name" String="SontOne"/>
+               </Record>
+            </Annotation>
+            <Annotation id="d187aAgAuB" target="d187aAgAa" Term="ODM.entityName" p2:Term="com.sap.vocabularies.ODM.v1.entityName" String="odmOne"/>
+            <Annotation id="d187aAgAuC" target="d187aAgAa" Term="ODM.oid" p2:Term="com.sap.vocabularies.ODM.v1.oid" PropertyPath="Computed" p1:PropertyPath="d187aAgAaO"/>
+         </Annotations>
+         <Annotations id="d187aAgAv" Target="self.SinglePartKey/AllOne">
+            <Annotation id="d187aAgAvA" path-to-target="d187aAgAa " target="d187aAgAaU" Term="ODM.oidReference" p2:Term="com.sap.vocabularies.ODM.v1.oidReference">
+               <Record id="d187aAgAvAa" Type="ODM.oidReferenceType" p2:Type="com.sap.vocabularies.ODM.v1.oidReferenceType">
+                  <PropertyValue id="d187aAgAvAaA" Property="entityName" String="odmTwo"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations id="d187aAgAw" Target="self.TwoPartKey/One">
+            <Annotation id="d187aAgAwA" path-to-target="d187aAgAb " target="d187aAgAbB" Term="Common.SAPObjectNodeTypeReference" p2:Term="com.sap.vocabularies.Common.v1.SAPObjectNodeTypeReference" String="SontOne"/>
+         </Annotations>
+      </Schema>
+   </edmx:DataServices>
+</edmx:Edmx>
