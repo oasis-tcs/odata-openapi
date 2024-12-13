@@ -2708,10 +2708,11 @@
       @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
       /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
       /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and
-      $navigation-path = concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]]" />
+      contains(concat(' ',$navigation-path,'$'),concat(' ',../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath,'$'))]]" />
 
     <xsl:variable name="navigable" select="not($navigation-restrictions/edm:PropertyValue/@Property='Navigability') and
-      not(//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions' and $navigation-path = concat(@path-to-target,@target)]
+      not(//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions' and
+      contains(concat(' ',$navigation-path,' '),concat(' ',@path-to-target,@target,' '))]
       /edm:Record/edm:PropertyValue[@Property='Navigability' and @p2:EnumMember='Org.OData.Capabilities.V1.NavigationType/None']) or
       $navigation-restrictions[not(edm:PropertyValue[@Property='Navigability' and @p2:EnumMember='Org.OData.Capabilities.V1.NavigationType/None'])]" />
 
@@ -4074,11 +4075,11 @@
     <xsl:variable name="with-count" select="not($target-countable='false')" />
 
     <xsl:variable name="capabilities" select="//edm:Annotation[not(@Qualifier) and
-      $navigation-path = concat(@path-to-target,@target)]" />
+      contains(concat(' ',$navigation-path,'$'),concat(' ',@path-to-target,@target,'$'))]" />
     <xsl:variable name="navigation-restrictions" select="//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
       /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
       /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and
-      $navigation-path = concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]]" />
+      contains(concat(' ',$navigation-path,'$'),concat(' ',../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath,'$'))]]" />
 
     <xsl:variable name="with-sort" select="not($navigation-restrictions) and
       not($capabilities[@p2:Term='Org.OData.Capabilities.V1.SortRestrictions']
