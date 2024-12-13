@@ -2454,8 +2454,8 @@
   </xsl:template>
 
   <xsl:template name="batch">
-    <xsl:variable name="batch-supported" select="not(//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.BatchSupported']
-      /edm:Record/edm:PropertyValue[@Property='Supported' and @Bool='false'])" />
+    <xsl:variable name="batch-supported" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.BatchSupported']
+      /edm:Record/edm:PropertyValue[@Property='Supported' and not(@Bool='false')]" />
     <xsl:text>"/$batch":{</xsl:text>
     <xsl:if test="$batch-supported">
       <xsl:text>"post":{"summary": "Send a group of requests","description": "Group multiple requests into a single request payload, see [Batch Requests](</xsl:text>
