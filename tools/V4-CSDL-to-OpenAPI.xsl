@@ -2727,7 +2727,7 @@
 
       <xsl:if test="$collection or not(@ContainsTarget='true')">
         <xsl:variable name="readable" select="not(//edm:Annotation[not(@Qualifier) and @target=$targetSet/@id and
-          @p2:Name='Org.OData.Capabilities.V1.ReadRestrictions']
+          @p2:Term='Org.OData.Capabilities.V1.ReadRestrictions']
           /edm:Record/edm:PropertyValue[@Property='Readable' and @Bool='false'])" />
 
         <!-- ReadRestrictions on source for this navigation property -->
