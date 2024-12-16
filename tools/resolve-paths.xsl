@@ -402,8 +402,15 @@
 	<!-- Paths relative to a property of a structured type -->
 	<xsl:template
 		match="edm:NavigationPropertyBinding/@Path |
-			edm:ReferentialConstraint/@ReferencedProperty"
+			edm:ReferentialConstraint/@ReferencedProperty |
+			edm:ActionImport/@EntitySet |
+			edm:FunctionImport/@EntitySet"
 		mode="ids">
+		<xsl:if test="name()='EntitySet' and not(contains(.,'.'))">
+			<xsl:attribute name="p0:EntitySet">
+				<xsl:apply-templates select="../.." mode="path-to-target" />
+			</xsl:attribute>
+		</xsl:if>
 		<xsl:apply-templates select="." mode="eval-path">
 			<xsl:with-param name="relative-to" select="../.." />
 		</xsl:apply-templates>
@@ -415,6 +422,11 @@
 			edm:NavigationPropertyBinding/@Target |
 			edm:ReferentialConstraint/@Property"
 		mode="ids">
+		<xsl:if test="name()='Target' and not(contains(.,'.'))">
+			<xsl:attribute name="p0:Target">
+				<xsl:apply-templates select="../../.." mode="path-to-target" />
+			</xsl:attribute>
+		</xsl:if>
 		<xsl:apply-templates select="." mode="eval-path">
 			<xsl:with-param name="relative-to" select="../../.." />
 		</xsl:apply-templates>
