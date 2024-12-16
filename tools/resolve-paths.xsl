@@ -185,20 +185,37 @@
 			<xsl:attribute name="id">
 				<xsl:value-of select="generate-id()" />
 			</xsl:attribute>
-			<xsl:attribute name="target">
-				<xsl:value-of
-				select="generate-id(ancestor::edm:*[not(
+			<xsl:variable name="target"
+				select="ancestor::edm:*[not(
 					self::edm:Annotation |
 					self::edm:Collection |
 					self::edm:Record |
 					self::edm:PropertyValue
-				)][1])" />
+				)][1]" />
+			<xsl:variable name="path-to-target">
+				<xsl:apply-templates select="$target/.." mode="path-to-target" />
+			</xsl:variable>
+			<xsl:if test="$path-to-target">
+				<xsl:attribute name="path-to-target">
+					<xsl:value-of select="$path-to-target" />
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:attribute name="target">
+				<xsl:value-of select="generate-id($target)" />
 			</xsl:attribute>
 			<xsl:apply-templates select="edm:*" mode="toattr" />
 			<xsl:apply-templates select="@*|node()"
 				mode="ids" />
 		</xsl:copy>
 	</xsl:template>
+
+	<xsl:template match="edm:*" mode="path-to-target">
+		<xsl:apply-templates select=".." mode="path-to-target" />
+		<xsl:value-of select="generate-id()" />
+		<xsl:text> </xsl:text>
+	</xsl:template>
+
+	<xsl:template match="edm:Schema" mode="path-to-target" />
 
 	<xsl:template match="edm:*" mode="toattr" />
 

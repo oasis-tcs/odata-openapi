@@ -2708,11 +2708,11 @@
       @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
       /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
       /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and
-      contains(concat(' ',$navigation-path,'$'),concat(' ',../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath,'$'))]]" />
+      $navigation-path=concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]]" />
 
     <xsl:variable name="navigable" select="not($navigation-restrictions/edm:PropertyValue/@Property='Navigability') and
       not(//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions' and
-      contains(concat(' ',$navigation-path,' '),concat(' ',@path-to-target,@target,' '))]
+      starts-with(concat($navigation-path,' '),concat(@path-to-target,@target,' '))]
       /edm:Record/edm:PropertyValue[@Property='Navigability' and @p2:EnumMember='Org.OData.Capabilities.V1.NavigationType/None']) or
       $navigation-restrictions[not(edm:PropertyValue[@Property='Navigability' and @p2:EnumMember='Org.OData.Capabilities.V1.NavigationType/None'])]" />
 
@@ -4009,7 +4009,7 @@
     <xsl:variable name="navigation-restrictions" select="//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
       /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
       /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and
-      contains(concat(' ',$navigation-path,'$'),concat(' ',../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath,'$'))]]" />
+      $navigation-path=concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]]" />
 
     <xsl:variable name="with-top" select="not($navigation-restrictions/edm:PropertyValue[@Property='TopSupported' and @Bool='false'] or
       not($navigation-restrictions) and
@@ -4134,7 +4134,7 @@
               //edm:Annotation[not(@Qualifier) and @target=$target/@id and
               @p2:Term='Org.OData.Capabilities.V1.SortRestrictions']
               /edm:Record/edm:PropertyValue[@Property='NonSortableProperties']/edm:Collection/edm:PropertyPath
-              [contains(concat(' ',$navigation-path,' ',current()/@id,'$'),concat(' ',@p0:PropertyPath,@p1:PropertyPath,'$'))])">
+              [current()/@id=@p1:PropertyPath])">
               <xsl:text>,"</xsl:text>
               <xsl:value-of select="@Name" />
               <xsl:text>","</xsl:text>
