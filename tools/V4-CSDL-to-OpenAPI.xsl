@@ -1425,19 +1425,23 @@
       </xsl:choose>
     </xsl:variable>
     <xsl:variable name="required">
+      <xsl:variable name="navigation-restrictions" select="//edm:Annotation[not(@Qualifier) and
+        @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
+        /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
+        /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and id(@p1:NavigationPropertyPath)/@p1:Type=$structuredType/@id]]" />
       <xsl:if test="$suffix='-create'">
         <!-- non-computed key properties are required, as are Capabilities.InsertRestrictions/RequiredProperties -->
         <xsl:for-each select="$structuredType/edm:Property[
-          (@Name=../edm:Key/edm:PropertyRef/@Name and not(@id=//edm:Annotation[not(@Qualifier) and
-          (@p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false') or
+          @Name=../edm:Key/edm:PropertyRef/@Name and not(@id=//edm:Annotation[not(@Qualifier) and
+          @p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false') or
           @p2:Term='Org.OData.Core.V1.ComputedDefaultValue' and not(@Bool='false') or
           @p2:Term='Org.OData.Core.V1.Permissions' and @p2:EnumMember='Org.OData.Core.V1.Permission/Read' or
-          @p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/ReadOnly')]/@target)) or
-          @Name=//edm:Annotation[not(@Qualifier) and id(@target)/@p1:EntityType=$structuredType/@id and @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions']
+          @p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/ReadOnly']/@target) or
+          @Name=$navigation-restrictions/edm:PropertyValue[@Property='InsertRestrictions']
           /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath or
-          @Name=//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
-          /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
-          /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and id(@p1:NavigationPropertyPath)/@p1:Type=$structuredType/@id]]/edm:PropertyValue[@Property='InsertRestrictions']
+          not($navigation-restrictions/edm:PropertyValue[@Property='InsertRestrictions']) and
+          @Name=//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions' and
+          id(@target)/@p1:EntityType=$structuredType/@id]
           /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath]">
           <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
@@ -1450,11 +1454,11 @@
       <xsl:if test="$suffix='-update'">
         <!-- required are Capabilities.UpdateRestrictions/RequiredProperties -->
         <xsl:for-each select="$structuredType/edm:Property[
-          @Name=//edm:Annotation[not(@Qualifier) and id(@target)/@p1:EntityType=$structuredType/@id and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions']
+          @Name=$navigation-restrictions/edm:PropertyValue[@Property='UpdateRestrictions']
           /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath or
-          @Name=//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
-          /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
-          /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and id(@p1:NavigationPropertyPath)/@p1:Type=$structuredType/@id]]/edm:PropertyValue[@Property='UpdateRestrictions']
+          not($navigation-restrictions/edm:PropertyValue[@Property='UpdateRestrictions']) and
+          @Name=//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions' and
+          id(@target)/@p1:EntityType=$structuredType/@id]
           /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath]">
           <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
@@ -2638,11 +2642,7 @@
       <xsl:with-param name="root" select="." />
       <xsl:with-param name="path-prefix" select="@Name" />
       <xsl:with-param name="prefix-parameters" select="''" />
-      <xsl:with-param name="navigationPropertyRestriction" select="null" />
       <xsl:with-param name="navigation-prefix" select="''" />
-      <xsl:with-param name="readRestrictions" select="$readRestrictions" />
-      <xsl:with-param name="insertRestrictions" select="$insertRestrictions" />
-      <xsl:with-param name="targetSet" select="." />
       <xsl:with-param name="with-get" select="$readable" />
       <xsl:with-param name="with-post" select="$insertable" />
     </xsl:call-template>
@@ -2653,19 +2653,14 @@
     <xsl:if test="$indexable">
       <xsl:call-template name="pathItem-single-entity">
         <xsl:with-param name="navigation-path" select="concat(../@id,' ',@id)" />
+        <xsl:with-param name="target-path" select="concat(../@id,' ',@id)" />
         <xsl:with-param name="entityType" select="id(@p1:EntityType)" />
         <xsl:with-param name="with-key" select="true()" />
         <xsl:with-param name="root" select="." />
         <xsl:with-param name="path-prefix" select="@Name" />
         <xsl:with-param name="prefix-parameters" select="''" />
         <xsl:with-param name="level" select="0" />
-        <xsl:with-param name="navigationRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']" />
         <xsl:with-param name="navigation-prefix" select="''" />
-        <xsl:with-param name="readRestrictions" select="$readRestrictions" />
-        <xsl:with-param name="selectSupport" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.SelectSupport']" />
-        <xsl:with-param name="expandRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.ExpandRestrictions']" />
-        <xsl:with-param name="updateRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions']" />
-        <xsl:with-param name="deleteRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.DeleteRestrictions']" />
       </xsl:call-template>
     </xsl:if>
   </xsl:template>
@@ -2673,19 +2668,14 @@
   <xsl:template match="edm:Singleton">
     <xsl:call-template name="pathItem-single-entity">
       <xsl:with-param name="navigation-path" select="concat(../@id,' ',@id)" />
+      <xsl:with-param name="target-path" select="concat(../@id,' ',@id)" />
       <xsl:with-param name="entityType" select="id(@p1:Type)" />
       <xsl:with-param name="with-key" select="false()" />
       <xsl:with-param name="root" select="." />
       <xsl:with-param name="path-prefix" select="@Name" />
       <xsl:with-param name="prefix-parameters" select="''" />
       <xsl:with-param name="level" select="0" />
-      <xsl:with-param name="navigationRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']" />
       <xsl:with-param name="navigation-prefix" select="''" />
-      <xsl:with-param name="readRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.ReadRestrictions']" />
-      <xsl:with-param name="selectSupport" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.SelectSupport']" />
-      <xsl:with-param name="expandRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.ExpandRestrictions']" />
-      <xsl:with-param name="updateRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions']" />
-      <xsl:with-param name="deleteRestrictions" select="//edm:Annotation[not(@Qualifier) and @target=current()/@id and @p2:Term='Org.OData.Capabilities.V1.DeleteRestrictions']" />
     </xsl:call-template>
   </xsl:template>
 
@@ -2695,20 +2685,14 @@
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
     <xsl:param name="level" />
-    <xsl:param name="navigationRestrictions" />
     <xsl:param name="navigation-prefix" />
 
     <xsl:variable name="navPropPath" select="concat($navigation-prefix,@Name)" />
-    <xsl:variable name="targetSet" select="id($root/edm:NavigationPropertyBinding[@Path=$navPropPath]/@p1:Target)" />
     <xsl:variable name="target-path">
       <xsl:for-each select="$root/edm:NavigationPropertyBinding[@p1:Path=current()/@id]">
         <xsl:value-of select="concat(@p0:Target,@p1:Target)" />
       </xsl:for-each>
     </xsl:variable>
-
-    <!-- NavigationRestrictions on root for this navigation property -->
-    <xsl:variable name="restrictedProperties" select="$navigationRestrictions/edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection" />
-    <xsl:variable name="navigationPropertyRestriction" select="$restrictedProperties/edm:Record[edm:PropertyValue[@Property='NavigationProperty']/@NavigationPropertyPath=$navPropPath]" />
 
     <xsl:variable name="navigation-restrictions" select="//edm:Annotation[not(@Qualifier) and
       @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
@@ -2754,18 +2738,9 @@
           <xsl:with-param name="root" select="$root" />
           <xsl:with-param name="path-prefix" select="$path-template" />
           <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
-          <xsl:with-param name="navigationPropertyRestriction" select="$navigationPropertyRestriction" />
           <xsl:with-param name="navigation-prefix" select="$navigation-prefix" />
-          <xsl:with-param name="readRestrictions" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ReadRestrictions']" />
-          <xsl:with-param name="insertRestrictions" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='InsertRestrictions']" />
-          <xsl:with-param name="targetSet" select="$targetSet" />
           <xsl:with-param name="with-get" select="$readable" />
-          <!-- TODO: need to look at both navigation restrictions and annotations on target set, same as with readable and insertable above.
-            combine them either here or in template
-            <xsl:with-param name="selectSupport"
-            select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SelectSupport']" />
-          -->
-          <xsl:with-param name="with-post" select="$collection and ($targetSet or @ContainsTarget='true') and $insertable" />
+          <xsl:with-param name="with-post" select="$collection and (string($target-path) or @ContainsTarget='true') and $insertable" />
         </xsl:call-template>
       </xsl:if>
 
@@ -2776,20 +2751,14 @@
         $target-path=concat(@path-to-target,@target) and @Bool='false'])">
         <xsl:call-template name="pathItem-single-entity">
           <xsl:with-param name="navigation-path" select="$navigation-path" />
+          <xsl:with-param name="target-path" select="$target-path" />
           <xsl:with-param name="entityType" select="id(@p1:Type)" />
           <xsl:with-param name="with-key" select="$collection" />
           <xsl:with-param name="root" select="$root" />
           <xsl:with-param name="path-prefix" select="$path-template" />
           <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
           <xsl:with-param name="level" select="$level" />
-          <xsl:with-param name="navigationRestrictions" select="$navigationRestrictions" />
           <xsl:with-param name="navigation-prefix" select="concat($navPropPath,'/')" />
-          <xsl:with-param name="readRestrictions" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ReadRestrictions']" />
-          <xsl:with-param name="selectSupport" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SelectSupport']" />
-          <!-- TODO: this is not correct, ExpandRestrictions are on container-child-level only -->
-          <xsl:with-param name="expandRestrictions" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='ExpandRestrictions']" />
-          <xsl:with-param name="updateRestrictions" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='UpdateRestrictions']" />
-          <xsl:with-param name="deleteRestrictions" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='DeleteRestrictions']" />
         </xsl:call-template>
       </xsl:if>
     </xsl:if>
@@ -2895,12 +2864,7 @@
     <xsl:param name="root" />
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
-    <xsl:param name="navigationPropertyRestriction" />
     <xsl:param name="navigation-prefix" />
-    <xsl:param name="readRestrictions" />
-    <xsl:param name="insertRestrictions" />
-    <!-- TODO: check if these parameters are needed -->
-    <xsl:param name="targetSet" />
     <xsl:param name="with-get" />
     <xsl:param name="with-post" />
 
@@ -2921,6 +2885,17 @@
 
     <xsl:if test="$with-get or $with-post">
 
+      <xsl:variable name="target">
+        <xsl:call-template name="substring-after-last">
+          <xsl:with-param name="input" select="$target-path" />
+          <xsl:with-param name="marker" select="' '" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="navigation-restrictions" select="//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
+        /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
+        /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and
+        $navigation-path=concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]]" />
+
       <xsl:text>"/</xsl:text>
       <xsl:value-of select="$path-prefix" />
       <xsl:text>":{</xsl:text>
@@ -2938,7 +2913,10 @@
         <xsl:text>"get":{</xsl:text>
 
         <xsl:call-template name="operation-summary-description">
-          <xsl:with-param name="restriction" select="$readRestrictions" />
+          <xsl:with-param name="restriction" select="$navigation-restrictions/edm:PropertyValue[@Property='ReadRestrictions'] |
+            //edm:Annotation[current()/self::edm:EntitySet and
+            not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.ReadRestrictions' and
+            $target-path=concat(@path-to-target,@target)]" />
           <xsl:with-param name="fallback-summary">
             <xsl:text>Get </xsl:text>
             <xsl:if test="$return-collection">
@@ -2953,14 +2931,13 @@
 
         <xsl:call-template name="operation-tag">
           <xsl:with-param name="sourceSet" select="$root" />
-          <xsl:with-param name="targetSet" select="$targetSet" />
+          <xsl:with-param name="targetSet" select="id($target)" />
         </xsl:call-template>
 
         <xsl:text>,"parameters":[</xsl:text>
         <xsl:call-template name="query-options">
           <xsl:with-param name="navigation-path" select="$navigation-path" />
           <xsl:with-param name="target-path" select="$target-path" />
-          <xsl:with-param name="navigationPropertyRestriction" select="$navigationPropertyRestriction" />
           <xsl:with-param name="collection" select="$return-collection" />
           <xsl:with-param name="entityType" select="$entityType" />
         </xsl:call-template>
@@ -2997,7 +2974,10 @@
         <xsl:text>"post":{</xsl:text>
 
         <xsl:call-template name="operation-summary-description">
-          <xsl:with-param name="restriction" select="$insertRestrictions" />
+          <xsl:with-param name="restriction" select="$navigation-restrictions/edm:PropertyValue[@Property='InsertRestrictions'] |
+            //edm:Annotation[current()/self::edm:EntitySet and
+            not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions' and
+            $target-path=concat(@path-to-target,@target)]" />
           <xsl:with-param name="fallback-summary">
             <xsl:choose>
               <xsl:when test="$entityType/@HasStream='true'">
@@ -3016,7 +2996,7 @@
 
         <xsl:call-template name="operation-tag">
           <xsl:with-param name="sourceSet" select="$root" />
-          <xsl:with-param name="targetSet" select="$targetSet" />
+          <xsl:with-param name="targetSet" select="id($target)" />
         </xsl:call-template>
 
         <xsl:choose>
@@ -3151,6 +3131,7 @@
 
   <xsl:template name="pathItem-single-entity">
     <xsl:param name="navigation-path" />
+    <xsl:param name="target-path" />
     <xsl:param name="entityType" />
     <xsl:param name="with-key" />
     <xsl:param name="root" />
@@ -3158,13 +3139,7 @@
     <xsl:param name="prefix-parameters" />
     <xsl:param name="level" />
     <!-- TODO: should be sufficient to pass just the records within RestrictedProperties/Collection -->
-    <xsl:param name="navigationRestrictions" />
     <xsl:param name="navigation-prefix" />
-    <xsl:param name="readRestrictions" />
-    <xsl:param name="selectSupport" />
-    <xsl:param name="expandRestrictions" />
-    <xsl:param name="updateRestrictions" />
-    <xsl:param name="deleteRestrictions" />
 
     <xsl:variable name="qualifiedType">
       <xsl:value-of select="$entityType/ancestor::edm:Schema/@Namespace" />
@@ -3174,27 +3149,42 @@
 
     <!-- for singleton first level we don't need the key -->
     <xsl:if test="$entityType or ($level=0 and not($with-key))">
-      <xsl:variable name="readable-p" select="$readRestrictions/edm:Record/edm:PropertyValue[@Property='Readable']" />
-      <xsl:variable name="readable" select="$readable-p/@Bool|$readable-p/edm:Bool" />
-      <xsl:variable name="readByKeyRestrictions" select="$readRestrictions/edm:Record/edm:PropertyValue[@Property='ReadByKeyRestrictions']" />
+
+      <xsl:variable name="navigation-restrictions" select="//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
+        /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
+        /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and
+        $navigation-path=concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]]" />
+
+      <xsl:variable name="readRestrictions" select="$navigation-restrictions/edm:PropertyValue[@Property='ReadRestrictions']
+        /edm:Record/edm:PropertyValue[@Property='ReadRestrictions'] |
+        //edm:Annotation[not($navigation-restrictions/edm:PropertyValue/@Property='ReadRestrictions') and
+        not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.ReadRestrictions' and
+        $target-path=concat(@path-to-target,@target)]" />
+      <xsl:variable name="readByKeyRestrictions" select="$readRestrictions
+        /edm:Record/edm:PropertyValue[@Property='ReadByKeyRestrictions']" />
       <xsl:variable name="with-get">
         <xsl:choose>
           <xsl:when test="$with-key">
-            <xsl:variable name="readByKeyRestrictions-readable" select="$readByKeyRestrictions/edm:Record/edm:PropertyValue[@Property='Readable']" />
-            <xsl:variable name="readableByKey" select="$readByKeyRestrictions-readable/@Bool|$readByKeyRestrictions-readable/edm:Bool" />
-            <xsl:value-of select="$readableByKey='true' or (not($readableByKey) and not($readable='false'))" />
+            <xsl:value-of select="$readByKeyRestrictions/edm:Record/edm:PropertyValue[@Property='Readable' and not(@Bool='false')] or
+              not($readByKeyRestrictions) and
+              not($readRestrictions/edm:Record/edm:PropertyValue[@Property='Readable' and @Bool='false'])" />
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="not($readable='false')" />
+            <xsl:value-of select="not($readRestrictions/edm:Record/edm:PropertyValue[@Property='Readable' and @Bool='false'])" />
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
 
-      <xsl:variable name="updatable-p" select="$updateRestrictions/edm:Record/edm:PropertyValue[@Property='Updatable']" />
-      <xsl:variable name="updatable" select="$updatable-p/@Bool|$updatable-p/edm:Bool" />
-
-      <xsl:variable name="deletable-p" select="$deleteRestrictions/edm:Record/edm:PropertyValue[@Property='Deletable']" />
-      <xsl:variable name="deletable" select="$deletable-p/@Bool|$deletable-p/edm:Bool" />
+      <xsl:variable name="updateRestrictions" select="$navigation-restrictions/edm:PropertyValue[@Property='UpdateRestrictions'] |
+        //edm:Annotation[current()[self::edm:EntitySet|self::edm:Singleton] and
+        not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions' and
+        $target-path=concat(@path-to-target,@target)]" />
+      <xsl:variable name="updatable" select="not($updateRestrictions/edm:Record/edm:PropertyValue[@Property='Updatable' and @Bool='false'])" />
+      <xsl:variable name="deleteRestrictions" select="$navigation-restrictions/edm:PropertyValue[@Property='DeleteRestrictions'] |
+        //edm:Annotation[current()[self::edm:EntitySet|self::edm:Singleton] and
+        not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.DeleteRestrictions' and
+        $target-path=concat(@path-to-target,@target)]" />
+      <xsl:variable name="deletable" select="not($deleteRestrictions/edm:Record/edm:PropertyValue[@Property='Deletable' and @Bool='false'])" />
 
       <xsl:variable name="path-template">
         <xsl:value-of select="$path-prefix" />
@@ -3218,7 +3208,7 @@
         </xsl:if>
       </xsl:variable>
 
-      <xsl:if test="$with-get='true' or not($updatable='false') or (local-name()!='Singleton' and not($deletable='false'))">
+      <xsl:if test="$with-get='true' or $updatable or not(self::edm:Singleton) and $deletable">
 
         <xsl:text>"/</xsl:text>
         <xsl:value-of select="$path-template" />
@@ -3267,10 +3257,11 @@
             <!-- TODO: Prefer, Preference-Applied -->
           </xsl:if>
 
-          <xsl:variable name="selectable-p" select="$selectSupport/edm:Record/edm:PropertyValue[@Property='Supported']" />
-          <xsl:variable name="selectable" select="$selectable-p/@Bool|$selectable-p/edm:Bool" />
+          <xsl:variable name="selectable" select="not(//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.SelectSupport' and
+            $target-path=concat(@path-to-target,@target)]
+            /edm:Record/edm:PropertyValue[@Property='Supported' and @Bool='false'])" />
           <xsl:variable name="selectable-properties" select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']" />
-          <xsl:if test="not($selectable='false')">
+          <xsl:if test="$selectable">
             <xsl:for-each select="$selectable-properties">
               <xsl:call-template name="select-property">
                 <!-- TODO: $delta -->
@@ -3280,14 +3271,14 @@
           </xsl:if>
 
           <!-- TODO: this is not correct, ExpandRestrictions are on container-child-level only, not in navigation restrictions -->
-          <xsl:variable name="expandable-p" select="$expandRestrictions/edm:Record/edm:PropertyValue[@Property='Expandable']" />
-          <xsl:variable name="expandable" select="$expandable-p/@Bool|$expandable-p/edm:Bool" />
-          <xsl:if test="not($expandable='false')">
+          <xsl:if test="not(//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.ExpandRestrictions' and
+            $target-path=concat(@path-to-target,@target)]
+            /edm:Record/edm:PropertyValue[@Property='Expandable' and @Bool='false'])">
             <!-- TODO: exclude properties that are listed in NonExpandableProperties -->
             <xsl:for-each select="$entityType/edm:NavigationProperty|$entityType/edm:Property[@Type='Edm.Stream' and /edmx:Edmx/@Version='4.01']">
               <xsl:call-template name="expand-property">
                 <!-- TODO: $delta -->
-                <xsl:with-param name="after" select="(not($selectable='false') and $selectable-properties)" />
+                <xsl:with-param name="after" select="$selectable and $selectable-properties" />
               </xsl:call-template>
             </xsl:for-each>
           </xsl:if>
@@ -3303,7 +3294,7 @@
         </xsl:if>
 
         <!-- PATCH -->
-        <xsl:if test="not($updatable='false')">
+        <xsl:if test="$updatable">
           <xsl:if test="$path-parameters!='' or $with-get='true'">
             <xsl:text>,</xsl:text>
           </xsl:if>
@@ -3385,8 +3376,8 @@
         </xsl:if>
 
         <!-- DELETE -->
-        <xsl:if test="local-name()!='Singleton' and not($deletable='false')">
-          <xsl:if test="$path-parameters!='' or $with-get='true' or not($updatable='false')">
+        <xsl:if test="not(self::edm:Singleton) and $deletable">
+          <xsl:if test="$path-parameters!='' or $with-get='true' or $updatable">
             <xsl:text>,</xsl:text>
           </xsl:if>
           <xsl:text>"delete":{</xsl:text>
@@ -3486,7 +3477,6 @@
           <xsl:with-param name="navigation-path" select="concat($navigation-path,' ',@id)" />
           <xsl:with-param name="entityType" select="$entityType" />
           <xsl:with-param name="root" select="$root" />
-          <xsl:with-param name="navigationRestrictions" select="$navigationRestrictions" />
           <xsl:with-param name="navigation-prefix" select="$navigation-prefix" />
           <xsl:with-param name="path-prefix" select="$path-template" />
           <xsl:with-param name="prefix-parameters" select="$path-parameters" />
@@ -4002,7 +3992,6 @@
   <xsl:template name="query-options">
     <xsl:param name="navigation-path" />
     <xsl:param name="target-path" />
-    <xsl:param name="navigationPropertyRestriction" />
     <xsl:param name="collection" />
     <xsl:param name="entityType" />
 
@@ -4046,10 +4035,7 @@
       /edm:Record/edm:PropertyValue[@Property='Sortable' and @Bool='false'])" />
 
     <xsl:variable name="selectable-properties" select="$entityType/edm:Property|$entityType/edm:NavigationProperty[$odata-version='2.0']" />
-    <xsl:variable name="with-select" select="not($navigation-restrictions/edm:PropertyValue[@Property='SelectSupport']
-      /edm:Record/edm:PropertyValue[@Property='Supported' and @Bool='false'] or
-      not($navigation-restrictions/edm:PropertyValue/@Property='SelectSupport') and
-      //edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.SelectSupport' and
+    <xsl:variable name="with-select" select="not(//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.SelectSupport' and
       $target-path=concat(@path-to-target,@target)]
       /edm:Record/edm:PropertyValue[@Property='Supported' and @Bool='false'])
       and $selectable-properties" />
