@@ -3176,12 +3176,12 @@
       </xsl:variable>
 
       <xsl:variable name="updateRestrictions" select="$navigation-restrictions/edm:PropertyValue[@Property='UpdateRestrictions'] |
-        //edm:Annotation[current()[self::edm:EntitySet|self::edm:Singleton] and
+        //edm:Annotation[not($navigation-restrictions/edm:PropertyValue[@Property='UpdateRestrictions']) and
         not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions' and
         $target-path=concat(@path-to-target,@target)]" />
       <xsl:variable name="updatable" select="not($updateRestrictions/edm:Record/edm:PropertyValue[@Property='Updatable' and @Bool='false'])" />
       <xsl:variable name="deleteRestrictions" select="$navigation-restrictions/edm:PropertyValue[@Property='DeleteRestrictions'] |
-        //edm:Annotation[current()[self::edm:EntitySet|self::edm:Singleton] and
+        //edm:Annotation[not($navigation-restrictions/edm:PropertyValue[@Property='DeleteRestrictions']) and
         not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.DeleteRestrictions' and
         $target-path=concat(@path-to-target,@target)]" />
       <xsl:variable name="deletable" select="not($deleteRestrictions/edm:Record/edm:PropertyValue[@Property='Deletable' and @Bool='false'])" />
