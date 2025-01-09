@@ -2746,7 +2746,7 @@
 
       <xsl:if test="@ContainsTarget='true' and $level&lt;$max-levels and
         not($navigation-restrictions/edm:PropertyValue[@Property='IndexableByKey' and @Bool='false'] or
-        not($navigation-restrictions) and
+        not($navigation-restrictions/edm:PropertyValue/@Property='IndexableByKey') and
         //edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.IndexableByKey' and
         $target-path=concat(@path-to-target,@target) and @Bool='false'])">
         <xsl:call-template name="pathItem-single-entity">
@@ -4001,11 +4001,11 @@
       $navigation-path=concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]]" />
 
     <xsl:variable name="with-top" select="not($navigation-restrictions/edm:PropertyValue[@Property='TopSupported' and @Bool='false'] or
-      not($navigation-restrictions) and
+      not($navigation-restrictions/edm:PropertyValue/@Property='TopSupported') and
       //edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.TopSupported' and
       $target-path=concat(@path-to-target,@target) and @Bool='false'])" />
     <xsl:variable name="with-skip" select="not($navigation-restrictions/edm:PropertyValue[@Property='SkipSupported' and @Bool='false'] or
-      not($navigation-restrictions) and
+      not($navigation-restrictions/edm:PropertyValue/@Property='SkipSupported') and
       //edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.SkipSupported' and
       $target-path=concat(@path-to-target,@target) and @Bool='false'])" />
     <xsl:variable name="with-search" select="not($navigation-restrictions/edm:PropertyValue[@Property='SearchRestrictions']
