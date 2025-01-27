@@ -4,7 +4,7 @@
 
 ### Fixed
 
-- Apply default value `true` for Capabilities.NavigationRestrictions/RestrictedProperties/TopSupported` and `SkipSupported`
+- Apply default value `true` for `Capabilities.NavigationRestrictions/RestrictedProperties/TopSupported` and `.../SkipSupported`
 
 ## 0.28.2 - 2024-10-30
 
