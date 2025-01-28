@@ -4726,29 +4726,12 @@
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:text>{"name":"</xsl:text>
+    <xsl:value-of select="@Name" />
     <xsl:choose>
       <xsl:when test="$odata-version='2.0'">
-        <xsl:if test="@Name='compute'
-                   or @Name='expand'
-                   or @Name='select'
-                   or @Name='filter'
-                   or @Name='search'
-                   or @Name='count'
-                   or @Name='orderby'
-                   or @Name='skip'
-                   or @Name='top'
-                   or @Name='format'
-                   or @Name='index'
-                   or @Name='schemaversion'
-                   or @Name='skiptoken'
-                   or @Name='apply'">
-          <xsl:text>@</xsl:text>
-        </xsl:if>
-        <xsl:value-of select="@Name" />
         <xsl:text>","in":"query",</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="@Name" />
         <xsl:text>","in":"path",</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
