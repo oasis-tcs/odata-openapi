@@ -2913,10 +2913,7 @@
         <xsl:text>"get":{</xsl:text>
 
         <xsl:call-template name="operation-summary-description">
-          <xsl:with-param name="restriction" select="$navigation-restrictions/edm:PropertyValue[@Property='ReadRestrictions'] |
-            //edm:Annotation[current()/self::edm:EntitySet and
-            not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.ReadRestrictions' and
-            $target-path=concat(@path-to-target,@target)]" />
+          <xsl:with-param name="restriction" select="$readRestrictions" />
           <xsl:with-param name="fallback-summary">
             <xsl:text>Get </xsl:text>
             <xsl:if test="$return-collection">
@@ -2974,10 +2971,7 @@
         <xsl:text>"post":{</xsl:text>
 
         <xsl:call-template name="operation-summary-description">
-          <xsl:with-param name="restriction" select="$navigation-restrictions/edm:PropertyValue[@Property='InsertRestrictions'] |
-            //edm:Annotation[current()/self::edm:EntitySet and
-            not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions' and
-            $target-path=concat(@path-to-target,@target)]" />
+          <xsl:with-param name="restriction" select="$insertRestrictions" />
           <xsl:with-param name="fallback-summary">
             <xsl:choose>
               <xsl:when test="$entityType/@HasStream='true'">
