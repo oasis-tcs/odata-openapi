@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.29.0 - 2025-01-27
+
+### Fixed
+
+- Apply default value `true` for `Capabilities.NavigationRestrictions/RestrictedProperties/TopSupported` and `.../SkipSupported`
+
 ## 0.28.2 - 2024-10-30
 
 ### Fixed

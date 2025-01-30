@@ -4270,13 +4270,13 @@
     <xsl:variable name="target-topSupported" select="$target-topSupported-p/@Bool|$target-topSupported-p/edm:Bool" />
     <xsl:variable name="navigation-topSupported-p" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='TopSupported']" />
     <xsl:variable name="navigation-topSupported" select="$navigation-topSupported-p/@Bool|$navigation-topSupported-p/edm:Bool" />
-    <xsl:variable name="with-top" select="not($navigation-topSupported='false' or (not($navigation-topSupported) and $target-topSupported='false'))" />
+    <xsl:variable name="with-top" select="not($navigation-topSupported='false' or (not($navigationPropertyRestriction) and $target-topSupported='false'))" />
 
     <xsl:variable name="target-skipSupported-p" select="$target-annotations[@Term=$capabilitiesSkipSupported or @Term=$capabilitiesSkipSupportedAliased]" />
     <xsl:variable name="target-skipSupported" select="$target-skipSupported-p/@Bool|$target-skipSupported-p/edm:Bool" />
     <xsl:variable name="navigation-skipSupported-p" select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SkipSupported']" />
     <xsl:variable name="navigation-skipSupported" select="$navigation-skipSupported-p/@Bool|$navigation-skipSupported-p/edm:Bool" />
-    <xsl:variable name="with-skip" select="not($navigation-skipSupported='false' or (not($navigation-skipSupported) and $target-skipSupported='false'))" />
+    <xsl:variable name="with-skip" select="not($navigation-skipSupported='false' or (not($navigationPropertyRestriction) and $target-skipSupported='false'))" />
 
     <xsl:variable name="target-searchable-p" select="$target-annotations[@Term=$capabilitiesSearchRestrictions or @Term=$capabilitiesSearchRestrictionsAliased]/edm:Record/edm:PropertyValue[@Property='Searchable']" />
     <xsl:variable name="target-searchable" select="$target-searchable-p/@Bool|$target-searchable-p/edm:Bool" />
