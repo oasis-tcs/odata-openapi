@@ -945,7 +945,7 @@ describe("Edge cases", function () {
             $Kind: "Function",
             $Parameter: [
               {
-                $Name: "skip",
+                $Name: "SKIP",
                 $Type: "Edm.Date",
                 $Collection: true,
                 "@Core.Description": "Dates to be skipped",
@@ -969,7 +969,7 @@ describe("Edge cases", function () {
           get: {
             parameters: [
               {
-                name: "@skip",
+                name: "@SKIP",
                 in: "query",
                 required: true,
                 description:
