@@ -201,6 +201,7 @@
     @target=/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer/@id and
     @p2:Term='Org.OData.Capabilities.V1.KeyAsSegmentSupported' and not(@Bool='false')]" />
 
+  <xsl:key name="id" match="edm:*" use="@id" />
   <xsl:key name="externalAnnotations" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations" use="@Target" />
   <xsl:key name="externalPropertyAnnotations" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations[contains(@Target,'/')]" use="substring-before(@Target,'/')" />
 
@@ -1428,7 +1429,7 @@
       <xsl:variable name="navigation-restrictions" select="//edm:Annotation[not(@Qualifier) and
         @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
         /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
-        /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and id(@p1:NavigationPropertyPath)/@p1:Type=$structuredType/@id]]" />
+        /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and key('id',@p1:NavigationPropertyPath)/@p1:Type=$structuredType/@id]]" />
       <xsl:if test="$suffix='-create'">
         <!-- non-computed key properties are required, as are Capabilities.InsertRestrictions/RequiredProperties -->
         <xsl:for-each select="$structuredType/edm:Property[
@@ -1441,7 +1442,7 @@
           /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath or
           not($navigation-restrictions/edm:PropertyValue[@Property='InsertRestrictions']) and
           @Name=//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions' and
-          id(@target)/@p1:EntityType=$structuredType/@id]
+          key('id',@target)/@p1:EntityType=$structuredType/@id]
           /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath]">
           <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
@@ -1458,7 +1459,7 @@
           /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath or
           not($navigation-restrictions/edm:PropertyValue[@Property='UpdateRestrictions']) and
           @Name=//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions' and
-          id(@target)/@p1:EntityType=$structuredType/@id]
+          key('id',@target)/@p1:EntityType=$structuredType/@id]
           /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath]">
           <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
@@ -2637,7 +2638,7 @@
     <xsl:call-template name="pathItem-entity-collection">
       <xsl:with-param name="navigation-path" select="concat(../@id,' ',@id)" />
       <xsl:with-param name="target-path" select="concat(../@id,' ',@id)" />
-      <xsl:with-param name="entityType" select="id(@p1:EntityType)" />
+      <xsl:with-param name="entityType" select="key('id',@p1:EntityType)" />
       <xsl:with-param name="return-collection" select="true()" />
       <xsl:with-param name="root" select="." />
       <xsl:with-param name="path-prefix" select="@Name" />
@@ -2654,7 +2655,7 @@
       <xsl:call-template name="pathItem-single-entity">
         <xsl:with-param name="navigation-path" select="concat(../@id,' ',@id)" />
         <xsl:with-param name="target-path" select="concat(../@id,' ',@id)" />
-        <xsl:with-param name="entityType" select="id(@p1:EntityType)" />
+        <xsl:with-param name="entityType" select="key('id',@p1:EntityType)" />
         <xsl:with-param name="with-key" select="true()" />
         <xsl:with-param name="root" select="." />
         <xsl:with-param name="path-prefix" select="@Name" />
@@ -2669,7 +2670,7 @@
     <xsl:call-template name="pathItem-single-entity">
       <xsl:with-param name="navigation-path" select="concat(../@id,' ',@id)" />
       <xsl:with-param name="target-path" select="concat(../@id,' ',@id)" />
-      <xsl:with-param name="entityType" select="id(@p1:Type)" />
+      <xsl:with-param name="entityType" select="key('id',@p1:Type)" />
       <xsl:with-param name="with-key" select="false()" />
       <xsl:with-param name="root" select="." />
       <xsl:with-param name="path-prefix" select="@Name" />
@@ -2733,7 +2734,7 @@
         <xsl:call-template name="pathItem-entity-collection">
           <xsl:with-param name="navigation-path" select="$navigation-path" />
           <xsl:with-param name="target-path" select="$target-path" />
-          <xsl:with-param name="entityType" select="id(@p1:Type)" />
+          <xsl:with-param name="entityType" select="key('id',@p1:Type)" />
           <xsl:with-param name="return-collection" select="$collection" />
           <xsl:with-param name="root" select="$root" />
           <xsl:with-param name="path-prefix" select="$path-template" />
@@ -2752,7 +2753,7 @@
         <xsl:call-template name="pathItem-single-entity">
           <xsl:with-param name="navigation-path" select="$navigation-path" />
           <xsl:with-param name="target-path" select="$target-path" />
-          <xsl:with-param name="entityType" select="id(@p1:Type)" />
+          <xsl:with-param name="entityType" select="key('id',@p1:Type)" />
           <xsl:with-param name="with-key" select="$collection" />
           <xsl:with-param name="root" select="$root" />
           <xsl:with-param name="path-prefix" select="$path-template" />
@@ -2913,7 +2914,9 @@
         <xsl:text>"get":{</xsl:text>
 
         <xsl:call-template name="operation-summary-description">
-          <xsl:with-param name="restriction" select="$readRestrictions" />
+          <xsl:with-param name="restriction" select="$navigation-restrictions/edm:PropertyValue[@Property='ReadRestrictions'] |
+            //edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.ReadRestrictions' and
+            $navigation-path=concat(@path-to-target,@target)]" />
           <xsl:with-param name="fallback-summary">
             <xsl:text>Get </xsl:text>
             <xsl:if test="$return-collection">
@@ -2928,7 +2931,7 @@
 
         <xsl:call-template name="operation-tag">
           <xsl:with-param name="sourceSet" select="$root" />
-          <xsl:with-param name="targetSet" select="id($target)" />
+          <xsl:with-param name="targetSet" select="key('id',$target)" />
         </xsl:call-template>
 
         <xsl:text>,"parameters":[</xsl:text>
@@ -2971,7 +2974,9 @@
         <xsl:text>"post":{</xsl:text>
 
         <xsl:call-template name="operation-summary-description">
-          <xsl:with-param name="restriction" select="$insertRestrictions" />
+          <xsl:with-param name="restriction" select="$navigation-restrictions/edm:PropertyValue[@Property='InsertRestrictions'] |
+            //edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions' and
+            $navigation-path=concat(@path-to-target,@target)]" />
           <xsl:with-param name="fallback-summary">
             <xsl:choose>
               <xsl:when test="$entityType/@HasStream='true'">
@@ -2990,7 +2995,7 @@
 
         <xsl:call-template name="operation-tag">
           <xsl:with-param name="sourceSet" select="$root" />
-          <xsl:with-param name="targetSet" select="id($target)" />
+          <xsl:with-param name="targetSet" select="key('id',$target)" />
         </xsl:call-template>
 
         <xsl:choose>
@@ -3149,8 +3154,7 @@
         /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and
         $navigation-path=concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]]" />
 
-      <xsl:variable name="readRestrictions" select="$navigation-restrictions/edm:PropertyValue[@Property='ReadRestrictions']
-        /edm:Record/edm:PropertyValue[@Property='ReadRestrictions'] |
+      <xsl:variable name="readRestrictions" select="$navigation-restrictions/edm:PropertyValue[@Property='ReadRestrictions'] |
         //edm:Annotation[not($navigation-restrictions/edm:PropertyValue/@Property='ReadRestrictions') and
         not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.ReadRestrictions' and
         $target-path=concat(@path-to-target,@target)]" />

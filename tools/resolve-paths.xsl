@@ -8,8 +8,7 @@
 	xmlns:p3="http://docs.oasis-open.org/odata/ns/edm/after-termcast-segment"
 	exclude-result-prefixes="edm">
 	<xsl:strip-space elements="*" />
-	<xsl:output doctype-system="csdl-ext.dtd" method="xml"
-		indent="yes" />
+	<xsl:output method="xml" indent="yes" />
 
 	<xsl:template match="/">
 		<xsl:apply-templates select="." mode="ids" />
