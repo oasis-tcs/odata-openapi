@@ -1276,21 +1276,58 @@
       <xsl:with-param name="aliasQualifiedName" select="$aliasQualifiedName" />
     </xsl:call-template>
 
-    <xsl:text>,</xsl:text>
+    <xsl:variable name="with-create">
+      <xsl:for-each select="p0:resource-path">
+        <xsl:variable name="navigation-restrictions" select="//edm:Annotation[not(@Qualifier) and
+        @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
+        /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
+        /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and
+        current()=concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]" />
+        <xsl:if test="not($navigation-restrictions/edm:PropertyValue[@Property='InsertRestrictions']
+          /edm:Record/edm:PropertyValue[@Property='Insertable' and @Bool='false'] or
+          not($navigation-restrictions/edm:PropertyValue/@Property='InsertRestrictions') and
+          //edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions' and
+          current()=concat(@path-to-target,@target)]
+          /edm:Record/edm:PropertyValue[@Property='Insertable' and @Bool='false'])">
+          <xsl:text>X</xsl:text>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:if test="$with-create">
+      <xsl:text>,</xsl:text>
+      <xsl:call-template name="structure">
+        <xsl:with-param name="qualifiedName" select="$qualifiedName" />
+        <xsl:with-param name="aliasQualifiedName" select="$aliasQualifiedName" />
+        <xsl:with-param name="suffix" select="'-create'" />
+      </xsl:call-template>
+    </xsl:if>
 
-    <xsl:call-template name="structure">
-      <xsl:with-param name="qualifiedName" select="$qualifiedName" />
-      <xsl:with-param name="aliasQualifiedName" select="$aliasQualifiedName" />
-      <xsl:with-param name="suffix" select="'-create'" />
-    </xsl:call-template>
+    <xsl:variable name="with-update">
+      <xsl:for-each select="p0:resource-path">
+        <xsl:variable name="navigation-restrictions" select="//edm:Annotation[not(@Qualifier) and
+        @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
+        /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
+        /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and
+        current()=concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]" />
+        <xsl:if test="not($navigation-restrictions/edm:PropertyValue[@Property='UpdateRestrictions']
+          /edm:Record/edm:PropertyValue[@Property='Updatable' and @Bool='false'] or
+          not($navigation-restrictions/edm:PropertyValue/@Property='UpdateRestrictions') and
+          //edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions' and
+          current()=concat(@path-to-target,@target)]
+          /edm:Record/edm:PropertyValue[@Property='Updatable' and @Bool='false'])">
+          <xsl:text>X</xsl:text>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:if test="$with-update">
+      <xsl:text>,</xsl:text>
+      <xsl:call-template name="structure">
+        <xsl:with-param name="qualifiedName" select="$qualifiedName" />
+        <xsl:with-param name="aliasQualifiedName" select="$aliasQualifiedName" />
+        <xsl:with-param name="suffix" select="'-update'" />
+      </xsl:call-template>
+    </xsl:if>
 
-    <xsl:text>,</xsl:text>
-
-    <xsl:call-template name="structure">
-      <xsl:with-param name="qualifiedName" select="$qualifiedName" />
-      <xsl:with-param name="aliasQualifiedName" select="$aliasQualifiedName" />
-      <xsl:with-param name="suffix" select="'-update'" />
-    </xsl:call-template>
   </xsl:template>
 
   <xsl:template name="structure">
@@ -2643,7 +2680,6 @@
       <xsl:with-param name="root" select="." />
       <xsl:with-param name="path-prefix" select="@Name" />
       <xsl:with-param name="prefix-parameters" select="''" />
-      <xsl:with-param name="navigation-prefix" select="''" />
       <xsl:with-param name="with-get" select="$readable" />
       <xsl:with-param name="with-post" select="$insertable" />
     </xsl:call-template>
@@ -2661,7 +2697,6 @@
         <xsl:with-param name="path-prefix" select="@Name" />
         <xsl:with-param name="prefix-parameters" select="''" />
         <xsl:with-param name="level" select="0" />
-        <xsl:with-param name="navigation-prefix" select="''" />
       </xsl:call-template>
     </xsl:if>
   </xsl:template>
@@ -2676,7 +2711,6 @@
       <xsl:with-param name="path-prefix" select="@Name" />
       <xsl:with-param name="prefix-parameters" select="''" />
       <xsl:with-param name="level" select="0" />
-      <xsl:with-param name="navigation-prefix" select="''" />
     </xsl:call-template>
   </xsl:template>
 
@@ -2686,9 +2720,7 @@
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
     <xsl:param name="level" />
-    <xsl:param name="navigation-prefix" />
 
-    <xsl:variable name="navPropPath" select="concat($navigation-prefix,@Name)" />
     <xsl:variable name="target-path">
       <xsl:for-each select="$root/edm:NavigationPropertyBinding[@p1:Path=current()/@id]">
         <xsl:value-of select="concat(@p0:Target,@p1:Target)" />
@@ -2739,7 +2771,6 @@
           <xsl:with-param name="root" select="$root" />
           <xsl:with-param name="path-prefix" select="$path-template" />
           <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
-          <xsl:with-param name="navigation-prefix" select="$navigation-prefix" />
           <xsl:with-param name="with-get" select="$readable" />
           <xsl:with-param name="with-post" select="$collection and (string($target-path) or @ContainsTarget='true') and $insertable" />
         </xsl:call-template>
@@ -2759,7 +2790,6 @@
           <xsl:with-param name="path-prefix" select="$path-template" />
           <xsl:with-param name="prefix-parameters" select="$prefix-parameters" />
           <xsl:with-param name="level" select="$level" />
-          <xsl:with-param name="navigation-prefix" select="concat($navPropPath,'/')" />
         </xsl:call-template>
       </xsl:if>
     </xsl:if>
@@ -2865,7 +2895,6 @@
     <xsl:param name="root" />
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
-    <xsl:param name="navigation-prefix" />
     <xsl:param name="with-get" />
     <xsl:param name="with-post" />
 
@@ -3137,8 +3166,6 @@
     <xsl:param name="path-prefix" />
     <xsl:param name="prefix-parameters" />
     <xsl:param name="level" />
-    <!-- TODO: should be sufficient to pass just the records within RestrictedProperties/Collection -->
-    <xsl:param name="navigation-prefix" />
 
     <xsl:variable name="qualifiedType">
       <xsl:value-of select="$entityType/ancestor::edm:Schema/@Namespace" />
@@ -3475,7 +3502,6 @@
           <xsl:with-param name="navigation-path" select="concat($navigation-path,' ',@id)" />
           <xsl:with-param name="entityType" select="$entityType" />
           <xsl:with-param name="root" select="$root" />
-          <xsl:with-param name="navigation-prefix" select="$navigation-prefix" />
           <xsl:with-param name="path-prefix" select="$path-template" />
           <xsl:with-param name="prefix-parameters" select="$path-parameters" />
           <xsl:with-param name="level" select="1+$level" />

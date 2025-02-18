@@ -88,7 +88,62 @@
 			</xsl:if>
 			<xsl:apply-templates select="@*|node()"
 				mode="ids" />
+			<xsl:apply-templates select="." mode="resource-paths" />
 		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="edm:*" mode="resource-paths" />
+
+	<xsl:template match="edm:EntityType" mode="resource-paths">
+		<xsl:param name="suffix" />
+		<xsl:for-each select="//edm:EntitySet
+			[@EntityType=concat(current()/../@Namespace,'.',current()/@Name) or
+			@EntityType=concat(current()/../@Alias,'.',current()/@Name) or
+			@EntityType=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
+			@EntityType=concat('Collection(',current()/../@Alias,'.',current()/@Name,')')]">
+			<p0:resource-path>
+				<xsl:value-of select="generate-id(..)" />
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="generate-id()" />
+				<xsl:value-of select="$suffix" />
+			</p0:resource-path>
+		</xsl:for-each>
+		<xsl:for-each select="//edm:Singleton
+			[@Type=concat(current()/../@Namespace,'.',current()/@Name) or
+			@Type=concat(current()/../@Alias,'.',current()/@Name) or
+			@Type=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
+			@Type=concat('Collection(',current()/../@Alias,'.',current()/@Name,')')]">
+			<p0:resource-path>
+				<xsl:value-of select="generate-id(..)" />
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="generate-id()" />
+				<xsl:value-of select="$suffix" />
+			</p0:resource-path>
+		</xsl:for-each>
+		<xsl:for-each select="//edm:NavigationProperty
+			[not(contains(concat($suffix,' '),concat(' ',generate-id(),' '))) and
+			(@Type=concat(current()/../@Namespace,'.',current()/@Name) or
+			@Type=concat(current()/../@Alias,'.',current()/@Name) or
+			@Type=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
+			@Type=concat('Collection(',current()/../@Alias,'.',current()/@Name,')'))]">
+			<xsl:apply-templates select=".." mode="resource-paths">
+				<xsl:with-param name="suffix" select="concat(' ',generate-id(),$suffix)" />
+			</xsl:apply-templates>
+		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template match="edm:ComplexType" mode="resource-paths">
+		<xsl:param name="suffix" />
+		<xsl:for-each select="//edm:Property
+			[not(contains(concat($suffix,' '),concat(' ',generate-id(),' '))) and
+			(@Type=concat(current()/../@Namespace,'.',current()/@Name) or
+			@Type=concat(current()/../@Alias,'.',current()/@Name) or
+			@Type=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
+			@Type=concat('Collection(',current()/../@Alias,'.',current()/@Name,')'))]">
+			<xsl:apply-templates select=".." mode="resource-paths">
+				<xsl:with-param name="suffix" select="concat(' ',generate-id(),$suffix)" />
+			</xsl:apply-templates>
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="edm:Annotation/@Term | edm:*/@EnumMember" mode="ids">
