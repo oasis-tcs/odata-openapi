@@ -7,7 +7,8 @@
 	</edmx:Reference>
 	<edmx:Reference
 		Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
-		<edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
+		<edmx:Include Namespace="Org.OData.Capabilities.V1"
+			Alias="Capabilities" />
 	</edmx:Reference>
 	<edmx:Reference
 		Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.xml">
@@ -26,7 +27,7 @@
 					<Annotation Term="Core.Immutable" />
 				</Property>
 				<NavigationProperty Name="Items"
-					Type="Collection(self.OrderItem)" />
+					Type="Collection(self.OrderItem)" Partner="Header" />
 			</EntityType>
 			<EntityType Name="OrderItem">
 				<Key>
@@ -38,7 +39,7 @@
 					<Annotation Term="Measures.Unit" Path="Header/Unit" />
 				</Property>
 				<NavigationProperty Name="Header"
-					Type="self.Order" />
+					Type="self.Order" Partner="Items" />
 			</EntityType>
 			<EntityContainer Name="Container">
 				<EntitySet Name="Orders" EntityType="self.Order" />
@@ -58,10 +59,12 @@
 						<PropertyValue Property="RestrictedProperties">
 							<Collection>
 								<Record>
-									<PropertyValue Property="NavigationProperty" NavigationPropertyPath="Items" />
+									<PropertyValue Property="NavigationProperty"
+										NavigationPropertyPath="Items" />
 									<PropertyValue Property="InsertRestrictions">
 										<Record>
-											<PropertyValue Property="Insertable" Bool="false" />
+											<PropertyValue Property="Insertable"
+												Bool="false" />
 										</Record>
 									</PropertyValue>
 								</Record>
@@ -71,7 +74,8 @@
 				</Annotation>
 			</Annotations>
 			<Annotations Target="self.Container/Orders/Items">
-				<Annotation Term="Core.Description" String="contained entity set" />
+				<Annotation Term="Core.Description"
+					String="contained entity set" />
 			</Annotations>
 		</Schema>
 	</edmx:DataServices>

@@ -27,7 +27,7 @@
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
   <xsl:strip-space elements="*" />
-
+  <xsl:preserve-space elements="p0:resource-path" />
 
   <xsl:param name="scheme" select="'http'" />
   <xsl:param name="host" select="'localhost'" />
@@ -1276,24 +1276,27 @@
       <xsl:with-param name="aliasQualifiedName" select="$aliasQualifiedName" />
     </xsl:call-template>
 
+    <xsl:variable name="resource-paths" select="p0:resource-path[not(p0:resource-path-segment
+      [key('id',normalize-space())/@p1:Partner=following-sibling::p0:resource-path-segment])]" />
+
     <xsl:variable name="with-create">
-      <xsl:for-each select="p0:resource-path">
+      <xsl:for-each select="$resource-paths">
         <xsl:variable name="navigation-restrictions" select="//edm:Annotation[not(@Qualifier) and
         @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
         /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
         /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and
-        current()=concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]" />
+        normalize-space(current())=concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]]" />
         <xsl:if test="not($navigation-restrictions/edm:PropertyValue[@Property='InsertRestrictions']
           /edm:Record/edm:PropertyValue[@Property='Insertable' and @Bool='false'] or
           not($navigation-restrictions/edm:PropertyValue/@Property='InsertRestrictions') and
           //edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions' and
-          current()=concat(@path-to-target,@target)]
+          normalize-space(current())=concat(@path-to-target,@target)]
           /edm:Record/edm:PropertyValue[@Property='Insertable' and @Bool='false'])">
           <xsl:text>X</xsl:text>
         </xsl:if>
       </xsl:for-each>
     </xsl:variable>
-    <xsl:if test="$with-create">
+    <xsl:if test="string($with-create)">
       <xsl:text>,</xsl:text>
       <xsl:call-template name="structure">
         <xsl:with-param name="qualifiedName" select="$qualifiedName" />
@@ -1303,23 +1306,23 @@
     </xsl:if>
 
     <xsl:variable name="with-update">
-      <xsl:for-each select="p0:resource-path">
+      <xsl:for-each select="$resource-paths">
         <xsl:variable name="navigation-restrictions" select="//edm:Annotation[not(@Qualifier) and
         @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
         /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
         /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and
-        current()=concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]" />
+        current()=concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]]" />
         <xsl:if test="not($navigation-restrictions/edm:PropertyValue[@Property='UpdateRestrictions']
           /edm:Record/edm:PropertyValue[@Property='Updatable' and @Bool='false'] or
           not($navigation-restrictions/edm:PropertyValue/@Property='UpdateRestrictions') and
           //edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions' and
-          current()=concat(@path-to-target,@target)]
+          normalize-space(current())=concat(@path-to-target,@target)]
           /edm:Record/edm:PropertyValue[@Property='Updatable' and @Bool='false'])">
           <xsl:text>X</xsl:text>
         </xsl:if>
       </xsl:for-each>
     </xsl:variable>
-    <xsl:if test="$with-update">
+    <xsl:if test="string($with-update)">
       <xsl:text>,</xsl:text>
       <xsl:call-template name="structure">
         <xsl:with-param name="qualifiedName" select="$qualifiedName" />
