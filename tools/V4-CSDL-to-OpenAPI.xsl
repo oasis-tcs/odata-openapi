@@ -1267,7 +1267,7 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:Record" mode="resource-paths">
+  <xsl:template match="p0:resource-path" mode="not-restricted">
     <xsl:param name="restrictions" />
     <xsl:param name="property" />
     <xsl:variable name="navigation-restrictions" select="//edm:Annotation[not(@Qualifier) and
@@ -1298,7 +1298,7 @@
       [key('id',normalize-space())/@p1:Partner=following-sibling::p0:resource-path-segment])]" />
 
     <xsl:variable name="with-create">
-      <xsl:apply-templates select="$resource-paths" mode="resource-paths">
+      <xsl:apply-templates select="$resource-paths" mode="not-restricted">
         <xsl:with-param name="restrictions" select="'InsertRestrictions'" />
         <xsl:with-param name="property" select="'Insertable'" />
       </xsl:apply-templates>
@@ -1313,7 +1313,7 @@
     </xsl:if>
 
     <xsl:variable name="with-update">
-      <xsl:apply-templates select="$resource-paths" mode="resource-paths">
+      <xsl:apply-templates select="$resource-paths" mode="not-restricted">
         <xsl:with-param name="restrictions" select="'UpdateRestrictions'" />
         <xsl:with-param name="property" select="'Updatable'" />
       </xsl:apply-templates>
