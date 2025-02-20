@@ -95,8 +95,7 @@
 	<xsl:template match="edm:*" mode="resource-paths" />
 
 	<xsl:template match="edm:EntityType" mode="resource-paths">
-		<xsl:param name="suffix" select="' '" />
-		<xsl:param name="suffix-fragment" />
+		<xsl:param name="suffix" />
 		<xsl:for-each select="//edm:EntitySet
 			[@EntityType=concat(current()/../@Namespace,'.',current()/@Name) or
 			@EntityType=concat(current()/../@Alias,'.',current()/@Name) or
@@ -111,7 +110,7 @@
 					<xsl:value-of select="generate-id()" />
 				</p0:resource-path-segment>
 				<xsl:text> </xsl:text>
-				<xsl:copy-of select="$suffix-fragment" />
+				<xsl:copy-of select="$suffix" />
 			</p0:resource-path>
 		</xsl:for-each>
 		<xsl:for-each select="//edm:Singleton
@@ -128,43 +127,42 @@
 					<xsl:value-of select="generate-id()" />
 				</p0:resource-path-segment>
 				<xsl:text> </xsl:text>
-				<xsl:copy-of select="$suffix-fragment" />
+				<xsl:copy-of select="$suffix" />
 			</p0:resource-path>
 		</xsl:for-each>
 		<xsl:for-each select="//edm:NavigationProperty
-			[not(contains($suffix,concat(' ',generate-id(),' '))) and
+			[not(contains(concat(' ',$suffix,' '),concat(' ',generate-id(),' '))) and
 			(@Type=concat(current()/../@Namespace,'.',current()/@Name) or
 			@Type=concat(current()/../@Alias,'.',current()/@Name) or
 			@Type=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
 			@Type=concat('Collection(',current()/../@Alias,'.',current()/@Name,')'))]">
 			<xsl:apply-templates select=".." mode="resource-paths">
-				<xsl:with-param name="suffix" select="concat(' ',generate-id(),$suffix)" />
-				<xsl:with-param name="suffix-fragment">
+				<xsl:with-param name="suffix">
 					<p0:resource-path-segment>
 						<xsl:value-of select="generate-id()" />
 					</p0:resource-path-segment>
-					<xsl:copy-of select="$suffix-fragment" />
+					<xsl:text> </xsl:text>
+					<xsl:copy-of select="$suffix" />
 				</xsl:with-param>
 			</xsl:apply-templates>
 		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="edm:ComplexType" mode="resource-paths">
-		<xsl:param name="suffix" select="' '" />
-		<xsl:param name="suffix-fragment" />
+		<xsl:param name="suffix" />
 		<xsl:for-each select="//edm:Property
-			[not(contains($suffix,concat(' ',generate-id(),' '))) and
+			[not(contains((' ',$suffix,' '),concat(' ',generate-id(),' '))) and
 			(@Type=concat(current()/../@Namespace,'.',current()/@Name) or
 			@Type=concat(current()/../@Alias,'.',current()/@Name) or
 			@Type=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
 			@Type=concat('Collection(',current()/../@Alias,'.',current()/@Name,')'))]">
 			<xsl:apply-templates select=".." mode="resource-paths">
-				<xsl:with-param name="suffix" select="concat(' ',generate-id(),$suffix)" />
-				<xsl:with-param name="suffix-fragment">
+				<xsl:with-param name="suffix">
 					<p0:resource-path-segment>
 						<xsl:value-of select="generate-id()" />
 					</p0:resource-path-segment>
-					<xsl:copy-of select="$suffix-fragment" />
+					<xsl:text> </xsl:text>
+					<xsl:copy-of select="$suffix" />
 				</xsl:with-param>
 			</xsl:apply-templates>
 		</xsl:for-each>
