@@ -1267,6 +1267,24 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
+  <xsl:template match="edm:Record" mode="resource-paths">
+    <xsl:param name="restrictions" />
+    <xsl:param name="property" />
+    <xsl:variable name="navigation-restrictions" select="//edm:Annotation[not(@Qualifier) and
+      @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
+      /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
+      /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and
+      normalize-space(current())=concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]]" />
+    <xsl:if test="not($navigation-restrictions/edm:PropertyValue[@Property=$restrictions]
+      /edm:Record/edm:PropertyValue[@Property=$property and @Bool='false'] or
+      not($navigation-restrictions/edm:PropertyValue/@Property=$restrictions) and
+      //edm:Annotation[not(@Qualifier) and @p2:Term=concat('Org.OData.Capabilities.V1.',$restrictions) and
+      normalize-space(current())=concat(@path-to-target,@target)]
+      /edm:Record/edm:PropertyValue[@Property=$property and @Bool='false'])">
+      <xsl:text>X</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="hashpair">
     <xsl:variable name="qualifiedName" select="concat(../@Namespace,'.',@Name)" />
     <xsl:variable name="aliasQualifiedName" select="concat(../@Alias,'.',@Name)" />
@@ -1280,21 +1298,10 @@
       [key('id',normalize-space())/@p1:Partner=following-sibling::p0:resource-path-segment])]" />
 
     <xsl:variable name="with-create">
-      <xsl:for-each select="$resource-paths">
-        <xsl:variable name="navigation-restrictions" select="//edm:Annotation[not(@Qualifier) and
-        @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
-        /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
-        /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and
-        normalize-space(current())=concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]]" />
-        <xsl:if test="not($navigation-restrictions/edm:PropertyValue[@Property='InsertRestrictions']
-          /edm:Record/edm:PropertyValue[@Property='Insertable' and @Bool='false'] or
-          not($navigation-restrictions/edm:PropertyValue/@Property='InsertRestrictions') and
-          //edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions' and
-          normalize-space(current())=concat(@path-to-target,@target)]
-          /edm:Record/edm:PropertyValue[@Property='Insertable' and @Bool='false'])">
-          <xsl:text>X</xsl:text>
-        </xsl:if>
-      </xsl:for-each>
+      <xsl:apply-templates select="$resource-paths" mode="resource-paths">
+        <xsl:with-param name="restrictions" select="'InsertRestrictions'" />
+        <xsl:with-param name="property" select="'Insertable'" />
+      </xsl:apply-templates>
     </xsl:variable>
     <xsl:if test="string($with-create)">
       <xsl:text>,</xsl:text>
@@ -1306,21 +1313,10 @@
     </xsl:if>
 
     <xsl:variable name="with-update">
-      <xsl:for-each select="$resource-paths">
-        <xsl:variable name="navigation-restrictions" select="//edm:Annotation[not(@Qualifier) and
-        @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
-        /edm:Record/edm:PropertyValue[@Property='RestrictedProperties']/edm:Collection
-        /edm:Record[edm:PropertyValue[@Property='NavigationProperty' and
-        current()=concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)]]" />
-        <xsl:if test="not($navigation-restrictions/edm:PropertyValue[@Property='UpdateRestrictions']
-          /edm:Record/edm:PropertyValue[@Property='Updatable' and @Bool='false'] or
-          not($navigation-restrictions/edm:PropertyValue/@Property='UpdateRestrictions') and
-          //edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions' and
-          normalize-space(current())=concat(@path-to-target,@target)]
-          /edm:Record/edm:PropertyValue[@Property='Updatable' and @Bool='false'])">
-          <xsl:text>X</xsl:text>
-        </xsl:if>
-      </xsl:for-each>
+      <xsl:apply-templates select="$resource-paths" mode="resource-paths">
+        <xsl:with-param name="restrictions" select="'UpdateRestrictions'" />
+        <xsl:with-param name="property" select="'Updatable'" />
+      </xsl:apply-templates>
     </xsl:variable>
     <xsl:if test="string($with-update)">
       <xsl:text>,</xsl:text>

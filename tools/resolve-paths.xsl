@@ -151,7 +151,7 @@
 	<xsl:template match="edm:ComplexType" mode="resource-paths">
 		<xsl:param name="suffix" />
 		<xsl:for-each select="//edm:Property
-			[not(contains((' ',$suffix,' '),concat(' ',generate-id(),' '))) and
+			[not(contains(concat(' ',$suffix,' '),concat(' ',generate-id(),' '))) and
 			(@Type=concat(current()/../@Namespace,'.',current()/@Name) or
 			@Type=concat(current()/../@Alias,'.',current()/@Name) or
 			@Type=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
