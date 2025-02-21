@@ -8,7 +8,7 @@
 	xmlns:p3="http://docs.oasis-open.org/odata/ns/edm/after-termcast-segment"
 	exclude-result-prefixes="edm">
 	<xsl:strip-space elements="*" />
-	<xsl:output method="xml" indent="yes" />
+	<xsl:output method="xml" indent="no" />
 
 	<xsl:template match="/">
 		<xsl:apply-templates select="." mode="ids" />
@@ -97,9 +97,7 @@
 	<xsl:template match="edm:*" mode="resource-paths" />
 
 	<xsl:template match="edm:EntityType" mode="resource-paths">
-		<xsl:param name="suffix">
-			<xsl:text> </xsl:text>
-		</xsl:param>
+		<xsl:param name="suffix" />
 		<xsl:for-each
 			select="//edm:EntitySet
 			[@EntityType=concat(current()/../@Namespace,'.',current()/@Name) or
@@ -156,9 +154,7 @@
 
 	<xsl:template match="edm:ComplexType"
 		mode="resource-paths">
-		<xsl:param name="suffix">
-			<xsl:text> </xsl:text>
-		</xsl:param>
+		<xsl:param name="suffix" />
 		<xsl:for-each
 			select="//edm:Property
 			[not(contains(concat(' ',$suffix,' '),concat(' ',generate-id(),' '))) and
@@ -206,7 +202,7 @@
 		</xsl:variable>
 		<xsl:apply-templates
 			select="//edm:Schema[@Namespace=$namespace or @Alias=$namespace]
-			/(edm:EntityType|edm:ComplexType)[@Name=$name]"
+			/edm:*[@Name=$name]"
 			mode="resource-paths">
 			<xsl:with-param name="suffix">
 				<xsl:text> </xsl:text>
