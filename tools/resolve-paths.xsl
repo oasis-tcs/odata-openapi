@@ -82,21 +82,26 @@
 			<xsl:if test="edm:EnumMember">
 				<xsl:attribute name="p2:EnumMember">
 					<xsl:call-template name="p2-attribute">
-						<xsl:with-param name="qname" select="edm:EnumMember" />
+						<xsl:with-param name="qname"
+							select="edm:EnumMember" />
 					</xsl:call-template>
 				</xsl:attribute>
 			</xsl:if>
 			<xsl:apply-templates select="@*|node()"
 				mode="ids" />
-			<xsl:apply-templates select="." mode="resource-paths" />
+			<xsl:apply-templates select="."
+				mode="resource-paths" />
 		</xsl:copy>
 	</xsl:template>
 
 	<xsl:template match="edm:*" mode="resource-paths" />
 
 	<xsl:template match="edm:EntityType" mode="resource-paths">
-		<xsl:param name="suffix" />
-		<xsl:for-each select="//edm:EntitySet
+		<xsl:param name="suffix">
+			<xsl:text> </xsl:text>
+		</xsl:param>
+		<xsl:for-each
+			select="//edm:EntitySet
 			[@EntityType=concat(current()/../@Namespace,'.',current()/@Name) or
 			@EntityType=concat(current()/../@Alias,'.',current()/@Name) or
 			@EntityType=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
@@ -109,11 +114,11 @@
 				<p0:resource-path-segment>
 					<xsl:value-of select="generate-id()" />
 				</p0:resource-path-segment>
-				<xsl:text> </xsl:text>
 				<xsl:copy-of select="$suffix" />
 			</p0:resource-path>
 		</xsl:for-each>
-		<xsl:for-each select="//edm:Singleton
+		<xsl:for-each
+			select="//edm:Singleton
 			[@Type=concat(current()/../@Namespace,'.',current()/@Name) or
 			@Type=concat(current()/../@Alias,'.',current()/@Name) or
 			@Type=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
@@ -126,49 +131,134 @@
 				<p0:resource-path-segment>
 					<xsl:value-of select="generate-id()" />
 				</p0:resource-path-segment>
-				<xsl:text> </xsl:text>
 				<xsl:copy-of select="$suffix" />
 			</p0:resource-path>
 		</xsl:for-each>
-		<xsl:for-each select="//edm:NavigationProperty
+		<xsl:for-each
+			select="//edm:NavigationProperty
 			[not(contains(concat(' ',$suffix,' '),concat(' ',generate-id(),' '))) and
 			(@Type=concat(current()/../@Namespace,'.',current()/@Name) or
 			@Type=concat(current()/../@Alias,'.',current()/@Name) or
 			@Type=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
 			@Type=concat('Collection(',current()/../@Alias,'.',current()/@Name,')'))]">
-			<xsl:apply-templates select=".." mode="resource-paths">
+			<xsl:apply-templates select=".."
+				mode="resource-paths">
 				<xsl:with-param name="suffix">
+					<xsl:text> </xsl:text>
 					<p0:resource-path-segment>
 						<xsl:value-of select="generate-id()" />
 					</p0:resource-path-segment>
-					<xsl:text> </xsl:text>
 					<xsl:copy-of select="$suffix" />
 				</xsl:with-param>
 			</xsl:apply-templates>
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template match="edm:ComplexType" mode="resource-paths">
-		<xsl:param name="suffix" />
-		<xsl:for-each select="//edm:Property
+	<xsl:template match="edm:ComplexType"
+		mode="resource-paths">
+		<xsl:param name="suffix">
+			<xsl:text> </xsl:text>
+		</xsl:param>
+		<xsl:for-each
+			select="//edm:Property
 			[not(contains(concat(' ',$suffix,' '),concat(' ',generate-id(),' '))) and
 			(@Type=concat(current()/../@Namespace,'.',current()/@Name) or
 			@Type=concat(current()/../@Alias,'.',current()/@Name) or
 			@Type=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
 			@Type=concat('Collection(',current()/../@Alias,'.',current()/@Name,')'))]">
-			<xsl:apply-templates select=".." mode="resource-paths">
+			<xsl:apply-templates select=".."
+				mode="resource-paths">
 				<xsl:with-param name="suffix">
+					<xsl:text> </xsl:text>
 					<p0:resource-path-segment>
 						<xsl:value-of select="generate-id()" />
 					</p0:resource-path-segment>
-					<xsl:text> </xsl:text>
 					<xsl:copy-of select="$suffix" />
 				</xsl:with-param>
 			</xsl:apply-templates>
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template match="edm:Annotation/@Term | edm:*/@EnumMember" mode="ids">
+	<xsl:template
+		match="edm:Action[@IsBound='true'] | edm:Function[@IsBound='true']"
+		mode="resource-paths">
+		<xsl:variable name="binding-type">
+			<xsl:choose>
+				<xsl:when
+					test="starts-with(edm:Parameter[1]/@Type,'Collection(')">
+					<xsl:value-of
+						select="substring(edm:Parameter[1]/@Type,12,string-length(edm:Parameter[1]/@Type)-12)" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="edm:Parameter[1]/@Type" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="namespace">
+			<xsl:call-template name="namespace">
+				<xsl:with-param name="qname" select="$binding-type" />
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="name">
+			<xsl:call-template name="name">
+				<xsl:with-param name="qname" select="$binding-type" />
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:apply-templates
+			select="//edm:Schema[@Namespace=$namespace or @Alias=$namespace]
+			/(edm:EntityType|edm:ComplexType)[@Name=$name]"
+			mode="resource-paths">
+			<xsl:with-param name="suffix">
+				<xsl:text> </xsl:text>
+				<p0:resource-path-segment>
+					<xsl:value-of select="generate-id()" />
+				</p0:resource-path-segment>
+			</xsl:with-param>
+		</xsl:apply-templates>
+	</xsl:template>
+
+	<xsl:template match="edm:Action[not(@IsBound='true')]"
+		mode="resource-paths">
+		<xsl:for-each
+			select="//edm:ActionImport
+			[@Action=concat(current()/../@Namespace,'.',current()/@Name) or
+			@Action=concat(current()/../@Alias,'.',current()/@Name) or
+			@Action=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
+			@Action=concat('Collection(',current()/../@Alias,'.',current()/@Name,')')]">
+			<p0:resource-path>
+				<p0:resource-path-segment>
+					<xsl:value-of select="generate-id(..)" />
+				</p0:resource-path-segment>
+				<xsl:text> </xsl:text>
+				<p0:resource-path-segment>
+					<xsl:value-of select="generate-id()" />
+				</p0:resource-path-segment>
+			</p0:resource-path>
+		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template match="edm:Function[not(@IsBound='true')]"
+		mode="resource-paths">
+		<xsl:for-each
+			select="//edm:FunctionImport
+			[@Function=concat(current()/../@Namespace,'.',current()/@Name) or
+			@Function=concat(current()/../@Alias,'.',current()/@Name) or
+			@Function=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
+			@Function=concat('Collection(',current()/../@Alias,'.',current()/@Name,')')]">
+			<p0:resource-path>
+				<p0:resource-path-segment>
+					<xsl:value-of select="generate-id(..)" />
+				</p0:resource-path-segment>
+				<xsl:text> </xsl:text>
+				<p0:resource-path-segment>
+					<xsl:value-of select="generate-id()" />
+				</p0:resource-path-segment>
+			</p0:resource-path>
+		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template
+		match="edm:Annotation/@Term | edm:*/@EnumMember" mode="ids">
 		<xsl:copy-of select="." />
 		<xsl:attribute name="p2:{local-name()}">
 			<xsl:call-template name="p2-attribute">
@@ -184,7 +274,8 @@
 				<xsl:with-param name="qname" select="$qname" />
 			</xsl:call-template>
 		</xsl:variable>
-		<xsl:variable name="ns" select="//edmx:Include[@Alias=$namespace or @Namespace=$namespace]
+		<xsl:variable name="ns"
+			select="//edmx:Include[@Alias=$namespace or @Namespace=$namespace]
 			/@Namespace" />
 		<xsl:choose>
 			<xsl:when test="$ns">
@@ -269,7 +360,8 @@
 					self::edm:PropertyValue
 				)][1]" />
 			<xsl:variable name="path-to-target">
-				<xsl:apply-templates select="$target/.." mode="path-to-target" />
+				<xsl:apply-templates select="$target/.."
+					mode="path-to-target" />
 			</xsl:variable>
 			<xsl:if test="$path-to-target">
 				<xsl:attribute name="path-to-target">
@@ -286,7 +378,8 @@
 	</xsl:template>
 
 	<xsl:template match="edm:*" mode="path-to-target">
-		<xsl:apply-templates select=".." mode="path-to-target" />
+		<xsl:apply-templates select=".."
+			mode="path-to-target" />
 		<xsl:value-of select="generate-id()" />
 		<xsl:text> </xsl:text>
 	</xsl:template>
@@ -476,8 +569,7 @@
 	</xsl:template>
 
 	<!-- Paths relative to the type of a property -->
-	<xsl:template
-		match="edm:NavigationProperty/@Partner"
+	<xsl:template match="edm:NavigationProperty/@Partner"
 		mode="ids">
 		<xsl:apply-templates select="." mode="eval-path">
 			<xsl:with-param name="relative-to" select=".." />
@@ -493,7 +585,8 @@
 		mode="ids">
 		<xsl:if test="name()='EntitySet' and not(contains(.,'.'))">
 			<xsl:attribute name="p0:EntitySet">
-				<xsl:apply-templates select="../.." mode="path-to-target" />
+				<xsl:apply-templates select="../.."
+					mode="path-to-target" />
 			</xsl:attribute>
 		</xsl:if>
 		<xsl:apply-templates select="." mode="eval-path">
@@ -509,7 +602,8 @@
 		mode="ids">
 		<xsl:if test="name()='Target' and not(contains(.,'.'))">
 			<xsl:attribute name="p0:Target">
-				<xsl:apply-templates select="../../.." mode="path-to-target" />
+				<xsl:apply-templates select="../../.."
+					mode="path-to-target" />
 			</xsl:attribute>
 		</xsl:if>
 		<xsl:apply-templates select="." mode="eval-path">
@@ -732,13 +826,11 @@
 
 	<xsl:template match="@*|*" mode="path-overload" />
 
-	<xsl:template match="edm:Action"
-		mode="path-overload">
+	<xsl:template match="edm:Action" mode="path-overload">
 		<xsl:param name="parameters" />
 		<xsl:param name="p" />
 		<xsl:choose>
-			<xsl:when
-				test="$parameters='' and not(@IsBound='true')">
+			<xsl:when test="$parameters='' and not(@IsBound='true')">
 				<xsl:apply-templates select="."
 					mode="path-remainder">
 					<xsl:with-param name="p" select="$p" />
@@ -766,8 +858,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="edm:Function"
-		mode="path-overload">
+	<xsl:template match="edm:Function" mode="path-overload">
 		<xsl:param name="parameters" />
 		<xsl:param name="parameter-count" select="1" />
 		<xsl:param name="p" />
