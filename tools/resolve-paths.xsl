@@ -83,7 +83,7 @@
 				<xsl:attribute name="p2:EnumMember">
 					<xsl:call-template name="p2-attribute">
 						<xsl:with-param name="qname"
-							select="edm:EnumMember" />
+					select="edm:EnumMember" />
 					</xsl:call-template>
 				</xsl:attribute>
 			</xsl:if>
@@ -101,15 +101,13 @@
 		<xsl:for-each
 			select="//edm:EntitySet
 			[@EntityType=concat(current()/../@Namespace,'.',current()/@Name) or
-			@EntityType=concat(current()/../@Alias,'.',current()/@Name) or
-			@EntityType=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
-			@EntityType=concat('Collection(',current()/../@Alias,'.',current()/@Name,')')]">
+			@EntityType=concat(current()/../@Alias,'.',current()/@Name)]">
 			<p0:resource-path>
 				<p0:resource-path-segment>
 					<xsl:value-of select="generate-id(..)" />
 				</p0:resource-path-segment>
 				<xsl:text> </xsl:text>
-				<p0:resource-path-segment>
+				<p0:resource-path-segment collection="true">
 					<xsl:value-of select="generate-id()" />
 				</p0:resource-path-segment>
 				<xsl:copy-of select="$suffix" />
@@ -118,9 +116,7 @@
 		<xsl:for-each
 			select="//edm:Singleton
 			[@Type=concat(current()/../@Namespace,'.',current()/@Name) or
-			@Type=concat(current()/../@Alias,'.',current()/@Name) or
-			@Type=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
-			@Type=concat('Collection(',current()/../@Alias,'.',current()/@Name,')')]">
+			@Type=concat(current()/../@Alias,'.',current()/@Name)]">
 			<p0:resource-path>
 				<p0:resource-path-segment>
 					<xsl:value-of select="generate-id(..)" />
@@ -144,6 +140,11 @@
 				<xsl:with-param name="suffix">
 					<xsl:text> </xsl:text>
 					<p0:resource-path-segment>
+						<xsl:if test="starts-with(@Type,'Collection(')">
+							<xsl:attribute name="collection">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>
+						</xsl:if>
 						<xsl:value-of select="generate-id()" />
 					</p0:resource-path-segment>
 					<xsl:copy-of select="$suffix" />
@@ -167,6 +168,11 @@
 				<xsl:with-param name="suffix">
 					<xsl:text> </xsl:text>
 					<p0:resource-path-segment>
+						<xsl:if test="starts-with(@Type,'Collection(')">
+							<xsl:attribute name="collection">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>
+						</xsl:if>
 						<xsl:value-of select="generate-id()" />
 					</p0:resource-path-segment>
 					<xsl:copy-of select="$suffix" />
@@ -207,6 +213,11 @@
 			<xsl:with-param name="suffix">
 				<xsl:text> </xsl:text>
 				<p0:resource-path-segment>
+					<xsl:if test="starts-with(edm:Parameter[1]/@Type,'Collection(')">
+						<xsl:attribute name="collection">
+							<xsl:text>true</xsl:text>
+						</xsl:attribute>
+					</xsl:if>
 					<xsl:value-of select="generate-id()" />
 				</p0:resource-path-segment>
 			</xsl:with-param>
@@ -218,9 +229,7 @@
 		<xsl:for-each
 			select="//edm:ActionImport
 			[@Action=concat(current()/../@Namespace,'.',current()/@Name) or
-			@Action=concat(current()/../@Alias,'.',current()/@Name) or
-			@Action=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
-			@Action=concat('Collection(',current()/../@Alias,'.',current()/@Name,')')]">
+			@Action=concat(current()/../@Alias,'.',current()/@Name)]">
 			<p0:resource-path>
 				<p0:resource-path-segment>
 					<xsl:value-of select="generate-id(..)" />
@@ -238,9 +247,7 @@
 		<xsl:for-each
 			select="//edm:FunctionImport
 			[@Function=concat(current()/../@Namespace,'.',current()/@Name) or
-			@Function=concat(current()/../@Alias,'.',current()/@Name) or
-			@Function=concat('Collection(',current()/../@Namespace,'.',current()/@Name,')') or
-			@Function=concat('Collection(',current()/../@Alias,'.',current()/@Name,')')]">
+			@Function=concat(current()/../@Alias,'.',current()/@Name)]">
 			<p0:resource-path>
 				<p0:resource-path-segment>
 					<xsl:value-of select="generate-id(..)" />
@@ -582,7 +589,7 @@
 		<xsl:if test="name()='EntitySet' and not(contains(.,'.'))">
 			<xsl:attribute name="p0:EntitySet">
 				<xsl:apply-templates select="../.."
-					mode="path-to-target" />
+				mode="path-to-target" />
 			</xsl:attribute>
 		</xsl:if>
 		<xsl:apply-templates select="." mode="eval-path">
@@ -599,7 +606,7 @@
 		<xsl:if test="name()='Target' and not(contains(.,'.'))">
 			<xsl:attribute name="p0:Target">
 				<xsl:apply-templates select="../../.."
-					mode="path-to-target" />
+				mode="path-to-target" />
 			</xsl:attribute>
 		</xsl:if>
 		<xsl:apply-templates select="." mode="eval-path">
