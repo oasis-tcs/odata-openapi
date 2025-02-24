@@ -83,7 +83,7 @@
 				<xsl:attribute name="p2:EnumMember">
 					<xsl:call-template name="p2-attribute">
 						<xsl:with-param name="qname"
-					select="edm:EnumMember" />
+							select="edm:EnumMember" />
 					</xsl:call-template>
 				</xsl:attribute>
 			</xsl:if>
