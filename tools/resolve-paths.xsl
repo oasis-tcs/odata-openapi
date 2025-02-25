@@ -691,29 +691,39 @@
 				<xsl:with-param name="sep" select="' '" />
 			</xsl:call-template>
 		</xsl:variable>
+		<xsl:variable name="name">
+			<xsl:choose>
+				<xsl:when test="name()='EntityType'">
+					<xsl:text>Type</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="name()" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:if test="string($non-final-segments)">
-			<xsl:attribute name="p0:{name()}">
+			<xsl:attribute name="p0:{$name}">
 				<xsl:value-of select="$non-final-segments" />
 				<xsl:text> </xsl:text>
 			</xsl:attribute>
 		</xsl:if>
 		<xsl:choose>
 			<xsl:when test="starts-with($final-segment,'@')">
-				<xsl:attribute name="p2:{name()}">
+				<xsl:attribute name="p2:{$name}">
 					<xsl:call-template name="p2-attribute">
 						<xsl:with-param name="qname"
 					select="substring-after(substring-before(concat($final-segment,'/'),'/'),'@')" />
 					</xsl:call-template>
 				</xsl:attribute>
 				<xsl:if test="contains($final-segment,'/')">
-					<xsl:attribute name="p3:{name()}">
+					<xsl:attribute name="p3:{$name}">
 						<xsl:value-of
 						select="substring-after($final-segment,'/')" />
 					</xsl:attribute>
 				</xsl:if>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:attribute name="p1:{name()}">
+				<xsl:attribute name="p1:{$name}">
 					<xsl:value-of select="$final-segment" />
 				</xsl:attribute>
 			</xsl:otherwise>
