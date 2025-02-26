@@ -2886,7 +2886,7 @@
       <xsl:with-param name="entityType" select=".." />
     </xsl:call-template>
     <xsl:text>]</xsl:text>
-    <xsl:variable name="delta" select="key('capability',concat('ChangeTracking',$binding))
+    <xsl:variable name="delta" select="key('capability',concat('ChangeTracking ',$binding))
       [not(edm:Record/edm:PropertyValue[@Property='Supported' and @Bool='false'])]" />
     <xsl:call-template name="responses">
       <xsl:with-param name="code" select="'200'" />
