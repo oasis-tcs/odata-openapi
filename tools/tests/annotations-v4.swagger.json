@@ -246,7 +246,7 @@
                 }
             }
         },
-        "/Orders('{ID}')/Items": {
+        "/OrderItems('{ID}')/Header": {
             "parameters": [
                 {
                     "name": "ID",
@@ -257,47 +257,12 @@
                 }
             ],
             "get": {
-                "summary": "Get entities from related Items",
+                "summary": "Get entity from related Header by key",
                 "tags": [
-                    "Orders"
+                    "OrderItems",
+                    "Header"
                 ],
                 "parameters": [
-                    {
-                        "$ref": "#/parameters/top"
-                    },
-                    {
-                        "$ref": "#/parameters/skip"
-                    },
-                    {
-                        "$ref": "#/parameters/search"
-                    },
-                    {
-                        "name": "$filter",
-                        "in": "query",
-                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
-                        "type": "string"
-                    },
-                    {
-                        "$ref": "#/parameters/count"
-                    },
-                    {
-                        "name": "$orderby",
-                        "in": "query",
-                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
-                        "type": "array",
-                        "uniqueItems": true,
-                        "items": {
-                            "type": "string",
-                            "enum": [
-                                "ID",
-                                "ID desc",
-                                "Text",
-                                "Text desc",
-                                "Quantity",
-                                "Quantity desc"
-                            ]
-                        }
-                    },
                     {
                         "name": "$select",
                         "in": "query",
@@ -308,8 +273,7 @@
                             "type": "string",
                             "enum": [
                                 "ID",
-                                "Text",
-                                "Quantity"
+                                "Unit"
                             ]
                         }
                     },
@@ -323,29 +287,60 @@
                             "type": "string",
                             "enum": [
                                 "*",
-                                "Header"
+                                "Items"
                             ]
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Retrieved entities",
+                        "description": "Retrieved entity",
                         "schema": {
-                            "title": "Collection of OrderItem",
-                            "type": "object",
-                            "properties": {
-                                "@odata.count": {
-                                    "$ref": "#/definitions/count"
-                                },
-                                "value": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Resolved.Paths.OrderItem"
-                                    }
-                                }
-                            }
+                            "$ref": "#/definitions/Resolved.Paths.Order"
                         }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update related Header",
+                "tags": [
+                    "OrderItems",
+                    "Header"
+                ],
+                "parameters": [
+                    {
+                        "name": "Order",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Resolved.Paths.Order-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated entity",
+                        "schema": {
+                            "$ref": "#/definitions/Resolved.Paths.Order"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete related Header",
+                "tags": [
+                    "OrderItems",
+                    "Header"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
                     },
                     "400": {
                         "$ref": "#/responses/error"
@@ -578,7 +573,7 @@
                 }
             }
         },
-        "/OrderItems('{ID}')/Header": {
+        "/Orders('{ID}')/Items": {
             "parameters": [
                 {
                     "name": "ID",
@@ -589,11 +584,48 @@
                 }
             ],
             "get": {
-                "summary": "Get related Header",
+                "summary": "Get entities from related Items",
                 "tags": [
-                    "OrderItems"
+                    "Orders",
+                    "Items"
                 ],
                 "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "ID desc",
+                                "Text",
+                                "Text desc",
+                                "Quantity",
+                                "Quantity desc"
+                            ]
+                        }
+                    },
                     {
                         "name": "$select",
                         "in": "query",
@@ -604,7 +636,8 @@
                             "type": "string",
                             "enum": [
                                 "ID",
-                                "Unit"
+                                "Text",
+                                "Quantity"
                             ]
                         }
                     },
@@ -618,7 +651,86 @@
                             "type": "string",
                             "enum": [
                                 "*",
-                                "Items"
+                                "Header"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "title": "Collection of OrderItem",
+                            "type": "object",
+                            "properties": {
+                                "@odata.count": {
+                                    "$ref": "#/definitions/count"
+                                },
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Resolved.Paths.OrderItem"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/Orders('{ID}')/Items('{ID}')": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "string"
+                },
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Get entity from related Items by key",
+                "tags": [
+                    "Orders",
+                    "Items"
+                ],
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ID",
+                                "Text",
+                                "Quantity"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "*",
+                                "Header"
                             ]
                         }
                     }
@@ -627,8 +739,51 @@
                     "200": {
                         "description": "Retrieved entity",
                         "schema": {
-                            "$ref": "#/definitions/Resolved.Paths.Order"
+                            "$ref": "#/definitions/Resolved.Paths.OrderItem"
                         }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in related Items",
+                "tags": [
+                    "Orders",
+                    "Items"
+                ],
+                "parameters": [
+                    {
+                        "name": "OrderItem",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Resolved.Paths.OrderItem-update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated entity",
+                        "schema": {
+                            "$ref": "#/definitions/Resolved.Paths.OrderItem"
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from related Items",
+                "tags": [
+                    "Orders",
+                    "Items"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
                     },
                     "400": {
                         "$ref": "#/responses/error"
@@ -697,7 +852,8 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/Resolved.Paths.OrderItem"
-                    }
+                    },
+                    "title": "contained entity set"
                 }
             },
             "title": "Order"
@@ -723,7 +879,8 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/Resolved.Paths.OrderItem-create"
-                    }
+                    },
+                    "title": "contained entity set"
                 }
             },
             "required": [

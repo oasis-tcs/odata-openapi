@@ -145,6 +145,11 @@
 								<xsl:text>true</xsl:text>
 							</xsl:attribute>
 						</xsl:if>
+						<xsl:if test="@ContainsTarget='true'">
+							<xsl:attribute name="containment">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>
+						</xsl:if>
 						<xsl:value-of select="generate-id()" />
 					</p0:resource-path-segment>
 					<xsl:copy-of select="$suffix" />

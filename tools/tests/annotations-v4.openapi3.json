@@ -277,7 +277,7 @@
                 }
             }
         },
-        "/Orders('{ID}')/Items": {
+        "/OrderItems('{ID}')/Header": {
             "parameters": [
                 {
                     "name": "ID",
@@ -290,52 +290,12 @@
                 }
             ],
             "get": {
-                "summary": "Get entities from related Items",
+                "summary": "Get entity from related Header by key",
                 "tags": [
-                    "Orders"
+                    "OrderItems",
+                    "Header"
                 ],
                 "parameters": [
-                    {
-                        "$ref": "#/components/parameters/top"
-                    },
-                    {
-                        "$ref": "#/components/parameters/skip"
-                    },
-                    {
-                        "$ref": "#/components/parameters/search"
-                    },
-                    {
-                        "name": "$filter",
-                        "in": "query",
-                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/count"
-                    },
-                    {
-                        "name": "$orderby",
-                        "in": "query",
-                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
-                        "explode": false,
-                        "schema": {
-                            "type": "array",
-                            "uniqueItems": true,
-                            "items": {
-                                "type": "string",
-                                "enum": [
-                                    "ID",
-                                    "ID desc",
-                                    "Text",
-                                    "Text desc",
-                                    "Quantity",
-                                    "Quantity desc"
-                                ]
-                            }
-                        }
-                    },
                     {
                         "name": "$select",
                         "in": "query",
@@ -348,8 +308,7 @@
                                 "type": "string",
                                 "enum": [
                                     "ID",
-                                    "Text",
-                                    "Quantity"
+                                    "Unit"
                                 ]
                             }
                         }
@@ -366,7 +325,7 @@
                                 "type": "string",
                                 "enum": [
                                     "*",
-                                    "Header"
+                                    "Items"
                                 ]
                             }
                         }
@@ -374,26 +333,62 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Retrieved entities",
+                        "description": "Retrieved entity",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Collection of OrderItem",
-                                    "type": "object",
-                                    "properties": {
-                                        "@odata.count": {
-                                            "$ref": "#/components/schemas/count"
-                                        },
-                                        "value": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Resolved.Paths.OrderItem"
-                                            }
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Resolved.Paths.Order"
                                 }
                             }
                         }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update related Header",
+                "tags": [
+                    "OrderItems",
+                    "Header"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New property values",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Resolved.Paths.Order-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Resolved.Paths.Order"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete related Header",
+                "tags": [
+                    "OrderItems",
+                    "Header"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
                     },
                     "4XX": {
                         "$ref": "#/components/responses/error"
@@ -663,7 +658,7 @@
                 }
             }
         },
-        "/OrderItems('{ID}')/Header": {
+        "/Orders('{ID}')/Items": {
             "parameters": [
                 {
                     "name": "ID",
@@ -676,11 +671,53 @@
                 }
             ],
             "get": {
-                "summary": "Get related Header",
+                "summary": "Get entities from related Items",
                 "tags": [
-                    "OrderItems"
+                    "Orders",
+                    "Items"
                 ],
                 "parameters": [
+                    {
+                        "$ref": "#/components/parameters/top"
+                    },
+                    {
+                        "$ref": "#/components/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/components/parameters/search"
+                    },
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "ID",
+                                    "ID desc",
+                                    "Text",
+                                    "Text desc",
+                                    "Quantity",
+                                    "Quantity desc"
+                                ]
+                            }
+                        }
+                    },
                     {
                         "name": "$select",
                         "in": "query",
@@ -693,7 +730,8 @@
                                 "type": "string",
                                 "enum": [
                                     "ID",
-                                    "Unit"
+                                    "Text",
+                                    "Quantity"
                                 ]
                             }
                         }
@@ -710,7 +748,100 @@
                                 "type": "string",
                                 "enum": [
                                     "*",
-                                    "Items"
+                                    "Header"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of OrderItem",
+                                    "type": "object",
+                                    "properties": {
+                                        "@odata.count": {
+                                            "$ref": "#/components/schemas/count"
+                                        },
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Resolved.Paths.OrderItem"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/Orders('{ID}')/Items('{ID}')": {
+            "parameters": [
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "ID",
+                    "in": "path",
+                    "required": true,
+                    "description": "key: ID",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get entity from related Items by key",
+                "tags": [
+                    "Orders",
+                    "Items"
+                ],
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "ID",
+                                    "Text",
+                                    "Quantity"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "*",
+                                    "Header"
                                 ]
                             }
                         }
@@ -722,7 +853,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Resolved.Paths.Order"
+                                    "$ref": "#/components/schemas/Resolved.Paths.OrderItem"
                                 }
                             }
                         }
@@ -731,9 +862,93 @@
                         "$ref": "#/components/responses/error"
                     }
                 }
+            },
+            "patch": {
+                "summary": "Update entity in related Items",
+                "tags": [
+                    "Orders",
+                    "Items"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "New property values",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Resolved.Paths.OrderItem-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Resolved.Paths.OrderItem"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from related Items",
+                "tags": [
+                    "Orders",
+                    "Items"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
             }
         },
-        "/$batch": {}
+        "/$batch": {
+            "post": {
+                "summary": "Send a group of requests",
+                "description": "Group multiple requests into a single request payload, see [Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).\n\n*Please note that \"Try it out\" is not supported for this request.*",
+                "tags": [
+                    "Batch Requests"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Batch request",
+                    "content": {
+                        "multipart/mixed;boundary=request-separator": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "example": "--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET Orders HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Batch response",
+                        "content": {
+                            "multipart/mixed": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{...}\n--response-separator--"
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        }
     },
     "components": {
         "schemas": {

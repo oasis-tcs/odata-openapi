@@ -197,10 +197,6 @@
     <xsl:text>responses/error"}</xsl:text>
   </xsl:variable>
 
-  <xsl:variable name="key-as-segment" select="//edm:Annotation[not(@Qualifier) and
-    @target=/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer/@id and
-    @p2:Term='Org.OData.Capabilities.V1.KeyAsSegmentSupported' and not(@Bool='false')]" />
-
   <xsl:key name="id" match="edm:*" use="@id" />
   <xsl:key name="navigation-restrictions" match="edm:Annotation[not(@Qualifier) and
     @p2:Term='Org.OData.Capabilities.V1.NavigationRestrictions']
@@ -209,6 +205,9 @@
     use="concat(../../../../../@path-to-target,../../../../../@target,' ',@p0:NavigationPropertyPath,@p1:NavigationPropertyPath)" />
   <xsl:key name="capability" match="edm:Annotation[not(@Qualifier) and starts-with(@p2:Term,'Org.OData.Capabilities.V1.')]"
     use="concat(substring-after(@p2:Term,'Org.OData.Capabilities.V1.'),' ',@path-to-target,@target)" />
+
+  <xsl:variable name="key-as-segment" select="key('capability',concat('KeyAsSegmentSupported ',/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer/@id))
+    [not(@Bool='false')]" />
 
   <xsl:key name="externalAnnotations" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations" use="@Target" />
   <xsl:key name="externalPropertyAnnotations" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations[contains(@Target,'/')]" use="substring-before(@Target,'/')" />
@@ -2498,14 +2497,32 @@
     <xsl:call-template name="batch" />
   </xsl:template>
 
-  <xsl:template match="p0:resource-path[p0:resource-path-segment[3]]" mode="binding">
-    <xsl:variable name="binding" select="//edm:NavigationPropertyBinding
-      [normalize-space(current())=concat(../../@id,' ',../@id,' ',@p0:Path,@p1:Path)]" />
-    <xsl:value-of select="concat($binding/@p0:Target,$binding/@p1:Target)" />
-  </xsl:template>
+  <!-- Path to bound (named or implicit) entity set -->
   <xsl:template match="p0:resource-path" mode="binding">
     <xsl:value-of select="concat(../../@id,' ',../@id)" />
   </xsl:template>
+  <xsl:template match="p0:resource-path[p0:resource-path-segment[3]]" mode="binding">
+    <xsl:param name="length" select="count(p0:resource-path-segment)" />
+    <xsl:choose>
+      <xsl:when test="p0:resource-path-segment[$length]/@containment">
+        <xsl:variable name="parent-binding">
+          <xsl:apply-templates select="." mode="binding">
+            <xsl:with-param name="length" select="$length - 1" />
+          </xsl:apply-templates>
+        </xsl:variable>
+        <xsl:if test="string($parent-binding)">
+          <xsl:value-of select="concat($parent-binding,' ',.)" />
+        </xsl:if>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="binding" select="//edm:NavigationPropertyBinding
+          [normalize-space(current()/p0:resource-path-segment[$length]/preceding-sibling::node())
+          =concat(../../@id,' ',../@id,' ',@p0:Path,@p1:Path)]" />
+        <xsl:value-of select="concat($binding/@p0:Target,$binding/@p1:Target)" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+ 
   <xsl:template match="p0:resource-path" mode="path">
     <xsl:apply-templates select="p0:resource-path-segment" mode="path" />
   </xsl:template>
@@ -2591,7 +2608,7 @@
       not($readByKeyRestrictions) and
       not($readRestrictions/edm:Record/edm:PropertyValue[@Property='Readable' and @Bool='false'])" />
 
-    <xsl:if test="string($with-get) or string($with-post)">
+    <xsl:if test="p0:resource-path-segment[last()]/@collection and (string($with-get) or string($with-post))">
       <xsl:text>"</xsl:text>
       <xsl:apply-templates select="." mode="path" />
       <xsl:text>":{</xsl:text>
@@ -2697,13 +2714,10 @@
         <xsl:text>}</xsl:text>
       </xsl:if>
 
-      <xsl:text>}</xsl:text>
+      <xsl:text>},</xsl:text>
     </xsl:if>
 
     <xsl:if test="$indexable and ($by-key or string($with-patch) or string($with-delete))">
-      <xsl:if test="string($with-get) or string($with-post)">
-        <xsl:text>,</xsl:text>
-      </xsl:if>
       <xsl:text>"</xsl:text>
       <xsl:apply-templates select="." mode="path" />
       <xsl:apply-templates select="p0:resource-path-segment[last()]/@collection" mode="path" />
@@ -2848,6 +2862,16 @@
 
   <xsl:template match="p0:resource-path" mode="get">
     <xsl:param name="collection" />
+    <xsl:variable name="entity">
+      <xsl:choose>
+        <xsl:when test="$collection!='key'">
+          <xsl:text>entities</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>entity</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="binding">
       <xsl:apply-templates select="." mode="binding" />
     </xsl:variable>
@@ -2857,14 +2881,8 @@
         /../edm:PropertyValue[@Property='ReadRestrictions']" />
       <xsl:with-param name="fallback-summary">
         <xsl:text>Get </xsl:text>
-        <xsl:choose>
-          <xsl:when test="$collection!='key'">
-            <xsl:text>entities from </xsl:text>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:text>entity from </xsl:text>
-          </xsl:otherwise>
-        </xsl:choose>
+        <xsl:value-of select="$entity" />
+        <xsl:text> from </xsl:text>
         <xsl:if test="p0:resource-path-segment[3]">
           <xsl:text>related </xsl:text>
         </xsl:if>
@@ -2903,16 +2921,7 @@
         </xsl:choose>
       </xsl:with-param>
       <xsl:with-param name="delta" select="$delta" />
-      <xsl:with-param name="description">
-        <xsl:choose>
-          <xsl:when test="$collection!='key'">
-            <xsl:text>Retrieved entities</xsl:text>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:text>Retrieved entity</xsl:text>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:with-param>
+      <xsl:with-param name="description" select="concat('Retrieved ',$entity)" />
     </xsl:call-template>
     <xsl:text>}</xsl:text>
   </xsl:template>
