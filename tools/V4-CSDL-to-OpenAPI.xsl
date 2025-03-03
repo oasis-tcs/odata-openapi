@@ -2543,10 +2543,29 @@
       </xsl:call-template>
     </xsl:if>
   </xsl:template>
-  <xsl:template match="p0:resource-path" mode="path-parameters">
-    <xsl:apply-templates select="p0:resource-path-segment[position()&lt;last()]/@collection" mode="path-parameters" />
+  <xsl:template match="p0:resource-path-segment[key('id',.)/self::edm:Function]" mode="path">
+    <xsl:text>/</xsl:text>
+    <xsl:value-of select="key('id',.)/@Name" />
+    <xsl:text>(</xsl:text>
+    <xsl:for-each select="key('id',.)/edm:Parameter[position()>1]">
+      <xsl:call-template name="parameter-in-path" />
+    </xsl:for-each>
+    <xsl:text>)</xsl:text>
   </xsl:template>
-  <xsl:template match="p0:resource-path-segment/@collection" mode="path-parameters">
+  <xsl:template match="p0:resource-path-segment[key('id',.)/self::edm:FunctionImport]" mode="path">
+    <xsl:text>/</xsl:text>
+    <xsl:value-of select="key('id',.)/@Name" />
+    <xsl:text>(</xsl:text>
+    <xsl:for-each select="key('id',key('id',.)/@p1:Function)/edm:Parameter[position()>1]">
+      <xsl:call-template name="parameter-in-path" />
+    </xsl:for-each>
+    <xsl:text>)</xsl:text>
+  </xsl:template>
+  <xsl:template match="p0:resource-path" mode="path-parameters">
+    <xsl:apply-templates select="p0:resource-path-segment[position()&lt;last()]/@collection |
+      p0:resource-path-segment[key('id',.)/self::edm:Function]" mode="path-parameters" />
+  </xsl:template>
+  <xsl:template match="p0:resouce-path-segment | p0:resource-path-segment/@collection" mode="path-parameters">
     <xsl:choose>
       <xsl:when test="position()=1">
         <xsl:text>"parameters":[</xsl:text>
@@ -2555,14 +2574,23 @@
         <xsl:text>,</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:call-template name="key-parameters">
-      <xsl:with-param name="entityType" select="key('id',key('id',..)/@p1:Type)" />
-      <xsl:with-param name="level" select="0" />
-    </xsl:call-template>
+    <xsl:apply-templates select="key('id',ancestor-or-self::p0:resource-path-segment)" mode="path-parameters-model-element" />
     <xsl:if test="position()=last()">
       <xsl:text>],</xsl:text>
     </xsl:if>
   </xsl:template>
+  <xsl:template match="edm:*[@p1:Type]" mode="path-parameters-model-element">
+    <xsl:call-template name="key-parameters">
+      <xsl:with-param name="entityType" select="key('id',@p1:Type)" />
+      <xsl:with-param name="level" select="0" />
+    </xsl:call-template>
+  </xsl:template>
+  <xsl:template match="edm:Function" mode="path-parameters-model-element">
+    <xsl:for-each select="edm:Parameter[position()>1]">
+      <xsl:call-template name="parameter" />
+    </xsl:for-each>
+  </xsl:template>
+
   <xsl:template match="p0:resource-path" />
 
   <xsl:template match="edm:EntityType/p0:resource-path[not(p0:resource-path-segment
@@ -2811,7 +2839,7 @@
         <xsl:text>}</xsl:text>
       </xsl:if>
 
-      <xsl:if test="not(key('id',p0:resource-path-segment[last()])/self::edm:Singleton) and string($with-patch)">
+      <xsl:if test="not(key('id',p0:resource-path-segment[last()])/self::edm:Singleton) and string($with-delete)">
         <xsl:if test="$by-key or string($with-patch)">
           <xsl:text>,</xsl:text>
         </xsl:if>
