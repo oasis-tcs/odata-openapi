@@ -2499,11 +2499,11 @@
 
   <!-- Path to bound (named or implicit) entity set -->
   <xsl:template match="p0:resource-path" mode="binding">
-    <xsl:value-of select="concat(../../@id,' ',../@id)" />
-  </xsl:template>
-  <xsl:template match="p0:resource-path[p0:resource-path-segment[3]]" mode="binding">
     <xsl:param name="length" select="count(p0:resource-path-segment)" />
     <xsl:choose>
+      <xsl:when test="$length&lt;3">
+        <xsl:value-of select="concat(../../@id,' ',../@id)" />
+      </xsl:when>
       <xsl:when test="p0:resource-path-segment[$length]/@containment">
         <xsl:variable name="parent-binding">
           <xsl:apply-templates select="." mode="binding">
