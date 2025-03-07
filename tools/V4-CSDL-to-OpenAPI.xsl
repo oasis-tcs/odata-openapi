@@ -60,7 +60,8 @@
   <xsl:param name="resourceColor" select="'{bg:dodgerblue}'" />
 
   <xsl:variable name="csdl-version" select="/edmx:Edmx/@Version" />
-  <xsl:variable name="option-prefix">
+  <xsl:variable name="option-prefix" select="'$'" />  
+  <!-- <xsl:variable name="option-prefix">
     <xsl:choose>
       <xsl:when test="/edmx:Edmx/@Version='4.0'">
         <xsl:text>$</xsl:text>
@@ -69,7 +70,7 @@
         <xsl:text />
       </xsl:otherwise>
     </xsl:choose>
-  </xsl:variable>
+  </xsl:variable> -->
 
   <xsl:variable name="reuse-schemas">
     <xsl:choose>
