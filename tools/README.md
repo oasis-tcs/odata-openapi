@@ -132,3 +132,5 @@ Check the `<xsl:param name="..." />` elements in `V4-CSDL-to-OpenAPI.xsl` for fu
 ## Supported Annotations
 
 The mapping can be fine-tuned via [annotations](../doc/Annotations.md) in the CSDL (`$metadata`) XML documents.
+
+This tool generates OpenAPI documents for OData V2 or V4 services that allow deep insert/upsert for _all_ navigation properties. Such OpenAPI documents are published for ABAP-based services on the [SAP Business Accelerator Hub](https://api.sap.com/).
