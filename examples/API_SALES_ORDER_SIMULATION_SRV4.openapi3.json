@@ -1,0 +1,2434 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Service for namespace API_SALES_ORDER_SIMULATION_SRV",
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[A_SalesOrderCreditSimulationType{bg:lightslategray}],[A_SalesOrderCreditSimulationType]->[A_SalesOrderSimulationType{bg:lightslategray}],[A_SalesOrderItemPartnerSimlnType{bg:lightslategray}],[A_SalesOrderItemPartnerSimlnType]->[A_SalesOrderSimulationType{bg:lightslategray}],[A_SalesOrderItemPartnerSimlnType]->[A_SalesOrderItemSimulationType{bg:lightslategray}],[A_SalesOrderItemSimulationType{bg:lightslategray}],[A_SalesOrderItemSimulationType]-*>[A_SalesOrderItemPartnerSimlnType{bg:lightslategray}],[A_SalesOrderItemSimulationType]-*>[A_SalesOrderItmPrcgElmntSimlnType{bg:lightslategray}],[A_SalesOrderItemSimulationType]->[A_SalesOrderSimulationType{bg:lightslategray}],[A_SalesOrderItemSimulationType]-*>[A_SalesOrderScheduleLineSimlnType{bg:lightslategray}],[A_SalesOrderItmPrcgElmntSimlnType{bg:lightslategray}],[A_SalesOrderItmPrcgElmntSimlnType]->[A_SalesOrderSimulationType{bg:lightslategray}],[A_SalesOrderItmPrcgElmntSimlnType]->[A_SalesOrderItemSimulationType{bg:lightslategray}],[A_SalesOrderPartnerSimulationType{bg:lightslategray}],[A_SalesOrderPartnerSimulationType]->[A_SalesOrderSimulationType{bg:lightslategray}],[A_SalesOrderPrcgElmntSimlnType{bg:lightslategray}],[A_SalesOrderPrcgElmntSimlnType]->[A_SalesOrderSimulationType{bg:lightslategray}],[A_SalesOrderPricingSimulationType{bg:lightslategray}],[A_SalesOrderPricingSimulationType]->[A_SalesOrderSimulationType{bg:lightslategray}],[A_SalesOrderScheduleLineSimlnType{bg:lightslategray}],[A_SalesOrderScheduleLineSimlnType]->[A_SalesOrderSimulationType{bg:lightslategray}],[A_SalesOrderScheduleLineSimlnType]->[A_SalesOrderItemSimulationType{bg:lightslategray}],[A_SalesOrderSimulationType{bg:lightslategray}],[A_SalesOrderSimulationType]->[A_SalesOrderCreditSimulationType{bg:lightslategray}],[A_SalesOrderSimulationType]-*>[A_SalesOrderItemSimulationType{bg:lightslategray}],[A_SalesOrderSimulationType]-*>[A_SalesOrderPartnerSimulationType{bg:lightslategray}],[A_SalesOrderSimulationType]->[A_SalesOrderPricingSimulationType{bg:lightslategray}],[A_SalesOrderSimulationType]-*>[A_SalesOrderPrcgElmntSimlnType{bg:lightslategray}],[A_SlsOrdSimlnValAddedSrvcType{bg:lightslategray}],[A_SlsOrdSimlnValAddedSrvc%20{bg:lawngreen}]++-*>[A_SlsOrdSimlnValAddedSrvcType],[A_SalesOrderSimulation%20{bg:lawngreen}]++-*>[A_SalesOrderSimulationType],[A_SalesOrderScheduleLineSimln%20{bg:lawngreen}]++-*>[A_SalesOrderScheduleLineSimlnType],[A_SalesOrderPricingSimulation%20{bg:lawngreen}]++-*>[A_SalesOrderPricingSimulationType],[A_SalesOrderPrcgElmntSimln%20{bg:lawngreen}]++-*>[A_SalesOrderPrcgElmntSimlnType],[A_SalesOrderPartnerSimulation%20{bg:lawngreen}]++-*>[A_SalesOrderPartnerSimulationType],[A_SalesOrderItmPrcgElmntSimln%20{bg:lawngreen}]++-*>[A_SalesOrderItmPrcgElmntSimlnType],[A_SalesOrderItemSimulation%20{bg:lawngreen}]++-*>[A_SalesOrderItemSimulationType],[A_SalesOrderItemPartnerSimln%20{bg:lawngreen}]++-*>[A_SalesOrderItemPartnerSimlnType],[A_SalesOrderCreditSimulation%20{bg:lawngreen}]++-*>[A_SalesOrderCreditSimulationType])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://localhost/service-root"
+        }
+    ],
+    "tags": [
+        {
+            "name": "A_SalesOrderCreditSimulation"
+        },
+        {
+            "name": "A_SalesOrderItemPartnerSimln"
+        },
+        {
+            "name": "A_SalesOrderItemSimulation"
+        },
+        {
+            "name": "A_SalesOrderItmPrcgElmntSimln"
+        },
+        {
+            "name": "A_SalesOrderPartnerSimulation"
+        },
+        {
+            "name": "A_SalesOrderPrcgElmntSimln"
+        },
+        {
+            "name": "A_SalesOrderPricingSimulation"
+        },
+        {
+            "name": "A_SalesOrderScheduleLineSimln"
+        },
+        {
+            "name": "A_SalesOrderSimulation"
+        },
+        {
+            "name": "A_SlsOrdSimlnValAddedSrvc"
+        }
+    ],
+    "paths": {
+        "/A_SalesOrderSimulation": {
+            "post": {
+                "summary": "Simulates the creation of a sales order.",
+                "description": "Simulates the creation of a sales order, including price calculation with results, Available-to-Promise (ATP) check, partner determination, and credit check.",
+                "tags": [
+                    "A_SalesOrderSimulation"
+                ],
+                "requestBody": {
+                    "description": "New entity",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/A_SlsOrdSimlnValAddedSrvc": {
+            "get": {
+                "summary": "Get entities from A_SlsOrdSimlnValAddedSrvc",
+                "tags": [
+                    "A_SlsOrdSimlnValAddedSrvc"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/top"
+                    },
+                    {
+                        "$ref": "#/components/parameters/skip"
+                    },
+                    {
+                        "name": "$filter",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "ValueAddedServiceType",
+                                    "ValueAddedServiceType desc",
+                                    "ValueAddedSubServiceType",
+                                    "ValueAddedSubServiceType desc",
+                                    "SalesOrder",
+                                    "SalesOrder desc",
+                                    "SalesOrderItem",
+                                    "SalesOrderItem desc",
+                                    "ValAddedSrvcTransactionNumber",
+                                    "ValAddedSrvcTransactionNumber desc",
+                                    "ValAddedSrvcItemGroup",
+                                    "ValAddedSrvcItemGroup desc",
+                                    "ValAddedSrvcItemNumber",
+                                    "ValAddedSrvcItemNumber desc",
+                                    "ValueAddedServiceProduct",
+                                    "ValueAddedServiceProduct desc",
+                                    "ValAddedSrvcHasToBeOrdered",
+                                    "ValAddedSrvcHasToBeOrdered desc",
+                                    "ValAddedSrvcIncrement",
+                                    "ValAddedSrvcIncrement desc",
+                                    "ValueAddedServiceChargeCode",
+                                    "ValueAddedServiceChargeCode desc",
+                                    "ValAddedSrvcIsCreatedManually",
+                                    "ValAddedSrvcIsCreatedManually desc",
+                                    "ValAddedSrvcItemNumberInSD",
+                                    "ValAddedSrvcItemNumberInSD desc",
+                                    "ValAddedSrvcIsRlvtForProcmt",
+                                    "ValAddedSrvcIsRlvtForProcmt desc",
+                                    "ValueAddedServiceText1",
+                                    "ValueAddedServiceText1 desc",
+                                    "ValueAddedServiceText2",
+                                    "ValueAddedServiceText2 desc",
+                                    "ValueAddedServiceText3",
+                                    "ValueAddedServiceText3 desc"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "$select",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "ValueAddedServiceType",
+                                    "ValueAddedSubServiceType",
+                                    "SalesOrder",
+                                    "SalesOrderItem",
+                                    "ValAddedSrvcTransactionNumber",
+                                    "ValAddedSrvcItemGroup",
+                                    "ValAddedSrvcItemNumber",
+                                    "ValueAddedServiceProduct",
+                                    "ValAddedSrvcHasToBeOrdered",
+                                    "ValAddedSrvcIncrement",
+                                    "ValueAddedServiceChargeCode",
+                                    "ValAddedSrvcIsCreatedManually",
+                                    "ValAddedSrvcItemNumberInSD",
+                                    "ValAddedSrvcIsRlvtForProcmt",
+                                    "ValueAddedServiceText1",
+                                    "ValueAddedServiceText2",
+                                    "ValueAddedServiceText3",
+                                    "ValueAddedServiceLongText"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Collection of A_SlsOrdSimlnValAddedSrvcType",
+                                    "properties": {
+                                        "@odata.count": {
+                                            "$ref": "#/components/schemas/count"
+                                        },
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SlsOrdSimlnValAddedSrvcType"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to A_SlsOrdSimlnValAddedSrvc",
+                "tags": [
+                    "A_SlsOrdSimlnValAddedSrvc"
+                ],
+                "requestBody": {
+                    "description": "New entity",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SlsOrdSimlnValAddedSrvcType-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SlsOrdSimlnValAddedSrvcType"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/A_SlsOrdSimlnValAddedSrvc(ValueAddedServiceType='{ValueAddedServiceType}',ValueAddedSubServiceType='{ValueAddedSubServiceType}',SalesOrder='{SalesOrder}',SalesOrderItem='{SalesOrderItem}')": {
+            "parameters": [
+                {
+                    "description": "key: ValueAddedServiceType",
+                    "in": "path",
+                    "name": "ValueAddedServiceType",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "maxLength": 2
+                    }
+                },
+                {
+                    "description": "key: ValueAddedSubServiceType",
+                    "in": "path",
+                    "name": "ValueAddedSubServiceType",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "maxLength": 5
+                    }
+                },
+                {
+                    "description": "key: SalesOrder",
+                    "in": "path",
+                    "name": "SalesOrder",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "maxLength": 10
+                    }
+                },
+                {
+                    "description": "key: SalesOrderItem",
+                    "in": "path",
+                    "name": "SalesOrderItem",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "maxLength": 6
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get entity from A_SlsOrdSimlnValAddedSrvc by key",
+                "tags": [
+                    "A_SlsOrdSimlnValAddedSrvc"
+                ],
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "in": "query",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "ValueAddedServiceType",
+                                    "ValueAddedSubServiceType",
+                                    "SalesOrder",
+                                    "SalesOrderItem",
+                                    "ValAddedSrvcTransactionNumber",
+                                    "ValAddedSrvcItemGroup",
+                                    "ValAddedSrvcItemNumber",
+                                    "ValueAddedServiceProduct",
+                                    "ValAddedSrvcHasToBeOrdered",
+                                    "ValAddedSrvcIncrement",
+                                    "ValueAddedServiceChargeCode",
+                                    "ValAddedSrvcIsCreatedManually",
+                                    "ValAddedSrvcItemNumberInSD",
+                                    "ValAddedSrvcIsRlvtForProcmt",
+                                    "ValueAddedServiceText1",
+                                    "ValueAddedServiceText2",
+                                    "ValueAddedServiceText3",
+                                    "ValueAddedServiceLongText"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SlsOrdSimlnValAddedSrvcType"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in A_SlsOrdSimlnValAddedSrvc",
+                "tags": [
+                    "A_SlsOrdSimlnValAddedSrvc"
+                ],
+                "requestBody": {
+                    "description": "New property values",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SlsOrdSimlnValAddedSrvcType-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from A_SlsOrdSimlnValAddedSrvc",
+                "tags": [
+                    "A_SlsOrdSimlnValAddedSrvc"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/$batch": {
+            "post": {
+                "summary": "Send a group of requests",
+                "description": "Group multiple requests into a single request payload, see [Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).\n\n*Please note that \"Try it out\" is not supported for this request.*",
+                "tags": [
+                    "Batch Requests"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Batch request",
+                    "content": {
+                        "multipart/mixed;boundary=request-separator": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "example": "--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET A_SalesOrderCreditSimulation HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Batch response",
+                        "content": {
+                            "multipart/mixed": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{...}\n--response-separator--"
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderCreditSimulationType": {
+                "title": "A_SalesOrderCreditSimulationType",
+                "type": "object",
+                "properties": {
+                    "SalesOrder": {
+                        "type": "string",
+                        "maxLength": 10
+                    },
+                    "TotalCreditCheckStatus": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "to_SalesOrder": {
+                        "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType"
+                    }
+                }
+            },
+            "API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemPartnerSimlnType": {
+                "title": "A_SalesOrderItemPartnerSimlnType",
+                "type": "object",
+                "properties": {
+                    "SalesOrder": {
+                        "type": "string",
+                        "maxLength": 10
+                    },
+                    "SalesOrderItem": {
+                        "type": "string",
+                        "maxLength": 6
+                    },
+                    "PartnerFunction": {
+                        "type": "string",
+                        "maxLength": 2
+                    },
+                    "PartnerFunctionInternalCode": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "Customer": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "Supplier": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "Personnel": {
+                        "type": "string",
+                        "maxLength": 8,
+                        "nullable": true
+                    },
+                    "ContactPerson": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "WorkAssignmentExternalID": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "nullable": true
+                    },
+                    "VATRegistration": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "to_SalesOrder": {
+                        "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType"
+                    },
+                    "to_SalesOrderItem": {
+                        "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemSimulationType"
+                    }
+                }
+            },
+            "API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemSimulationType": {
+                "title": "A_SalesOrderItemSimulationType",
+                "type": "object",
+                "properties": {
+                    "SalesOrder": {
+                        "type": "string",
+                        "maxLength": 10
+                    },
+                    "SalesOrderItem": {
+                        "type": "string",
+                        "maxLength": 6
+                    },
+                    "HigherLevelItem": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "nullable": true
+                    },
+                    "HigherLevelItemUsage": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "SalesOrderItemCategory": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "SalesOrderItemText": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "nullable": true
+                    },
+                    "PurchaseOrderByCustomer": {
+                        "type": "string",
+                        "maxLength": 35,
+                        "nullable": true
+                    },
+                    "Material": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "nullable": true
+                    },
+                    "MaterialByCustomer": {
+                        "type": "string",
+                        "maxLength": 35,
+                        "nullable": true
+                    },
+                    "PricingDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "nullable": true
+                    },
+                    "PricingReferenceMaterial": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "nullable": true
+                    },
+                    "RequestedQuantity": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 999999999999.999,
+                        "minimum": -999999999999.999,
+                        "nullable": true
+                    },
+                    "RequestedQuantityUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "RequestedQuantitySAPUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "RequestedQuantityISOUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "OrderQuantityUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "OrderQuantitySAPUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "OrderQuantityISOUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ConfdDelivQtyInOrderQtyUnit": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 999999999999.999,
+                        "minimum": -999999999999.999,
+                        "nullable": true
+                    },
+                    "ItemGrossWeight": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 999999999999.999,
+                        "minimum": -999999999999.999,
+                        "nullable": true
+                    },
+                    "ItemNetWeight": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 999999999999.999,
+                        "minimum": -999999999999.999,
+                        "nullable": true
+                    },
+                    "ItemWeightUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ItemWeightSAPUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ItemWeightISOUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ItemVolume": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 999999999999.999,
+                        "minimum": -999999999999.999,
+                        "nullable": true
+                    },
+                    "ItemVolumeUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ItemVolumeSAPUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ItemVolumeISOUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "OriginallyRequestedMaterial": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "nullable": true
+                    },
+                    "TransactionCurrency": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "nullable": true
+                    },
+                    "NetAmount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "nullable": true
+                    },
+                    "TaxAmount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 99999999999.999,
+                        "minimum": -99999999999.999,
+                        "nullable": true
+                    },
+                    "CostAmount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 99999999999.999,
+                        "minimum": -99999999999.999,
+                        "nullable": true
+                    },
+                    "Subtotal1Amount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 99999999999.999,
+                        "minimum": -99999999999.999,
+                        "nullable": true
+                    },
+                    "Subtotal2Amount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 99999999999.999,
+                        "minimum": -99999999999.999,
+                        "nullable": true
+                    },
+                    "Subtotal3Amount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 99999999999.999,
+                        "minimum": -99999999999.999,
+                        "nullable": true
+                    },
+                    "Subtotal4Amount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 99999999999.999,
+                        "minimum": -99999999999.999,
+                        "nullable": true
+                    },
+                    "Subtotal5Amount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 99999999999.999,
+                        "minimum": -99999999999.999,
+                        "nullable": true
+                    },
+                    "Subtotal6Amount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 99999999999.999,
+                        "minimum": -99999999999.999,
+                        "nullable": true
+                    },
+                    "MaterialSubstitutionReason": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "MaterialGroup": {
+                        "type": "string",
+                        "maxLength": 9,
+                        "nullable": true
+                    },
+                    "MaterialPricingGroup": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "Batch": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "Plant": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "StorageLocation": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "DeliveryGroup": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ShippingPoint": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "ShippingType": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "DeliveryPriority": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "IncotermsClassification": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "IncotermsTransferLocation": {
+                        "type": "string",
+                        "maxLength": 28,
+                        "nullable": true
+                    },
+                    "IncotermsLocation1": {
+                        "type": "string",
+                        "maxLength": 70,
+                        "nullable": true
+                    },
+                    "IncotermsLocation2": {
+                        "type": "string",
+                        "maxLength": 70,
+                        "nullable": true
+                    },
+                    "ProductTaxClassification1": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "ProductTaxClassification2": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "ProductTaxClassification3": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "ProductTaxClassification4": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "ProductTaxClassification5": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "ProductTaxClassification6": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "ProductTaxClassification7": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "ProductTaxClassification8": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "ProductTaxClassification9": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "ReferenceSDDocument": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "ReferenceSDDocumentItem": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "nullable": true
+                    },
+                    "CustomerPaymentTerms": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "SalesDocumentRjcnReason": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "to_Partner": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemPartnerSimlnType"
+                        }
+                    },
+                    "to_Partner@odata.count": {
+                        "$ref": "#/components/schemas/count"
+                    },
+                    "to_PricingElement": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItmPrcgElmntSimlnType"
+                        }
+                    },
+                    "to_PricingElement@odata.count": {
+                        "$ref": "#/components/schemas/count"
+                    },
+                    "to_SalesOrder": {
+                        "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType"
+                    },
+                    "to_ScheduleLine": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderScheduleLineSimlnType"
+                        }
+                    },
+                    "to_ScheduleLine@odata.count": {
+                        "$ref": "#/components/schemas/count"
+                    }
+                }
+            },
+            "API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItmPrcgElmntSimlnType": {
+                "title": "A_SalesOrderItmPrcgElmntSimlnType",
+                "type": "object",
+                "properties": {
+                    "SalesOrder": {
+                        "type": "string",
+                        "maxLength": 10
+                    },
+                    "SalesOrderItem": {
+                        "type": "string",
+                        "maxLength": 6
+                    },
+                    "PricingProcedureStep": {
+                        "type": "string",
+                        "maxLength": 3
+                    },
+                    "PricingProcedureCounter": {
+                        "type": "string",
+                        "maxLength": 3
+                    },
+                    "ConditionType": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "PriceConditionDeterminationDte": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "nullable": true
+                    },
+                    "ConditionCalculationType": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ConditionBaseValue": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 1e-9,
+                        "nullable": true
+                    },
+                    "ConditionRateValue": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 1e-9,
+                        "nullable": true
+                    },
+                    "ConditionCurrency": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "nullable": true
+                    },
+                    "ConditionQuantity": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 1,
+                        "maximum": 99999,
+                        "minimum": -99999,
+                        "nullable": true
+                    },
+                    "ConditionQuantityUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ConditionQuantitySAPUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ConditionQuantityISOUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ConditionIsForStatistics": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "ConditionOrigin": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "IsGroupCondition": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "ConditionAmount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "nullable": true
+                    },
+                    "TransactionCurrency": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "nullable": true
+                    },
+                    "ConditionInactiveReason": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "ConditionClass": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "PricingScaleBasis": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ConditionScaleBasisValue": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 1e-9,
+                        "nullable": true
+                    },
+                    "ConditionIsManuallyChanged": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "to_SalesOrder": {
+                        "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType"
+                    },
+                    "to_SalesOrderItem": {
+                        "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemSimulationType"
+                    }
+                }
+            },
+            "API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderPartnerSimulationType": {
+                "title": "A_SalesOrderPartnerSimulationType",
+                "type": "object",
+                "properties": {
+                    "SalesOrder": {
+                        "type": "string",
+                        "maxLength": 10
+                    },
+                    "PartnerFunction": {
+                        "type": "string",
+                        "maxLength": 2
+                    },
+                    "PartnerFunctionInternalCode": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "Customer": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "Supplier": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "Personnel": {
+                        "type": "string",
+                        "maxLength": 8,
+                        "nullable": true
+                    },
+                    "ContactPerson": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "WorkAssignmentExternalID": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "nullable": true
+                    },
+                    "VATRegistration": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "to_SalesOrder": {
+                        "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType"
+                    }
+                }
+            },
+            "API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderPrcgElmntSimlnType": {
+                "title": "A_SalesOrderPrcgElmntSimlnType",
+                "type": "object",
+                "properties": {
+                    "SalesOrder": {
+                        "type": "string",
+                        "maxLength": 10
+                    },
+                    "PricingProcedureStep": {
+                        "type": "string",
+                        "maxLength": 3
+                    },
+                    "PricingProcedureCounter": {
+                        "type": "string",
+                        "maxLength": 3
+                    },
+                    "ConditionType": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "PriceConditionDeterminationDte": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "nullable": true
+                    },
+                    "ConditionCalculationType": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ConditionBaseValue": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 1e-9,
+                        "nullable": true
+                    },
+                    "ConditionRateValue": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 1e-9,
+                        "nullable": true
+                    },
+                    "ConditionCurrency": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "nullable": true
+                    },
+                    "ConditionQuantity": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 1,
+                        "maximum": 99999,
+                        "minimum": -99999,
+                        "nullable": true
+                    },
+                    "ConditionQuantityUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ConditionQuantitySAPUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ConditionQuantityISOUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ConditionIsForStatistics": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "ConditionOrigin": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "IsGroupCondition": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "ConditionAmount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "nullable": true
+                    },
+                    "TransactionCurrency": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "nullable": true
+                    },
+                    "ConditionInactiveReason": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "ConditionClass": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "PricingScaleBasis": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ConditionScaleBasisValue": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 1e-9,
+                        "nullable": true
+                    },
+                    "ConditionIsManuallyChanged": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "to_SalesOrder": {
+                        "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType"
+                    }
+                }
+            },
+            "API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderPricingSimulationType": {
+                "title": "A_SalesOrderPricingSimulationType",
+                "type": "object",
+                "properties": {
+                    "SalesOrder": {
+                        "type": "string",
+                        "maxLength": 10
+                    },
+                    "TotalNetAmount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "nullable": true
+                    },
+                    "TransactionCurrency": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "nullable": true
+                    },
+                    "to_SalesOrder": {
+                        "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType"
+                    }
+                }
+            },
+            "API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderScheduleLineSimlnType": {
+                "title": "A_SalesOrderScheduleLineSimlnType",
+                "type": "object",
+                "properties": {
+                    "SalesOrder": {
+                        "type": "string",
+                        "maxLength": 10
+                    },
+                    "SalesOrderItem": {
+                        "type": "string",
+                        "maxLength": 6
+                    },
+                    "ScheduleLine": {
+                        "type": "string",
+                        "maxLength": 4
+                    },
+                    "RequestedDeliveryDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "nullable": true
+                    },
+                    "ConfirmedDeliveryDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "nullable": true
+                    },
+                    "OrderQuantityUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "OrderQuantitySAPUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "OrderQuantityISOUnit": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ScheduleLineOrderQuantity": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 9999999999.999,
+                        "minimum": -9999999999.999,
+                        "nullable": true
+                    },
+                    "ConfdOrderQtyByMatlAvailCheck": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 9999999999.999,
+                        "minimum": -9999999999.999,
+                        "nullable": true
+                    },
+                    "OpenConfdDelivQtyInOrdQtyUnit": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 9999999999.999,
+                        "minimum": -9999999999.999,
+                        "nullable": true
+                    },
+                    "CorrectedQtyInOrderQtyUnit": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "example": 0,
+                        "multipleOf": 0.001,
+                        "maximum": 9999999999.999,
+                        "minimum": -9999999999.999,
+                        "nullable": true
+                    },
+                    "to_SalesOrder": {
+                        "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType"
+                    },
+                    "to_SalesOrderItem": {
+                        "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemSimulationType"
+                    }
+                }
+            },
+            "API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType": {
+                "title": "A_SalesOrderSimulationType",
+                "type": "object",
+                "properties": {
+                    "SalesOrder": {
+                        "type": "string",
+                        "maxLength": 10
+                    },
+                    "SalesOrderType": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "SalesOrganization": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "DistributionChannel": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "OrganizationDivision": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "SalesGroup": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "SalesOffice": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "SalesDistrict": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "nullable": true
+                    },
+                    "SoldToParty": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "CustomerGroup": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "AdditionalCustomerGroup1": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "AdditionalCustomerGroup2": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "AdditionalCustomerGroup3": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "AdditionalCustomerGroup4": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "AdditionalCustomerGroup5": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "PurchaseOrderByCustomer": {
+                        "type": "string",
+                        "maxLength": 35,
+                        "nullable": true
+                    },
+                    "CustomerPurchaseOrderType": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "CustomerPurchaseOrderDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "nullable": true
+                    },
+                    "SalesOrderDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "nullable": true
+                    },
+                    "TransactionCurrency": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "nullable": true
+                    },
+                    "AccountingDocExternalReference": {
+                        "type": "string",
+                        "maxLength": 16,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification1": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification2": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification3": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification4": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification5": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification6": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification7": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification8": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification9": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "TaxDepartureCountry": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "VATRegistrationCountry": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "PriceListType": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "CustomerPriceGroup": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "SDDocumentReason": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "PricingDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "nullable": true
+                    },
+                    "SDPricingProcedure": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "nullable": true
+                    },
+                    "RequestedDeliveryDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "nullable": true
+                    },
+                    "ShippingCondition": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "CompleteDeliveryIsDefined": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "ShippingType": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "IncotermsClassification": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "IncotermsTransferLocation": {
+                        "type": "string",
+                        "maxLength": 28,
+                        "nullable": true
+                    },
+                    "IncotermsLocation1": {
+                        "type": "string",
+                        "maxLength": 70,
+                        "nullable": true
+                    },
+                    "IncotermsLocation2": {
+                        "type": "string",
+                        "maxLength": 70,
+                        "nullable": true
+                    },
+                    "IncotermsVersion": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "ReferenceSDDocument": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "CustomerPaymentTerms": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "PaymentMethod": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "to_Credit": {
+                        "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderCreditSimulationType"
+                    },
+                    "to_Item": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemSimulationType"
+                        }
+                    },
+                    "to_Item@odata.count": {
+                        "$ref": "#/components/schemas/count"
+                    },
+                    "to_Partner": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderPartnerSimulationType"
+                        }
+                    },
+                    "to_Partner@odata.count": {
+                        "$ref": "#/components/schemas/count"
+                    },
+                    "to_Pricing": {
+                        "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderPricingSimulationType"
+                    },
+                    "to_PricingElement": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderPrcgElmntSimlnType"
+                        }
+                    },
+                    "to_PricingElement@odata.count": {
+                        "$ref": "#/components/schemas/count"
+                    }
+                }
+            },
+            "API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType-create": {
+                "title": "A_SalesOrderSimulationType (for create)",
+                "type": "object",
+                "properties": {
+                    "SalesOrder": {
+                        "type": "string",
+                        "maxLength": 10
+                    },
+                    "SalesOrderType": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "SalesOrganization": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "DistributionChannel": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "OrganizationDivision": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "SalesGroup": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "SalesOffice": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "SalesDistrict": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "nullable": true
+                    },
+                    "SoldToParty": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "CustomerGroup": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "AdditionalCustomerGroup1": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "AdditionalCustomerGroup2": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "AdditionalCustomerGroup3": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "AdditionalCustomerGroup4": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "AdditionalCustomerGroup5": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "PurchaseOrderByCustomer": {
+                        "type": "string",
+                        "maxLength": 35,
+                        "nullable": true
+                    },
+                    "CustomerPurchaseOrderType": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "CustomerPurchaseOrderDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "nullable": true
+                    },
+                    "SalesOrderDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "nullable": true
+                    },
+                    "TransactionCurrency": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "nullable": true
+                    },
+                    "AccountingDocExternalReference": {
+                        "type": "string",
+                        "maxLength": 16,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification1": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification2": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification3": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification4": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification5": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification6": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification7": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification8": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "CustomerTaxClassification9": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "TaxDepartureCountry": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "VATRegistrationCountry": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "PriceListType": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "CustomerPriceGroup": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "SDDocumentReason": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "PricingDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "nullable": true
+                    },
+                    "RequestedDeliveryDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "nullable": true
+                    },
+                    "ShippingCondition": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "CompleteDeliveryIsDefined": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "ShippingType": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "nullable": true
+                    },
+                    "IncotermsClassification": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "IncotermsTransferLocation": {
+                        "type": "string",
+                        "maxLength": 28,
+                        "nullable": true
+                    },
+                    "IncotermsLocation1": {
+                        "type": "string",
+                        "maxLength": 70,
+                        "nullable": true
+                    },
+                    "IncotermsLocation2": {
+                        "type": "string",
+                        "maxLength": 70,
+                        "nullable": true
+                    },
+                    "IncotermsVersion": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "ReferenceSDDocument": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "CustomerPaymentTerms": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "PaymentMethod": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "to_Credit@odata.bind": {
+                        "$ref": "#/components/schemas/entityReference"
+                    },
+                    "to_Pricing@odata.bind": {
+                        "$ref": "#/components/schemas/entityReference"
+                    }
+                },
+                "required": [
+                    "SalesOrder"
+                ]
+            },
+            "API_SALES_ORDER_SIMULATION_SRV.A_SlsOrdSimlnValAddedSrvcType": {
+                "title": "A_SlsOrdSimlnValAddedSrvcType",
+                "type": "object",
+                "properties": {
+                    "ValueAddedServiceType": {
+                        "type": "string",
+                        "maxLength": 2
+                    },
+                    "ValueAddedSubServiceType": {
+                        "type": "string",
+                        "maxLength": 5
+                    },
+                    "SalesOrder": {
+                        "type": "string",
+                        "maxLength": 10
+                    },
+                    "SalesOrderItem": {
+                        "type": "string",
+                        "maxLength": 6
+                    },
+                    "ValAddedSrvcTransactionNumber": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "ValAddedSrvcItemGroup": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "nullable": true
+                    },
+                    "ValAddedSrvcItemNumber": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "nullable": true
+                    },
+                    "ValueAddedServiceProduct": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "nullable": true
+                    },
+                    "ValAddedSrvcHasToBeOrdered": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "ValAddedSrvcIncrement": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "ValueAddedServiceChargeCode": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ValAddedSrvcIsCreatedManually": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "nullable": true
+                    },
+                    "ValAddedSrvcItemNumberInSD": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "nullable": true
+                    },
+                    "ValAddedSrvcIsRlvtForProcmt": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "ValueAddedServiceText1": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "ValueAddedServiceText2": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "ValueAddedServiceText3": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "ValueAddedServiceLongText": {
+                        "type": "string",
+                        "maxLength": 132,
+                        "nullable": true
+                    }
+                }
+            },
+            "API_SALES_ORDER_SIMULATION_SRV.A_SlsOrdSimlnValAddedSrvcType-create": {
+                "title": "A_SlsOrdSimlnValAddedSrvcType (for create)",
+                "type": "object",
+                "properties": {
+                    "ValueAddedServiceType": {
+                        "type": "string",
+                        "maxLength": 2
+                    },
+                    "ValueAddedSubServiceType": {
+                        "type": "string",
+                        "maxLength": 5
+                    },
+                    "SalesOrder": {
+                        "type": "string",
+                        "maxLength": 10
+                    },
+                    "SalesOrderItem": {
+                        "type": "string",
+                        "maxLength": 6
+                    },
+                    "ValueAddedServiceProduct": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "nullable": true
+                    },
+                    "ValAddedSrvcHasToBeOrdered": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "ValAddedSrvcIncrement": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "ValueAddedServiceChargeCode": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ValAddedSrvcIsRlvtForProcmt": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "ValueAddedServiceText1": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "ValueAddedServiceText2": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "ValueAddedServiceText3": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "ValueAddedServiceLongText": {
+                        "type": "string",
+                        "maxLength": 132,
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "ValueAddedServiceType",
+                    "ValueAddedSubServiceType",
+                    "SalesOrder",
+                    "SalesOrderItem"
+                ]
+            },
+            "API_SALES_ORDER_SIMULATION_SRV.A_SlsOrdSimlnValAddedSrvcType-update": {
+                "title": "A_SlsOrdSimlnValAddedSrvcType (for update)",
+                "type": "object",
+                "properties": {
+                    "ValueAddedServiceProduct": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "nullable": true
+                    },
+                    "ValAddedSrvcHasToBeOrdered": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "ValAddedSrvcIncrement": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "nullable": true
+                    },
+                    "ValueAddedServiceChargeCode": {
+                        "type": "string",
+                        "maxLength": 3,
+                        "nullable": true
+                    },
+                    "ValAddedSrvcIsRlvtForProcmt": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "ValueAddedServiceText1": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "ValueAddedServiceText2": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "ValueAddedServiceText3": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "ValueAddedServiceLongText": {
+                        "type": "string",
+                        "maxLength": 132,
+                        "nullable": true
+                    }
+                }
+            },
+            "count": {
+                "anyOf": [
+                    {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    {
+                        "type": "string"
+                    }
+                ],
+                "description": "The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option."
+            },
+            "entityReference": {
+                "type": "string",
+                "format": "uri",
+                "description": "[Link to a related entity](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_LinktoRelatedEntitiesWhenCreatinganE)"
+            },
+            "error": {
+                "type": "object",
+                "required": [
+                    "error"
+                ],
+                "properties": {
+                    "error": {
+                        "type": "object",
+                        "required": [
+                            "code",
+                            "message"
+                        ],
+                        "properties": {
+                            "code": {
+                                "type": "string"
+                            },
+                            "message": {
+                                "type": "string"
+                            },
+                            "target": {
+                                "type": "string"
+                            },
+                            "details": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "target": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "innererror": {
+                                "type": "object",
+                                "description": "The structure of this object is service-specific"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "top": {
+                "name": "$top",
+                "in": "query",
+                "description": "Show only the first n items, see [Paging - Top](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptiontop)",
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "example": 50
+            },
+            "skip": {
+                "name": "$skip",
+                "in": "query",
+                "description": "Skip the first n items, see [Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionskip)",
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            },
+            "count": {
+                "name": "$count",
+                "in": "query",
+                "description": "Include count of items, see [Count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount)",
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "search": {
+                "name": "$search",
+                "in": "query",
+                "description": "Search items by search phrases, see [Searching](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionsearch)",
+                "schema": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses": {
+            "error": {
+                "description": "Error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/error"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

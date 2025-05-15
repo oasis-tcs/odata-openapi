@@ -1,0 +1,1762 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+   <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+      <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core"/>
+   </edmx:Reference>
+   <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value">
+      <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+   </edmx:Reference>
+   <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value">
+      <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+   </edmx:Reference>
+   <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value">
+      <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+   </edmx:Reference>
+   <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='LOCAL')/$value">
+      <edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
+   </edmx:Reference>
+   <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+      <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+   </edmx:Reference>
+   <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+      <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+   </edmx:Reference>
+   <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value">
+      <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+   </edmx:Reference>
+   <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ODM',Version='0001',SAP__Origin='LOCAL')/$value">
+      <edmx:Include Namespace="com.sap.vocabularies.ODM.v1" Alias="SAP__ODM"/>
+   </edmx:Reference>
+   <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value">
+      <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+   </edmx:Reference>
+   <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+      <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+   </edmx:Reference>
+   <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value">
+      <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+   </edmx:Reference>
+   <edmx:DataServices>
+      <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="API_SALES_ORDER_SIMULATION_SRV">
+         <Annotation Term="com.sap.vocabularies.Common.v1.OriginalProtocolVersion" String="2.0"/>
+         <EntityType Name="A_SalesOrderCreditSimulationType">
+            <Annotation Term="Common.Label" String="Sales Order Credit Simulation (API)"/>
+            <Key>
+               <PropertyRef Name="SalesOrder"/>
+            </Key>
+            <Property Name="SalesOrder" Type="Edm.String" Nullable="false" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Sales Order"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="TotalCreditCheckStatus" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Credit Status"/>
+               <Annotation Term="Common.QuickInfo" String="Overall Status of Credit Checks"/>
+            </Property>
+            <NavigationProperty Name="to_SalesOrder" Type="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType" Nullable="false"/>
+         </EntityType>
+         <EntityType Name="A_SalesOrderItemPartnerSimlnType">
+            <Annotation Term="Common.Label" String="Sales Order Item Partner Sim (API)"/>
+            <Key>
+               <PropertyRef Name="SalesOrder"/>
+               <PropertyRef Name="SalesOrderItem"/>
+               <PropertyRef Name="PartnerFunction"/>
+            </Key>
+            <Property Name="SalesOrder" Type="Edm.String" Nullable="false" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Sales Order"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="SalesOrderItem" Type="Edm.String" Nullable="false" MaxLength="6">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Item"/>
+               <Annotation Term="Common.QuickInfo" String="Sales Order Item"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="PartnerFunction" Type="Edm.String" Nullable="false" MaxLength="2">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Partner Function"/>
+            </Property>
+            <Property Name="PartnerFunctionInternalCode" Type="Edm.String" MaxLength="2">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Partner Function"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="Customer" Type="Edm.String" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Customer"/>
+               <Annotation Term="Common.QuickInfo" String="Customer Number"/>
+            </Property>
+            <Property Name="Supplier" Type="Edm.String" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Supplier"/>
+               <Annotation Term="Common.QuickInfo" String="Account Number of Supplier"/>
+            </Property>
+            <Property Name="Personnel" Type="Edm.String" MaxLength="8">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Personnel Number"/>
+            </Property>
+            <Property Name="ContactPerson" Type="Edm.String" MaxLength="10">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Contact Person"/>
+               <Annotation Term="Common.QuickInfo" String="Number of Contact Person"/>
+            </Property>
+            <Property Name="WorkAssignmentExternalID" Type="Edm.String" MaxLength="100">
+               <Annotation Term="Common.Label" String="Work Agreement ID"/>
+            </Property>
+            <Property Name="VATRegistration" Type="Edm.String" MaxLength="20">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="VAT Registration No."/>
+               <Annotation Term="Common.QuickInfo" String="VAT Registration Number"/>
+            </Property>
+            <NavigationProperty Name="to_SalesOrder" Type="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType" Nullable="false"/>
+            <NavigationProperty Name="to_SalesOrderItem" Type="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemSimulationType" Nullable="false"/>
+         </EntityType>
+         <EntityType Name="A_SalesOrderItemSimulationType">
+            <Annotation Term="Common.Label" String="Sales Order Item Simulation (API)"/>
+            <Key>
+               <PropertyRef Name="SalesOrder"/>
+               <PropertyRef Name="SalesOrderItem"/>
+            </Key>
+            <Property Name="SalesOrder" Type="Edm.String" Nullable="false" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Sales Order"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="SalesOrderItem" Type="Edm.String" Nullable="false" MaxLength="6">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Text" Path="SalesOrderItemText"/>
+               <Annotation Term="Common.Label" String="Item"/>
+               <Annotation Term="Common.QuickInfo" String="Sales Order Item"/>
+            </Property>
+            <Property Name="HigherLevelItem" Type="Edm.String" MaxLength="6">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Higher-Level Item"/>
+               <Annotation Term="Common.QuickInfo" String="Higher-Level Item in Bill of Material Structures"/>
+            </Property>
+            <Property Name="HigherLevelItemUsage" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Usage of HL Item"/>
+               <Annotation Term="Common.QuickInfo" String="ID for higher-level item usage"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="SalesOrderItemCategory" Type="Edm.String" MaxLength="4">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Item Category"/>
+               <Annotation Term="Common.QuickInfo" String="Sales Document Item Category"/>
+            </Property>
+            <Property Name="SalesOrderItemText" Type="Edm.String" MaxLength="40">
+               <Annotation Term="Common.Label" String="Item Description"/>
+               <Annotation Term="Common.QuickInfo" String="Short Text for Sales Order Item"/>
+            </Property>
+            <Property Name="PurchaseOrderByCustomer" Type="Edm.String" MaxLength="35">
+               <Annotation Term="Common.Label" String="Customer Reference"/>
+            </Property>
+            <Property Name="Material" Type="Edm.String" MaxLength="40">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Material"/>
+               <Annotation Term="Common.QuickInfo" String="Material Number"/>
+            </Property>
+            <Property Name="MaterialByCustomer" Type="Edm.String" MaxLength="35">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Customer Material"/>
+               <Annotation Term="Common.QuickInfo" String="Material Number Used by Customer"/>
+            </Property>
+            <Property Name="PricingDate" Type="Edm.Date" Precision="0">
+               <Annotation Term="Common.Label" String="Pricing Date"/>
+               <Annotation Term="Common.QuickInfo" String="Date for Pricing and Exchange Rate"/>
+            </Property>
+            <Property Name="PricingReferenceMaterial" Type="Edm.String" MaxLength="40">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Pricing Ref. Matl"/>
+               <Annotation Term="Common.QuickInfo" String="Pricing Reference Material"/>
+            </Property>
+            <Property Name="RequestedQuantity" Type="Edm.Decimal" Precision="15" Scale="3">
+               <Annotation Term="Measures.Unit" Path="RequestedQuantitySAPUnit"/>
+               <Annotation Term="Common.Label" String="Requested Quantity"/>
+            </Property>
+            <Property Name="RequestedQuantityUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.Label" String="Requested Qty Unit"/>
+               <Annotation Term="Common.QuickInfo" String="Unit of the Requested Quantity"/>
+            </Property>
+            <Property Name="RequestedQuantitySAPUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.Label" String="SAP Code Req. Qty"/>
+               <Annotation Term="Common.QuickInfo" String="SAP Unit Code for Requested Quantity"/>
+            </Property>
+            <Property Name="RequestedQuantityISOUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="ISO Code Req. Qty"/>
+               <Annotation Term="Common.QuickInfo" String="ISO Unit Code for Requested Quantity"/>
+            </Property>
+            <Property Name="OrderQuantityUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.Label" String="Sales Unit"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="OrderQuantitySAPUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.Label" String="SAP Order Quantity"/>
+               <Annotation Term="Common.QuickInfo" String="SAP Unit Code for Order Quantity"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="OrderQuantityISOUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="ISO Order Quantity"/>
+               <Annotation Term="Common.QuickInfo" String="ISO Unit Code for Order Quantity"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConfdDelivQtyInOrderQtyUnit" Type="Edm.Decimal" Precision="15" Scale="3">
+               <Annotation Term="Measures.Unit" Path="OrderQuantitySAPUnit"/>
+               <Annotation Term="Common.Label" String="Confirmed Quantity"/>
+               <Annotation Term="Common.QuickInfo" String="Cumulative Confirmed Quantity in Sales Unit"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ItemGrossWeight" Type="Edm.Decimal" Precision="15" Scale="3">
+               <Annotation Term="Measures.Unit" Path="ItemWeightSAPUnit"/>
+               <Annotation Term="Common.Label" String="Gross Weight"/>
+               <Annotation Term="Common.QuickInfo" String="Gross Weight of the Item"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ItemNetWeight" Type="Edm.Decimal" Precision="15" Scale="3">
+               <Annotation Term="Measures.Unit" Path="ItemWeightSAPUnit"/>
+               <Annotation Term="Common.Label" String="Net Weight"/>
+               <Annotation Term="Common.QuickInfo" String="Net Weight of the Item"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ItemWeightUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.Label" String="Unit of Weight"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ItemWeightSAPUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.Label" String="SAP Code Item Weight"/>
+               <Annotation Term="Common.QuickInfo" String="SAP Unit Code for Item Weight"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ItemWeightISOUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="ISO Code Item Weight"/>
+               <Annotation Term="Common.QuickInfo" String="ISO Unit Code for Item Weight"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ItemVolume" Type="Edm.Decimal" Precision="15" Scale="3">
+               <Annotation Term="Measures.Unit" Path="ItemVolumeSAPUnit"/>
+               <Annotation Term="Common.Label" String="Volume"/>
+               <Annotation Term="Common.QuickInfo" String="Volume of the item"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ItemVolumeUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.Label" String="Volume Unit"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ItemVolumeSAPUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.Label" String="SAP Code f Item Vol."/>
+               <Annotation Term="Common.QuickInfo" String="SAP Unit Code for Item Volume"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ItemVolumeISOUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="ISO Unit Item Volume"/>
+               <Annotation Term="Common.QuickInfo" String="ISO Unit Code for Item Volume"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="OriginallyRequestedMaterial" Type="Edm.String" MaxLength="40">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Material Entered"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="TransactionCurrency" Type="Edm.String" MaxLength="5">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Document Currency"/>
+               <Annotation Term="Common.QuickInfo" String="SD Document Currency"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="NetAmount" Type="Edm.Decimal" Precision="16" Scale="3">
+               <Annotation Term="Measures.ISOCurrency" Path="TransactionCurrency"/>
+               <Annotation Term="Common.Label" String="Net Value"/>
+               <Annotation Term="Common.QuickInfo" String="Net Value of the Document Item in Document Currency"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="TaxAmount" Type="Edm.Decimal" Precision="14" Scale="3">
+               <Annotation Term="Measures.ISOCurrency" Path="TransactionCurrency"/>
+               <Annotation Term="Common.Label" String="Tax Amount"/>
+               <Annotation Term="Common.QuickInfo" String="Tax Amount in Document Currency"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="CostAmount" Type="Edm.Decimal" Precision="14" Scale="3">
+               <Annotation Term="Measures.ISOCurrency" Path="TransactionCurrency"/>
+               <Annotation Term="Common.Label" String="Cost"/>
+               <Annotation Term="Common.QuickInfo" String="Cost in Document Currency"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="Subtotal1Amount" Type="Edm.Decimal" Precision="14" Scale="3">
+               <Annotation Term="Measures.ISOCurrency" Path="TransactionCurrency"/>
+               <Annotation Term="Common.Label" String="Subtotal 1"/>
+               <Annotation Term="Common.QuickInfo" String="Subtotal 1 from Pricing Procedure for Price Element"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="Subtotal2Amount" Type="Edm.Decimal" Precision="14" Scale="3">
+               <Annotation Term="Measures.ISOCurrency" Path="TransactionCurrency"/>
+               <Annotation Term="Common.Label" String="Subtotal 2"/>
+               <Annotation Term="Common.QuickInfo" String="Subtotal 2 from Pricing Procedure for Price Element"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="Subtotal3Amount" Type="Edm.Decimal" Precision="14" Scale="3">
+               <Annotation Term="Measures.ISOCurrency" Path="TransactionCurrency"/>
+               <Annotation Term="Common.Label" String="Subtotal 3"/>
+               <Annotation Term="Common.QuickInfo" String="Subtotal 3 from Pricing Procedure for Price Element"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="Subtotal4Amount" Type="Edm.Decimal" Precision="14" Scale="3">
+               <Annotation Term="Measures.ISOCurrency" Path="TransactionCurrency"/>
+               <Annotation Term="Common.Label" String="Subtotal 4"/>
+               <Annotation Term="Common.QuickInfo" String="Subtotal 4 from Pricing Procedure for Price Element"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="Subtotal5Amount" Type="Edm.Decimal" Precision="14" Scale="3">
+               <Annotation Term="Measures.ISOCurrency" Path="TransactionCurrency"/>
+               <Annotation Term="Common.Label" String="Subtotal 5"/>
+               <Annotation Term="Common.QuickInfo" String="Subtotal 5 from Pricing Procedure for Price Element"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="Subtotal6Amount" Type="Edm.Decimal" Precision="14" Scale="3">
+               <Annotation Term="Measures.ISOCurrency" Path="TransactionCurrency"/>
+               <Annotation Term="Common.Label" String="Subtotal 6"/>
+               <Annotation Term="Common.QuickInfo" String="Subtotal 6 from Pricing Procedure for Price Element"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="MaterialSubstitutionReason" Type="Edm.String" MaxLength="4">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Substitution Reason"/>
+               <Annotation Term="Common.QuickInfo" String="Reason for Material Substitution"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="MaterialGroup" Type="Edm.String" MaxLength="9">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Material Group"/>
+            </Property>
+            <Property Name="MaterialPricingGroup" Type="Edm.String" MaxLength="2">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Product Price Group"/>
+            </Property>
+            <Property Name="Batch" Type="Edm.String" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Batch"/>
+               <Annotation Term="Common.QuickInfo" String="Batch Number"/>
+            </Property>
+            <Property Name="Plant" Type="Edm.String" MaxLength="4">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Plant"/>
+               <Annotation Term="Common.QuickInfo" String="Plant (Own or External)"/>
+            </Property>
+            <Property Name="StorageLocation" Type="Edm.String" MaxLength="4">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Storage Location"/>
+            </Property>
+            <Property Name="DeliveryGroup" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Delivery Group"/>
+               <Annotation Term="Common.QuickInfo" String="Delivery Group (Items are delivered together)"/>
+            </Property>
+            <Property Name="ShippingPoint" Type="Edm.String" MaxLength="4">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Shipping Point"/>
+               <Annotation Term="Common.QuickInfo" String="Shipping Point / Receiving Point"/>
+            </Property>
+            <Property Name="ShippingType" Type="Edm.String" MaxLength="2">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Shipping Type"/>
+            </Property>
+            <Property Name="DeliveryPriority" Type="Edm.String" MaxLength="2">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Delivery Priority"/>
+            </Property>
+            <Property Name="IncotermsClassification" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Incoterms"/>
+               <Annotation Term="Common.QuickInfo" String="Incoterms (Part 1)"/>
+            </Property>
+            <Property Name="IncotermsTransferLocation" Type="Edm.String" MaxLength="28">
+               <Annotation Term="Common.Label" String="Incoterms (Part 2)"/>
+            </Property>
+            <Property Name="IncotermsLocation1" Type="Edm.String" MaxLength="70">
+               <Annotation Term="Common.Label" String="Incoterms Location 1"/>
+            </Property>
+            <Property Name="IncotermsLocation2" Type="Edm.String" MaxLength="70">
+               <Annotation Term="Common.Label" String="Incoterms Location 2"/>
+            </Property>
+            <Property Name="ProductTaxClassification1" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Classifc. Mat."/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification for Material"/>
+            </Property>
+            <Property Name="ProductTaxClassification2" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Classifc. Mat."/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification for Material"/>
+            </Property>
+            <Property Name="ProductTaxClassification3" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Classifc. Mat."/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification for Material"/>
+            </Property>
+            <Property Name="ProductTaxClassification4" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Classifc. Mat."/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification for Material"/>
+            </Property>
+            <Property Name="ProductTaxClassification5" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Classifc. Mat."/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification for Material"/>
+            </Property>
+            <Property Name="ProductTaxClassification6" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Classifc. Mat."/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification for Material"/>
+            </Property>
+            <Property Name="ProductTaxClassification7" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Classifc. Mat."/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification for Material"/>
+            </Property>
+            <Property Name="ProductTaxClassification8" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Classifc. Mat."/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification for Material"/>
+            </Property>
+            <Property Name="ProductTaxClassification9" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Classifc. Mat."/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification for Material"/>
+            </Property>
+            <Property Name="ReferenceSDDocument" Type="Edm.String" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Reference Document"/>
+               <Annotation Term="Common.QuickInfo" String="Document Number of Reference Document"/>
+            </Property>
+            <Property Name="ReferenceSDDocumentItem" Type="Edm.String" MaxLength="6">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Reference Item"/>
+               <Annotation Term="Common.QuickInfo" String="Item Number of the Reference Item"/>
+            </Property>
+            <Property Name="CustomerPaymentTerms" Type="Edm.String" MaxLength="4">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Terms of Payment"/>
+               <Annotation Term="Common.QuickInfo" String="Key for Terms of Payment"/>
+            </Property>
+            <Property Name="SalesDocumentRjcnReason" Type="Edm.String" MaxLength="2">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Reason for Rejection"/>
+               <Annotation Term="Common.QuickInfo" String="Reason for Rejection of Sales Documents"/>
+            </Property>
+            <NavigationProperty Name="to_Partner" Type="Collection(API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemPartnerSimlnType)"/>
+            <NavigationProperty Name="to_PricingElement" Type="Collection(API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItmPrcgElmntSimlnType)"/>
+            <NavigationProperty Name="to_SalesOrder" Type="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType" Nullable="false"/>
+            <NavigationProperty Name="to_ScheduleLine" Type="Collection(API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderScheduleLineSimlnType)"/>
+         </EntityType>
+         <EntityType Name="A_SalesOrderItmPrcgElmntSimlnType">
+            <Annotation Term="Common.Label" String="Sales Order Item Pricing Elmnt Sim (API)"/>
+            <Key>
+               <PropertyRef Name="SalesOrder"/>
+               <PropertyRef Name="SalesOrderItem"/>
+               <PropertyRef Name="PricingProcedureStep"/>
+               <PropertyRef Name="PricingProcedureCounter"/>
+            </Key>
+            <Property Name="SalesOrder" Type="Edm.String" Nullable="false" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Sales Order"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="SalesOrderItem" Type="Edm.String" Nullable="false" MaxLength="6">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Item"/>
+               <Annotation Term="Common.QuickInfo" String="Sales Order Item"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="PricingProcedureStep" Type="Edm.String" Nullable="false" MaxLength="3">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Step Number"/>
+            </Property>
+            <Property Name="PricingProcedureCounter" Type="Edm.String" Nullable="false" MaxLength="3">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Counter"/>
+               <Annotation Term="Common.QuickInfo" String="Condition Counter"/>
+            </Property>
+            <Property Name="ConditionType" Type="Edm.String" MaxLength="4">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Condition Type"/>
+            </Property>
+            <Property Name="PriceConditionDeterminationDte" Type="Edm.Date" Precision="0">
+               <Annotation Term="Common.Label" String="Cndn Pricing Date"/>
+               <Annotation Term="Common.QuickInfo" String="Condition Pricing Date"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionCalculationType" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Calculation Type"/>
+               <Annotation Term="Common.QuickInfo" String="Calculation Type for Condition"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionBaseValue" Type="Edm.Decimal" Precision="24" Scale="9">
+               <Annotation Term="Common.Label" String="Condition Basis"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionRateValue" Type="Edm.Decimal" Precision="24" Scale="9">
+               <Annotation Term="Common.Label" String="Amount"/>
+               <Annotation Term="Common.QuickInfo" String="Condition Amount or Percentage"/>
+            </Property>
+            <Property Name="ConditionCurrency" Type="Edm.String" MaxLength="5">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Currency"/>
+               <Annotation Term="Common.QuickInfo" String="Currency Key"/>
+            </Property>
+            <Property Name="ConditionQuantity" Type="Edm.Decimal" Precision="5" Scale="0">
+               <Annotation Term="Measures.Unit" Path="ConditionQuantitySAPUnit"/>
+               <Annotation Term="Common.Label" String="Pricing Unit"/>
+               <Annotation Term="Common.QuickInfo" String="Condition Pricing Unit"/>
+            </Property>
+            <Property Name="ConditionQuantityUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.Label" String="Condition Unit"/>
+               <Annotation Term="Common.QuickInfo" String="Condition Unit in the Document"/>
+            </Property>
+            <Property Name="ConditionQuantitySAPUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.Label" String="SAP Condition Qty"/>
+               <Annotation Term="Common.QuickInfo" String="SAP Unit Code for Condition Quantity"/>
+            </Property>
+            <Property Name="ConditionQuantityISOUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="ISO Condition Qty"/>
+               <Annotation Term="Common.QuickInfo" String="ISO Unit Code for Condition Quantity"/>
+            </Property>
+            <Property Name="ConditionIsForStatistics" Type="Edm.Boolean">
+               <Annotation Term="Common.Label" String="Statistical"/>
+               <Annotation Term="Common.QuickInfo" String="Condition is used for statistics"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionOrigin" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Condition Origin"/>
+               <Annotation Term="Common.QuickInfo" String="Origin of the Condition"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="IsGroupCondition" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Group Condition"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionAmount" Type="Edm.Decimal" Precision="16" Scale="3">
+               <Annotation Term="Measures.ISOCurrency" Path="TransactionCurrency"/>
+               <Annotation Term="Common.Label" String="Condition Value"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="TransactionCurrency" Type="Edm.String" MaxLength="5">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Document Currency"/>
+               <Annotation Term="Common.QuickInfo" String="SD Document Currency"/>
+            </Property>
+            <Property Name="ConditionInactiveReason" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Inactive Condition"/>
+               <Annotation Term="Common.QuickInfo" String="Condition is Inactive"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionClass" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Condition Class"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="PricingScaleBasis" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Scale Basis"/>
+               <Annotation Term="Common.QuickInfo" String="Scale Basis Indicator"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionScaleBasisValue" Type="Edm.Decimal" Precision="24" Scale="9">
+               <Annotation Term="Common.Label" String="Scale Base Val."/>
+               <Annotation Term="Common.QuickInfo" String="Scale Base Value"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionIsManuallyChanged" Type="Edm.Boolean">
+               <Annotation Term="Common.Label" String="Changed Manually"/>
+               <Annotation Term="Common.QuickInfo" String="Condition Changed Manually"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <NavigationProperty Name="to_SalesOrder" Type="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType" Nullable="false"/>
+            <NavigationProperty Name="to_SalesOrderItem" Type="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemSimulationType" Nullable="false"/>
+         </EntityType>
+         <EntityType Name="A_SalesOrderPartnerSimulationType">
+            <Annotation Term="Common.Label" String="Sales Order Partner Simulation (API)"/>
+            <Key>
+               <PropertyRef Name="SalesOrder"/>
+               <PropertyRef Name="PartnerFunction"/>
+            </Key>
+            <Property Name="SalesOrder" Type="Edm.String" Nullable="false" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Sales Order"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="PartnerFunction" Type="Edm.String" Nullable="false" MaxLength="2">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Partner Function"/>
+            </Property>
+            <Property Name="PartnerFunctionInternalCode" Type="Edm.String" MaxLength="2">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Partner Function"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="Customer" Type="Edm.String" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Customer"/>
+               <Annotation Term="Common.QuickInfo" String="Customer Number"/>
+            </Property>
+            <Property Name="Supplier" Type="Edm.String" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Supplier"/>
+               <Annotation Term="Common.QuickInfo" String="Account Number of Supplier"/>
+            </Property>
+            <Property Name="Personnel" Type="Edm.String" MaxLength="8">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Personnel Number"/>
+            </Property>
+            <Property Name="ContactPerson" Type="Edm.String" MaxLength="10">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Contact Person"/>
+               <Annotation Term="Common.QuickInfo" String="Number of Contact Person"/>
+            </Property>
+            <Property Name="WorkAssignmentExternalID" Type="Edm.String" MaxLength="100">
+               <Annotation Term="Common.Label" String="Work Agreement ID"/>
+            </Property>
+            <Property Name="VATRegistration" Type="Edm.String" MaxLength="20">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="VAT Registration No."/>
+               <Annotation Term="Common.QuickInfo" String="VAT Registration Number"/>
+            </Property>
+            <NavigationProperty Name="to_SalesOrder" Type="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType" Nullable="false"/>
+         </EntityType>
+         <EntityType Name="A_SalesOrderPrcgElmntSimlnType">
+            <Annotation Term="Common.Label" String="Sales Order Pricing Elmnt Sim (API)"/>
+            <Key>
+               <PropertyRef Name="SalesOrder"/>
+               <PropertyRef Name="PricingProcedureStep"/>
+               <PropertyRef Name="PricingProcedureCounter"/>
+            </Key>
+            <Property Name="SalesOrder" Type="Edm.String" Nullable="false" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Sales Order"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="PricingProcedureStep" Type="Edm.String" Nullable="false" MaxLength="3">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Step Number"/>
+            </Property>
+            <Property Name="PricingProcedureCounter" Type="Edm.String" Nullable="false" MaxLength="3">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Counter"/>
+               <Annotation Term="Common.QuickInfo" String="Condition Counter"/>
+            </Property>
+            <Property Name="ConditionType" Type="Edm.String" MaxLength="4">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Condition Type"/>
+            </Property>
+            <Property Name="PriceConditionDeterminationDte" Type="Edm.Date" Precision="0">
+               <Annotation Term="Common.Label" String="Cndn Pricing Date"/>
+               <Annotation Term="Common.QuickInfo" String="Condition Pricing Date"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionCalculationType" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Calculation Type"/>
+               <Annotation Term="Common.QuickInfo" String="Calculation Type for Condition"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionBaseValue" Type="Edm.Decimal" Precision="24" Scale="9">
+               <Annotation Term="Common.Label" String="Condition Basis"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionRateValue" Type="Edm.Decimal" Precision="24" Scale="9">
+               <Annotation Term="Common.Label" String="Amount"/>
+               <Annotation Term="Common.QuickInfo" String="Condition Amount or Percentage"/>
+            </Property>
+            <Property Name="ConditionCurrency" Type="Edm.String" MaxLength="5">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Currency"/>
+               <Annotation Term="Common.QuickInfo" String="Currency Key"/>
+            </Property>
+            <Property Name="ConditionQuantity" Type="Edm.Decimal" Precision="5" Scale="0">
+               <Annotation Term="Measures.Unit" Path="ConditionQuantitySAPUnit"/>
+               <Annotation Term="Common.Label" String="Pricing Unit"/>
+               <Annotation Term="Common.QuickInfo" String="Condition Pricing Unit"/>
+            </Property>
+            <Property Name="ConditionQuantityUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.Label" String="Condition Unit"/>
+               <Annotation Term="Common.QuickInfo" String="Condition Unit in the Document"/>
+            </Property>
+            <Property Name="ConditionQuantitySAPUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.Label" String="SAP Condition Qty"/>
+               <Annotation Term="Common.QuickInfo" String="SAP Unit Code for Condition Quantity"/>
+            </Property>
+            <Property Name="ConditionQuantityISOUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="ISO Condition Qty"/>
+               <Annotation Term="Common.QuickInfo" String="ISO Unit Code for Condition Quantity"/>
+            </Property>
+            <Property Name="ConditionIsForStatistics" Type="Edm.Boolean">
+               <Annotation Term="Common.Label" String="Statistical"/>
+               <Annotation Term="Common.QuickInfo" String="Condition is used for statistics"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionOrigin" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Condition Origin"/>
+               <Annotation Term="Common.QuickInfo" String="Origin of the Condition"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="IsGroupCondition" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Group Condition"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionAmount" Type="Edm.Decimal" Precision="16" Scale="3">
+               <Annotation Term="Measures.ISOCurrency" Path="TransactionCurrency"/>
+               <Annotation Term="Common.Label" String="Condition Value"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="TransactionCurrency" Type="Edm.String" MaxLength="5">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Document Currency"/>
+               <Annotation Term="Common.QuickInfo" String="SD Document Currency"/>
+            </Property>
+            <Property Name="ConditionInactiveReason" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Inactive Condition"/>
+               <Annotation Term="Common.QuickInfo" String="Condition is Inactive"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionClass" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Condition Class"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="PricingScaleBasis" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Scale Basis"/>
+               <Annotation Term="Common.QuickInfo" String="Scale Basis Indicator"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionScaleBasisValue" Type="Edm.Decimal" Precision="24" Scale="9">
+               <Annotation Term="Common.Label" String="Scale Base Val."/>
+               <Annotation Term="Common.QuickInfo" String="Scale Base Value"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ConditionIsManuallyChanged" Type="Edm.Boolean">
+               <Annotation Term="Common.Label" String="Changed Manually"/>
+               <Annotation Term="Common.QuickInfo" String="Condition Changed Manually"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <NavigationProperty Name="to_SalesOrder" Type="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType" Nullable="false"/>
+         </EntityType>
+         <EntityType Name="A_SalesOrderPricingSimulationType">
+            <Annotation Term="Common.Label" String="Sales Order Pricing Simulation (API)"/>
+            <Key>
+               <PropertyRef Name="SalesOrder"/>
+            </Key>
+            <Property Name="SalesOrder" Type="Edm.String" Nullable="false" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Sales Order"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="TotalNetAmount" Type="Edm.Decimal" Precision="16" Scale="3">
+               <Annotation Term="Measures.ISOCurrency" Path="TransactionCurrency"/>
+               <Annotation Term="Common.Label" String="Net Value"/>
+               <Annotation Term="Common.QuickInfo" String="Net Value of the Sales Document in Document Currency"/>
+            </Property>
+            <Property Name="TransactionCurrency" Type="Edm.String" MaxLength="5">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Document Currency"/>
+               <Annotation Term="Common.QuickInfo" String="SD Document Currency"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <NavigationProperty Name="to_SalesOrder" Type="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType" Nullable="false"/>
+         </EntityType>
+         <EntityType Name="A_SalesOrderScheduleLineSimlnType">
+            <Annotation Term="Common.Label" String="Sales Order Schedule Line Sim (API)"/>
+            <Key>
+               <PropertyRef Name="SalesOrder"/>
+               <PropertyRef Name="SalesOrderItem"/>
+               <PropertyRef Name="ScheduleLine"/>
+            </Key>
+            <Property Name="SalesOrder" Type="Edm.String" Nullable="false" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Sales Document"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="SalesOrderItem" Type="Edm.String" Nullable="false" MaxLength="6">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Sales Document Item"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ScheduleLine" Type="Edm.String" Nullable="false" MaxLength="4">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Schedule Line Number"/>
+            </Property>
+            <Property Name="RequestedDeliveryDate" Type="Edm.Date" Precision="0">
+               <Annotation Term="Common.Label" String="Delivery Date"/>
+               <Annotation Term="Common.QuickInfo" String="Requested Delivery Date"/>
+            </Property>
+            <Property Name="ConfirmedDeliveryDate" Type="Edm.Date" Precision="0">
+               <Annotation Term="Common.Label" String="Delivery Date"/>
+               <Annotation Term="Common.QuickInfo" String="Confirmed Delivery Date"/>
+            </Property>
+            <Property Name="OrderQuantityUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.Label" String="Sales Unit"/>
+            </Property>
+            <Property Name="OrderQuantitySAPUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.Label" String="SAP Order Quantity"/>
+               <Annotation Term="Common.QuickInfo" String="SAP Unit Code for Order Quantity"/>
+            </Property>
+            <Property Name="OrderQuantityISOUnit" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="ISO Order Quantity"/>
+               <Annotation Term="Common.QuickInfo" String="ISO Unit Code for Order Quantity"/>
+            </Property>
+            <Property Name="ScheduleLineOrderQuantity" Type="Edm.Decimal" Precision="13" Scale="3">
+               <Annotation Term="Measures.Unit" Path="OrderQuantitySAPUnit"/>
+               <Annotation Term="Common.Label" String="Order Quantity"/>
+               <Annotation Term="Common.QuickInfo" String="Order Quantity in Sales Units"/>
+            </Property>
+            <Property Name="ConfdOrderQtyByMatlAvailCheck" Type="Edm.Decimal" Precision="13" Scale="3">
+               <Annotation Term="Measures.Unit" Path="OrderQuantitySAPUnit"/>
+               <Annotation Term="Common.Label" String="Confirmed Quantity"/>
+            </Property>
+            <Property Name="OpenConfdDelivQtyInOrdQtyUnit" Type="Edm.Decimal" Precision="13" Scale="3">
+               <Annotation Term="Measures.Unit" Path="OrderQuantitySAPUnit"/>
+               <Annotation Term="Common.Label" String="Open Quantity"/>
+               <Annotation Term="Common.QuickInfo" String="Open Confirmed Delivery Quantity"/>
+            </Property>
+            <Property Name="CorrectedQtyInOrderQtyUnit" Type="Edm.Decimal" Precision="13" Scale="3">
+               <Annotation Term="Measures.Unit" Path="OrderQuantitySAPUnit"/>
+               <Annotation Term="Common.Label" String="Corr.qty"/>
+               <Annotation Term="Common.QuickInfo" String="Corrected quantity in sales unit"/>
+            </Property>
+            <NavigationProperty Name="to_SalesOrder" Type="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType" Nullable="false"/>
+            <NavigationProperty Name="to_SalesOrderItem" Type="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemSimulationType" Nullable="false"/>
+         </EntityType>
+         <EntityType Name="A_SalesOrderSimulationType">
+            <Annotation Term="Common.Label" String="Sales Order Simulation"/>
+            <Key>
+               <PropertyRef Name="SalesOrder"/>
+            </Key>
+            <Property Name="SalesOrder" Type="Edm.String" Nullable="false" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Sales Order"/>
+            </Property>
+            <Property Name="SalesOrderType" Type="Edm.String" MaxLength="4">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Sales Order Type"/>
+            </Property>
+            <Property Name="SalesOrganization" Type="Edm.String" MaxLength="4">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Sales Organization"/>
+            </Property>
+            <Property Name="DistributionChannel" Type="Edm.String" MaxLength="2">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Distribution Channel"/>
+            </Property>
+            <Property Name="OrganizationDivision" Type="Edm.String" MaxLength="2">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Division"/>
+            </Property>
+            <Property Name="SalesGroup" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Sales Group"/>
+            </Property>
+            <Property Name="SalesOffice" Type="Edm.String" MaxLength="4">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Sales Office"/>
+            </Property>
+            <Property Name="SalesDistrict" Type="Edm.String" MaxLength="6">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Sales District"/>
+            </Property>
+            <Property Name="SoldToParty" Type="Edm.String" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Sold-to Party"/>
+            </Property>
+            <Property Name="CustomerGroup" Type="Edm.String" MaxLength="2">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Customer Group"/>
+            </Property>
+            <Property Name="AdditionalCustomerGroup1" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Customer Group 1"/>
+            </Property>
+            <Property Name="AdditionalCustomerGroup2" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Customer Group 2"/>
+            </Property>
+            <Property Name="AdditionalCustomerGroup3" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Customer Group 3"/>
+            </Property>
+            <Property Name="AdditionalCustomerGroup4" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Customer Group 4"/>
+            </Property>
+            <Property Name="AdditionalCustomerGroup5" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Customer Group 5"/>
+            </Property>
+            <Property Name="PurchaseOrderByCustomer" Type="Edm.String" MaxLength="35">
+               <Annotation Term="Common.Label" String="Customer Reference"/>
+            </Property>
+            <Property Name="CustomerPurchaseOrderType" Type="Edm.String" MaxLength="4">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Purchase Order Type"/>
+               <Annotation Term="Common.QuickInfo" String="Customer Purchase Order Type"/>
+            </Property>
+            <Property Name="CustomerPurchaseOrderDate" Type="Edm.Date" Precision="0">
+               <Annotation Term="Common.Label" String="Customer Reference Date"/>
+            </Property>
+            <Property Name="SalesOrderDate" Type="Edm.Date" Precision="0">
+               <Annotation Term="Common.Label" String="Document Date"/>
+               <Annotation Term="Common.QuickInfo" String="Document Date (Date Received/Sent)"/>
+            </Property>
+            <Property Name="TransactionCurrency" Type="Edm.String" MaxLength="5">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Document Currency"/>
+               <Annotation Term="Common.QuickInfo" String="SD Document Currency"/>
+            </Property>
+            <Property Name="AccountingDocExternalReference" Type="Edm.String" MaxLength="16">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Reference"/>
+               <Annotation Term="Common.QuickInfo" String="Reference Document Number"/>
+            </Property>
+            <Property Name="CustomerTaxClassification1" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Alt.Tax Classific."/>
+               <Annotation Term="Common.QuickInfo" String="Alternative Tax Classification"/>
+            </Property>
+            <Property Name="CustomerTaxClassification2" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Class.2 Customer"/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification 2 for Customer"/>
+            </Property>
+            <Property Name="CustomerTaxClassification3" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Class.3 Customer"/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification 3 for Customer"/>
+            </Property>
+            <Property Name="CustomerTaxClassification4" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Class.4 Customer"/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification 4 for Customer"/>
+            </Property>
+            <Property Name="CustomerTaxClassification5" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Class.5 Customer"/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification 5 for Customer"/>
+            </Property>
+            <Property Name="CustomerTaxClassification6" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Class.6 Customer"/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification 6 for Customer"/>
+            </Property>
+            <Property Name="CustomerTaxClassification7" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Class.7 Customer"/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification 7 for Customer"/>
+            </Property>
+            <Property Name="CustomerTaxClassification8" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Class.8 Customer"/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification 8 for Customer"/>
+            </Property>
+            <Property Name="CustomerTaxClassification9" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Class.9 Customer"/>
+               <Annotation Term="Common.QuickInfo" String="Tax Classification 9 for Customer"/>
+            </Property>
+            <Property Name="TaxDepartureCountry" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Departure Country/Region"/>
+            </Property>
+            <Property Name="VATRegistrationCountry" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Tax Destination Country/Region"/>
+            </Property>
+            <Property Name="PriceListType" Type="Edm.String" MaxLength="2">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Price List Type"/>
+            </Property>
+            <Property Name="CustomerPriceGroup" Type="Edm.String" MaxLength="2">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Customer Price Group"/>
+            </Property>
+            <Property Name="SDDocumentReason" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Order Reason"/>
+               <Annotation Term="Common.QuickInfo" String="Order Reason (Reason for the Business Transaction)"/>
+            </Property>
+            <Property Name="PricingDate" Type="Edm.Date" Precision="0">
+               <Annotation Term="Common.Label" String="Pricing Date"/>
+               <Annotation Term="Common.QuickInfo" String="Date for Pricing and Exchange Rate"/>
+            </Property>
+            <Property Name="SDPricingProcedure" Type="Edm.String" MaxLength="6">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Pricing Procedure"/>
+               <Annotation Term="Common.QuickInfo" String="Pricing Procedure in Pricing"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="RequestedDeliveryDate" Type="Edm.Date" Precision="0">
+               <Annotation Term="Common.Label" String="Requested Delivery Date"/>
+            </Property>
+            <Property Name="ShippingCondition" Type="Edm.String" MaxLength="2">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Shipping Conditions"/>
+            </Property>
+            <Property Name="CompleteDeliveryIsDefined" Type="Edm.Boolean">
+               <Annotation Term="Common.Label" String="Complete Delivery"/>
+               <Annotation Term="Common.QuickInfo" String="Complete Delivery Defined for Each Sales Order"/>
+            </Property>
+            <Property Name="ShippingType" Type="Edm.String" MaxLength="2">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Shipping Type"/>
+            </Property>
+            <Property Name="IncotermsClassification" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Incoterms"/>
+               <Annotation Term="Common.QuickInfo" String="Incoterms (Part 1)"/>
+            </Property>
+            <Property Name="IncotermsTransferLocation" Type="Edm.String" MaxLength="28">
+               <Annotation Term="Common.Label" String="Incoterms (Part 2)"/>
+            </Property>
+            <Property Name="IncotermsLocation1" Type="Edm.String" MaxLength="70">
+               <Annotation Term="Common.Label" String="Incoterms Location 1"/>
+            </Property>
+            <Property Name="IncotermsLocation2" Type="Edm.String" MaxLength="70">
+               <Annotation Term="Common.Label" String="Incoterms Location 2"/>
+            </Property>
+            <Property Name="IncotermsVersion" Type="Edm.String" MaxLength="4">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Incoterms Version"/>
+            </Property>
+            <Property Name="ReferenceSDDocument" Type="Edm.String" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Reference Document"/>
+               <Annotation Term="Common.QuickInfo" String="Document Number of Reference Document"/>
+            </Property>
+            <Property Name="CustomerPaymentTerms" Type="Edm.String" MaxLength="4">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Terms of Payment"/>
+               <Annotation Term="Common.QuickInfo" String="Key for Terms of Payment"/>
+            </Property>
+            <Property Name="PaymentMethod" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Payment Method"/>
+            </Property>
+            <NavigationProperty Name="to_Credit" Type="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderCreditSimulationType" Nullable="false"/>
+            <NavigationProperty Name="to_Item" Type="Collection(API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemSimulationType)"/>
+            <NavigationProperty Name="to_Partner" Type="Collection(API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderPartnerSimulationType)"/>
+            <NavigationProperty Name="to_Pricing" Type="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderPricingSimulationType" Nullable="false"/>
+            <NavigationProperty Name="to_PricingElement" Type="Collection(API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderPrcgElmntSimlnType)"/>
+         </EntityType>
+         <EntityType Name="A_SlsOrdSimlnValAddedSrvcType">
+            <Annotation Term="Common.Label" String="Value Added Service for SO Simulation"/>
+            <Key>
+               <PropertyRef Name="ValueAddedServiceType"/>
+               <PropertyRef Name="ValueAddedSubServiceType"/>
+               <PropertyRef Name="SalesOrder"/>
+               <PropertyRef Name="SalesOrderItem"/>
+            </Key>
+            <Property Name="ValueAddedServiceType" Type="Edm.String" Nullable="false" MaxLength="2">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="VAS Service Types"/>
+            </Property>
+            <Property Name="ValueAddedSubServiceType" Type="Edm.String" Nullable="false" MaxLength="5">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="VAS Sub Services"/>
+            </Property>
+            <Property Name="SalesOrder" Type="Edm.String" Nullable="false" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Reference Document"/>
+               <Annotation Term="Common.QuickInfo" String="Document Number of Reference Document"/>
+            </Property>
+            <Property Name="SalesOrderItem" Type="Edm.String" Nullable="false" MaxLength="6">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Reference Item"/>
+               <Annotation Term="Common.QuickInfo" String="Item Number of the Reference Item"/>
+            </Property>
+            <Property Name="ValAddedSrvcTransactionNumber" Type="Edm.String" MaxLength="10">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Transaction Number"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ValAddedSrvcItemGroup" Type="Edm.String" MaxLength="5">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Item Group"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ValAddedSrvcItemNumber" Type="Edm.String" MaxLength="5">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Item Number"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ValueAddedServiceProduct" Type="Edm.String" MaxLength="40">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Material Number"/>
+               <Annotation Term="Common.QuickInfo" String="VAS Material Number"/>
+            </Property>
+            <Property Name="ValAddedSrvcHasToBeOrdered" Type="Edm.Boolean">
+               <Annotation Term="Common.Label" String="Req Relevance"/>
+               <Annotation Term="Common.QuickInfo" String="Requirement Relevancy Flag for VAS Material"/>
+            </Property>
+            <Property Name="ValAddedSrvcIncrement" Type="Edm.String" MaxLength="4">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="Increment"/>
+               <Annotation Term="Common.QuickInfo" String="VAS Increment"/>
+            </Property>
+            <Property Name="ValueAddedServiceChargeCode" Type="Edm.String" MaxLength="3">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="VAS Charge Code"/>
+               <Annotation Term="Common.QuickInfo" String="VAS Charge Codes"/>
+            </Property>
+            <Property Name="ValAddedSrvcIsCreatedManually" Type="Edm.String" MaxLength="1">
+               <Annotation Term="Common.IsUpperCase"/>
+               <Annotation Term="Common.Label" String="Manual Entry Ind."/>
+               <Annotation Term="Common.QuickInfo" String="Manual Entry Indicator"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ValAddedSrvcItemNumberInSD" Type="Edm.String" MaxLength="6">
+               <Annotation Term="Common.IsDigitSequence"/>
+               <Annotation Term="Common.Label" String="VAS Item Number"/>
+               <Annotation Term="Common.QuickInfo" String="VAS Item Number in SD"/>
+               <Annotation Term="Core.Computed"/>
+            </Property>
+            <Property Name="ValAddedSrvcIsRlvtForProcmt" Type="Edm.Boolean">
+               <Annotation Term="Common.Label" String="Procurmnt Relev"/>
+               <Annotation Term="Common.QuickInfo" String="Procurement Relevant for VAS Material"/>
+            </Property>
+            <Property Name="ValueAddedServiceText1" Type="Edm.String" MaxLength="20">
+               <Annotation Term="Common.Label" String="Field1"/>
+               <Annotation Term="Common.QuickInfo" String="VAS Field 1 for Free Use by Customer"/>
+            </Property>
+            <Property Name="ValueAddedServiceText2" Type="Edm.String" MaxLength="20">
+               <Annotation Term="Common.Label" String="Field2"/>
+               <Annotation Term="Common.QuickInfo" String="VAS Field 2 for Free Use by Customer"/>
+            </Property>
+            <Property Name="ValueAddedServiceText3" Type="Edm.String" MaxLength="20">
+               <Annotation Term="Common.Label" String="Field3"/>
+               <Annotation Term="Common.QuickInfo" String="VAS Field 3 for Free Use by Customer"/>
+            </Property>
+            <Property Name="ValueAddedServiceLongText" Type="Edm.String" MaxLength="132"/>
+         </EntityType>
+         <EntityContainer Name="API_SALES_ORDER_SIMULATION_SRV_Entities">
+            <EntitySet Name="A_SalesOrderCreditSimulation" EntityType="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderCreditSimulationType">
+               <Annotation Term="Capabilities.InsertRestrictions">
+                  <Record>
+                     <PropertyValue Property="Insertable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.UpdateRestrictions">
+                  <Record>
+                     <PropertyValue Property="Updatable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.DeleteRestrictions">
+                  <Record>
+                     <PropertyValue Property="Deletable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <NavigationPropertyBinding Target="A_SalesOrderSimulation" Path="to_SalesOrder"/>
+               <Annotation Term="Capabilities.SearchRestrictions">
+                  <Record>
+                     <PropertyValue Property="Searchable" Bool="false"/>
+                  </Record>
+               </Annotation>
+            </EntitySet>
+            <EntitySet Name="A_SalesOrderItemPartnerSimln" EntityType="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemPartnerSimlnType">
+               <Annotation Term="Capabilities.InsertRestrictions">
+                  <Record>
+                     <PropertyValue Property="Insertable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.UpdateRestrictions">
+                  <Record>
+                     <PropertyValue Property="Updatable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.DeleteRestrictions">
+                  <Record>
+                     <PropertyValue Property="Deletable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <NavigationPropertyBinding Target="A_SalesOrderItemSimulation" Path="to_SalesOrderItem"/>
+               <NavigationPropertyBinding Target="A_SalesOrderSimulation" Path="to_SalesOrder"/>
+               <Annotation Term="Capabilities.SearchRestrictions">
+                  <Record>
+                     <PropertyValue Property="Searchable" Bool="false"/>
+                  </Record>
+               </Annotation>
+            </EntitySet>
+            <EntitySet Name="A_SalesOrderItemSimulation" EntityType="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemSimulationType">
+               <Annotation Term="Capabilities.InsertRestrictions">
+                  <Record>
+                     <PropertyValue Property="Insertable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.UpdateRestrictions">
+                  <Record>
+                     <PropertyValue Property="Updatable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.DeleteRestrictions">
+                  <Record>
+                     <PropertyValue Property="Deletable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <NavigationPropertyBinding Target="A_SalesOrderScheduleLineSimln" Path="to_ScheduleLine"/>
+               <NavigationPropertyBinding Target="A_SalesOrderItemPartnerSimln" Path="to_Partner"/>
+               <NavigationPropertyBinding Target="A_SalesOrderItmPrcgElmntSimln" Path="to_PricingElement"/>
+               <NavigationPropertyBinding Target="A_SalesOrderSimulation" Path="to_SalesOrder"/>
+               <Annotation Term="Capabilities.SearchRestrictions">
+                  <Record>
+                     <PropertyValue Property="Searchable" Bool="false"/>
+                  </Record>
+               </Annotation>
+            </EntitySet>
+            <EntitySet Name="A_SalesOrderItmPrcgElmntSimln" EntityType="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItmPrcgElmntSimlnType">
+               <Annotation Term="Capabilities.InsertRestrictions">
+                  <Record>
+                     <PropertyValue Property="Insertable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.UpdateRestrictions">
+                  <Record>
+                     <PropertyValue Property="Updatable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.DeleteRestrictions">
+                  <Record>
+                     <PropertyValue Property="Deletable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <NavigationPropertyBinding Target="A_SalesOrderItemSimulation" Path="to_SalesOrderItem"/>
+               <NavigationPropertyBinding Target="A_SalesOrderSimulation" Path="to_SalesOrder"/>
+               <Annotation Term="Capabilities.SearchRestrictions">
+                  <Record>
+                     <PropertyValue Property="Searchable" Bool="false"/>
+                  </Record>
+               </Annotation>
+            </EntitySet>
+            <EntitySet Name="A_SalesOrderPartnerSimulation" EntityType="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderPartnerSimulationType">
+               <Annotation Term="Capabilities.InsertRestrictions">
+                  <Record>
+                     <PropertyValue Property="Insertable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.UpdateRestrictions">
+                  <Record>
+                     <PropertyValue Property="Updatable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.DeleteRestrictions">
+                  <Record>
+                     <PropertyValue Property="Deletable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <NavigationPropertyBinding Target="A_SalesOrderSimulation" Path="to_SalesOrder"/>
+               <Annotation Term="Capabilities.SearchRestrictions">
+                  <Record>
+                     <PropertyValue Property="Searchable" Bool="false"/>
+                  </Record>
+               </Annotation>
+            </EntitySet>
+            <EntitySet Name="A_SalesOrderPrcgElmntSimln" EntityType="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderPrcgElmntSimlnType">
+               <Annotation Term="Capabilities.InsertRestrictions">
+                  <Record>
+                     <PropertyValue Property="Insertable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.UpdateRestrictions">
+                  <Record>
+                     <PropertyValue Property="Updatable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.DeleteRestrictions">
+                  <Record>
+                     <PropertyValue Property="Deletable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <NavigationPropertyBinding Target="A_SalesOrderSimulation" Path="to_SalesOrder"/>
+               <Annotation Term="Capabilities.SearchRestrictions">
+                  <Record>
+                     <PropertyValue Property="Searchable" Bool="false"/>
+                  </Record>
+               </Annotation>
+            </EntitySet>
+            <EntitySet Name="A_SalesOrderPricingSimulation" EntityType="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderPricingSimulationType">
+               <Annotation Term="Capabilities.InsertRestrictions">
+                  <Record>
+                     <PropertyValue Property="Insertable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.UpdateRestrictions">
+                  <Record>
+                     <PropertyValue Property="Updatable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.DeleteRestrictions">
+                  <Record>
+                     <PropertyValue Property="Deletable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <NavigationPropertyBinding Target="A_SalesOrderSimulation" Path="to_SalesOrder"/>
+               <Annotation Term="Capabilities.SearchRestrictions">
+                  <Record>
+                     <PropertyValue Property="Searchable" Bool="false"/>
+                  </Record>
+               </Annotation>
+            </EntitySet>
+            <EntitySet Name="A_SalesOrderScheduleLineSimln" EntityType="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderScheduleLineSimlnType">
+               <Annotation Term="Capabilities.InsertRestrictions">
+                  <Record>
+                     <PropertyValue Property="Insertable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.UpdateRestrictions">
+                  <Record>
+                     <PropertyValue Property="Updatable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.DeleteRestrictions">
+                  <Record>
+                     <PropertyValue Property="Deletable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <NavigationPropertyBinding Target="A_SalesOrderItemSimulation" Path="to_SalesOrderItem"/>
+               <NavigationPropertyBinding Target="A_SalesOrderSimulation" Path="to_SalesOrder"/>
+               <Annotation Term="Capabilities.SearchRestrictions">
+                  <Record>
+                     <PropertyValue Property="Searchable" Bool="false"/>
+                  </Record>
+               </Annotation>
+            </EntitySet>
+            <EntitySet Name="A_SalesOrderSimulation" EntityType="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderSimulationType">
+               <Annotation Term="Capabilities.UpdateRestrictions">
+                  <Record>
+                     <PropertyValue Property="Updatable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.DeleteRestrictions">
+                  <Record>
+                     <PropertyValue Property="Deletable" Bool="false"/>
+                  </Record>
+               </Annotation>
+               <NavigationPropertyBinding Target="A_SalesOrderPrcgElmntSimln" Path="to_PricingElement"/>
+               <NavigationPropertyBinding Target="A_SalesOrderPartnerSimulation" Path="to_Partner"/>
+               <NavigationPropertyBinding Target="A_SalesOrderPricingSimulation" Path="to_Pricing"/>
+               <NavigationPropertyBinding Target="A_SalesOrderCreditSimulation" Path="to_Credit"/>
+               <NavigationPropertyBinding Target="A_SalesOrderItemSimulation" Path="to_Item"/>
+               <Annotation Term="Capabilities.SearchRestrictions">
+                  <Record>
+                     <PropertyValue Property="Searchable" Bool="false"/>
+                  </Record>
+               </Annotation>
+            </EntitySet>
+            <EntitySet Name="A_SlsOrdSimlnValAddedSrvc" EntityType="API_SALES_ORDER_SIMULATION_SRV.A_SlsOrdSimlnValAddedSrvcType">
+               <Annotation Term="Capabilities.FilterRestrictions">
+                  <Record>
+                     <PropertyValue Property="NonFilterableProperties">
+                        <Collection>
+                           <PropertyPath>ValueAddedServiceLongText</PropertyPath>
+                        </Collection>
+                     </PropertyValue>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.SortRestrictions">
+                  <Record>
+                     <PropertyValue Property="NonSortableProperties">
+                        <Collection>
+                           <PropertyPath>ValueAddedServiceLongText</PropertyPath>
+                        </Collection>
+                     </PropertyValue>
+                  </Record>
+               </Annotation>
+               <Annotation Term="Capabilities.SearchRestrictions">
+                  <Record>
+                     <PropertyValue Property="Searchable" Bool="false"/>
+                  </Record>
+               </Annotation>
+            </EntitySet>
+         </EntityContainer>
+         <Annotation Term="Core.SchemaVersion" String="1.0.0"/>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities">
+            <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SlsOrdSimlnValAddedSrvc">
+            <Annotation Term="Capabilities.FilterRestrictions">
+               <Record>
+                  <PropertyValue Property="NonFilterableProperties">
+                     <Collection>
+                        <PropertyPath>ValueAddedServiceLongText</PropertyPath>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+            <Annotation Term="Capabilities.SortRestrictions">
+               <Record>
+                  <PropertyValue Property="NonSortableProperties">
+                     <Collection>
+                        <PropertyPath>ValueAddedServiceLongText</PropertyPath>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderCreditSimulation">
+            <Annotation Term="Capabilities.NavigationRestrictions">
+               <Record>
+                  <PropertyValue Property="RestrictedProperties">
+                     <Collection>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesOrder"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="true"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderItemPartnerSimln">
+            <Annotation Term="Capabilities.NavigationRestrictions">
+               <Record>
+                  <PropertyValue Property="RestrictedProperties">
+                     <Collection>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesOrder"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="true"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesOrderItem"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="false"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderItemSimulation">
+            <Annotation Term="Capabilities.NavigationRestrictions">
+               <Record>
+                  <PropertyValue Property="RestrictedProperties">
+                     <Collection>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Partner"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="false"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_PricingElement"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="false"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesOrder"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="true"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_ScheduleLine"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="false"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderItmPrcgElmntSimln">
+            <Annotation Term="Capabilities.NavigationRestrictions">
+               <Record>
+                  <PropertyValue Property="RestrictedProperties">
+                     <Collection>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesOrder"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="true"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesOrderItem"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="false"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderPartnerSimulation">
+            <Annotation Term="Capabilities.NavigationRestrictions">
+               <Record>
+                  <PropertyValue Property="RestrictedProperties">
+                     <Collection>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesOrder"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="true"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderPrcgElmntSimln">
+            <Annotation Term="Capabilities.NavigationRestrictions">
+               <Record>
+                  <PropertyValue Property="RestrictedProperties">
+                     <Collection>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesOrder"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="true"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderPricingSimulation">
+            <Annotation Term="Capabilities.NavigationRestrictions">
+               <Record>
+                  <PropertyValue Property="RestrictedProperties">
+                     <Collection>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesOrder"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="true"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderScheduleLineSimln">
+            <Annotation Term="Capabilities.NavigationRestrictions">
+               <Record>
+                  <PropertyValue Property="RestrictedProperties">
+                     <Collection>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesOrder"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="true"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesOrderItem"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="false"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderSimulation">
+            <Annotation Term="Capabilities.NavigationRestrictions">
+               <Record>
+                  <PropertyValue Property="RestrictedProperties">
+                     <Collection>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Credit"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="false"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Item"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="false"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Partner"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="false"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Pricing"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="false"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                        <Record>
+                           <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_PricingElement"/>
+                           <PropertyValue Property="InsertRestrictions">
+                              <Record>
+                                 <PropertyValue Property="Insertable" Bool="false"/>
+                              </Record>
+                           </PropertyValue>
+                        </Record>
+                     </Collection>
+                  </PropertyValue>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemSimulationType/ConfdDelivQtyInOrderQtyUnit">
+            <Annotation Term="Measures.UNECEUnit" Path="OrderQuantityISOUnit"/>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemSimulationType/ItemGrossWeight">
+            <Annotation Term="Measures.UNECEUnit" Path="ItemWeightISOUnit"/>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemSimulationType/ItemNetWeight">
+            <Annotation Term="Measures.UNECEUnit" Path="ItemWeightISOUnit"/>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemSimulationType/ItemVolume">
+            <Annotation Term="Measures.UNECEUnit" Path="ItemVolumeISOUnit"/>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItemSimulationType/RequestedQuantity">
+            <Annotation Term="Measures.UNECEUnit" Path="RequestedQuantityISOUnit"/>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderItmPrcgElmntSimlnType/ConditionQuantity">
+            <Annotation Term="Measures.UNECEUnit" Path="ConditionQuantityISOUnit"/>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderPrcgElmntSimlnType/ConditionQuantity">
+            <Annotation Term="Measures.UNECEUnit" Path="ConditionQuantityISOUnit"/>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderScheduleLineSimlnType/ConfdOrderQtyByMatlAvailCheck">
+            <Annotation Term="Measures.UNECEUnit" Path="OrderQuantityISOUnit"/>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderScheduleLineSimlnType/CorrectedQtyInOrderQtyUnit">
+            <Annotation Term="Measures.UNECEUnit" Path="OrderQuantityISOUnit"/>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderScheduleLineSimlnType/OpenConfdDelivQtyInOrdQtyUnit">
+            <Annotation Term="Measures.UNECEUnit" Path="OrderQuantityISOUnit"/>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.A_SalesOrderScheduleLineSimlnType/ScheduleLineOrderQuantity">
+            <Annotation Term="Measures.UNECEUnit" Path="OrderQuantityISOUnit"/>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderCreditSimulation">
+            <Annotation Term="Capabilities.ReadRestrictions">
+               <Record>
+                  <PropertyValue Property="Readable" Bool="false"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderItemPartnerSimln">
+            <Annotation Term="Capabilities.ReadRestrictions">
+               <Record>
+                  <PropertyValue Property="Readable" Bool="false"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderItemSimulation">
+            <Annotation Term="Capabilities.ReadRestrictions">
+               <Record>
+                  <PropertyValue Property="Readable" Bool="false"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderItmPrcgElmntSimln">
+            <Annotation Term="Capabilities.ReadRestrictions">
+               <Record>
+                  <PropertyValue Property="Readable" Bool="false"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderPartnerSimulation">
+            <Annotation Term="Capabilities.ReadRestrictions">
+               <Record>
+                  <PropertyValue Property="Readable" Bool="false"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderPrcgElmntSimln">
+            <Annotation Term="Capabilities.ReadRestrictions">
+               <Record>
+                  <PropertyValue Property="Readable" Bool="false"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderPricingSimulation">
+            <Annotation Term="Capabilities.ReadRestrictions">
+               <Record>
+                  <PropertyValue Property="Readable" Bool="false"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderScheduleLineSimln">
+            <Annotation Term="Capabilities.ReadRestrictions">
+               <Record>
+                  <PropertyValue Property="Readable" Bool="false"/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities/A_SalesOrderSimulation">
+            <Annotation Term="Capabilities.ReadRestrictions">
+               <Record>
+                  <PropertyValue Property="Readable" Bool="false"/>
+               </Record>
+            </Annotation>
+            <Annotation Term="Capabilities.InsertRestrictions">
+               <Record>
+                  <PropertyValue Property="Description" String="Simulates the creation of a sales order."/>
+                  <PropertyValue Property="LongDescription" String="Simulates the creation of a sales order, including price calculation with results, Available-to-Promise (ATP) check, partner determination, and credit check."/>
+               </Record>
+            </Annotation>
+         </Annotations>
+         <Annotations Target="API_SALES_ORDER_SIMULATION_SRV.API_SALES_ORDER_SIMULATION_SRV_Entities"/>
+      </Schema>
+   </edmx:DataServices>
+</edmx:Edmx>
