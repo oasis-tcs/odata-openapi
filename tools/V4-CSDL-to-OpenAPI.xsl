@@ -58,18 +58,9 @@
   <xsl:param name="entityTypeColor" select="'{bg:orange}'" />
   <xsl:param name="externalTypeColor" select="'{bg:whitesmoke}'" />
   <xsl:param name="resourceColor" select="'{bg:dodgerblue}'" />
-
+  <xsl:variable name="option-prefix" select="'$'" />
   <xsl:variable name="csdl-version" select="/edmx:Edmx/@Version" />
-  <xsl:variable name="option-prefix">
-    <xsl:choose>
-      <xsl:when test="/edmx:Edmx/@Version='4.0'">
-        <xsl:text>$</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text />
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
+   
 
   <xsl:variable name="reuse-schemas">
     <xsl:choose>
