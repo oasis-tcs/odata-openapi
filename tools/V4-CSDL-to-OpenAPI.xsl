@@ -1552,7 +1552,7 @@
     </xsl:variable>
     <xsl:variable name="required">
       <xsl:if test="$suffix='-create'">
-        <!-- non-computed key properties are required -->
+        <!-- non-computed key properties are required, as are Capabilities.InsertRestrictions/RequiredProperties -->
         <xsl:variable name="insert-restrictions">
           <xsl:apply-templates select="$structuredType" mode="capabilities">
             <xsl:with-param name="term" select="'InsertRestrictions'" />
