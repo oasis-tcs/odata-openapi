@@ -1562,7 +1562,7 @@
           @Name=../edm:Key/edm:PropertyRef/@Name and not(@Name=$read-only
           or @Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext
           or @Name=$computeddefaultvalue or concat($qualifiedName,'/',@Name) = $computeddefaultvalue-ext or concat($aliasQualifiedName,'/',@Name) = $computeddefaultvalue-ext)
-          or @Name=//edm:Annotation[concat(' ',generate-id(),' ')=$insert-restrictions]
+          or @Name=//edm:Annotation[contains($insert-restrictions,concat(' ',generate-id(),' '))]
           /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath]">
           <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
