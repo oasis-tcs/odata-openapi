@@ -1552,11 +1552,18 @@
     </xsl:variable>
     <xsl:variable name="required">
       <xsl:if test="$suffix='-create'">
-        <!-- non-computed key properties are required -->
+        <!-- non-computed key properties are required, as are Capabilities.InsertRestrictions/RequiredProperties -->
+        <xsl:variable name="insert-restrictions">
+          <xsl:apply-templates select="$structuredType" mode="capabilities">
+            <xsl:with-param name="term" select="'InsertRestrictions'" />
+          </xsl:apply-templates>
+        </xsl:variable>
         <xsl:for-each select="$structuredType/edm:Property[
           @Name=../edm:Key/edm:PropertyRef/@Name and not(@Name=$read-only
           or @Name=$computed or concat($qualifiedName,'/',@Name) = $computed-ext or concat($aliasQualifiedName,'/',@Name) = $computed-ext
-          or @Name=$computeddefaultvalue or concat($qualifiedName,'/',@Name) = $computeddefaultvalue-ext or concat($aliasQualifiedName,'/',@Name) = $computeddefaultvalue-ext)]">
+          or @Name=$computeddefaultvalue or concat($qualifiedName,'/',@Name) = $computeddefaultvalue-ext or concat($aliasQualifiedName,'/',@Name) = $computeddefaultvalue-ext)
+          or @Name=//edm:Annotation[contains($insert-restrictions,concat(' ',generate-id(),' '))]
+          /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath]">
           <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
           </xsl:if>
@@ -2730,6 +2737,24 @@
         <xsl:value-of select="$set/@Name" />
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="edm:EntityType" mode="capabilities">
+    <xsl:param name="term" />
+    <xsl:for-each select="//edm:EntitySet[
+      @EntityType=concat(current()/../@Namespace,'.',current()/@Name) or
+      @EntityType=concat(current()/../@Alias,'.',current()/@Name)]">
+      <xsl:variable name="target-path" select="concat(../../@Namespace,'.',../@Name,'/',@Name)" />
+      <xsl:variable name="target-path-aliased" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+      <xsl:variable name="annos" select="key('externalAnnotations',$target-path)|key('externalAnnotations',$target-path-aliased)|." />
+      <xsl:for-each select="$annos/edm:Annotation[not(@Qualifier) and
+        @Term=concat($capabilitiesNamespace,'.',$term) or
+        @Term=concat($capabilitiesAlias,'.',$term)]">
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="generate-id()" />
+        <xsl:text> </xsl:text>
+      </xsl:for-each>
+    </xsl:for-each>
   </xsl:template>
 
   <xsl:template match="edm:EntitySet">
