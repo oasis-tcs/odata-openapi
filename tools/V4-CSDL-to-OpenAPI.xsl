@@ -2713,7 +2713,7 @@
         </xsl:variable>
         <xsl:choose>
           <xsl:when test="$label!=''">
-            <xsl:value-of select="$label" />
+            <xsl:value-of select="translate($label,'_','-')" />
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="translate($set/@Name,'_','-')" />
