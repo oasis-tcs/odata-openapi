@@ -2716,12 +2716,12 @@
             <xsl:value-of select="$label" />
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="$set/@Name" />
+            <xsl:value-of select="translate($set/@Name,'_','-')" />
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$set/@Name" />
+        <xsl:value-of select="translate($set/@Name,'_','-')" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
