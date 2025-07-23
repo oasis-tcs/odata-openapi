@@ -1591,29 +1591,17 @@
 
 
   <xsl:if test="$suffix = '-update'">
-    <!-- gather the RTFs for update restrictions -->
+        <!-- gather the RTFs for update restrictions -->
     <xsl:variable name="update-restrictions">
-      <xsl:apply-templates select="$structuredType" mode="capabilities">
-        <xsl:with-param name="term" select="'UpdateRestrictions'" />
-      </xsl:apply-templates>
-    </xsl:variable>
-
-      <!-- non-computed key properties are required, as are properties marked with Common.FieldControl=Mandatory
-      and Capabilities.UpdateRestrictions/ RequiredProperties  -->
-      <xsl:for-each select="
+          <xsl:apply-templates select="$structuredType" mode="capabilities">
+            <xsl:with-param name="term" select="'UpdateRestrictions'" />
+          </xsl:apply-templates>
+        </xsl:variable>
+        <!-- Capabilities.UpdateRestrictions/ RequiredProperties  -->
+      <xsl:for-each
+          select="
         $structuredType/edm:Property[
-          (
-            @Name = ../edm:Key/edm:PropertyRef/@Name
-            and not(
-              @Name = $read-only
-              or @Name = $computed
-              or concat($qualifiedName, '/', @Name) = $computed-ext
-              or concat($aliasQualifiedName, '/', @Name) = $computed-ext
-            )
-          )
-          or concat($qualifiedName, '/', @Name) = $mandatory
-          or concat($aliasQualifiedName, '/', @Name) = $mandatory
-          or @Name = (
+          @Name = (
             //edm:Annotation
               [ contains($update-restrictions, concat(' ', generate-id(), ' ')) ]
             /edm:Record
@@ -1622,12 +1610,13 @@
             /edm:PropertyPath
           )
         ]
-          ">
+      ">
           <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
           </xsl:if>
           <xsl:text>"</xsl:text>
-          <xsl:value-of select="@Name" />
+          <xsl:value-of
+            select="@Name" />
           <xsl:text>"</xsl:text>
         </xsl:for-each>
       </xsl:if>
