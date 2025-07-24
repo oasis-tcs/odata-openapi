@@ -425,13 +425,19 @@
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="$info-title">
-        <xsl:value-of select="$info-title" />
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="$info-title" />
+        </xsl:call-template>
       </xsl:when>
       <xsl:when test="$schemaDescription!=''">
-        <xsl:value-of select="$schemaDescription" />
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="$schemaDescription" />
+        </xsl:call-template>
       </xsl:when>
       <xsl:when test="$containerDescription!=''">
-        <xsl:value-of select="$containerDescription" />
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="$containerDescription" />
+        </xsl:call-template>
       </xsl:when>
       <xsl:when test="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer">
         <xsl:text>Service for namespace </xsl:text>
@@ -470,13 +476,19 @@
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="$info-description">
-        <xsl:value-of select="$info-description" />
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="$info-description" />
+        </xsl:call-template>
       </xsl:when>
       <xsl:when test="$schemaLongDescription!=''">
-        <xsl:value-of select="$schemaLongDescription" />
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="$schemaLongDescription" />
+        </xsl:call-template>
       </xsl:when>
       <xsl:when test="$containerLongDescription!=''">
-        <xsl:value-of select="$containerLongDescription" />
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="$containerLongDescription" />
+        </xsl:call-template>
       </xsl:when>
       <xsl:when test="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityContainer">
         <xsl:text>This service is located at [</xsl:text>
