@@ -797,7 +797,13 @@
 					<xsl:with-param name="p" select="$p" />
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:when test="@Type | @EntityType">
+			<xsl:when test="$q='$ReturnType'">
+				<xsl:apply-templates select="edm:ReturnType"
+					mode="path-remainder">
+					<xsl:with-param name="p" select="$p" />
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:when test="@Type or @EntityType or @BaseType and not(*[@Name=$q])">
 				<xsl:variable name="type">
 					<xsl:choose>
 						<xsl:when
@@ -806,7 +812,7 @@
 								select="substring(@Type | @EntityType,12,string-length(@Type | @EntityType)-12)" />
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="@Type | @EntityType" />
+							<xsl:value-of select="@Type | @EntityType | @BaseType" />
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
@@ -824,12 +830,6 @@
 					select="//edm:Schema[@Alias=$namespace or @Namespace=$namespace]
 						/*[@Name=$name]"
 					mode="path">
-					<xsl:with-param name="p" select="$p" />
-				</xsl:apply-templates>
-			</xsl:when>
-			<xsl:when test="$q='$ReturnType'">
-				<xsl:apply-templates select="edm:ReturnType"
-					mode="path-remainder">
 					<xsl:with-param name="p" select="$p" />
 				</xsl:apply-templates>
 			</xsl:when>
