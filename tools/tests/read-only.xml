@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.01">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="ReadOnly">
+      <EntityType Name="Entity">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <EntityContainer Name="Container">
+        <EntitySet Name="Entities" EntityType="ReadOnly.Entity">
+          <Annotation Term="Capabilities.InsertRestrictions">
+            <Record>
+              <PropertyValue Property="Insertable" Bool="false" />
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.UpdateRestrictions">
+            <Record>
+              <PropertyValue Property="Updatable" Bool="false" />
+            </Record>
+          </Annotation>
+          <Annotation Term="Capabilities.DeleteRestrictions">
+            <Record>
+              <PropertyValue Property="Deletable" Bool="false" />
+            </Record>
+          </Annotation>
+        </EntitySet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
