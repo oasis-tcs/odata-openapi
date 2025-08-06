@@ -1435,7 +1435,7 @@
             (@p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false') or
             @p2:Term='Org.OData.Core.V1.Permissions' and @p2:EnumMember='Org.OData.Core.V1.Permission/Read' or
             @p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/ReadOnly')]/@target
-            or @Name=../edm:Key/edm:PropertyRef/@Name)]">
+            or @id=../edm:Key/edm:PropertyRef/@p1:Name)]">
             <xsl:call-template name="property">
               <xsl:with-param name="suffix" select="'-update'" />
             </xsl:call-template>
@@ -1471,17 +1471,17 @@
       <xsl:if test="$suffix='-create'">
         <!-- non-computed key properties are required, as are Capabilities.InsertRestrictions/RequiredProperties -->
         <xsl:for-each select="$structuredType/edm:Property[
-          @Name=../edm:Key/edm:PropertyRef/@Name and not(@id=//edm:Annotation[not(@Qualifier) and
+          @id=../edm:Key/edm:PropertyRef/@p1:Name and not(@id=//edm:Annotation[not(@Qualifier) and
           @p2:Term='Org.OData.Core.V1.Computed' and not(@Bool='false') or
           @p2:Term='Org.OData.Core.V1.ComputedDefaultValue' and not(@Bool='false') or
           @p2:Term='Org.OData.Core.V1.Permissions' and @p2:EnumMember='Org.OData.Core.V1.Permission/Read' or
           @p2:Term='com.sap.vocabularies.Common.v1.FieldControl' and @p2:EnumMember='com.sap.vocabularies.Common.v1.FieldControlType/ReadOnly']/@target) or
-          @Name=$navigation-restrictions/edm:PropertyValue[@Property='InsertRestrictions']
-          /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath or
+          @id=$navigation-restrictions/edm:PropertyValue[@Property='InsertRestrictions']
+          /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath/@p1:PropertyPath or
           not($navigation-restrictions/edm:PropertyValue[@Property='InsertRestrictions']) and
-          @Name=//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions' and
+          @id=//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.InsertRestrictions' and
           key('id',@target)/@p1:Type=$structuredType/@id]
-          /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath]">
+          /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath/@p1:PropertyPath]">
           <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
           </xsl:if>
@@ -1493,12 +1493,12 @@
       <xsl:if test="$suffix='-update'">
         <!-- required are Capabilities.UpdateRestrictions/RequiredProperties -->
         <xsl:for-each select="$structuredType/edm:Property[
-          @Name=$navigation-restrictions/edm:PropertyValue[@Property='UpdateRestrictions']
-          /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath or
+          @id=$navigation-restrictions/edm:PropertyValue[@Property='UpdateRestrictions']
+          /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath/@p1:PropertyPath or
           not($navigation-restrictions/edm:PropertyValue[@Property='UpdateRestrictions']) and
-          @Name=//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions' and
+          @id=//edm:Annotation[not(@Qualifier) and @p2:Term='Org.OData.Capabilities.V1.UpdateRestrictions' and
           key('id',@target)/@p1:Type=$structuredType/@id]
-          /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath]">
+          /edm:Record/edm:PropertyValue[@Property='RequiredProperties']/edm:Collection/edm:PropertyPath/@p1:PropertyPath]">
           <xsl:if test="position()>1">
             <xsl:text>,</xsl:text>
           </xsl:if>
