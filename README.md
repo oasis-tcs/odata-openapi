@@ -34,7 +34,7 @@
 
 <h3>Further Description of this Repository</h3>
 
-The OData TC has published the [OData to OpenAPI Mapping Version 1.0](http://docs.oasis-open.org/odata/odata-openapi/v1.0/odata-openapi-v1.0.html), a recommendation on how to create OpenAPI descriptions for OData services. This project contains two proof-of-concept implementations of that mapping, [one using JavaScript](https://github.com/oasis-tcs/odata-openapi/blob/main/lib), and [one using XSLT](https://github.com/oasis-tcs/odata-openapi/blob/main/tools).
+The OData TC has published the [OData to OpenAPI Mapping Version 1.0](http://docs.oasis-open.org/odata/odata-openapi/v1.0/odata-openapi-v1.0.html), a recommendation on how to create OpenAPI descriptions for OData services. This project contains two proof-of-concept implementations of that mapping, [one using JavaScript](https://github.com/oasis-tcs/odata-openapi/blob/main/lib), and [one using XSLT](https://github.com/oasis-tcs/odata-openapi/blob/main/tools). The latter also evaluates certain "OData V2 style" annotations that are explained [here](https://sap.github.io/odata-vocabularies/docs/v2-annotations.html).
 
 The [`examples` folder](https://github.com/oasis-tcs/odata-openapi/blob/main/examples) contains [OpenAPI 3.0.2](https://github.com/OAI/OpenAPI-Specification) descriptions that have been created from the XML `$metadata` documents of live and example OData services with these proof-of-concept implementations.
 
