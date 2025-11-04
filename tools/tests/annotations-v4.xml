@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0"
+	xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+	<edmx:Reference
+		Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+		<edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
+	</edmx:Reference>
+	<edmx:Reference
+		Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+		<edmx:Include Namespace="Org.OData.Capabilities.V1"
+			Alias="Capabilities" />
+	</edmx:Reference>
+	<edmx:Reference
+		Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.xml">
+		<edmx:Include Namespace="Org.OData.Measures.V1"
+			Alias="Measures" />
+	</edmx:Reference>
+	<edmx:DataServices>
+		<Schema Namespace="Resolved.Paths" Alias="self"
+			xmlns="http://docs.oasis-open.org/odata/ns/edm">
+			<EntityType Name="Order">
+				<Key>
+					<PropertyRef Name="ID" />
+				</Key>
+				<Property Name="ID" Type="Edm.String" />
+				<Property Name="Unit" Type="Edm.String">
+					<Annotation Term="Core.Immutable" />
+				</Property>
+				<NavigationProperty Name="Items"
+					Type="Collection(self.OrderItem)" Partner="Header" />
+			</EntityType>
+			<EntityType Name="OrderItem">
+				<Key>
+					<PropertyRef Name="ID" />
+				</Key>
+				<Property Name="ID" Type="Edm.String" Nullable="false" />
+				<Property Name="Text" Type="Edm.String" />
+				<Property Name="Quantity" Type="Edm.Decimal">
+					<Annotation Term="Measures.Unit" Path="Header/Unit" />
+				</Property>
+				<NavigationProperty Name="Header"
+					Type="self.Order" Partner="Items" />
+			</EntityType>
+			<EntityContainer Name="Container">
+				<EntitySet Name="Orders" EntityType="self.Order" />
+				<EntitySet Name="OrderItems" EntityType="self.OrderItem">
+					<NavigationPropertyBinding Path="Header"
+						Target="Orderst" />
+				</EntitySet>
+			</EntityContainer>
+			<Annotations Target="self.OrderItem/ID">
+				<Annotation Term="Core.Description">
+					<Path>Quantity/@Measures.Unit</Path>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="self.Container/Orders">
+				<Annotation Term="Capabilities.NavigationRestrictions">
+					<Record>
+						<PropertyValue Property="RestrictedProperties">
+							<Collection>
+								<Record>
+									<PropertyValue Property="NavigationProperty"
+										NavigationPropertyPath="Items" />
+									<PropertyValue Property="InsertRestrictions">
+										<Record>
+											<PropertyValue Property="Insertable"
+												Bool="false" />
+										</Record>
+									</PropertyValue>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="self.Container/Orders/Items">
+				<Annotation Term="Core.Description"
+					String="contained entity set" />
+			</Annotations>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>
