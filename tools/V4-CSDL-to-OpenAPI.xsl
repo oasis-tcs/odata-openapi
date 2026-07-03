@@ -823,7 +823,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
-      <xsl:when test="$type='OAuth2AuthCode' or $type='OAuth2ClientCredentials' or $type='OAuth2Implicit' or $type='OAuth2Password'">
+      <xsl:when test="$type='OAuth2AuthCode' or $type='OAuth2SAML2Bearer' or $type='OAuth2ClientCredentials' or $type='OAuth2Implicit' or $type='OAuth2Password'">
         <xsl:text>"type":"oauth2"</xsl:text>
         <xsl:variable name="flow">
           <xsl:choose>
@@ -836,6 +836,9 @@
                   <xsl:text>accessCode</xsl:text>
                 </xsl:otherwise>
               </xsl:choose>
+            </xsl:when>
+            <xsl:when test="$type='OAuth2SAML2Bearer'">
+              <xsl:text>saml2Bearer</xsl:text>
             </xsl:when>
             <xsl:when test="$type='OAuth2ClientCredentials'">
               <xsl:choose>
