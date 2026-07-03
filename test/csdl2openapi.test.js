@@ -1018,6 +1018,7 @@ describe("Edge cases", function () {
                 $Name: "optional",
                 "@Core.OptionalParameter": {},
               },
+              { $Name: "collection", $Collection: true },
             ],
           },
         ],
@@ -1037,6 +1038,10 @@ describe("Edge cases", function () {
                 required2: { type: "boolean" },
                 nullable: { type: "string", nullable: true },
                 optional: { type: "string" },
+                collection: {
+                  type: "array",
+                  items: { type: "string" },
+                },
               },
             },
           },
