@@ -1,0 +1,3556 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Service for namespace com.sap.gateway.default.loancontract.v0001",
+        "version": "1.0.0",
+        "description": "This service is located at [https://localhost/service-root/](https://localhost/service-root/)\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[BalanceKeyFigures{bg:orange}],[BalanceKeyFigures]++-[Amount],[CommittedCapitalAdjustment{bg:orange}],[CommittedCapitalAdjustment]++-[ValidityPeriod],[CommittedCapitalAdjustment]++-[Amount],[EffectiveYields{bg:orange}],[EffectiveYields]++-[CalculationPeriod],[IncomingPaymentAgreement{bg:orange}],[IncomingPaymentAgreement]++-[UPPEROPEN_DatePeriod],[IncomingPaymentAgreement]++-[Amount],[LoanContract{bg:orange}],[LoanContract]++-[BankAccountContractID],[LoanContract]++-[BkAcctIdfgElmnts],[LoanContract]++-[PartyIdfgElmnts],[LoanContract]++-[Product],[LoanContract]++-[BusinessEventRecord],[LoanContract]++-[OperationalBankContractManagement],[LoanContract]++-[BusinessProcessChainAssignment],[LoanContract]++-[ClearingBankAccountContract],[LoanContract]++-[TermSpecification],[LoanContract]++-*>[BalanceKeyFigures{bg:orange}],[LoanContract]++-*>[CommittedCapitalAdjustment{bg:orange}],[LoanContract]++-*>[EffectiveYields{bg:orange}],[LoanContract]++-*>[IncomingPaymentAgreement{bg:orange}],[LoanContract]-*>[LOANDISBURSEMENTREQ.BasicDataLoanDisbursementRequest{bg:whitesmoke}],[LoanContract]-*>[LCBORROWERPARTYCHANGEREQUEST.LoanContractBorrowerPartyChangeRequest{bg:whitesmoke}],[LoanContract]-*>[LOANPAYMENTSKIPREQUEST.LoanPaymentSkipRequest{bg:whitesmoke}],[LoanContract]++-*>[PaymentTransactionInstruction{bg:orange}],[LoanContract]++-*>[TermAgreement{bg:orange}],[PaymentTransactionInstruction{bg:orange}],[PaymentTransactionInstruction]++-0..1[BankAccount],[PaymentTransactionInstruction]++-0..1[DirectDebitMandate],[TermAgreement{bg:orange}],[TermAgreement]++-[Amount],[TermAgreement]++-[UPPEROPEN_DatePeriod],[Amount],[Bank],[BankAccount],[BankAccount]++-0..1[Bank],[BankAccountContractID],[BkAcctIdfgElmnts],[BkAcctIdfgElmnts]++-[Bank],[BusinessEventRecord],[BusinessProcessChainAssignment],[CalculationPeriod],[ClearingBankAccountContract],[DirectDebitMandate],[OperationalBankContractManagement],[PartyIdfgElmnts],[Product],[Product]++-[ProductionControl],[Product]++-0..1[ProductID],[ProductID],[ProductionControl],[RescissionPeriod],[SystemAdministrativeData],[TermSpecification],[TermSpecification]++-[UPPEROPEN_DatePeriod],[TermSpecification]++-0..1[RescissionPeriod],[UPPEROPEN_DatePeriod],[ValidityPeriod],[LoanContracts{bg:dodgerblue}]++-*>[LoanContract])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:orange}],[EntitySet/Singleton/Operation{bg:dodgerblue}])"
+    },
+    "servers": [
+        {
+            "url": "https://localhost/service-root"
+        }
+    ],
+    "tags": [
+        {
+            "name": "LoanContracts"
+        }
+    ],
+    "paths": {
+        "/LoanContracts": {
+            "post": {
+                "summary": "Create Loan Contract",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Loan Contract",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.LoanContract-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.LoanContract"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/LoanContracts/{UUID}": {
+            "parameters": [
+                {
+                    "name": "UUID",
+                    "in": "path",
+                    "required": true,
+                    "description": "An universal unique identifier of a bank account contract.  \nGDT: NOSC_UUID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Read Loan Contract by UUID",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "UUID",
+                                    "ID",
+                                    "CurrencyCode",
+                                    "BankAccountIdentifyingElements",
+                                    "LifeCycleStatusCode",
+                                    "LifeCycleStatusName",
+                                    "BorrowerPartyIdentifyingElements",
+                                    "Product",
+                                    "BusinessEventRecord",
+                                    "OperationalBankContractManagement",
+                                    "BusinessProcessChainAssignment",
+                                    "ChangeStateID",
+                                    "ClearingBankAccountContract",
+                                    "TermSpecification"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "*",
+                                    "BalanceKeyFigures",
+                                    "CommittedCapitalAdjustments",
+                                    "EffectiveYields",
+                                    "IncomingPaymentAgreements",
+                                    "BasicDataLoanDisbursementRequests",
+                                    "LoanContractBorrowerPartyChangeRequests",
+                                    "LoanPaymentSkipRequests",
+                                    "PaymentTransactionInstructions",
+                                    "TermAgreements"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.LoanContract"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update Loan Contract",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Loan Contract",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.LoanContract-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.LoanContract"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/LoanContracts/{UUID}/BalanceKeyFigures": {
+            "parameters": [
+                {
+                    "name": "UUID",
+                    "in": "path",
+                    "required": true,
+                    "description": "An universal unique identifier of a bank account contract.  \nGDT: NOSC_UUID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Query Balance Key Figures",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "parameters": [
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "Code",
+                                    "Name",
+                                    "Description",
+                                    "Amount"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of BalanceKeyFigures",
+                                    "type": "object",
+                                    "properties": {
+                                        "@odata.count": {
+                                            "$ref": "#/components/schemas/count"
+                                        },
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.BalanceKeyFigures"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/LoanContracts/{UUID}/CommittedCapitalAdjustments": {
+            "parameters": [
+                {
+                    "name": "UUID",
+                    "in": "path",
+                    "required": true,
+                    "description": "An universal unique identifier of a bank account contract.  \nGDT: NOSC_UUID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Query Committed Capital Adjustment",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "ID",
+                                    "ValidityPeriod",
+                                    "Amount"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of CommittedCapitalAdjustment",
+                                    "type": "object",
+                                    "properties": {
+                                        "@odata.count": {
+                                            "$ref": "#/components/schemas/count"
+                                        },
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.CommittedCapitalAdjustment"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create Committed Capital Adjustment",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "CommittedCapitalAdjustment",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.CommittedCapitalAdjustment-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.CommittedCapitalAdjustment"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/LoanContracts/{UUID}/CommittedCapitalAdjustments/{ID-1}": {
+            "parameters": [
+                {
+                    "name": "UUID",
+                    "in": "path",
+                    "required": true,
+                    "description": "An universal unique identifier of a bank account contract.  \nGDT: NOSC_UUID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                },
+                {
+                    "name": "ID-1",
+                    "in": "path",
+                    "required": true,
+                    "description": "Unique identifier of an adjustment of a committed capital for a loan contract.  \nGDT: CommittedCapitalAdjustmentID",
+                    "schema": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "1"
+                    }
+                }
+            ],
+            "patch": {
+                "summary": "Update Committed Capital Adjustment",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "CommittedCapitalAdjustment",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.CommittedCapitalAdjustment-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.CommittedCapitalAdjustment"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete Committed Capital Adjustment",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/LoanContracts/{UUID}/EffectiveYields": {
+            "parameters": [
+                {
+                    "name": "UUID",
+                    "in": "path",
+                    "required": true,
+                    "description": "An universal unique identifier of a bank account contract.  \nGDT: NOSC_UUID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Query Effective Yields",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "CalculationReasonCode",
+                                    "CalculationReasonName",
+                                    "CalculationMethodCode",
+                                    "CalculationMethodName",
+                                    "Percent",
+                                    "BankingBusinessTransactionTypeCode",
+                                    "BankingBusinessTransactionTypeName",
+                                    "ValidityStartDate",
+                                    "CalculationPeriod"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of EffectiveYields",
+                                    "type": "object",
+                                    "properties": {
+                                        "@odata.count": {
+                                            "$ref": "#/components/schemas/count"
+                                        },
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.EffectiveYields"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/LoanContracts/{UUID}/IncomingPaymentAgreements": {
+            "parameters": [
+                {
+                    "name": "UUID",
+                    "in": "path",
+                    "required": true,
+                    "description": "An universal unique identifier of a bank account contract.  \nGDT: NOSC_UUID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Query Incoming Payment Agreement",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "ID",
+                                    "Period",
+                                    "PlannedFinalPaymentAmount",
+                                    "LastPaymentDatePeriodEndAdjustmentIndicator"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of IncomingPaymentAgreement",
+                                    "type": "object",
+                                    "properties": {
+                                        "@odata.count": {
+                                            "$ref": "#/components/schemas/count"
+                                        },
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.IncomingPaymentAgreement"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/LoanContracts/{UUID}/IncomingPaymentAgreements/{ID-1}": {
+            "parameters": [
+                {
+                    "name": "UUID",
+                    "in": "path",
+                    "required": true,
+                    "description": "An universal unique identifier of a bank account contract.  \nGDT: NOSC_UUID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                },
+                {
+                    "name": "ID-1",
+                    "in": "path",
+                    "required": true,
+                    "description": "An identifier of an incoming payment agreement belonging to a loan contract.  \nGDT: BankAccountContractIncomingPaymentAgreementID",
+                    "schema": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "1"
+                    }
+                }
+            ],
+            "patch": {
+                "summary": "Update Incoming Payment Agreement",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "IncomingPaymentAgreement",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.IncomingPaymentAgreement-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.IncomingPaymentAgreement"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/LoanContracts/{UUID}/BasicDataLoanDisbursementRequests": {
+            "parameters": [
+                {
+                    "name": "UUID",
+                    "in": "path",
+                    "required": true,
+                    "description": "An universal unique identifier of a bank account contract.  \nGDT: NOSC_UUID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Query Loan Disbursement Requests",
+                "description": "Refer to API Loan Disbursement Requests for supported query options",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/count"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of BasicDataLoanDisbursementRequest",
+                                    "type": "object",
+                                    "properties": {
+                                        "@odata.count": {
+                                            "$ref": "#/components/schemas/count"
+                                        },
+                                        "value": {
+                                            "type": "array"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/LoanContracts/{UUID}/LoanContractBorrowerPartyChangeRequests": {
+            "parameters": [
+                {
+                    "name": "UUID",
+                    "in": "path",
+                    "required": true,
+                    "description": "An universal unique identifier of a bank account contract.  \nGDT: NOSC_UUID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get entities from related LoanContractBorrowerPartyChangeRequests",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/top"
+                    },
+                    {
+                        "$ref": "#/components/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/components/parameters/search"
+                    },
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of LoanContractBorrowerPartyChangeRequest",
+                                    "type": "object",
+                                    "properties": {
+                                        "@odata.count": {
+                                            "$ref": "#/components/schemas/count"
+                                        },
+                                        "value": {
+                                            "type": "array"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/LoanContracts/{UUID}/LoanPaymentSkipRequests": {
+            "parameters": [
+                {
+                    "name": "UUID",
+                    "in": "path",
+                    "required": true,
+                    "description": "An universal unique identifier of a bank account contract.  \nGDT: NOSC_UUID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Query Loan Payment Skip Requests",
+                "description": "Refer to API Loan Payment Skip Requests for supported query options",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/count"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of LoanPaymentSkipRequest",
+                                    "type": "object",
+                                    "properties": {
+                                        "@odata.count": {
+                                            "$ref": "#/components/schemas/count"
+                                        },
+                                        "value": {
+                                            "type": "array"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/LoanContracts/{UUID}/PaymentTransactionInstructions": {
+            "parameters": [
+                {
+                    "name": "UUID",
+                    "in": "path",
+                    "required": true,
+                    "description": "An universal unique identifier of a bank account contract.  \nGDT: NOSC_UUID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Query Payment Transaction Instruction",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "UUID",
+                                    "BankingBusinessTransactionTypeCode",
+                                    "BankingBusinessTransactionTypeName",
+                                    "BankingBusinessTransactionProcessingResultPaymentTypeCode",
+                                    "BankingBusinessTransactionProcessingResultPaymentTypeName",
+                                    "BankContractPaymentTransactionInstructionTypeCode",
+                                    "BankContractPaymentTransactionInstructionTypeName",
+                                    "DebitCreditCode",
+                                    "DebitCreditName",
+                                    "CounterpartyBankAccount",
+                                    "DirectDebitMandate",
+                                    "MappableIndicator"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of PaymentTransactionInstruction",
+                                    "type": "object",
+                                    "properties": {
+                                        "@odata.count": {
+                                            "$ref": "#/components/schemas/count"
+                                        },
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.PaymentTransactionInstruction"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create Payment Transaction Instruction",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "PaymentTransactionInstruction",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.PaymentTransactionInstruction-create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.PaymentTransactionInstruction"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/LoanContracts/{UUID}/PaymentTransactionInstructions/{UUID-1}": {
+            "parameters": [
+                {
+                    "name": "UUID",
+                    "in": "path",
+                    "required": true,
+                    "description": "An universal unique identifier of a bank account contract.  \nGDT: NOSC_UUID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                },
+                {
+                    "name": "UUID-1",
+                    "in": "path",
+                    "required": true,
+                    "description": "A UUID is a globally unique identifier for a PaymentTransactionInstruction.  \nGDT: NOSC_UUID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                }
+            ],
+            "patch": {
+                "summary": "Update Payment Transaction Instruction",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "PaymentTransactionInstruction",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.PaymentTransactionInstruction-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.PaymentTransactionInstruction"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete Payment Transaction Instruction",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/LoanContracts/{UUID}/TermAgreements": {
+            "parameters": [
+                {
+                    "name": "UUID",
+                    "in": "path",
+                    "required": true,
+                    "description": "An universal unique identifier of a bank account contract.  \nGDT: NOSC_UUID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Query Term Agreement",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "ID",
+                                    "CommittedCapitalAmount",
+                                    "BankContractFinancialConditionContextValueCode",
+                                    "BankContractFinancialConditionContextValueName",
+                                    "FixingPeriod"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Collection of TermAgreement",
+                                    "type": "object",
+                                    "properties": {
+                                        "@odata.count": {
+                                            "$ref": "#/components/schemas/count"
+                                        },
+                                        "value": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.TermAgreement"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/LoanContracts/{UUID}/TermAgreements/{ID-1}": {
+            "parameters": [
+                {
+                    "name": "UUID",
+                    "in": "path",
+                    "required": true,
+                    "description": "An universal unique identifier of a bank account contract.  \nGDT: NOSC_UUID",
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef"
+                    }
+                },
+                {
+                    "name": "ID-1",
+                    "in": "path",
+                    "required": true,
+                    "description": "An identifier of a term agreement belonging to a loan contract.  \nGDT: BankAccountContractTermAgreementID",
+                    "schema": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "1"
+                    }
+                }
+            ],
+            "patch": {
+                "summary": "Update Term Agreement",
+                "tags": [
+                    "LoanContracts"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "TermAgreement",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.TermAgreement-update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.TermAgreement"
+                                }
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        },
+        "/$batch": {
+            "post": {
+                "summary": "Send a group of requests",
+                "description": "Group multiple requests into a single request payload, see [Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).\n\n*Please note that \"Try it out\" is not supported for this request.*",
+                "tags": [
+                    "Batch Requests"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Batch request",
+                    "content": {
+                        "multipart/mixed;boundary=request-separator": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "example": "--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET LoanContracts HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Batch response",
+                        "content": {
+                            "multipart/mixed": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{...}\n--response-separator--"
+                            }
+                        }
+                    },
+                    "4XX": {
+                        "$ref": "#/components/responses/error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "com.sap.gateway.default.loancontract.v0001.BalanceKeyFigures": {
+                "type": "object",
+                "properties": {
+                    "Code": {
+                        "type": "string",
+                        "maxLength": 4,
+                        "example": "17",
+                        "title": "A BankAccountContractBalanceKeyFigureCode is a coded representation of a key figure for a balance of a BankAccountContract.",
+                        "description": "Remark: The valid code values for a loan contract are described in the BDT BankAccountContractBalanceKeyFigureCode."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "example": "InitialLoanContractAmount",
+                        "title": "Name of BankAccountContractBalanceKeyFigureCode."
+                    },
+                    "Description": {
+                        "type": "string",
+                        "maxLength": 200,
+                        "example": "An amount that is the initial loan contract amount.",
+                        "title": "Description of a balance key figure."
+                    },
+                    "Amount": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Amount"
+                            }
+                        ],
+                        "title": "An amount that specifies the amount of the balance key figure.",
+                        "description": "Integrity constraint: CurrencyCode of Amount has to be equal to CurrencyCode of LoanContract."
+                    }
+                },
+                "title": "BalanceKeyFigures",
+                "description": "A BalanceKeyFigure is a key figure that describes an amount pertaining to a loan contract."
+            },
+            "com.sap.gateway.default.loancontract.v0001.BalanceKeyFigures-create": {
+                "type": "object",
+                "title": "BalanceKeyFigures (for create)",
+                "description": "A BalanceKeyFigure is a key figure that describes an amount pertaining to a loan contract."
+            },
+            "com.sap.gateway.default.loancontract.v0001.BalanceKeyFigures-update": {
+                "type": "object",
+                "title": "BalanceKeyFigures (for update)",
+                "description": "A BalanceKeyFigure is a key figure that describes an amount pertaining to a loan contract."
+            },
+            "com.sap.gateway.default.loancontract.v0001.CommittedCapitalAdjustment": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "1",
+                        "title": "Unique identifier of an adjustment of a committed capital for a loan contract.",
+                        "description": "GDT: CommittedCapitalAdjustmentID"
+                    },
+                    "ValidityPeriod": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.ValidityPeriod"
+                            }
+                        ],
+                        "title": "The period in which the Committed Capital Adjustment is valid.",
+                        "description": "It describes the period when the committed capital adjustment is used. GDT:ValidityPeriod"
+                    },
+                    "Amount": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Amount"
+                            }
+                        ],
+                        "title": "The amount by which the committed capital is adjusted.",
+                        "description": "A negative amount decreases the committed capital amount and a positive amount increases the committed capital amount. GDT: Amount"
+                    }
+                },
+                "title": "CommittedCapitalAdjustment",
+                "description": "Adjusts the loan capital amount that is committed for the specified period.Remark: This functionality is realized in the backend using Seasonal Limits.The effects of this adjustment can be seen using transaction BCA_CN_KFG and requesting \"Interest and Capital Amounts\".Constraint:  Increase adjustments can be made in the contract future; decrease adjustments can only be made in the contract present."
+            },
+            "com.sap.gateway.default.loancontract.v0001.CommittedCapitalAdjustment-create": {
+                "type": "object",
+                "properties": {
+                    "ValidityPeriod": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.ValidityPeriod-create"
+                            }
+                        ],
+                        "title": "The period in which the Committed Capital Adjustment is valid.",
+                        "description": "It describes the period when the committed capital adjustment is used. GDT:ValidityPeriod"
+                    },
+                    "Amount": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Amount-create"
+                            }
+                        ],
+                        "title": "The amount by which the committed capital is adjusted.",
+                        "description": "A negative amount decreases the committed capital amount and a positive amount increases the committed capital amount. GDT: Amount"
+                    }
+                },
+                "title": "CommittedCapitalAdjustment (for create)",
+                "description": "Adjusts the loan capital amount that is committed for the specified period.Remark: This functionality is realized in the backend using Seasonal Limits.The effects of this adjustment can be seen using transaction BCA_CN_KFG and requesting \"Interest and Capital Amounts\".Constraint:  Increase adjustments can be made in the contract future; decrease adjustments can only be made in the contract present."
+            },
+            "com.sap.gateway.default.loancontract.v0001.CommittedCapitalAdjustment-update": {
+                "type": "object",
+                "properties": {
+                    "ValidityPeriod": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.ValidityPeriod-update"
+                            }
+                        ],
+                        "title": "The period in which the Committed Capital Adjustment is valid.",
+                        "description": "It describes the period when the committed capital adjustment is used. GDT:ValidityPeriod"
+                    },
+                    "Amount": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Amount-update"
+                            }
+                        ],
+                        "title": "The amount by which the committed capital is adjusted.",
+                        "description": "A negative amount decreases the committed capital amount and a positive amount increases the committed capital amount. GDT: Amount"
+                    }
+                },
+                "title": "CommittedCapitalAdjustment (for update)",
+                "description": "Adjusts the loan capital amount that is committed for the specified period.Remark: This functionality is realized in the backend using Seasonal Limits.The effects of this adjustment can be seen using transaction BCA_CN_KFG and requesting \"Interest and Capital Amounts\".Constraint:  Increase adjustments can be made in the contract future; decrease adjustments can only be made in the contract present."
+            },
+            "com.sap.gateway.default.loancontract.v0001.EffectiveYields": {
+                "type": "object",
+                "properties": {
+                    "CalculationReasonCode": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "example": "1",
+                        "title": "A coded representation of the reason for a effective yield calculation for a bank account contract.",
+                        "description": "Remark: The valid code values for a loan contract are described in the GDT EffectiveYieldCalculationReasonCode."
+                    },
+                    "CalculationReasonName": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "example": "Legal Effective Yield",
+                        "title": "The name of an effective yield calculation reason code."
+                    },
+                    "CalculationMethodCode": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "example": "6",
+                        "title": "A coded representation of the method for calculating the effective interest rate.",
+                        "description": "Remark: The valid code values for a loan contract are described in the GDT EffectiveYieldCalculationMethodCode."
+                    },
+                    "CalculationMethodName": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "example": "EU Act/365",
+                        "title": "The name of a calculation method code.",
+                        "description": "GDT:MEDIUM_Name"
+                    },
+                    "Percent": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "x-sap-precision": 16,
+                        "x-sap-scale": 6,
+                        "multipleOf": 1e-06,
+                        "example": "7.2006348312",
+                        "title": "The effective yield percent.",
+                        "description": "GDT:Percent"
+                    },
+                    "BankingBusinessTransactionTypeCode": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "200008",
+                        "title": "BankingBusinessTransactionTypeCode is the coded representation of the banking business transaction which is associated with the calculation of the bank account contract effective yield.",
+                        "description": "Remark: GDT: BankingBusinessTransactionTypeCode"
+                    },
+                    "BankingBusinessTransactionTypeName": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Loan Contract Utilization (Disbursement)",
+                        "title": "Name of BankingBusinessTransactionTypeCode.",
+                        "description": "GDT: MEDIUM_Name"
+                    },
+                    "ValidityStartDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The date at which the effective yield validity begins."
+                    },
+                    "CalculationPeriod": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.CalculationPeriod"
+                            }
+                        ],
+                        "title": "The period for which EffectiveYieldPercent is calculated.",
+                        "description": "It describes the period for which EffectiveYieldPercent is calculated.GDT:CLOSED_DatePeriod"
+                    }
+                },
+                "title": "EffectiveYields",
+                "description": "An EffectiveYields is the effective yield (effective interest) of a bank account contract."
+            },
+            "com.sap.gateway.default.loancontract.v0001.EffectiveYields-create": {
+                "type": "object",
+                "title": "EffectiveYields (for create)",
+                "description": "An EffectiveYields is the effective yield (effective interest) of a bank account contract."
+            },
+            "com.sap.gateway.default.loancontract.v0001.EffectiveYields-update": {
+                "type": "object",
+                "title": "EffectiveYields (for update)",
+                "description": "An EffectiveYields is the effective yield (effective interest) of a bank account contract."
+            },
+            "com.sap.gateway.default.loancontract.v0001.IncomingPaymentAgreement": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "1",
+                        "title": "An identifier of an incoming payment agreement belonging to a loan contract.",
+                        "description": "GDT: BankAccountContractIncomingPaymentAgreementID"
+                    },
+                    "Period": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.UPPEROPEN_DatePeriod"
+                            }
+                        ],
+                        "title": "Is the period in which the IncomingPaymentAgreement is valid."
+                    },
+                    "PlannedFinalPaymentAmount": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Amount"
+                            }
+                        ],
+                        "title": "The amount of the final payment that is planned for the incoming payment agreement. ",
+                        "description": "Use: Use: The planned final payment for a loan is a payment agreed with the borrower party. It is due as the last payment of the loan.  GDT: Amount"
+                    },
+                    "LastPaymentDatePeriodEndAdjustmentIndicator": {
+                        "type": "boolean",
+                        "title": "Indicates whether the last payment date in the payment plan must be adjusted to the end date of the period of the incoming payment agreement or not. ",
+                        "description": "GDT: Indicator"
+                    }
+                },
+                "title": "IncomingPaymentAgreement",
+                "description": "An Incoming Payment Agreement is an agreement that specifies the term for the incoming payments of the loan contract."
+            },
+            "com.sap.gateway.default.loancontract.v0001.IncomingPaymentAgreement-create": {
+                "type": "object",
+                "properties": {
+                    "Period": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.UPPEROPEN_DatePeriod-create"
+                            }
+                        ],
+                        "title": "Is the period in which the IncomingPaymentAgreement is valid."
+                    },
+                    "PlannedFinalPaymentAmount": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Amount-create"
+                            }
+                        ],
+                        "title": "The amount of the final payment that is planned for the incoming payment agreement. ",
+                        "description": "Use: Use: The planned final payment for a loan is a payment agreed with the borrower party. It is due as the last payment of the loan.  GDT: Amount"
+                    },
+                    "LastPaymentDatePeriodEndAdjustmentIndicator": {
+                        "type": "boolean",
+                        "title": "Indicates whether the last payment date in the payment plan must be adjusted to the end date of the period of the incoming payment agreement or not. ",
+                        "description": "GDT: Indicator"
+                    }
+                },
+                "title": "IncomingPaymentAgreement (for create)",
+                "description": "An Incoming Payment Agreement is an agreement that specifies the term for the incoming payments of the loan contract."
+            },
+            "com.sap.gateway.default.loancontract.v0001.IncomingPaymentAgreement-update": {
+                "type": "object",
+                "properties": {
+                    "Period": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.UPPEROPEN_DatePeriod-update"
+                            }
+                        ],
+                        "title": "Is the period in which the IncomingPaymentAgreement is valid."
+                    },
+                    "PlannedFinalPaymentAmount": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Amount-update"
+                            }
+                        ],
+                        "title": "The amount of the final payment that is planned for the incoming payment agreement. ",
+                        "description": "Use: Use: The planned final payment for a loan is a payment agreed with the borrower party. It is due as the last payment of the loan.  GDT: Amount"
+                    },
+                    "LastPaymentDatePeriodEndAdjustmentIndicator": {
+                        "type": "boolean",
+                        "title": "Indicates whether the last payment date in the payment plan must be adjusted to the end date of the period of the incoming payment agreement or not. ",
+                        "description": "GDT: Indicator"
+                    }
+                },
+                "title": "IncomingPaymentAgreement (for update)",
+                "description": "An Incoming Payment Agreement is an agreement that specifies the term for the incoming payments of the loan contract."
+            },
+            "com.sap.gateway.default.loancontract.v0001.LoanContract": {
+                "type": "object",
+                "properties": {
+                    "UUID": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "title": "An universal unique identifier of a bank account contract.",
+                        "description": "GDT: NOSC_UUID"
+                    },
+                    "ID": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.BankAccountContractID"
+                            }
+                        ],
+                        "title": "An identifier of a bank account contract.",
+                        "description": "GDT: BankAccountContractID"
+                    },
+                    "CurrencyCode": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "example": "EUR",
+                        "title": "A CurrencyCode specifies the currency of the bank account contract.",
+                        "description": "GDT: CurrencyCode"
+                    },
+                    "BankAccountIdentifyingElements": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.BkAcctIdfgElmnts"
+                            }
+                        ],
+                        "title": "A BankAccount is a bank account associated with the bank account contract.",
+                        "description": "BOCT: BankAccountIdentifyingElements"
+                    },
+                    "LifeCycleStatusCode": {
+                        "type": "string",
+                        "maxLength": 2,
+                        "example": "2",
+                        "title": "A coded representation of the life cycle status of a bank account contract.",
+                        "description": "GDT: BankAccountContractLifeCycleStatusCode"
+                    },
+                    "LifeCycleStatusName": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "example": "Active",
+                        "title": "Name of LifeCycleStatusCode.",
+                        "description": "GDT: LANGUAGEINDEPENDENT_MEDIUM_Name"
+                    },
+                    "BorrowerPartyIdentifyingElements": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.PartyIdfgElmnts"
+                            }
+                        ],
+                        "title": "A BorrowerParty is a party who takes up a financial instrument, in this case a loan contract."
+                    },
+                    "Product": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Product"
+                            }
+                        ],
+                        "title": "A Product describes the (financial) product upon which the bank account contract is based."
+                    },
+                    "BusinessEventRecord": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.BusinessEventRecord"
+                            }
+                        ],
+                        "title": "A record of a business event that changes a bank account contract."
+                    },
+                    "OperationalBankContractManagement": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.OperationalBankContractManagement"
+                            }
+                        ],
+                        "title": "An OperationalBankContractManagement is responsible for managing operational bank contracts and executing the related banking processes.",
+                        "description": "A functional unit that is responsible for managing the contract."
+                    },
+                    "BusinessProcessChainAssignment": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.BusinessProcessChainAssignment"
+                            }
+                        ],
+                        "title": "Business Process Chain Assignment is the assignment of a business object node to a business process chain.",
+                        "description": " BOCT: BusProcChnAssgmtFSElmnts"
+                    },
+                    "ChangeStateID": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "example": "20191122135035.7818490",
+                        "title": "A ChangeStateID is a unique identifier for a change state.",
+                        "description": " GDT: ChangeStateID"
+                    },
+                    "ClearingBankAccountContract": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.ClearingBankAccountContract"
+                            }
+                        ],
+                        "title": "A ClearingBankAccountContract is a BankAccountContract that receives incoming payments that have to be transferred to a specific loan contract.",
+                        "description": "Remark: The ClearingBankAccountContract can be changed."
+                    },
+                    "TermSpecification": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.TermSpecification"
+                            }
+                        ],
+                        "title": "A specification of term elements that affects all term agreements of the loan contract.",
+                        "description": "Corresponds to tab 'Agreement' in backend Agreement number not included because only one agreement is allowed"
+                    },
+                    "BalanceKeyFigures": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.BalanceKeyFigures"
+                        }
+                    },
+                    "CommittedCapitalAdjustments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.CommittedCapitalAdjustment"
+                        }
+                    },
+                    "EffectiveYields": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.EffectiveYields"
+                        }
+                    },
+                    "IncomingPaymentAgreements": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.IncomingPaymentAgreement"
+                        }
+                    },
+                    "PaymentTransactionInstructions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.PaymentTransactionInstruction"
+                        }
+                    },
+                    "TermAgreements": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.TermAgreement"
+                        }
+                    }
+                },
+                "title": "Loan Contract",
+                "description": "Loan Contract is a contractual agreement between lenders and borrowers, which is based on a borrower\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u201e\u00a2s request for a loan and includes, for example, loan type, borrower(s), and general terms and conditions.  Comment: A BankAccount is a bank account associated with the bank account contract.   Integrity Condition:StartDate of TermSpecificationValidityPeriod, TermAgreementFixingPeriod, and IncomingPaymentAgreementPeriod have to be the same date.   Constraint: Loan Contract Create - During creation of a loan contract , it is required to specify the details of Term Agreement and Inpayment Agreement."
+            },
+            "com.sap.gateway.default.loancontract.v0001.LoanContract-create": {
+                "type": "object",
+                "properties": {
+                    "CurrencyCode": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "example": "EUR",
+                        "title": "A CurrencyCode specifies the currency of the bank account contract.",
+                        "description": "GDT: CurrencyCode"
+                    },
+                    "BorrowerPartyIdentifyingElements": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.PartyIdfgElmnts-create"
+                            }
+                        ],
+                        "title": "A BorrowerParty is a party who takes up a financial instrument, in this case a loan contract."
+                    },
+                    "Product": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Product-create"
+                            }
+                        ],
+                        "title": "A Product describes the (financial) product upon which the bank account contract is based."
+                    },
+                    "BusinessEventRecord": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.BusinessEventRecord-create"
+                            }
+                        ],
+                        "title": "A record of a business event that changes a bank account contract."
+                    },
+                    "OperationalBankContractManagement": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.OperationalBankContractManagement-create"
+                            }
+                        ],
+                        "title": "An OperationalBankContractManagement is responsible for managing operational bank contracts and executing the related banking processes.",
+                        "description": "A functional unit that is responsible for managing the contract."
+                    },
+                    "BusinessProcessChainAssignment": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.BusinessProcessChainAssignment-create"
+                            }
+                        ],
+                        "title": "Business Process Chain Assignment is the assignment of a business object node to a business process chain.",
+                        "description": " BOCT: BusProcChnAssgmtFSElmnts"
+                    },
+                    "ClearingBankAccountContract": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.ClearingBankAccountContract-create"
+                            }
+                        ],
+                        "title": "A ClearingBankAccountContract is a BankAccountContract that receives incoming payments that have to be transferred to a specific loan contract.",
+                        "description": "Remark: The ClearingBankAccountContract can be changed."
+                    },
+                    "TermSpecification": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.TermSpecification-create"
+                            }
+                        ],
+                        "title": "A specification of term elements that affects all term agreements of the loan contract.",
+                        "description": "Corresponds to tab 'Agreement' in backend Agreement number not included because only one agreement is allowed"
+                    },
+                    "BalanceKeyFigures": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.BalanceKeyFigures-create"
+                        }
+                    },
+                    "CommittedCapitalAdjustments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.CommittedCapitalAdjustment-create"
+                        }
+                    },
+                    "EffectiveYields": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.EffectiveYields-create"
+                        }
+                    },
+                    "IncomingPaymentAgreements": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.IncomingPaymentAgreement-create"
+                        }
+                    },
+                    "PaymentTransactionInstructions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.PaymentTransactionInstruction-create"
+                        }
+                    },
+                    "TermAgreements": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.TermAgreement-create"
+                        }
+                    }
+                },
+                "title": "Loan Contract (for create)",
+                "description": "Loan Contract is a contractual agreement between lenders and borrowers, which is based on a borrower\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u201e\u00a2s request for a loan and includes, for example, loan type, borrower(s), and general terms and conditions.  Comment: A BankAccount is a bank account associated with the bank account contract.   Integrity Condition:StartDate of TermSpecificationValidityPeriod, TermAgreementFixingPeriod, and IncomingPaymentAgreementPeriod have to be the same date.   Constraint: Loan Contract Create - During creation of a loan contract , it is required to specify the details of Term Agreement and Inpayment Agreement."
+            },
+            "com.sap.gateway.default.loancontract.v0001.LoanContract-update": {
+                "type": "object",
+                "properties": {
+                    "BusinessProcessChainAssignment": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.BusinessProcessChainAssignment-update"
+                            }
+                        ],
+                        "title": "Business Process Chain Assignment is the assignment of a business object node to a business process chain.",
+                        "description": " BOCT: BusProcChnAssgmtFSElmnts"
+                    },
+                    "ClearingBankAccountContract": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.ClearingBankAccountContract-update"
+                            }
+                        ],
+                        "title": "A ClearingBankAccountContract is a BankAccountContract that receives incoming payments that have to be transferred to a specific loan contract.",
+                        "description": "Remark: The ClearingBankAccountContract can be changed."
+                    },
+                    "TermSpecification": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.TermSpecification-update"
+                            }
+                        ],
+                        "title": "A specification of term elements that affects all term agreements of the loan contract.",
+                        "description": "Corresponds to tab 'Agreement' in backend Agreement number not included because only one agreement is allowed"
+                    }
+                },
+                "title": "Loan Contract (for update)",
+                "description": "Loan Contract is a contractual agreement between lenders and borrowers, which is based on a borrower\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u201e\u00a2s request for a loan and includes, for example, loan type, borrower(s), and general terms and conditions.  Comment: A BankAccount is a bank account associated with the bank account contract.   Integrity Condition:StartDate of TermSpecificationValidityPeriod, TermAgreementFixingPeriod, and IncomingPaymentAgreementPeriod have to be the same date.   Constraint: Loan Contract Create - During creation of a loan contract , it is required to specify the details of Term Agreement and Inpayment Agreement."
+            },
+            "com.sap.gateway.default.loancontract.v0001.PaymentTransactionInstruction": {
+                "type": "object",
+                "properties": {
+                    "UUID": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "title": "A UUID is a globally unique identifier for a PaymentTransactionInstruction.",
+                        "description": "GDT: NOSC_UUID"
+                    },
+                    "BankingBusinessTransactionTypeCode": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "500001",
+                        "title": "A BankingBusinessTransactionTypeCode is a coded representation of the type of business transaction from a banking view.",
+                        "description": "Remark: Specifies the business transaction for which the payment transaction instruction is used. GDT: BankingBusinessTransactionTypeCode"
+                    },
+                    "BankingBusinessTransactionTypeName": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "example": "Bank Account Settlement",
+                        "title": "Name of BankingBusinessTransactionTypeCode.",
+                        "description": "GDT: MEDIUM_Name"
+                    },
+                    "BankingBusinessTransactionProcessingResultPaymentTypeCode": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "1",
+                        "title": "A BankingBusinessTransactionProcessingResultingPaymentTypeCode is a coded representation of the payment type that results from processing a banking business transaction.",
+                        "description": "GDT: BankingBusinessTransactionProcessingResultPaymentTypeCode"
+                    },
+                    "BankingBusinessTransactionProcessingResultPaymentTypeName": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "example": "ClrgAcctSettlmtRsltsBySCT",
+                        "title": "Name of BankingBusinessTransactionProcessingResultPaymentTypeCode.",
+                        "description": "GDT: MEDIUM_Name"
+                    },
+                    "BankContractPaymentTransactionInstructionTypeCode": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "71",
+                        "title": "A BankContractPaymentTransactionInstructionTypeCode is a coded representation of the type of a bank contract payment transaction instruction.",
+                        "description": "GDT: BankContractPaymentTransactionInstructionTypeCode"
+                    },
+                    "BankContractPaymentTransactionInstructionTypeName": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "example": "Settlement Generic Payment",
+                        "title": "Name of BankContractPaymentTransactionInstructionTypeCode.",
+                        "description": "GDT: MEDIUM_Name"
+                    },
+                    "DebitCreditCode": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "example": "1",
+                        "title": "A coded representation of the credit or debit side of payment transaction instruction.",
+                        "description": "Remark: A DebitCreditCode is used to identify the resulting payment transaction as a credit or debit transaction. GDT: DebitCreditCode"
+                    },
+                    "DebitCreditName": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "example": "Debit",
+                        "title": "Name of DebitCreditCode.",
+                        "description": "GDT: MEDIUM_Name"
+                    },
+                    "CounterpartyBankAccount": {
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.BankAccount"
+                            }
+                        ],
+                        "title": "Contains the bank account to which funds are either transferred or collected from.",
+                        "description": "Comment: The Counterparty is the party that participates in a payment transaction. Remark: If DebitCreditCode is 'Credit', funds are transferred to the bank account. If DebitCreditCode is 'Debit', funds are collected from the bank account."
+                    },
+                    "DirectDebitMandate": {
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.DirectDebitMandate"
+                            }
+                        ],
+                        "title": "The direct debit mandate used in a payment transaction instruction.",
+                        "description": "Remark: DirectDebitMandate is only applicable, if value for DebitCreditCode is 'Debit'."
+                    },
+                    "MappableIndicator": {
+                        "type": "boolean",
+                        "title": "Indicates that PaymentTransactionInstruction is mappable.",
+                        "description": "GDT: Indicator"
+                    }
+                },
+                "title": "PaymentTransactionInstruction",
+                "description": "A payment transaction instruction is an instruction for payment transactions related to the bank account contract.  Remark: A payment transaction instruction is used in banking business transaction to trigger a payment transaction."
+            },
+            "com.sap.gateway.default.loancontract.v0001.PaymentTransactionInstruction-create": {
+                "type": "object",
+                "properties": {
+                    "BankingBusinessTransactionTypeCode": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "500001",
+                        "title": "A BankingBusinessTransactionTypeCode is a coded representation of the type of business transaction from a banking view.",
+                        "description": "Remark: Specifies the business transaction for which the payment transaction instruction is used. GDT: BankingBusinessTransactionTypeCode"
+                    },
+                    "BankingBusinessTransactionProcessingResultPaymentTypeCode": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "1",
+                        "title": "A BankingBusinessTransactionProcessingResultingPaymentTypeCode is a coded representation of the payment type that results from processing a banking business transaction.",
+                        "description": "GDT: BankingBusinessTransactionProcessingResultPaymentTypeCode"
+                    },
+                    "BankContractPaymentTransactionInstructionTypeCode": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "71",
+                        "title": "A BankContractPaymentTransactionInstructionTypeCode is a coded representation of the type of a bank contract payment transaction instruction.",
+                        "description": "GDT: BankContractPaymentTransactionInstructionTypeCode"
+                    },
+                    "DebitCreditCode": {
+                        "type": "string",
+                        "maxLength": 1,
+                        "example": "1",
+                        "title": "A coded representation of the credit or debit side of payment transaction instruction.",
+                        "description": "Remark: A DebitCreditCode is used to identify the resulting payment transaction as a credit or debit transaction. GDT: DebitCreditCode"
+                    },
+                    "CounterpartyBankAccount": {
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.BankAccount-create"
+                            }
+                        ],
+                        "title": "Contains the bank account to which funds are either transferred or collected from.",
+                        "description": "Comment: The Counterparty is the party that participates in a payment transaction. Remark: If DebitCreditCode is 'Credit', funds are transferred to the bank account. If DebitCreditCode is 'Debit', funds are collected from the bank account."
+                    },
+                    "DirectDebitMandate": {
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.DirectDebitMandate-create"
+                            }
+                        ],
+                        "title": "The direct debit mandate used in a payment transaction instruction.",
+                        "description": "Remark: DirectDebitMandate is only applicable, if value for DebitCreditCode is 'Debit'."
+                    }
+                },
+                "title": "PaymentTransactionInstruction (for create)",
+                "description": "A payment transaction instruction is an instruction for payment transactions related to the bank account contract.  Remark: A payment transaction instruction is used in banking business transaction to trigger a payment transaction."
+            },
+            "com.sap.gateway.default.loancontract.v0001.PaymentTransactionInstruction-update": {
+                "type": "object",
+                "properties": {
+                    "BankContractPaymentTransactionInstructionTypeCode": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "71",
+                        "title": "A BankContractPaymentTransactionInstructionTypeCode is a coded representation of the type of a bank contract payment transaction instruction.",
+                        "description": "GDT: BankContractPaymentTransactionInstructionTypeCode"
+                    },
+                    "CounterpartyBankAccount": {
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.BankAccount-update"
+                            }
+                        ],
+                        "title": "Contains the bank account to which funds are either transferred or collected from.",
+                        "description": "Comment: The Counterparty is the party that participates in a payment transaction. Remark: If DebitCreditCode is 'Credit', funds are transferred to the bank account. If DebitCreditCode is 'Debit', funds are collected from the bank account."
+                    },
+                    "DirectDebitMandate": {
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.DirectDebitMandate-update"
+                            }
+                        ],
+                        "title": "The direct debit mandate used in a payment transaction instruction.",
+                        "description": "Remark: DirectDebitMandate is only applicable, if value for DebitCreditCode is 'Debit'."
+                    }
+                },
+                "title": "PaymentTransactionInstruction (for update)",
+                "description": "A payment transaction instruction is an instruction for payment transactions related to the bank account contract.  Remark: A payment transaction instruction is used in banking business transaction to trigger a payment transaction."
+            },
+            "com.sap.gateway.default.loancontract.v0001.TermAgreement": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "1",
+                        "title": "An identifier of a term agreement belonging to a loan contract.",
+                        "description": "GDT: BankAccountContractTermAgreementID"
+                    },
+                    "CommittedCapitalAmount": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Amount"
+                            }
+                        ],
+                        "title": "The CommittedAmount is the committed amount of the term agreement of a loan contract.",
+                        "description": "GDT: Amount"
+                    },
+                    "BankContractFinancialConditionContextValueCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 2,
+                        "example": "FC",
+                        "title": "A coded representation of the value of a context.",
+                        "description": " GDT: BankContractFinancialConditionContextValueCode"
+                    },
+                    "BankContractFinancialConditionContextValueName": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 46,
+                        "example": "Fixed Interest, to be capitalized",
+                        "title": "Name of BankContractFinancialConditionContextCode",
+                        "description": " GDT: LONG_Name"
+                    },
+                    "FixingPeriod": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.UPPEROPEN_DatePeriod"
+                            }
+                        ],
+                        "title": "A FixingPeriod is the period for which the term agreement is fixed.",
+                        "description": "Use: the FixingPeriod is the period for which the committed capital amount is fixed. "
+                    }
+                },
+                "title": "TermAgreement",
+                "description": "The TermAgreement is an agreement on the terms of a loan contractCorresponds to tab 'Condition Fixing' in backend  Constraint: Only context code value 34 \"Loan Contract Term Agreement Condition Determination Key\" is supported for BankContractFinancialConditionContextValueCode = VC or  BankContractFinancialConditionContextValueCode = FC. Note: While creating LoanContract we have to pass same attributes for all term agreements.It means all the records in TermAgreement should have the same attributes during POST call.Even if some attributes are not required, we can pass those with blank value to make the request homogeneous."
+            },
+            "com.sap.gateway.default.loancontract.v0001.TermAgreement-create": {
+                "type": "object",
+                "properties": {
+                    "CommittedCapitalAmount": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Amount-create"
+                            }
+                        ],
+                        "title": "The CommittedAmount is the committed amount of the term agreement of a loan contract.",
+                        "description": "GDT: Amount"
+                    },
+                    "BankContractFinancialConditionContextValueCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 2,
+                        "example": "FC",
+                        "title": "A coded representation of the value of a context.",
+                        "description": " GDT: BankContractFinancialConditionContextValueCode"
+                    },
+                    "FixingPeriod": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.UPPEROPEN_DatePeriod-create"
+                            }
+                        ],
+                        "title": "A FixingPeriod is the period for which the term agreement is fixed.",
+                        "description": "Use: the FixingPeriod is the period for which the committed capital amount is fixed. "
+                    }
+                },
+                "title": "TermAgreement (for create)",
+                "description": "The TermAgreement is an agreement on the terms of a loan contractCorresponds to tab 'Condition Fixing' in backend  Constraint: Only context code value 34 \"Loan Contract Term Agreement Condition Determination Key\" is supported for BankContractFinancialConditionContextValueCode = VC or  BankContractFinancialConditionContextValueCode = FC. Note: While creating LoanContract we have to pass same attributes for all term agreements.It means all the records in TermAgreement should have the same attributes during POST call.Even if some attributes are not required, we can pass those with blank value to make the request homogeneous."
+            },
+            "com.sap.gateway.default.loancontract.v0001.TermAgreement-update": {
+                "type": "object",
+                "properties": {
+                    "CommittedCapitalAmount": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Amount-update"
+                            }
+                        ],
+                        "title": "The CommittedAmount is the committed amount of the term agreement of a loan contract.",
+                        "description": "GDT: Amount"
+                    },
+                    "BankContractFinancialConditionContextValueCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 2,
+                        "example": "FC",
+                        "title": "A coded representation of the value of a context.",
+                        "description": " GDT: BankContractFinancialConditionContextValueCode"
+                    },
+                    "FixingPeriod": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.UPPEROPEN_DatePeriod-update"
+                            }
+                        ],
+                        "title": "A FixingPeriod is the period for which the term agreement is fixed.",
+                        "description": "Use: the FixingPeriod is the period for which the committed capital amount is fixed. "
+                    }
+                },
+                "title": "TermAgreement (for update)",
+                "description": "The TermAgreement is an agreement on the terms of a loan contractCorresponds to tab 'Condition Fixing' in backend  Constraint: Only context code value 34 \"Loan Contract Term Agreement Condition Determination Key\" is supported for BankContractFinancialConditionContextValueCode = VC or  BankContractFinancialConditionContextValueCode = FC. Note: While creating LoanContract we have to pass same attributes for all term agreements.It means all the records in TermAgreement should have the same attributes during POST call.Even if some attributes are not required, we can pass those with blank value to make the request homogeneous."
+            },
+            "com.sap.gateway.default.loancontract.v0001.Amount": {
+                "type": "object",
+                "properties": {
+                    "Content": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "x-sap-precision": 23,
+                        "example": "100",
+                        "title": "Value of an amount."
+                    },
+                    "CurrencyCode": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "example": "EUR",
+                        "title": "Currency unit in accordance with the ISO 4217 three-character code.",
+                        "description": "A currency must always be specified. GDT: CurrencyCode"
+                    }
+                },
+                "title": "Amount",
+                "description": "Is an amount with the corresponding currency unit."
+            },
+            "com.sap.gateway.default.loancontract.v0001.Amount-create": {
+                "type": "object",
+                "properties": {
+                    "Content": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "x-sap-precision": 23,
+                        "example": "100",
+                        "title": "Value of an amount."
+                    },
+                    "CurrencyCode": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "example": "EUR",
+                        "title": "Currency unit in accordance with the ISO 4217 three-character code.",
+                        "description": "A currency must always be specified. GDT: CurrencyCode"
+                    }
+                },
+                "title": "Amount (for create)",
+                "description": "Is an amount with the corresponding currency unit."
+            },
+            "com.sap.gateway.default.loancontract.v0001.Amount-update": {
+                "type": "object",
+                "properties": {
+                    "Content": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "format": "decimal",
+                        "x-sap-precision": 23,
+                        "example": "100",
+                        "title": "Value of an amount."
+                    },
+                    "CurrencyCode": {
+                        "type": "string",
+                        "maxLength": 5,
+                        "example": "EUR",
+                        "title": "Currency unit in accordance with the ISO 4217 three-character code.",
+                        "description": "A currency must always be specified. GDT: CurrencyCode"
+                    }
+                },
+                "title": "Amount (for update)",
+                "description": "Is an amount with the corresponding currency unit."
+            },
+            "com.sap.gateway.default.loancontract.v0001.Bank": {
+                "type": "object",
+                "properties": {
+                    "StandardID": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 11,
+                        "example": "TOLLDEWDXXX",
+                        "title": "Bank Identification Code (BIC) of the Society for Worldwide Interbank Financial Telecommunications (S.W.I.F.T.), see GDT BankStandardID.",
+                        "description": "GDT: BankStandardID"
+                    },
+                    "RoutingID": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 35,
+                        "example": "90000001",
+                        "title": "Number of the bank in a clearing system (see GDT BankRoutingID).",
+                        "description": "GDT: BankRoutingID"
+                    },
+                    "CountryCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 3,
+                        "example": "DE",
+                        "title": "Country in which the bank identified earlier goes about its business. If the bank is a member in a national clearing system, the country to which this clearing system belongs is entered here. Constraint: Only listID 3166-1 of listAgencyID 5 will be supported.",
+                        "description": "GDT: CountryCode"
+                    }
+                },
+                "title": "Bank",
+                "description": "A bank is a business entity that performs financial investment services and payment transactions. "
+            },
+            "com.sap.gateway.default.loancontract.v0001.Bank-create": {
+                "type": "object",
+                "properties": {
+                    "StandardID": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 11,
+                        "example": "TOLLDEWDXXX",
+                        "title": "Bank Identification Code (BIC) of the Society for Worldwide Interbank Financial Telecommunications (S.W.I.F.T.), see GDT BankStandardID.",
+                        "description": "GDT: BankStandardID"
+                    },
+                    "RoutingID": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 35,
+                        "example": "90000001",
+                        "title": "Number of the bank in a clearing system (see GDT BankRoutingID).",
+                        "description": "GDT: BankRoutingID"
+                    },
+                    "CountryCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 3,
+                        "example": "DE",
+                        "title": "Country in which the bank identified earlier goes about its business. If the bank is a member in a national clearing system, the country to which this clearing system belongs is entered here. Constraint: Only listID 3166-1 of listAgencyID 5 will be supported.",
+                        "description": "GDT: CountryCode"
+                    }
+                },
+                "title": "Bank (for create)",
+                "description": "A bank is a business entity that performs financial investment services and payment transactions. "
+            },
+            "com.sap.gateway.default.loancontract.v0001.Bank-update": {
+                "type": "object",
+                "properties": {
+                    "StandardID": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 11,
+                        "example": "TOLLDEWDXXX",
+                        "title": "Bank Identification Code (BIC) of the Society for Worldwide Interbank Financial Telecommunications (S.W.I.F.T.), see GDT BankStandardID.",
+                        "description": "GDT: BankStandardID"
+                    },
+                    "RoutingID": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 35,
+                        "example": "90000001",
+                        "title": "Number of the bank in a clearing system (see GDT BankRoutingID).",
+                        "description": "GDT: BankRoutingID"
+                    },
+                    "CountryCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 3,
+                        "example": "DE",
+                        "title": "Country in which the bank identified earlier goes about its business. If the bank is a member in a national clearing system, the country to which this clearing system belongs is entered here. Constraint: Only listID 3166-1 of listAgencyID 5 will be supported.",
+                        "description": "GDT: CountryCode"
+                    }
+                },
+                "title": "Bank (for update)",
+                "description": "A bank is a business entity that performs financial investment services and payment transactions. "
+            },
+            "com.sap.gateway.default.loancontract.v0001.BankAccount": {
+                "type": "object",
+                "properties": {
+                    "HolderName": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "example": "John Doe",
+                        "title": "A name of the account holder of a bank account.",
+                        "description": "GDT: BankAccountHolderName_V1"
+                    },
+                    "ID": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 35,
+                        "example": "4711",
+                        "title": "Bank account number (Basic Bank Account Number, BBAN). An account number that is assigned by the account managing bank. It uniquely identifies a bank account in most countries only together with the bank",
+                        "description": "GDT: BankAccountID"
+                    },
+                    "StandardID": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 34,
+                        "example": "DE58200505500000004711",
+                        "title": "International bank account number (International Bank Account Number, IBAN)",
+                        "description": "GDT: BankAccountStandardID"
+                    },
+                    "CurrencyCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 5,
+                        "example": "EUR",
+                        "title": "CurrencyCode is a coded representation of the currency of the bank account.",
+                        "description": "GDT: CurrencyCode"
+                    },
+                    "Bank": {
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Bank"
+                            }
+                        ],
+                        "title": "Bank where the account is held."
+                    }
+                },
+                "title": "Bank Account",
+                "description": "An account that holds funds in a bank and is subject to deposits and withdrawals."
+            },
+            "com.sap.gateway.default.loancontract.v0001.BankAccount-create": {
+                "type": "object",
+                "properties": {
+                    "HolderName": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "example": "John Doe",
+                        "title": "A name of the account holder of a bank account.",
+                        "description": "GDT: BankAccountHolderName_V1"
+                    },
+                    "ID": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 35,
+                        "example": "4711",
+                        "title": "Bank account number (Basic Bank Account Number, BBAN). An account number that is assigned by the account managing bank. It uniquely identifies a bank account in most countries only together with the bank",
+                        "description": "GDT: BankAccountID"
+                    },
+                    "StandardID": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 34,
+                        "example": "DE58200505500000004711",
+                        "title": "International bank account number (International Bank Account Number, IBAN)",
+                        "description": "GDT: BankAccountStandardID"
+                    },
+                    "CurrencyCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 5,
+                        "example": "EUR",
+                        "title": "CurrencyCode is a coded representation of the currency of the bank account.",
+                        "description": "GDT: CurrencyCode"
+                    },
+                    "Bank": {
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Bank-create"
+                            }
+                        ],
+                        "title": "Bank where the account is held."
+                    }
+                },
+                "title": "Bank Account (for create)",
+                "description": "An account that holds funds in a bank and is subject to deposits and withdrawals."
+            },
+            "com.sap.gateway.default.loancontract.v0001.BankAccount-update": {
+                "type": "object",
+                "properties": {
+                    "HolderName": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "example": "John Doe",
+                        "title": "A name of the account holder of a bank account.",
+                        "description": "GDT: BankAccountHolderName_V1"
+                    },
+                    "ID": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 35,
+                        "example": "4711",
+                        "title": "Bank account number (Basic Bank Account Number, BBAN). An account number that is assigned by the account managing bank. It uniquely identifies a bank account in most countries only together with the bank",
+                        "description": "GDT: BankAccountID"
+                    },
+                    "StandardID": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 34,
+                        "example": "DE58200505500000004711",
+                        "title": "International bank account number (International Bank Account Number, IBAN)",
+                        "description": "GDT: BankAccountStandardID"
+                    },
+                    "CurrencyCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 5,
+                        "example": "EUR",
+                        "title": "CurrencyCode is a coded representation of the currency of the bank account.",
+                        "description": "GDT: CurrencyCode"
+                    },
+                    "Bank": {
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Bank-update"
+                            }
+                        ],
+                        "title": "Bank where the account is held."
+                    }
+                },
+                "title": "Bank Account (for update)",
+                "description": "An account that holds funds in a bank and is subject to deposits and withdrawals."
+            },
+            "com.sap.gateway.default.loancontract.v0001.BankAccountContractID": {
+                "type": "object",
+                "properties": {
+                    "Content": {
+                        "type": "string",
+                        "maxLength": 80,
+                        "example": "DE32904200380010000707",
+                        "title": "Content of BankAccountContractID."
+                    },
+                    "schemeID": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "example": "BAC.001",
+                        "title": "SchemeID of the BankAccountContractID.",
+                        "description": "Default: If filter value is not provided, BAC.001 will be used as default value for filter."
+                    },
+                    "schemeAgencyID": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "example": "310",
+                        "title": "SchemeAgencyID of the BankAccountContractID.",
+                        "description": "Default: If filter value is not provided, 310 will be used as default value for filter."
+                    }
+                },
+                "title": "BankAccountContractID",
+                "description": "An identifier of a bank account contract. GDT: BankAccountContractID"
+            },
+            "com.sap.gateway.default.loancontract.v0001.BankAccountContractID-create": {
+                "type": "object",
+                "properties": {
+                    "Content": {
+                        "type": "string",
+                        "maxLength": 80,
+                        "example": "DE32904200380010000707",
+                        "title": "Content of BankAccountContractID."
+                    },
+                    "schemeID": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "example": "BAC.001",
+                        "title": "SchemeID of the BankAccountContractID.",
+                        "description": "Default: If filter value is not provided, BAC.001 will be used as default value for filter."
+                    },
+                    "schemeAgencyID": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "example": "310",
+                        "title": "SchemeAgencyID of the BankAccountContractID.",
+                        "description": "Default: If filter value is not provided, 310 will be used as default value for filter."
+                    }
+                },
+                "title": "BankAccountContractID (for create)",
+                "description": "An identifier of a bank account contract. GDT: BankAccountContractID"
+            },
+            "com.sap.gateway.default.loancontract.v0001.BankAccountContractID-update": {
+                "type": "object",
+                "properties": {
+                    "Content": {
+                        "type": "string",
+                        "maxLength": 80,
+                        "example": "DE32904200380010000707",
+                        "title": "Content of BankAccountContractID."
+                    },
+                    "schemeID": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "example": "BAC.001",
+                        "title": "SchemeID of the BankAccountContractID.",
+                        "description": "Default: If filter value is not provided, BAC.001 will be used as default value for filter."
+                    }
+                },
+                "title": "BankAccountContractID (for update)",
+                "description": "An identifier of a bank account contract. GDT: BankAccountContractID"
+            },
+            "com.sap.gateway.default.loancontract.v0001.BkAcctIdfgElmnts": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "maxLength": 35,
+                        "example": "0000000976",
+                        "title": "Bank account number (Basic Bank Account Number, BBAN). An account number that is assigned by the account managing bank. It uniquely identifies a bank account in most countries only together with the bank.",
+                        "description": "GDT: BankAccountID"
+                    },
+                    "StandardID": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 34,
+                        "example": "DE84900000010000000976",
+                        "title": "International bank account number (International Bank Account Number, IBAN).",
+                        "description": "GDT: BankAccountStandardID"
+                    },
+                    "InternalID": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "5A880E4987E81EE8A9BCFA163E78A157",
+                        "title": "BankAccountInternalID is a proprietary identifier for a bank account.",
+                        "description": "GDT: BankAccountInternalID"
+                    },
+                    "UUID": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "title": "A UUID is an universal unique identifier of a bank account.",
+                        "description": "GDT: NOSC_UUID"
+                    },
+                    "CurrencyCode": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 5,
+                        "example": "EUR",
+                        "title": "CurrencyCode is a coded representation of the currency of the bank account.",
+                        "description": "GDT: CurrencyCode"
+                    },
+                    "Bank": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.Bank"
+                            }
+                        ],
+                        "title": "Bank where the account is held."
+                    }
+                },
+                "title": "Bank Account Identifying Elements",
+                "description": "The identifying elements of a bank account supported by bank account management in Financial Services (Banking)."
+            },
+            "com.sap.gateway.default.loancontract.v0001.BkAcctIdfgElmnts-create": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "maxLength": 35,
+                        "example": "0000000976",
+                        "title": "Bank account number (Basic Bank Account Number, BBAN). An account number that is assigned by the account managing bank. It uniquely identifies a bank account in most countries only together with the bank.",
+                        "description": "GDT: BankAccountID"
+                    }
+                },
+                "title": "Bank Account Identifying Elements (for create)",
+                "description": "The identifying elements of a bank account supported by bank account management in Financial Services (Banking)."
+            },
+            "com.sap.gateway.default.loancontract.v0001.BkAcctIdfgElmnts-update": {
+                "type": "object",
+                "title": "Bank Account Identifying Elements (for update)",
+                "description": "The identifying elements of a bank account supported by bank account management in Financial Services (Banking)."
+            },
+            "com.sap.gateway.default.loancontract.v0001.BusinessEventRecord": {
+                "type": "object",
+                "properties": {
+                    "StartDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "Date when the bank account contract becomes operational from the customer's point of view.",
+                        "description": " GDT: Date"
+                    },
+                    "ActualCancellationDate": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "Date when a bank account contract is actually canceled.",
+                        "description": " GDT: Date"
+                    },
+                    "PlannedCancellationDate": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "Date when a  cancellation of a bank account contract is planned.",
+                        "description": " GDT: Date"
+                    }
+                },
+                "title": "Business Event Record",
+                "description": "A record of a business event that changes a bank account contract. "
+            },
+            "com.sap.gateway.default.loancontract.v0001.BusinessEventRecord-create": {
+                "type": "object",
+                "properties": {
+                    "StartDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "Date when the bank account contract becomes operational from the customer's point of view.",
+                        "description": " GDT: Date"
+                    }
+                },
+                "title": "Business Event Record (for create)",
+                "description": "A record of a business event that changes a bank account contract. "
+            },
+            "com.sap.gateway.default.loancontract.v0001.BusinessEventRecord-update": {
+                "type": "object",
+                "title": "Business Event Record (for update)",
+                "description": "A record of a business event that changes a bank account contract. "
+            },
+            "com.sap.gateway.default.loancontract.v0001.BusinessProcessChainAssignment": {
+                "type": "object",
+                "properties": {
+                    "BusinessProcessChainUUID": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "title": "UUID of the business process chain to which the hosting business object is assigned to.",
+                        "description": "GDT: UUID"
+                    },
+                    "BankingBusinessTransactionTypeCode": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "400006",
+                        "title": "BankingBusinessTransactionTypeCode",
+                        "description": "BDT: BankingBusinessTransactionTypeCode"
+                    },
+                    "BankingBusinessTransactionTypeName": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Adhoc Loan Contract Change",
+                        "title": "Name of BankingBusinessTransactionTypeCode",
+                        "description": "GDT: EXTENDED_Name"
+                    }
+                },
+                "title": "Business Process Chain Assignment",
+                "description": "Is the assignment of a business object node to a business process chain.  /nDefault: If BankingBusinessTransactionTypeCode is not specified, code value \"400006 - Adhoc Loan Contract Change\" will be used by default. "
+            },
+            "com.sap.gateway.default.loancontract.v0001.BusinessProcessChainAssignment-create": {
+                "type": "object",
+                "properties": {
+                    "BusinessProcessChainUUID": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "title": "UUID of the business process chain to which the hosting business object is assigned to.",
+                        "description": "GDT: UUID"
+                    },
+                    "BankingBusinessTransactionTypeCode": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "400006",
+                        "title": "BankingBusinessTransactionTypeCode",
+                        "description": "BDT: BankingBusinessTransactionTypeCode"
+                    }
+                },
+                "title": "Business Process Chain Assignment (for create)",
+                "description": "Is the assignment of a business object node to a business process chain.  /nDefault: If BankingBusinessTransactionTypeCode is not specified, code value \"400006 - Adhoc Loan Contract Change\" will be used by default. "
+            },
+            "com.sap.gateway.default.loancontract.v0001.BusinessProcessChainAssignment-update": {
+                "type": "object",
+                "properties": {
+                    "BusinessProcessChainUUID": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "title": "UUID of the business process chain to which the hosting business object is assigned to.",
+                        "description": "GDT: UUID"
+                    },
+                    "BankingBusinessTransactionTypeCode": {
+                        "type": "string",
+                        "maxLength": 6,
+                        "example": "400006",
+                        "title": "BankingBusinessTransactionTypeCode",
+                        "description": "BDT: BankingBusinessTransactionTypeCode"
+                    }
+                },
+                "title": "Business Process Chain Assignment (for update)",
+                "description": "Is the assignment of a business object node to a business process chain.  /nDefault: If BankingBusinessTransactionTypeCode is not specified, code value \"400006 - Adhoc Loan Contract Change\" will be used by default. "
+            },
+            "com.sap.gateway.default.loancontract.v0001.CalculationPeriod": {
+                "type": "object",
+                "properties": {
+                    "StartDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The StartDate is the start date of the Calculation Period.",
+                        "description": " GDT: Date"
+                    },
+                    "EndDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The EndDate is the end date of the Calculation Period.",
+                        "description": " GDT: Date"
+                    }
+                },
+                "title": "Calculation Period",
+                "description": "The period for which EffectiveYieldPercent is calculated."
+            },
+            "com.sap.gateway.default.loancontract.v0001.CalculationPeriod-create": {
+                "type": "object",
+                "properties": {
+                    "StartDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The StartDate is the start date of the Calculation Period.",
+                        "description": " GDT: Date"
+                    },
+                    "EndDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The EndDate is the end date of the Calculation Period.",
+                        "description": " GDT: Date"
+                    }
+                },
+                "title": "Calculation Period (for create)",
+                "description": "The period for which EffectiveYieldPercent is calculated."
+            },
+            "com.sap.gateway.default.loancontract.v0001.CalculationPeriod-update": {
+                "type": "object",
+                "properties": {
+                    "StartDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The StartDate is the start date of the Calculation Period.",
+                        "description": " GDT: Date"
+                    },
+                    "EndDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The EndDate is the end date of the Calculation Period.",
+                        "description": " GDT: Date"
+                    }
+                },
+                "title": "Calculation Period (for update)",
+                "description": "The period for which EffectiveYieldPercent is calculated."
+            },
+            "com.sap.gateway.default.loancontract.v0001.ClearingBankAccountContract": {
+                "type": "object",
+                "properties": {
+                    "UUID": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "title": "A UUID is an universal unique identifier of a bank account contract.",
+                        "description": "GDT: NOSC_UUID"
+                    },
+                    "LoanContractUsedIndicator": {
+                        "type": "boolean",
+                        "title": "Indicates whether the loan contract is used as clearing bank account contract",
+                        "description": "GDT: Indicator Remark: If this indicator is not set, it implies that the Clearing Bank Account Contract used for incoming payments to the loan , is different than the loan contract. Constraint : If LoanContractUsedIndicator is true, the ClearingBankAccountContractUUID must not be specified"
+                    }
+                },
+                "title": "ClearingBankAccountContract",
+                "description": "A ClearingBankAccountContract is a BankAccountContract that receives incoming payments that have to be transferred to a specific loan contract.Remark: The ClearingBankAccountContract can be changed.Constraint: Loan Contract Create - During creation of a Loan Contract , it is required to either specify the ClearingBankAccountContractUUID or ClearingBankAccountContract LoanContractUsedIndicator."
+            },
+            "com.sap.gateway.default.loancontract.v0001.ClearingBankAccountContract-create": {
+                "type": "object",
+                "properties": {
+                    "UUID": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "title": "A UUID is an universal unique identifier of a bank account contract.",
+                        "description": "GDT: NOSC_UUID"
+                    },
+                    "LoanContractUsedIndicator": {
+                        "type": "boolean",
+                        "title": "Indicates whether the loan contract is used as clearing bank account contract",
+                        "description": "GDT: Indicator Remark: If this indicator is not set, it implies that the Clearing Bank Account Contract used for incoming payments to the loan , is different than the loan contract. Constraint : If LoanContractUsedIndicator is true, the ClearingBankAccountContractUUID must not be specified"
+                    }
+                },
+                "title": "ClearingBankAccountContract (for create)",
+                "description": "A ClearingBankAccountContract is a BankAccountContract that receives incoming payments that have to be transferred to a specific loan contract.Remark: The ClearingBankAccountContract can be changed.Constraint: Loan Contract Create - During creation of a Loan Contract , it is required to either specify the ClearingBankAccountContractUUID or ClearingBankAccountContract LoanContractUsedIndicator."
+            },
+            "com.sap.gateway.default.loancontract.v0001.ClearingBankAccountContract-update": {
+                "type": "object",
+                "properties": {
+                    "UUID": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "title": "A UUID is an universal unique identifier of a bank account contract.",
+                        "description": "GDT: NOSC_UUID"
+                    },
+                    "LoanContractUsedIndicator": {
+                        "type": "boolean",
+                        "title": "Indicates whether the loan contract is used as clearing bank account contract",
+                        "description": "GDT: Indicator Remark: If this indicator is not set, it implies that the Clearing Bank Account Contract used for incoming payments to the loan , is different than the loan contract. Constraint : If LoanContractUsedIndicator is true, the ClearingBankAccountContractUUID must not be specified"
+                    }
+                },
+                "title": "ClearingBankAccountContract (for update)",
+                "description": "A ClearingBankAccountContract is a BankAccountContract that receives incoming payments that have to be transferred to a specific loan contract.Remark: The ClearingBankAccountContract can be changed.Constraint: Loan Contract Create - During creation of a Loan Contract , it is required to either specify the ClearingBankAccountContractUUID or ClearingBankAccountContract LoanContractUsedIndicator."
+            },
+            "com.sap.gateway.default.loancontract.v0001.DirectDebitMandate": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "maxLength": 35,
+                        "example": "4711",
+                        "title": "A identifier of Direct Debit Mandate",
+                        "description": "GDT: DirectDebitMandateID"
+                    },
+                    "CreditorPartyID": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "example": "DE82ZZZ00000001015",
+                        "title": "A unique identifier of a creditor party of direct debit mandate.",
+                        "description": "GDT: PartyID"
+                    }
+                },
+                "title": "Direct Debit Mandate"
+            },
+            "com.sap.gateway.default.loancontract.v0001.DirectDebitMandate-create": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "maxLength": 35,
+                        "example": "4711",
+                        "title": "A identifier of Direct Debit Mandate",
+                        "description": "GDT: DirectDebitMandateID"
+                    },
+                    "CreditorPartyID": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "example": "DE82ZZZ00000001015",
+                        "title": "A unique identifier of a creditor party of direct debit mandate.",
+                        "description": "GDT: PartyID"
+                    }
+                },
+                "title": "Direct Debit Mandate (for create)"
+            },
+            "com.sap.gateway.default.loancontract.v0001.DirectDebitMandate-update": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "maxLength": 35,
+                        "example": "4711",
+                        "title": "A identifier of Direct Debit Mandate",
+                        "description": "GDT: DirectDebitMandateID"
+                    },
+                    "CreditorPartyID": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "example": "DE82ZZZ00000001015",
+                        "title": "A unique identifier of a creditor party of direct debit mandate.",
+                        "description": "GDT: PartyID"
+                    }
+                },
+                "title": "Direct Debit Mandate (for update)"
+            },
+            "com.sap.gateway.default.loancontract.v0001.OperationalBankContractManagement": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "example": "50000608",
+                        "title": "A unique identifier of an organizational unit that is responsible for managing operational bank contracts and executing the related banking processes.",
+                        "description": "Constraint: The ID may not exceed the length of 8 and may only consist of numerical characters. GDT: OrganisationalCentreID "
+                    },
+                    "Name": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "example": "DE01",
+                        "title": "A name of the Operational Bank Contract Management.",
+                        "description": "GDT: MEDIUM_Name"
+                    },
+                    "Description": {
+                        "type": "string",
+                        "maxLength": 80,
+                        "example": "Xamplebank",
+                        "title": "A description of the Operational Bank Contract Management.",
+                        "description": "GDT: MEDIUM_Description"
+                    }
+                },
+                "title": "Operational Bank Contract Management",
+                "description": "A functional unit that is responsible for managing the contract. "
+            },
+            "com.sap.gateway.default.loancontract.v0001.OperationalBankContractManagement-create": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "example": "50000608",
+                        "title": "A unique identifier of an organizational unit that is responsible for managing operational bank contracts and executing the related banking processes.",
+                        "description": "Constraint: The ID may not exceed the length of 8 and may only consist of numerical characters. GDT: OrganisationalCentreID "
+                    }
+                },
+                "title": "Operational Bank Contract Management (for create)",
+                "description": "A functional unit that is responsible for managing the contract. "
+            },
+            "com.sap.gateway.default.loancontract.v0001.OperationalBankContractManagement-update": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "example": "50000608",
+                        "title": "A unique identifier of an organizational unit that is responsible for managing operational bank contracts and executing the related banking processes.",
+                        "description": "Constraint: The ID may not exceed the length of 8 and may only consist of numerical characters. GDT: OrganisationalCentreID "
+                    }
+                },
+                "title": "Operational Bank Contract Management (for update)",
+                "description": "A functional unit that is responsible for managing the contract. "
+            },
+            "com.sap.gateway.default.loancontract.v0001.PartyIdfgElmnts": {
+                "type": "object",
+                "properties": {
+                    "PartyUUID": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "title": "The UUID of a party (business partner).",
+                        "description": " GDT: UUID"
+                    },
+                    "PartyID": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "example": "310867",
+                        "title": "The ID of a party (business partner).",
+                        "description": " GDT: PartyID"
+                    }
+                },
+                "title": "Party Identifying Elements",
+                "description": "PartyIdentifyingElements does contain all identifying elements of a party (business partner).   Remark:  PartyTypeCode is value 147 (Business Partner).  Integrity Condition: Either PartyUUID or PartyID must be specified during creation."
+            },
+            "com.sap.gateway.default.loancontract.v0001.PartyIdfgElmnts-create": {
+                "type": "object",
+                "properties": {
+                    "PartyUUID": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "title": "The UUID of a party (business partner).",
+                        "description": " GDT: UUID"
+                    },
+                    "PartyID": {
+                        "type": "string",
+                        "maxLength": 60,
+                        "example": "310867",
+                        "title": "The ID of a party (business partner).",
+                        "description": " GDT: PartyID"
+                    }
+                },
+                "title": "Party Identifying Elements (for create)",
+                "description": "PartyIdentifyingElements does contain all identifying elements of a party (business partner).   Remark:  PartyTypeCode is value 147 (Business Partner).  Integrity Condition: Either PartyUUID or PartyID must be specified during creation."
+            },
+            "com.sap.gateway.default.loancontract.v0001.PartyIdfgElmnts-update": {
+                "type": "object",
+                "title": "Party Identifying Elements (for update)",
+                "description": "PartyIdentifyingElements does contain all identifying elements of a party (business partner).   Remark:  PartyTypeCode is value 147 (Business Partner).  Integrity Condition: Either PartyUUID or PartyID must be specified during creation."
+            },
+            "com.sap.gateway.default.loancontract.v0001.Product": {
+                "type": "object",
+                "properties": {
+                    "ProductionControl": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.ProductionControl"
+                            }
+                        ],
+                        "title": "A BankAccountContractProductionControl defines the parameters that control the processing and handling in the production of a bank account contract. ",
+                        "description": "Comment: BankAccountContractProductionControl defines the contract information that controls the production of a bank account contract. "
+                    },
+                    "BankSalesProductID": {
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.ProductID"
+                            }
+                        ]
+                    }
+                },
+                "title": "Product",
+                "description": "A Product describes the (financial) product upon which the bank account contract is based."
+            },
+            "com.sap.gateway.default.loancontract.v0001.Product-create": {
+                "type": "object",
+                "properties": {
+                    "ProductionControl": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.ProductionControl-create"
+                            }
+                        ],
+                        "title": "A BankAccountContractProductionControl defines the parameters that control the processing and handling in the production of a bank account contract. ",
+                        "description": "Comment: BankAccountContractProductionControl defines the contract information that controls the production of a bank account contract. "
+                    },
+                    "BankSalesProductID": {
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.ProductID-create"
+                            }
+                        ]
+                    }
+                },
+                "title": "Product (for create)",
+                "description": "A Product describes the (financial) product upon which the bank account contract is based."
+            },
+            "com.sap.gateway.default.loancontract.v0001.Product-update": {
+                "type": "object",
+                "properties": {
+                    "BankSalesProductID": {
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.ProductID-update"
+                            }
+                        ]
+                    }
+                },
+                "title": "Product (for update)",
+                "description": "A Product describes the (financial) product upon which the bank account contract is based."
+            },
+            "com.sap.gateway.default.loancontract.v0001.ProductID": {
+                "type": "object",
+                "properties": {
+                    "Content": {
+                        "type": "string",
+                        "maxLength": 60
+                    },
+                    "SchemeID": {
+                        "type": "string",
+                        "maxLength": 60
+                    },
+                    "SchemeAgencyID": {
+                        "type": "string",
+                        "maxLength": 60
+                    }
+                },
+                "title": "ProductID"
+            },
+            "com.sap.gateway.default.loancontract.v0001.ProductID-create": {
+                "type": "object",
+                "properties": {
+                    "Content": {
+                        "type": "string",
+                        "maxLength": 60
+                    },
+                    "SchemeID": {
+                        "type": "string",
+                        "maxLength": 60
+                    },
+                    "SchemeAgencyID": {
+                        "type": "string",
+                        "maxLength": 60
+                    }
+                },
+                "title": "ProductID (for create)"
+            },
+            "com.sap.gateway.default.loancontract.v0001.ProductID-update": {
+                "type": "object",
+                "properties": {
+                    "Content": {
+                        "type": "string",
+                        "maxLength": 60
+                    },
+                    "SchemeID": {
+                        "type": "string",
+                        "maxLength": 60
+                    },
+                    "SchemeAgencyID": {
+                        "type": "string",
+                        "maxLength": 60
+                    }
+                },
+                "title": "ProductID (for update)"
+            },
+            "com.sap.gateway.default.loancontract.v0001.ProductionControl": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "GIRO MAX",
+                        "title": "ID is an identifier of a bank account production control.",
+                        "description": "Filter: Only 'Eq' is supported as logical operator.  GDT: BankAccountContractProductionControlID"
+                    },
+                    "Description": {
+                        "type": "string",
+                        "maxLength": 80,
+                        "example": "Current Account with max. functionality",
+                        "title": "A description of the Bank Account Contract Production Control.",
+                        "description": "GDT: LANGUAGEINDEPENDENT_MEDIUM_Description"
+                    }
+                },
+                "title": "Bank Account Contract Production Control",
+                "description": "A BankAccountContractProductionControl defines the parameters that control the processing and handling in the production of a bank account contract. "
+            },
+            "com.sap.gateway.default.loancontract.v0001.ProductionControl-create": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "GIRO MAX",
+                        "title": "ID is an identifier of a bank account production control.",
+                        "description": "Filter: Only 'Eq' is supported as logical operator.  GDT: BankAccountContractProductionControlID"
+                    }
+                },
+                "title": "Bank Account Contract Production Control (for create)",
+                "description": "A BankAccountContractProductionControl defines the parameters that control the processing and handling in the production of a bank account contract. "
+            },
+            "com.sap.gateway.default.loancontract.v0001.ProductionControl-update": {
+                "type": "object",
+                "properties": {
+                    "ID": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "GIRO MAX",
+                        "title": "ID is an identifier of a bank account production control.",
+                        "description": "Filter: Only 'Eq' is supported as logical operator.  GDT: BankAccountContractProductionControlID"
+                    }
+                },
+                "title": "Bank Account Contract Production Control (for update)",
+                "description": "A BankAccountContractProductionControl defines the parameters that control the processing and handling in the production of a bank account contract. "
+            },
+            "com.sap.gateway.default.loancontract.v0001.RescissionPeriod": {
+                "type": "object",
+                "properties": {
+                    "StartDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The StartDate is the start date of the rescission period",
+                        "description": " GDT: Date Constraint for Create/Update: If StartDate and EndDate are provided no Duration must be provided."
+                    },
+                    "Duration": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "example": "P12M",
+                        "title": "The duration of the rescission period.",
+                        "description": " GDT: Duration Constraint: Allowed literals for Duration are: Y = Duration in years, M = Duration in months, D = Duration in days. Constraint for Create/Update: If duration is provided StartDate must be provided and EndDate must not be provided."
+                    },
+                    "EndDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The EndDate is the end date of rescission period"
+                    }
+                },
+                "title": "RescissionPeriod",
+                "description": "\"RescissionPeriod is a period that is defined by two points in time.These points in time are expressed in calendar days. RescissionPeriod includes the start time-point, but excludes the end time-point.\""
+            },
+            "com.sap.gateway.default.loancontract.v0001.RescissionPeriod-create": {
+                "type": "object",
+                "properties": {
+                    "StartDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The StartDate is the start date of the rescission period",
+                        "description": " GDT: Date Constraint for Create/Update: If StartDate and EndDate are provided no Duration must be provided."
+                    },
+                    "Duration": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "example": "P12M",
+                        "title": "The duration of the rescission period.",
+                        "description": " GDT: Duration Constraint: Allowed literals for Duration are: Y = Duration in years, M = Duration in months, D = Duration in days. Constraint for Create/Update: If duration is provided StartDate must be provided and EndDate must not be provided."
+                    }
+                },
+                "title": "RescissionPeriod (for create)",
+                "description": "\"RescissionPeriod is a period that is defined by two points in time.These points in time are expressed in calendar days. RescissionPeriod includes the start time-point, but excludes the end time-point.\""
+            },
+            "com.sap.gateway.default.loancontract.v0001.RescissionPeriod-update": {
+                "type": "object",
+                "properties": {
+                    "StartDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The StartDate is the start date of the rescission period",
+                        "description": " GDT: Date Constraint for Create/Update: If StartDate and EndDate are provided no Duration must be provided."
+                    },
+                    "Duration": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "example": "P12M",
+                        "title": "The duration of the rescission period.",
+                        "description": " GDT: Duration Constraint: Allowed literals for Duration are: Y = Duration in years, M = Duration in months, D = Duration in days. Constraint for Create/Update: If duration is provided StartDate must be provided and EndDate must not be provided."
+                    }
+                },
+                "title": "RescissionPeriod (for update)",
+                "description": "\"RescissionPeriod is a period that is defined by two points in time.These points in time are expressed in calendar days. RescissionPeriod includes the start time-point, but excludes the end time-point.\""
+            },
+            "com.sap.gateway.default.loancontract.v0001.SystemAdministrativeData": {
+                "type": "object",
+                "properties": {
+                    "CreationDateTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "title": "Creation date/time (date and time stamp).",
+                        "description": "GDT: GLOBAL_DateTime"
+                    },
+                    "LastChangeDateTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-04-13T15:51:04Z",
+                        "title": "Time (date and time stamp) of last change.",
+                        "description": "GDT: GLOBAL_DateTime"
+                    }
+                },
+                "title": "System Administrative Data",
+                "description": "SystemAdministrativeData is administrative data that is stored in a system. This data includes system users and change dates/times."
+            },
+            "com.sap.gateway.default.loancontract.v0001.SystemAdministrativeData-create": {
+                "type": "object",
+                "title": "System Administrative Data (for create)",
+                "description": "SystemAdministrativeData is administrative data that is stored in a system. This data includes system users and change dates/times."
+            },
+            "com.sap.gateway.default.loancontract.v0001.SystemAdministrativeData-update": {
+                "type": "object",
+                "title": "System Administrative Data (for update)",
+                "description": "SystemAdministrativeData is administrative data that is stored in a system. This data includes system users and change dates/times."
+            },
+            "com.sap.gateway.default.loancontract.v0001.TermSpecification": {
+                "type": "object",
+                "properties": {
+                    "ValidityPeriod": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.UPPEROPEN_DatePeriod"
+                            }
+                        ],
+                        "title": "Specifies the period in which the specification for the loan contract term is valid."
+                    },
+                    "ActiveIndicator": {
+                        "type": "boolean",
+                        "title": "Indicates whether the term specification is active. ",
+                        "description": "GDT: IndicatorRemark: If ActiveIndicator is false the term specification is preliminary. If ActiveIndicator is true the term specification is Active. The default value for this indicator is FALSE."
+                    },
+                    "RescissionPeriod": {
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.RescissionPeriod"
+                            }
+                        ],
+                        "title": "Specifies the period in which the borrower has the right to rescind the term specification related to the loan contract."
+                    }
+                },
+                "title": "TermSpecification",
+                "description": "A specification of term elements that affects all term agreements of the loan contract."
+            },
+            "com.sap.gateway.default.loancontract.v0001.TermSpecification-create": {
+                "type": "object",
+                "properties": {
+                    "ValidityPeriod": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.UPPEROPEN_DatePeriod-create"
+                            }
+                        ],
+                        "title": "Specifies the period in which the specification for the loan contract term is valid."
+                    },
+                    "ActiveIndicator": {
+                        "type": "boolean",
+                        "title": "Indicates whether the term specification is active. ",
+                        "description": "GDT: IndicatorRemark: If ActiveIndicator is false the term specification is preliminary. If ActiveIndicator is true the term specification is Active. The default value for this indicator is FALSE."
+                    },
+                    "RescissionPeriod": {
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.RescissionPeriod-create"
+                            }
+                        ],
+                        "title": "Specifies the period in which the borrower has the right to rescind the term specification related to the loan contract."
+                    }
+                },
+                "title": "TermSpecification (for create)",
+                "description": "A specification of term elements that affects all term agreements of the loan contract."
+            },
+            "com.sap.gateway.default.loancontract.v0001.TermSpecification-update": {
+                "type": "object",
+                "properties": {
+                    "ValidityPeriod": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.UPPEROPEN_DatePeriod-update"
+                            }
+                        ],
+                        "title": "Specifies the period in which the specification for the loan contract term is valid."
+                    },
+                    "ActiveIndicator": {
+                        "type": "boolean",
+                        "title": "Indicates whether the term specification is active. ",
+                        "description": "GDT: IndicatorRemark: If ActiveIndicator is false the term specification is preliminary. If ActiveIndicator is true the term specification is Active. The default value for this indicator is FALSE."
+                    },
+                    "RescissionPeriod": {
+                        "nullable": true,
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/com.sap.gateway.default.loancontract.v0001.RescissionPeriod-update"
+                            }
+                        ],
+                        "title": "Specifies the period in which the borrower has the right to rescind the term specification related to the loan contract."
+                    }
+                },
+                "title": "TermSpecification (for update)",
+                "description": "A specification of term elements that affects all term agreements of the loan contract."
+            },
+            "com.sap.gateway.default.loancontract.v0001.UPPEROPEN_DatePeriod": {
+                "type": "object",
+                "properties": {
+                    "StartDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The StartDate is the start date of the period",
+                        "description": " GDT: Date Constraint for Create/Update: If StartDate and EndDate are provided no Duration must be provided."
+                    },
+                    "Duration": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "example": "P12M",
+                        "title": "The duration of the period.",
+                        "description": " GDT: Duration Constraint: Allowed literals for Duration are: Y = Duration in years, M = Duration in months, D = Duration in days. Constraint for Create/Update: If duration is provided StartDate must be provided and EndDate must not be provided."
+                    },
+                    "EndDate": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The EndDate is the end date of period",
+                        "description": " GDT: Date"
+                    }
+                },
+                "title": "UPPEROPEN_DatePeriod",
+                "description": "\"UPPEROPEN_DatePeriod is a period that is defined by two points in time.These points in time are expressed in calendar days. UPPEROPEN_DatePeriod includes the start time-point, but excludes the end time-point.\""
+            },
+            "com.sap.gateway.default.loancontract.v0001.UPPEROPEN_DatePeriod-create": {
+                "type": "object",
+                "properties": {
+                    "StartDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The StartDate is the start date of the period",
+                        "description": " GDT: Date Constraint for Create/Update: If StartDate and EndDate are provided no Duration must be provided."
+                    },
+                    "Duration": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "example": "P12M",
+                        "title": "The duration of the period.",
+                        "description": " GDT: Duration Constraint: Allowed literals for Duration are: Y = Duration in years, M = Duration in months, D = Duration in days. Constraint for Create/Update: If duration is provided StartDate must be provided and EndDate must not be provided."
+                    },
+                    "EndDate": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The EndDate is the end date of period",
+                        "description": " GDT: Date"
+                    }
+                },
+                "title": "UPPEROPEN_DatePeriod (for create)",
+                "description": "\"UPPEROPEN_DatePeriod is a period that is defined by two points in time.These points in time are expressed in calendar days. UPPEROPEN_DatePeriod includes the start time-point, but excludes the end time-point.\""
+            },
+            "com.sap.gateway.default.loancontract.v0001.UPPEROPEN_DatePeriod-update": {
+                "type": "object",
+                "properties": {
+                    "StartDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The StartDate is the start date of the period",
+                        "description": " GDT: Date Constraint for Create/Update: If StartDate and EndDate are provided no Duration must be provided."
+                    },
+                    "Duration": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "example": "P12M",
+                        "title": "The duration of the period.",
+                        "description": " GDT: Duration Constraint: Allowed literals for Duration are: Y = Duration in years, M = Duration in months, D = Duration in days. Constraint for Create/Update: If duration is provided StartDate must be provided and EndDate must not be provided."
+                    },
+                    "EndDate": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The EndDate is the end date of period",
+                        "description": " GDT: Date"
+                    }
+                },
+                "title": "UPPEROPEN_DatePeriod (for update)",
+                "description": "\"UPPEROPEN_DatePeriod is a period that is defined by two points in time.These points in time are expressed in calendar days. UPPEROPEN_DatePeriod includes the start time-point, but excludes the end time-point.\""
+            },
+            "com.sap.gateway.default.loancontract.v0001.ValidityPeriod": {
+                "type": "object",
+                "properties": {
+                    "StartDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The StartDate is the start date of the commitment capital adjustment validity period",
+                        "description": " GDT: Date"
+                    },
+                    "EndDate": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The EndDate is the end date of the commitment capital adjustment validity period.",
+                        "description": " GDT: Date"
+                    }
+                },
+                "title": "ValidityPeriod",
+                "description": "A period in which the committed capital adjustment is valid"
+            },
+            "com.sap.gateway.default.loancontract.v0001.ValidityPeriod-create": {
+                "type": "object",
+                "properties": {
+                    "StartDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The StartDate is the start date of the commitment capital adjustment validity period",
+                        "description": " GDT: Date"
+                    },
+                    "EndDate": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The EndDate is the end date of the commitment capital adjustment validity period.",
+                        "description": " GDT: Date"
+                    }
+                },
+                "title": "ValidityPeriod (for create)",
+                "description": "A period in which the committed capital adjustment is valid"
+            },
+            "com.sap.gateway.default.loancontract.v0001.ValidityPeriod-update": {
+                "type": "object",
+                "properties": {
+                    "StartDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The StartDate is the start date of the commitment capital adjustment validity period",
+                        "description": " GDT: Date"
+                    },
+                    "EndDate": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date",
+                        "example": "2017-04-13",
+                        "title": "The EndDate is the end date of the commitment capital adjustment validity period.",
+                        "description": " GDT: Date"
+                    }
+                },
+                "title": "ValidityPeriod (for update)",
+                "description": "A period in which the committed capital adjustment is valid"
+            },
+            "count": {
+                "anyOf": [
+                    {
+                        "type": "number"
+                    },
+                    {
+                        "type": "string"
+                    }
+                ],
+                "description": "The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option."
+            },
+            "error": {
+                "type": "object",
+                "required": [
+                    "error"
+                ],
+                "properties": {
+                    "error": {
+                        "type": "object",
+                        "required": [
+                            "code",
+                            "message"
+                        ],
+                        "properties": {
+                            "code": {
+                                "type": "string"
+                            },
+                            "message": {
+                                "type": "string"
+                            },
+                            "target": {
+                                "type": "string"
+                            },
+                            "details": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "target": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "innererror": {
+                                "type": "object",
+                                "description": "The structure of this object is service-specific"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "top": {
+                "name": "$top",
+                "in": "query",
+                "description": "Show only the first n items, see [Paging - Top](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptiontop)",
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "example": 50
+            },
+            "skip": {
+                "name": "$skip",
+                "in": "query",
+                "description": "Skip the first n items, see [Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionskip)",
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            },
+            "count": {
+                "name": "$count",
+                "in": "query",
+                "description": "Include count of items, see [Count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount)",
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "search": {
+                "name": "$search",
+                "in": "query",
+                "description": "Search items by search phrases, see [Searching](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionsearch)",
+                "schema": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses": {
+            "error": {
+                "description": "Error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/error"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

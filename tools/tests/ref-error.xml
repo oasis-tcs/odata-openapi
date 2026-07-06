@@ -1,0 +1,2064 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+  xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <edmx:Reference Uri="../../../../default/sap/lcborrowerpartychangerequest/0001/$metadata">
+    <edmx:Include Namespace="com.sap.gateway.default.lcborrowerpartychangerequest.v0001"
+      Alias="LCBORROWERPARTYCHANGEREQUEST" />
+  </edmx:Reference>
+  <edmx:Reference Uri="../../../../default/sap/loandisbursementrequest/0001/$metadata">
+    <edmx:Include Namespace="com.sap.gateway.default.loandisbursementrequest.v0001"
+      Alias="LOANDISBURSEMENTREQ" />
+  </edmx:Reference>
+  <edmx:Reference Uri="../../../../default/sap/loanpaymentskiprequest/0001/$metadata">
+    <edmx:Include Namespace="com.sap.gateway.default.loanpaymentskiprequest.v0001"
+      Alias="LOANPAYMENTSKIPREQUEST" />
+  </edmx:Reference>
+  <edmx:Reference
+    Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+    <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="SAP__common" />
+  </edmx:Reference>
+  <edmx:Reference
+    Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value">
+    <edmx:Include Namespace="Org.OData.Measures.V1" Alias="SAP__measures" />
+  </edmx:Reference>
+  <edmx:Reference
+    Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CORE',Version='0001',SAP__Origin='LOCAL')/$value">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="SAP__core" />
+  </edmx:Reference>
+  <edmx:Reference
+    Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value">
+    <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="SAP__capabilities" />
+  </edmx:Reference>
+  <edmx:Reference
+    Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value">
+    <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="SAP__aggregation" />
+  </edmx:Reference>
+  <edmx:Reference
+    Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value">
+    <edmx:Include Namespace="Org.OData.Validation.V1" Alias="SAP__validation" />
+  </edmx:Reference>
+  <edmx:Reference
+    Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='LOCAL')/$value">
+    <edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList" />
+  </edmx:Reference>
+  <edmx:Reference
+    Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+    <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="SAP__UI" />
+  </edmx:Reference>
+  <edmx:Reference
+    Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_HTML5',Version='0001',SAP__Origin='LOCAL')/$value">
+    <edmx:Include Namespace="com.sap.vocabularies.HTML5.v1" Alias="SAP__HTML5" />
+  </edmx:Reference>
+  <edmx:Reference
+    Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PDF',Version='0001',SAP__Origin='LOCAL')/$value">
+    <edmx:Include Namespace="com.sap.vocabularies.PDF.v1" Alias="SAP__PDF" />
+  </edmx:Reference>
+  <edmx:Reference
+    Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_SESSION',Version='0001',SAP__Origin='LOCAL')/$value">
+    <edmx:Include Namespace="com.sap.vocabularies.Session.v1" Alias="SAP__session" />
+  </edmx:Reference>
+  <edmx:Reference
+    Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_HIERARCHY',Version='0001',SAP__Origin='LOCAL')/$value">
+    <edmx:Include Namespace="com.sap.vocabularies.Hierarchy.v1" Alias="SAP__hierarchy" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="com.sap.gateway.default.loancontract.v0001" Alias="SAP__self">
+      <Annotation Term="SAP__core.SchemaVersion" String="1.0.0" />
+      <EntityType Name="BalanceKeyFigures">
+        <Key>
+          <PropertyRef Name="Code" />
+        </Key>
+        <Property Name="Code" Type="Edm.String" Nullable="false" MaxLength="4" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="40" />
+        <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="200" />
+        <Property Name="Amount" Type="com.sap.gateway.default.loancontract.v0001.Amount"
+          Nullable="false" />
+      </EntityType>
+      <EntityType Name="CommittedCapitalAdjustment">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="6" />
+        <Property Name="ValidityPeriod"
+          Type="com.sap.gateway.default.loancontract.v0001.ValidityPeriod" Nullable="false" />
+        <Property Name="Amount" Type="com.sap.gateway.default.loancontract.v0001.Amount"
+          Nullable="false" />
+      </EntityType>
+      <EntityType Name="EffectiveYields">
+        <Key>
+          <PropertyRef Name="CalculationReasonCode" />
+        </Key>
+        <Property Name="CalculationReasonCode" Type="Edm.String" Nullable="false" MaxLength="2" />
+        <Property Name="CalculationReasonName" Type="Edm.String" Nullable="false" MaxLength="40" />
+        <Property Name="CalculationMethodCode" Type="Edm.String" Nullable="false" MaxLength="2" />
+        <Property Name="CalculationMethodName" Type="Edm.String" Nullable="false" MaxLength="40" />
+        <Property Name="Percent" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="6" />
+        <Property Name="BankingBusinessTransactionTypeCode" Type="Edm.String" Nullable="false"
+          MaxLength="6" />
+        <Property Name="BankingBusinessTransactionTypeName" Type="Edm.String" Nullable="false"
+          MaxLength="255" />
+        <Property Name="ValidityStartDate" Type="Edm.Date" Nullable="false" />
+        <Property Name="CalculationPeriod"
+          Type="com.sap.gateway.default.loancontract.v0001.CalculationPeriod" Nullable="false" />
+      </EntityType>
+      <EntityType Name="IncomingPaymentAgreement">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="6" />
+        <Property Name="Period"
+          Type="com.sap.gateway.default.loancontract.v0001.UPPEROPEN_DatePeriod" Nullable="false" />
+        <Property Name="PlannedFinalPaymentAmount"
+          Type="com.sap.gateway.default.loancontract.v0001.Amount" Nullable="false" />
+        <Property Name="LastPaymentDatePeriodEndAdjustmentIndicator" Type="Edm.Boolean"
+          Nullable="false" />
+      </EntityType>
+      <EntityType Name="LoanContract">
+        <Key>
+          <PropertyRef Name="UUID" />
+        </Key>
+        <Property Name="UUID" Type="Edm.Guid" Nullable="false" />
+        <Property Name="ID" Type="com.sap.gateway.default.loancontract.v0001.BankAccountContractID"
+          Nullable="false" />
+        <Property Name="CurrencyCode" Type="Edm.String" Nullable="false" MaxLength="5" />
+        <Property Name="BankAccountIdentifyingElements"
+          Type="com.sap.gateway.default.loancontract.v0001.BkAcctIdfgElmnts" Nullable="false" />
+        <Property Name="LifeCycleStatusCode" Type="Edm.String" Nullable="false" MaxLength="2" />
+        <Property Name="LifeCycleStatusName" Type="Edm.String" Nullable="false" MaxLength="40" />
+        <Property Name="BorrowerPartyIdentifyingElements"
+          Type="com.sap.gateway.default.loancontract.v0001.PartyIdfgElmnts" Nullable="false" />
+        <Property Name="Product" Type="com.sap.gateway.default.loancontract.v0001.Product"
+          Nullable="false" />
+        <Property Name="BusinessEventRecord"
+          Type="com.sap.gateway.default.loancontract.v0001.BusinessEventRecord" Nullable="false" />
+        <Property Name="OperationalBankContractManagement"
+          Type="com.sap.gateway.default.loancontract.v0001.OperationalBankContractManagement"
+          Nullable="false" />
+        <Property Name="BusinessProcessChainAssignment"
+          Type="com.sap.gateway.default.loancontract.v0001.BusinessProcessChainAssignment"
+          Nullable="false" />
+        <Property Name="ChangeStateID" Type="Edm.String" Nullable="false" MaxLength="40" />
+        <Property Name="ClearingBankAccountContract"
+          Type="com.sap.gateway.default.loancontract.v0001.ClearingBankAccountContract"
+          Nullable="false" />
+        <Property Name="TermSpecification"
+          Type="com.sap.gateway.default.loancontract.v0001.TermSpecification" Nullable="false" />
+        <NavigationProperty Name="BalanceKeyFigures"
+          Type="Collection(com.sap.gateway.default.loancontract.v0001.BalanceKeyFigures)"
+          ContainsTarget="true" />
+        <NavigationProperty Name="CommittedCapitalAdjustments"
+          Type="Collection(com.sap.gateway.default.loancontract.v0001.CommittedCapitalAdjustment)"
+          ContainsTarget="true" />
+        <NavigationProperty Name="EffectiveYields"
+          Type="Collection(com.sap.gateway.default.loancontract.v0001.EffectiveYields)"
+          ContainsTarget="true" />
+        <NavigationProperty Name="IncomingPaymentAgreements"
+          Type="Collection(com.sap.gateway.default.loancontract.v0001.IncomingPaymentAgreement)"
+          ContainsTarget="true" />
+        <NavigationProperty Name="BasicDataLoanDisbursementRequests"
+          Type="Collection(com.sap.gateway.default.loandisbursementrequest.v0001.BasicDataLoanDisbursementRequest)" />
+        <NavigationProperty Name="LoanContractBorrowerPartyChangeRequests"
+          Type="Collection(com.sap.gateway.default.lcborrowerpartychangerequest.v0001.LoanContractBorrowerPartyChangeRequest)" />
+        <NavigationProperty Name="LoanPaymentSkipRequests"
+          Type="Collection(com.sap.gateway.default.loanpaymentskiprequest.v0001.LoanPaymentSkipRequest)" />
+        <NavigationProperty Name="PaymentTransactionInstructions"
+          Type="Collection(com.sap.gateway.default.loancontract.v0001.PaymentTransactionInstruction)"
+          ContainsTarget="true" />
+        <NavigationProperty Name="TermAgreements"
+          Type="Collection(com.sap.gateway.default.loancontract.v0001.TermAgreement)"
+          ContainsTarget="true" />
+      </EntityType>
+      <EntityType Name="PaymentTransactionInstruction">
+        <Key>
+          <PropertyRef Name="UUID" />
+        </Key>
+        <Property Name="UUID" Type="Edm.Guid" Nullable="false" />
+        <Property Name="BankingBusinessTransactionTypeCode" Type="Edm.String" Nullable="false"
+          MaxLength="6" />
+        <Property Name="BankingBusinessTransactionTypeName" Type="Edm.String" Nullable="false"
+          MaxLength="40" />
+        <Property Name="BankingBusinessTransactionProcessingResultPaymentTypeCode" Type="Edm.String"
+          Nullable="false" MaxLength="6" />
+        <Property Name="BankingBusinessTransactionProcessingResultPaymentTypeName" Type="Edm.String"
+          Nullable="false" MaxLength="40" />
+        <Property Name="BankContractPaymentTransactionInstructionTypeCode" Type="Edm.String"
+          Nullable="false" MaxLength="6" />
+        <Property Name="BankContractPaymentTransactionInstructionTypeName" Type="Edm.String"
+          Nullable="false" MaxLength="40" />
+        <Property Name="DebitCreditCode" Type="Edm.String" Nullable="false" MaxLength="1" />
+        <Property Name="DebitCreditName" Type="Edm.String" Nullable="false" MaxLength="40" />
+        <Property Name="CounterpartyBankAccount"
+          Type="com.sap.gateway.default.loancontract.v0001.BankAccount" />
+        <Property Name="DirectDebitMandate"
+          Type="com.sap.gateway.default.loancontract.v0001.DirectDebitMandate" />
+        <Property Name="MappableIndicator" Type="Edm.Boolean" Nullable="false" />
+      </EntityType>
+      <EntityType Name="TermAgreement">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="6" />
+        <Property Name="CommittedCapitalAmount"
+          Type="com.sap.gateway.default.loancontract.v0001.Amount" Nullable="false" />
+        <Property Name="BankContractFinancialConditionContextValueCode" Type="Edm.String"
+          MaxLength="2" />
+        <Property Name="BankContractFinancialConditionContextValueName" Type="Edm.String"
+          MaxLength="46" />
+        <Property Name="FixingPeriod"
+          Type="com.sap.gateway.default.loancontract.v0001.UPPEROPEN_DatePeriod" Nullable="false" />
+      </EntityType>
+      <ComplexType Name="Amount">
+        <Property Name="Content" Type="Edm.Decimal" Nullable="false" Precision="23" Scale="variable" />
+        <Property Name="CurrencyCode" Type="Edm.String" Nullable="false" MaxLength="5" />
+      </ComplexType>
+      <ComplexType Name="Bank">
+        <Property Name="StandardID" Type="Edm.String" MaxLength="11" />
+        <Property Name="RoutingID" Type="Edm.String" MaxLength="35" />
+        <Property Name="CountryCode" Type="Edm.String" MaxLength="3" />
+      </ComplexType>
+      <ComplexType Name="BankAccount">
+        <Property Name="HolderName" Type="Edm.String" Nullable="false" MaxLength="60" />
+        <Property Name="ID" Type="Edm.String" MaxLength="35" />
+        <Property Name="StandardID" Type="Edm.String" MaxLength="34" />
+        <Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" />
+        <Property Name="Bank" Type="com.sap.gateway.default.loancontract.v0001.Bank" />
+      </ComplexType>
+      <ComplexType Name="BankAccountContractID">
+        <Property Name="Content" Type="Edm.String" Nullable="false" MaxLength="80" />
+        <Property Name="schemeID" Type="Edm.String" Nullable="false" MaxLength="60" />
+        <Property Name="schemeAgencyID" Type="Edm.String" Nullable="false" MaxLength="60" />
+      </ComplexType>
+      <ComplexType Name="BkAcctIdfgElmnts">
+        <Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="35" />
+        <Property Name="StandardID" Type="Edm.String" MaxLength="34" />
+        <Property Name="InternalID" Type="Edm.String" Nullable="false" MaxLength="32" />
+        <Property Name="UUID" Type="Edm.Guid" Nullable="false" />
+        <Property Name="CurrencyCode" Type="Edm.String" MaxLength="5" />
+        <Property Name="Bank" Type="com.sap.gateway.default.loancontract.v0001.Bank"
+          Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="BusinessEventRecord">
+        <Property Name="StartDate" Type="Edm.Date" Nullable="false" />
+        <Property Name="ActualCancellationDate" Type="Edm.Date" />
+        <Property Name="PlannedCancellationDate" Type="Edm.Date" />
+      </ComplexType>
+      <ComplexType Name="BusinessProcessChainAssignment">
+        <Property Name="BusinessProcessChainUUID" Type="Edm.Guid" Nullable="false" />
+        <Property Name="BankingBusinessTransactionTypeCode" Type="Edm.String" Nullable="false"
+          MaxLength="6" />
+        <Property Name="BankingBusinessTransactionTypeName" Type="Edm.String" Nullable="false"
+          MaxLength="255" />
+      </ComplexType>
+      <ComplexType Name="CalculationPeriod">
+        <Property Name="StartDate" Type="Edm.Date" Nullable="false" />
+        <Property Name="EndDate" Type="Edm.Date" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="ClearingBankAccountContract">
+        <Property Name="UUID" Type="Edm.Guid" Nullable="false" />
+        <Property Name="LoanContractUsedIndicator" Type="Edm.Boolean" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="DirectDebitMandate">
+        <Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="35" />
+        <Property Name="CreditorPartyID" Type="Edm.String" Nullable="false" MaxLength="60" />
+      </ComplexType>
+      <ComplexType Name="OperationalBankContractManagement">
+        <Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="20" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="40" />
+        <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="80" />
+      </ComplexType>
+      <ComplexType Name="PartyIdfgElmnts">
+        <Property Name="PartyUUID" Type="Edm.Guid" Nullable="false" />
+        <Property Name="PartyID" Type="Edm.String" Nullable="false" MaxLength="60" />
+      </ComplexType>
+      <ComplexType Name="Product">
+        <Property Name="ProductionControl"
+          Type="com.sap.gateway.default.loancontract.v0001.ProductionControl" Nullable="false" />
+        <Property Name="BankSalesProductID"
+          Type="com.sap.gateway.default.loancontract.v0001.ProductID" />
+      </ComplexType>
+      <ComplexType Name="ProductID">
+        <Property Name="Content" Type="Edm.String" Nullable="false" MaxLength="60" />
+        <Property Name="SchemeID" Type="Edm.String" Nullable="false" MaxLength="60" />
+        <Property Name="SchemeAgencyID" Type="Edm.String" Nullable="false" MaxLength="60" />
+      </ComplexType>
+      <ComplexType Name="ProductionControl">
+        <Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="32" />
+        <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="80" />
+      </ComplexType>
+      <ComplexType Name="RescissionPeriod">
+        <Property Name="StartDate" Type="Edm.Date" Nullable="false" />
+        <Property Name="Duration" Type="Edm.String" Nullable="false" MaxLength="20" />
+        <Property Name="EndDate" Type="Edm.Date" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="SystemAdministrativeData">
+        <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="LastChangeDateTime" Type="Edm.DateTimeOffset" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="TermSpecification">
+        <Property Name="ValidityPeriod"
+          Type="com.sap.gateway.default.loancontract.v0001.UPPEROPEN_DatePeriod" Nullable="false" />
+        <Property Name="ActiveIndicator" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="RescissionPeriod"
+          Type="com.sap.gateway.default.loancontract.v0001.RescissionPeriod" />
+      </ComplexType>
+      <ComplexType Name="UPPEROPEN_DatePeriod">
+        <Property Name="StartDate" Type="Edm.Date" Nullable="false" />
+        <Property Name="Duration" Type="Edm.String" Nullable="false" MaxLength="20" />
+        <Property Name="EndDate" Type="Edm.Date" />
+      </ComplexType>
+      <ComplexType Name="ValidityPeriod">
+        <Property Name="StartDate" Type="Edm.Date" Nullable="false" />
+        <Property Name="EndDate" Type="Edm.Date" />
+      </ComplexType>
+      <EntityContainer Name="Container">
+        <EntitySet Name="LoanContracts"
+          EntityType="com.sap.gateway.default.loancontract.v0001.LoanContract">
+          <NavigationPropertyBinding Path="BasicDataLoanDisbursementRequests"
+            Target="com.sap.gateway.default.loandisbursementrequest.v0001.Container/BasicDataLoanDisbursementRequests" />
+          <NavigationPropertyBinding Path="LoanPaymentSkipRequests"
+            Target="com.sap.gateway.default.loanpaymentskiprequest.v0001.Container/LoanPaymentSkipRequests" />
+          <NavigationPropertyBinding Path="LoanContractBorrowerPartyChangeRequests"
+            Target="com.sap.gateway.default.lcborrowerpartychangerequest.v0001.Container/LoanContractBorrowerPartyChangeRequests" />
+        </EntitySet>
+      </EntityContainer>
+      <Annotations Target="SAP__self.LoanContract">
+        <Annotation Term="SAP__core.Description" String="Loan Contract" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Loan Contract is a contractual agreement between lenders and borrowers, which is based on a borrowerâ€™s request for a loan and includes, for example, loan type, borrower(s), and general terms and conditions.
+
+Comment: A BankAccount is a bank account associated with the bank account contract. 
+
+Integrity Condition:StartDate of TermSpecificationValidityPeriod, TermAgreementFixingPeriod, and IncomingPaymentAgreementPeriod have to be the same date. 
+
+Constraint: Loan Contract Create - During creation of a loan contract , it is required to specify the details of Term Agreement and Inpayment Agreement." />
+      </Annotations>
+      <Annotations Target="SAP__self.LoanContract/UUID">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="An universal unique identifier of a bank account contract." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: NOSC_UUID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="5a880e49-87e8-1ee8-a9bc-fa163e78a157" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.LoanContract/ID">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="An identifier of a bank account contract." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: BankAccountContractID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="DE29904200340010009784" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.LoanContract/CurrencyCode">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A CurrencyCode specifies the currency of the bank account contract." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: CurrencyCode" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="EUR" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.LoanContract/BankAccountIdentifyingElements">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A BankAccount is a bank account associated with the bank account contract." />
+        <Annotation Term="SAP__core.LongDescription" String="BOCT: BankAccountIdentifyingElements" />
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+      </Annotations>
+      <Annotations Target="SAP__self.LoanContract/LifeCycleStatusCode">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A coded representation of the life cycle status of a bank account contract." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="GDT: BankAccountContractLifeCycleStatusCode" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="2" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.LoanContract/LifeCycleStatusName">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="Name of LifeCycleStatusCode." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: LANGUAGEINDEPENDENT_MEDIUM_Name" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="Active" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.LoanContract/BorrowerPartyIdentifyingElements">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A BorrowerParty is a party who takes up a financial instrument, in this case a loan contract." />
+      </Annotations>
+      <Annotations Target="SAP__self.LoanContract/Product">
+        <Annotation Term="SAP__core.Description"
+          String="A Product describes the (financial) product upon which the bank account contract is based." />
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+      </Annotations>
+      <Annotations Target="SAP__self.LoanContract/BusinessEventRecord">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A record of a business event that changes a bank account contract." />
+      </Annotations>
+      <Annotations Target="SAP__self.LoanContract/OperationalBankContractManagement">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="An OperationalBankContractManagement is responsible for managing operational bank contracts and executing the related banking processes." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="A functional unit that is responsible for managing the contract." />
+      </Annotations>
+      <Annotations Target="SAP__self.LoanContract/BusinessProcessChainAssignment">
+        <Annotation Term="SAP__core.Description"
+          String="Business Process Chain Assignment is the assignment of a business object node to a business process chain." />
+        <Annotation Term="SAP__core.LongDescription" String="
+BOCT: BusProcChnAssgmtFSElmnts" />
+      </Annotations>
+      <Annotations Target="SAP__self.LoanContract/ChangeStateID">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A ChangeStateID is a unique identifier for a change state." />
+        <Annotation Term="SAP__core.LongDescription" String="
+GDT: ChangeStateID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="20191122135035.7818490" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.LoanContract/ClearingBankAccountContract">
+        <Annotation Term="SAP__core.Description"
+          String="A ClearingBankAccountContract is a BankAccountContract that receives incoming payments that have to be transferred to a specific loan contract." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Remark: The ClearingBankAccountContract can be changed." />
+      </Annotations>
+      <Annotations Target="SAP__self.LoanContract/TermSpecification">
+        <Annotation Term="SAP__core.Description"
+          String="A specification of term elements that affects all term agreements of the loan contract." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Corresponds to tab 'Agreement' in backend
+Agreement number not included because only one agreement is allowed" />
+      </Annotations>
+      <Annotations Target="SAP__self.Container/LoanContracts">
+        <Annotation Term="SAP__capabilities.ReadRestrictions">
+          <Record>
+            <PropertyValue Property="Readable" Bool="false" />
+            <PropertyValue Property="ReadByKeyRestrictions">
+              <Record>
+                <PropertyValue Property="Readable" Bool="true" />
+                <PropertyValue Property="Description" String="Read Loan Contract by UUID" />
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="SAP__capabilities.InsertRestrictions">
+          <Record>
+            <PropertyValue Property="Insertable" Bool="true" />
+            <PropertyValue Property="Description" String="Create Loan Contract" />
+            <PropertyValue Property="NonInsertableNavigationProperties">
+              <Collection>
+                <PropertyPath>BasicDataLoanDisbursementRequests</PropertyPath>
+                <PropertyPath>LoanPaymentSkipRequests</PropertyPath>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="SAP__capabilities.UpdateRestrictions">
+          <Record>
+            <PropertyValue Property="Updatable" Bool="true" />
+            <PropertyValue Property="Description" String="Update Loan Contract" />
+            <PropertyValue Property="QueryOptions">
+              <Record>
+                <PropertyValue Property="SelectSupported" Bool="true" />
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="SAP__capabilities.DeleteRestrictions">
+          <Record>
+            <PropertyValue Property="Deletable" Bool="false" />
+          </Record>
+        </Annotation>
+        <Annotation Term="SAP__capabilities.TopSupported" Bool="false" />
+        <Annotation Term="SAP__capabilities.SkipSupported" Bool="false" />
+        <Annotation Term="SAP__capabilities.CountRestrictions">
+          <Record>
+            <PropertyValue Property="Countable" Bool="false" />
+          </Record>
+        </Annotation>
+        <Annotation Term="SAP__capabilities.SortRestrictions">
+          <Record>
+            <PropertyValue Property="Sortable" Bool="false" />
+          </Record>
+        </Annotation>
+        <Annotation Term="SAP__capabilities.SearchRestrictions">
+          <Record>
+            <PropertyValue Property="Searchable" Bool="false" />
+          </Record>
+        </Annotation>
+        <Annotation Term="SAP__capabilities.FilterRestrictions">
+          <Record>
+            <PropertyValue Property="Filterable" Bool="false" />
+          </Record>
+        </Annotation>
+        <Annotation Term="SAP__capabilities.ExpandRestrictions">
+          <Record>
+            <PropertyValue Property="Expandable" Bool="true" />
+          </Record>
+        </Annotation>
+        <Annotation Term="SAP__capabilities.NavigationRestrictions">
+          <Record>
+            <PropertyValue Property="RestrictedProperties">
+              <Collection>
+                <Record>
+                  <PropertyValue Property="NavigationProperty"
+                    NavigationPropertyPath="TermAgreements" />
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Readable" Bool="true" />
+                      <PropertyValue Property="Description" String="Query Term Agreement" />
+                      <PropertyValue Property="ReadByKeyRestrictions">
+                        <Record>
+                          <PropertyValue Property="Readable" Bool="false" />
+                        </Record>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Insertable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="UpdateRestrictions">
+                    <Record>
+                      <PropertyValue Property="Updatable" Bool="true" />
+                      <PropertyValue Property="Description" String="Update Term Agreement" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="DeleteRestrictions">
+                    <Record>
+                      <PropertyValue Property="Deletable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="TopSupported" Bool="false" />
+                  <PropertyValue Property="SkipSupported" Bool="false" />
+                  <PropertyValue Property="CountRestrictions">
+                    <Record>
+                      <PropertyValue Property="Countable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SortRestrictions">
+                    <Record>
+                      <PropertyValue Property="Sortable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SearchRestrictions">
+                    <Record>
+                      <PropertyValue Property="Searchable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="FilterRestrictions">
+                    <Record>
+                      <PropertyValue Property="Filterable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty"
+                    NavigationPropertyPath="IncomingPaymentAgreements" />
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Readable" Bool="true" />
+                      <PropertyValue Property="Description"
+                        String="Query Incoming Payment Agreement" />
+                      <PropertyValue Property="ReadByKeyRestrictions">
+                        <Record>
+                          <PropertyValue Property="Readable" Bool="false" />
+                        </Record>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Insertable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="UpdateRestrictions">
+                    <Record>
+                      <PropertyValue Property="Updatable" Bool="true" />
+                      <PropertyValue Property="Description"
+                        String="Update Incoming Payment Agreement" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="DeleteRestrictions">
+                    <Record>
+                      <PropertyValue Property="Deletable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="TopSupported" Bool="false" />
+                  <PropertyValue Property="SkipSupported" Bool="false" />
+                  <PropertyValue Property="CountRestrictions">
+                    <Record>
+                      <PropertyValue Property="Countable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SortRestrictions">
+                    <Record>
+                      <PropertyValue Property="Sortable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SearchRestrictions">
+                    <Record>
+                      <PropertyValue Property="Searchable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="FilterRestrictions">
+                    <Record>
+                      <PropertyValue Property="Filterable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty"
+                    NavigationPropertyPath="PaymentTransactionInstructions" />
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Readable" Bool="true" />
+                      <PropertyValue Property="Description"
+                        String="Query Payment Transaction Instruction" />
+                      <PropertyValue Property="ReadByKeyRestrictions">
+                        <Record>
+                          <PropertyValue Property="Readable" Bool="false" />
+                        </Record>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Insertable" Bool="true" />
+                      <PropertyValue Property="Description"
+                        String="Create Payment Transaction Instruction" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="UpdateRestrictions">
+                    <Record>
+                      <PropertyValue Property="Updatable" Bool="true" />
+                      <PropertyValue Property="Description"
+                        String="Update Payment Transaction Instruction" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="DeleteRestrictions">
+                    <Record>
+                      <PropertyValue Property="Deletable" Bool="true" />
+                      <PropertyValue Property="Description"
+                        String="Delete Payment Transaction Instruction" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="TopSupported" Bool="false" />
+                  <PropertyValue Property="SkipSupported" Bool="false" />
+                  <PropertyValue Property="CountRestrictions">
+                    <Record>
+                      <PropertyValue Property="Countable" Bool="true" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SortRestrictions">
+                    <Record>
+                      <PropertyValue Property="Sortable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SearchRestrictions">
+                    <Record>
+                      <PropertyValue Property="Searchable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="FilterRestrictions">
+                    <Record>
+                      <PropertyValue Property="Filterable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty"
+                    NavigationPropertyPath="BasicDataLoanDisbursementRequests" />
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Readable" Bool="true" />
+                      <PropertyValue Property="Description"
+                        String="Query Loan Disbursement Requests" />
+                      <PropertyValue Property="LongDescription"
+                        String="Refer to API Loan Disbursement Requests for supported query options" />
+                      <PropertyValue Property="ReadByKeyRestrictions">
+                        <Record>
+                          <PropertyValue Property="Readable" Bool="false" />
+                        </Record>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Insertable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="UpdateRestrictions">
+                    <Record>
+                      <PropertyValue Property="Updatable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="DeleteRestrictions">
+                    <Record>
+                      <PropertyValue Property="Deletable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="TopSupported" Bool="false" />
+                  <PropertyValue Property="SkipSupported" Bool="false" />
+                  <PropertyValue Property="CountRestrictions">
+                    <Record>
+                      <PropertyValue Property="Countable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SortRestrictions">
+                    <Record>
+                      <PropertyValue Property="Sortable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SearchRestrictions">
+                    <Record>
+                      <PropertyValue Property="Searchable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="FilterRestrictions">
+                    <Record>
+                      <PropertyValue Property="Filterable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty"
+                    NavigationPropertyPath="LoanPaymentSkipRequests" />
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Readable" Bool="true" />
+                      <PropertyValue Property="Description"
+                        String="Query Loan Payment Skip Requests" />
+                      <PropertyValue Property="LongDescription"
+                        String="Refer to API Loan Payment Skip Requests for supported query options" />
+                      <PropertyValue Property="ReadByKeyRestrictions">
+                        <Record>
+                          <PropertyValue Property="Readable" Bool="false" />
+                        </Record>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Insertable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="UpdateRestrictions">
+                    <Record>
+                      <PropertyValue Property="Updatable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="DeleteRestrictions">
+                    <Record>
+                      <PropertyValue Property="Deletable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="TopSupported" Bool="false" />
+                  <PropertyValue Property="SkipSupported" Bool="false" />
+                  <PropertyValue Property="CountRestrictions">
+                    <Record>
+                      <PropertyValue Property="Countable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SortRestrictions">
+                    <Record>
+                      <PropertyValue Property="Sortable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SearchRestrictions">
+                    <Record>
+                      <PropertyValue Property="Searchable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="FilterRestrictions">
+                    <Record>
+                      <PropertyValue Property="Filterable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty"
+                    NavigationPropertyPath="CommittedCapitalAdjustments" />
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Readable" Bool="true" />
+                      <PropertyValue Property="Description"
+                        String="Query Committed Capital Adjustment" />
+                      <PropertyValue Property="ReadByKeyRestrictions">
+                        <Record>
+                          <PropertyValue Property="Readable" Bool="false" />
+                        </Record>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Insertable" Bool="true" />
+                      <PropertyValue Property="Description"
+                        String="Create Committed Capital Adjustment" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="UpdateRestrictions">
+                    <Record>
+                      <PropertyValue Property="Updatable" Bool="true" />
+                      <PropertyValue Property="Description"
+                        String="Update Committed Capital Adjustment" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="DeleteRestrictions">
+                    <Record>
+                      <PropertyValue Property="Deletable" Bool="true" />
+                      <PropertyValue Property="Description"
+                        String="Delete Committed Capital Adjustment" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="TopSupported" Bool="false" />
+                  <PropertyValue Property="SkipSupported" Bool="false" />
+                  <PropertyValue Property="CountRestrictions">
+                    <Record>
+                      <PropertyValue Property="Countable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SortRestrictions">
+                    <Record>
+                      <PropertyValue Property="Sortable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SearchRestrictions">
+                    <Record>
+                      <PropertyValue Property="Searchable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="FilterRestrictions">
+                    <Record>
+                      <PropertyValue Property="Filterable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty"
+                    NavigationPropertyPath="BalanceKeyFigures" />
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Readable" Bool="true" />
+                      <PropertyValue Property="Description" String="Query Balance Key Figures" />
+                      <PropertyValue Property="ReadByKeyRestrictions">
+                        <Record>
+                          <PropertyValue Property="Readable" Bool="false" />
+                        </Record>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Insertable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="UpdateRestrictions">
+                    <Record>
+                      <PropertyValue Property="Updatable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="DeleteRestrictions">
+                    <Record>
+                      <PropertyValue Property="Deletable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="TopSupported" Bool="false" />
+                  <PropertyValue Property="SkipSupported" Bool="false" />
+                  <PropertyValue Property="CountRestrictions">
+                    <Record>
+                      <PropertyValue Property="Countable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SortRestrictions">
+                    <Record>
+                      <PropertyValue Property="Sortable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SearchRestrictions">
+                    <Record>
+                      <PropertyValue Property="Searchable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="FilterRestrictions">
+                    <Record>
+                      <PropertyValue Property="Filterable" Bool="true" />
+                    </Record>
+                  </PropertyValue>
+                </Record>
+                <Record>
+                  <PropertyValue Property="NavigationProperty"
+                    NavigationPropertyPath="EffectiveYields" />
+                  <PropertyValue Property="ReadRestrictions">
+                    <Record>
+                      <PropertyValue Property="Readable" Bool="true" />
+                      <PropertyValue Property="Description" String="Query Effective Yields" />
+                      <PropertyValue Property="ReadByKeyRestrictions">
+                        <Record>
+                          <PropertyValue Property="Readable" Bool="false" />
+                        </Record>
+                      </PropertyValue>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record>
+                      <PropertyValue Property="Insertable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="UpdateRestrictions">
+                    <Record>
+                      <PropertyValue Property="Updatable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="DeleteRestrictions">
+                    <Record>
+                      <PropertyValue Property="Deletable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="TopSupported" Bool="false" />
+                  <PropertyValue Property="SkipSupported" Bool="false" />
+                  <PropertyValue Property="CountRestrictions">
+                    <Record>
+                      <PropertyValue Property="Countable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SortRestrictions">
+                    <Record>
+                      <PropertyValue Property="Sortable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="SearchRestrictions">
+                    <Record>
+                      <PropertyValue Property="Searchable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="FilterRestrictions">
+                    <Record>
+                      <PropertyValue Property="Filterable" Bool="false" />
+                    </Record>
+                  </PropertyValue>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="SAP__core.OptimisticConcurrency">
+          <Collection>
+            <PropertyPath>ChangeStateID</PropertyPath>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.Amount">
+        <Annotation Term="SAP__core.Description" String="Amount" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Is an amount with the corresponding currency unit." />
+      </Annotations>
+      <Annotations Target="SAP__self.Amount/Content">
+        <Annotation Term="SAP__core.Description" String="Value of an amount." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="100" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.Amount/CurrencyCode">
+        <Annotation Term="SAP__core.Description"
+          String="Currency unit in accordance with the ISO 4217 three-character code." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="A currency must always be specified.
+GDT: CurrencyCode" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="EUR" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BusinessProcessChainAssignment">
+        <Annotation Term="SAP__core.Description" String="Business Process Chain Assignment" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Is the assignment of a business object node to a business process chain.  /nDefault: If BankingBusinessTransactionTypeCode is not specified, code value &quot;400006 - Adhoc Loan Contract Change&quot; will be used by default. " />
+      </Annotations>
+      <Annotations Target="SAP__self.BusinessProcessChainAssignment/BusinessProcessChainUUID">
+        <Annotation Term="SAP__core.Description"
+          String="UUID of the business process chain to which the hosting business object is assigned to." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: UUID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="6ba7b810-9dad-11d1-80b4-00c04fd430c8" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations
+        Target="SAP__self.BusinessProcessChainAssignment/BankingBusinessTransactionTypeCode">
+        <Annotation Term="SAP__core.Description" String="BankingBusinessTransactionTypeCode" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="BDT: BankingBusinessTransactionTypeCode" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="400006" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations
+        Target="SAP__self.BusinessProcessChainAssignment/BankingBusinessTransactionTypeName">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="Name of BankingBusinessTransactionTypeCode" />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: EXTENDED_Name" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="Adhoc Loan Contract Change" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BkAcctIdfgElmnts">
+        <Annotation Term="SAP__core.Description" String="Bank Account Identifying Elements" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="The identifying elements of a bank account supported by bank account management in Financial Services (Banking)." />
+      </Annotations>
+      <Annotations Target="SAP__self.BkAcctIdfgElmnts/ID">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="Bank account number (Basic Bank Account Number, BBAN). An account number that is assigned by the account managing bank. It uniquely identifies a bank account in most countries only together with the bank." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: BankAccountID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="0000000976" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BkAcctIdfgElmnts/StandardID">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="International bank account number (International Bank Account Number, IBAN)." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: BankAccountStandardID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="DE84900000010000000976" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BkAcctIdfgElmnts/InternalID">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="BankAccountInternalID is a proprietary identifier for a bank account." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: BankAccountInternalID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="5A880E4987E81EE8A9BCFA163E78A157" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BkAcctIdfgElmnts/UUID">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A UUID is an universal unique identifier of a bank account." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: NOSC_UUID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="5A880E49-87E8-1EE8-A9BC-FA163E78A157" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BkAcctIdfgElmnts/CurrencyCode">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="CurrencyCode is a coded representation of the currency of the bank account." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: CurrencyCode" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="EUR" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BkAcctIdfgElmnts/Bank">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="Bank where the account is held." />
+      </Annotations>
+      <Annotations Target="SAP__self.Bank">
+        <Annotation Term="SAP__core.Description" String="Bank" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="A bank is a business entity that performs financial investment services and payment transactions. " />
+      </Annotations>
+      <Annotations Target="SAP__self.Bank/StandardID">
+        <Annotation Term="SAP__core.Description"
+          String="Bank Identification Code (BIC) of the Society for Worldwide Interbank Financial Telecommunications (S.W.I.F.T.), see GDT BankStandardID." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: BankStandardID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="TOLLDEWDXXX" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.Bank/RoutingID">
+        <Annotation Term="SAP__core.Description"
+          String="Number of the bank in a clearing system (see GDT BankRoutingID)." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: BankRoutingID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="90000001" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.Bank/CountryCode">
+        <Annotation Term="SAP__core.Description"
+          String="Country in which the bank identified earlier goes about its business. If the bank is a member in a national clearing system, the country to which this clearing system belongs is entered here. Constraint: Only listID 3166-1 of listAgencyID 5 will be supported." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: CountryCode" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="DE" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.Product">
+        <Annotation Term="SAP__core.Description" String="Product" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="A Product describes the (financial) product upon which the bank account contract is based." />
+      </Annotations>
+      <Annotations Target="SAP__self.Product/ProductionControl">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A BankAccountContractProductionControl defines the parameters that control the processing and handling in the production of a bank account contract. " />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Comment: BankAccountContractProductionControl defines the contract information that controls the production of a bank account contract. " />
+      </Annotations>
+      <Annotations Target="SAP__self.ProductionControl">
+        <Annotation Term="SAP__core.Description" String="Bank Account Contract Production Control" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="A BankAccountContractProductionControl defines the parameters that control the processing and handling in the production of a bank account contract. " />
+      </Annotations>
+      <Annotations Target="SAP__self.ProductionControl/ID">
+        <Annotation Term="SAP__core.Description"
+          String="ID is an identifier of a bank account production control." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Filter: Only 'Eq' is supported as logical operator. 
+GDT: BankAccountContractProductionControlID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="GIRO MAX" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.ProductionControl/Description">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A description of the Bank Account Contract Production Control." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="GDT: LANGUAGEINDEPENDENT_MEDIUM_Description" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="Current Account with max. functionality" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BusinessEventRecord">
+        <Annotation Term="SAP__core.Description" String="Business Event Record" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="A record of a business event that changes a bank account contract. " />
+      </Annotations>
+      <Annotations Target="SAP__self.BusinessEventRecord/StartDate">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="Date when the bank account contract becomes operational from the customer's point of view." />
+        <Annotation Term="SAP__core.LongDescription" String="
+GDT: Date" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="2018-11-14" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BusinessEventRecord/ActualCancellationDate">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="Date when a bank account contract is actually canceled." />
+        <Annotation Term="SAP__core.LongDescription" String="
+GDT: Date" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="2020-11-14" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BusinessEventRecord/PlannedCancellationDate">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="Date when a  cancellation of a bank account contract is planned." />
+        <Annotation Term="SAP__core.LongDescription" String="
+GDT: Date" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="2020-11-14" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.OperationalBankContractManagement">
+        <Annotation Term="SAP__core.Description" String="Operational Bank Contract Management" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="A functional unit that is responsible for managing the contract. " />
+      </Annotations>
+      <Annotations Target="SAP__self.OperationalBankContractManagement/ID">
+        <Annotation Term="SAP__core.Description"
+          String="A unique identifier of an organizational unit that is responsible for managing operational bank contracts and executing the related banking processes." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Constraint: The ID may not exceed the length of 8 and may only consist of numerical characters.
+GDT: OrganisationalCentreID " />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="50000608" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.OperationalBankContractManagement/Name">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A name of the Operational Bank Contract Management." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: MEDIUM_Name" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="DE01" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.OperationalBankContractManagement/Description">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A description of the Operational Bank Contract Management." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: MEDIUM_Description" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="Xamplebank" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BankAccountContractID">
+        <Annotation Term="SAP__core.Description" String="BankAccountContractID" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="An identifier of a bank account contract.
+GDT: BankAccountContractID" />
+      </Annotations>
+      <Annotations Target="SAP__self.BankAccountContractID/Content">
+        <Annotation Term="SAP__core.Description" String="Content of BankAccountContractID." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="DE32904200380010000707" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BankAccountContractID/schemeID">
+        <Annotation Term="SAP__core.Description" String="SchemeID of the BankAccountContractID." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Default: If filter value is not provided, BAC.001 will be used as default value for filter." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="BAC.001" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BankAccountContractID/schemeAgencyID">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="SchemeAgencyID of the BankAccountContractID." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Default: If filter value is not provided, 310 will be used as default value for filter." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="310" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.PartyIdfgElmnts">
+        <Annotation Term="SAP__core.Description" String="Party Identifying Elements" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="PartyIdentifyingElements does contain all identifying elements of a party (business partner).  
+Remark:  PartyTypeCode is value 147 (Business Partner). 
+Integrity Condition: Either PartyUUID or PartyID must be specified during creation." />
+      </Annotations>
+      <Annotations Target="SAP__self.PartyIdfgElmnts/PartyUUID">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="The UUID of a party (business partner)." />
+        <Annotation Term="SAP__core.LongDescription" String="
+GDT: UUID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="0050568f-0843-1ed1-9d9e-d0bcecff668d" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.PartyIdfgElmnts/PartyID">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="The ID of a party (business partner)." />
+        <Annotation Term="SAP__core.LongDescription" String="
+GDT: PartyID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="310867" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BankAccount">
+        <Annotation Term="SAP__core.Description" String="Bank Account" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="An account that holds funds in a bank and is subject to deposits and withdrawals." />
+      </Annotations>
+      <Annotations Target="SAP__self.BankAccount/HolderName">
+        <Annotation Term="SAP__core.Description"
+          String="A name of the account holder of a bank account." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: BankAccountHolderName_V1" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="John Doe" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BankAccount/ID">
+        <Annotation Term="SAP__core.Description"
+          String="Bank account number (Basic Bank Account Number, BBAN). An account number that is assigned by the account managing bank. It uniquely identifies a bank account in most countries only together with the bank" />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: BankAccountID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="4711" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BankAccount/StandardID">
+        <Annotation Term="SAP__core.Description"
+          String="International bank account number (International Bank Account Number, IBAN)" />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: BankAccountStandardID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="DE58200505500000004711" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BankAccount/CurrencyCode">
+        <Annotation Term="SAP__core.Description"
+          String="CurrencyCode is a coded representation of the currency of the bank account." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: CurrencyCode" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="EUR" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BankAccount/Bank">
+        <Annotation Term="SAP__core.Description" String="Bank where the account is held." />
+      </Annotations>
+      <Annotations Target="SAP__self.DirectDebitMandate">
+        <Annotation Term="SAP__core.Description" String="Direct Debit Mandate" />
+      </Annotations>
+      <Annotations Target="SAP__self.DirectDebitMandate/ID">
+        <Annotation Term="SAP__core.Description" String="A identifier of Direct Debit Mandate" />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: DirectDebitMandateID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="4711" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.DirectDebitMandate/CreditorPartyID">
+        <Annotation Term="SAP__core.Description"
+          String="A unique identifier of a creditor party of direct debit mandate." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: PartyID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="DE82ZZZ00000001015" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.SystemAdministrativeData">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="System Administrative Data" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="SystemAdministrativeData is administrative data that is stored in a system. This data includes system users and change dates/times." />
+      </Annotations>
+      <Annotations Target="SAP__self.SystemAdministrativeData/CreationDateTime">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="Creation date/time (date and time stamp)." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: GLOBAL_DateTime" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="2021-03-15T12:28:41Z" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.SystemAdministrativeData/LastChangeDateTime">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="Time (date and time stamp) of last change." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: GLOBAL_DateTime" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="2021-04-15T14:29:41Z" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.UPPEROPEN_DatePeriod">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="UPPEROPEN_DatePeriod" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="&quot;UPPEROPEN_DatePeriod is a period that is defined by two points in time.These points in time are expressed in calendar days. UPPEROPEN_DatePeriod includes the start time-point, but excludes the end time-point.&quot;" />
+      </Annotations>
+      <Annotations Target="SAP__self.UPPEROPEN_DatePeriod/StartDate">
+        <Annotation Term="SAP__core.Description"
+          String="The StartDate is the start date of the period" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="
+GDT: Date Constraint for Create/Update: If StartDate and EndDate are provided no Duration must be provided." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="2018-11-14" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.UPPEROPEN_DatePeriod/Duration">
+        <Annotation Term="SAP__core.Description" String="The duration of the period." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="
+GDT: Duration Constraint: Allowed literals for Duration are: Y = Duration in years, M = Duration in months, D = Duration in days. Constraint for Create/Update: If duration is provided StartDate must be provided and EndDate must not be provided." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="P12M" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.UPPEROPEN_DatePeriod/EndDate">
+        <Annotation Term="SAP__core.Description" String="The EndDate is the end date of period" />
+        <Annotation Term="SAP__core.LongDescription" String="
+GDT: Date" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="2019-11-14" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.RescissionPeriod">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="RescissionPeriod" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="&quot;RescissionPeriod is a period that is defined by two points in time.These points in time are expressed in calendar days. RescissionPeriod includes the start time-point, but excludes the end time-point.&quot;" />
+      </Annotations>
+      <Annotations Target="SAP__self.RescissionPeriod/StartDate">
+        <Annotation Term="SAP__core.Description"
+          String="The StartDate is the start date of the rescission period" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="
+GDT: Date Constraint for Create/Update: If StartDate and EndDate are provided no Duration must be provided." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="2018-11-14" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.RescissionPeriod/Duration">
+        <Annotation Term="SAP__core.Description" String="The duration of the rescission period." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="
+GDT: Duration Constraint: Allowed literals for Duration are: Y = Duration in years, M = Duration in months, D = Duration in days. Constraint for Create/Update: If duration is provided StartDate must be provided and EndDate must not be provided." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="P12M" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.RescissionPeriod/EndDate">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="The EndDate is the end date of rescission period" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="2019-11-14" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.ValidityPeriod">
+        <Annotation Term="SAP__core.Description" String="ValidityPeriod" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="A period in which the committed capital adjustment is valid" />
+      </Annotations>
+      <Annotations Target="SAP__self.ValidityPeriod/StartDate">
+        <Annotation Term="SAP__core.Description"
+          String="The StartDate is the start date of the commitment capital adjustment validity period" />
+        <Annotation Term="SAP__core.LongDescription" String="
+GDT: Date" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="2018-11-14" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.ValidityPeriod/EndDate">
+        <Annotation Term="SAP__core.Description"
+          String="The EndDate is the end date of the commitment capital adjustment validity period." />
+        <Annotation Term="SAP__core.LongDescription" String="
+GDT: Date" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="2019-11-14" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.CalculationPeriod">
+        <Annotation Term="SAP__core.Description" String="Calculation Period" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="The period for which EffectiveYieldPercent is calculated." />
+      </Annotations>
+      <Annotations Target="SAP__self.CalculationPeriod/StartDate">
+        <Annotation Term="SAP__core.Description"
+          String="The StartDate is the start date of the Calculation Period." />
+        <Annotation Term="SAP__core.LongDescription" String="
+GDT: Date" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="2018-11-14" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.CalculationPeriod/EndDate">
+        <Annotation Term="SAP__core.Description"
+          String="The EndDate is the end date of the Calculation Period." />
+        <Annotation Term="SAP__core.LongDescription" String="
+GDT: Date" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="2019-11-14" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.TermSpecification">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="TermSpecification" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="A specification of term elements that affects all term agreements of the loan contract." />
+      </Annotations>
+      <Annotations Target="SAP__self.TermSpecification/ValidityPeriod">
+        <Annotation Term="SAP__core.Description"
+          String="Specifies the period in which the specification for the loan contract term is valid." />
+      </Annotations>
+      <Annotations Target="SAP__self.TermSpecification/ActiveIndicator">
+        <Annotation Term="SAP__core.Description"
+          String="Indicates whether the term specification is active. " />
+        <Annotation Term="SAP__core.LongDescription"
+          String="GDT: IndicatorRemark: If ActiveIndicator is false the term specification is preliminary. If ActiveIndicator is true the term specification is Active. The default value for this indicator is FALSE." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="TRUE" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.TermSpecification/RescissionPeriod">
+        <Annotation Term="SAP__core.Description"
+          String="Specifies the period in which the borrower has the right to rescind the term specification related to the loan contract." />
+      </Annotations>
+      <Annotations Target="SAP__self.ClearingBankAccountContract">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="ClearingBankAccountContract" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="A ClearingBankAccountContract is a BankAccountContract that receives incoming payments that have to be transferred to a specific loan contract.Remark: The ClearingBankAccountContract can be changed.Constraint: Loan Contract Create - During creation of a Loan Contract , it is required to either specify the ClearingBankAccountContractUUID or ClearingBankAccountContract LoanContractUsedIndicator." />
+      </Annotations>
+      <Annotations Target="SAP__self.ClearingBankAccountContract/UUID">
+        <Annotation Term="SAP__core.Description"
+          String="A UUID is an universal unique identifier of a bank account contract." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: NOSC_UUID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="5a880e49-87e8-1ee8-a9bc-fa163e78a157" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.ClearingBankAccountContract/LoanContractUsedIndicator">
+        <Annotation Term="SAP__core.Description"
+          String="Indicates whether the loan contract is used as clearing bank account contract" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="GDT: Indicator
+Remark: If this indicator is not set, it implies that the Clearing Bank Account Contract used for incoming payments to the loan , is different than the loan contract. Constraint : If LoanContractUsedIndicator is true, the ClearingBankAccountContractUUID must not be specified" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="FALSE" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.TermAgreement">
+        <Annotation Term="SAP__core.Description" String="TermAgreement" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="The TermAgreement is an agreement on the terms of a loan contractCorresponds to tab 'Condition Fixing' in backend 
+Constraint: Only context code value 34 &quot;Loan Contract Term Agreement Condition Determination Key&quot; is supported for BankContractFinancialConditionContextValueCode = VC or  BankContractFinancialConditionContextValueCode = FC.
+Note: While creating LoanContract we have to pass same attributes for all term agreements.It means all the records in TermAgreement should have the same attributes during POST call.Even if some attributes are not required, we can pass those with blank value to make the request homogeneous." />
+      </Annotations>
+      <Annotations Target="SAP__self.TermAgreement/ID">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="An identifier of a term agreement belonging to a loan contract." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="GDT: BankAccountContractTermAgreementID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="1" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.TermAgreement/CommittedCapitalAmount">
+        <Annotation Term="SAP__core.Description"
+          String="The CommittedAmount is the committed amount of the term agreement of a loan contract." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: Amount" />
+      </Annotations>
+      <Annotations Target="SAP__self.TermAgreement/BankContractFinancialConditionContextValueCode">
+        <Annotation Term="SAP__core.Description"
+          String="A coded representation of the value of a context." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="
+GDT: BankContractFinancialConditionContextValueCode" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="FC" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.TermAgreement/BankContractFinancialConditionContextValueName">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="Name of BankContractFinancialConditionContextCode" />
+        <Annotation Term="SAP__core.LongDescription" String="
+GDT: LONG_Name" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="Fixed Interest, to be capitalized" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.TermAgreement/FixingPeriod">
+        <Annotation Term="SAP__core.Description"
+          String="A FixingPeriod is the period for which the term agreement is fixed." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Use: the FixingPeriod is the period for which the committed capital amount is fixed. " />
+      </Annotations>
+      <Annotations Target="SAP__self.IncomingPaymentAgreement">
+        <Annotation Term="SAP__core.Description" String="IncomingPaymentAgreement" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="An Incoming Payment Agreement is an agreement that specifies the term for the incoming payments of the loan contract." />
+      </Annotations>
+      <Annotations Target="SAP__self.IncomingPaymentAgreement/ID">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="An identifier of an incoming payment agreement belonging to a loan contract." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="GDT: BankAccountContractIncomingPaymentAgreementID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="1" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.IncomingPaymentAgreement/Period">
+        <Annotation Term="SAP__core.Description"
+          String="Is the period in which the IncomingPaymentAgreement is valid." />
+      </Annotations>
+      <Annotations Target="SAP__self.IncomingPaymentAgreement/PlannedFinalPaymentAmount">
+        <Annotation Term="SAP__core.Description"
+          String="The amount of the final payment that is planned for the incoming payment agreement. " />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Use: Use: The planned final payment for a loan is a payment agreed with the borrower party. It is due as the last payment of the loan. 
+GDT: Amount" />
+      </Annotations>
+      <Annotations
+        Target="SAP__self.IncomingPaymentAgreement/LastPaymentDatePeriodEndAdjustmentIndicator">
+        <Annotation Term="SAP__core.Description"
+          String="Indicates whether the last payment date in the payment plan must be adjusted to the end date of the period of the incoming payment agreement or not. " />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: Indicator" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="true" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.PaymentTransactionInstruction">
+        <Annotation Term="SAP__core.Description" String="PaymentTransactionInstruction" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="A payment transaction instruction is an instruction for payment transactions related to the bank account contract. 
+Remark:
+A payment transaction instruction is used in banking business transaction to trigger a payment transaction." />
+      </Annotations>
+      <Annotations Target="SAP__self.PaymentTransactionInstruction/UUID">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A UUID is a globally unique identifier for a PaymentTransactionInstruction." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: NOSC_UUID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="42010aee-016b-1eea-9e93-e9f0396a403f" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations
+        Target="SAP__self.PaymentTransactionInstruction/BankingBusinessTransactionTypeCode">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A BankingBusinessTransactionTypeCode is a coded representation of the type of business transaction from a banking view." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Remark: Specifies the business transaction for which the payment transaction instruction is used. GDT: BankingBusinessTransactionTypeCode" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="500001" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations
+        Target="SAP__self.PaymentTransactionInstruction/BankingBusinessTransactionTypeName">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="Name of BankingBusinessTransactionTypeCode." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: MEDIUM_Name" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="Bank Account Settlement" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations
+        Target="SAP__self.PaymentTransactionInstruction/BankingBusinessTransactionProcessingResultPaymentTypeCode">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A BankingBusinessTransactionProcessingResultingPaymentTypeCode is a coded representation of the payment type that results from processing a banking business transaction." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="GDT: BankingBusinessTransactionProcessingResultPaymentTypeCode" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="1" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations
+        Target="SAP__self.PaymentTransactionInstruction/BankingBusinessTransactionProcessingResultPaymentTypeName">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="Name of BankingBusinessTransactionProcessingResultPaymentTypeCode." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: MEDIUM_Name" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="ClrgAcctSettlmtRsltsBySCT" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations
+        Target="SAP__self.PaymentTransactionInstruction/BankContractPaymentTransactionInstructionTypeCode">
+        <Annotation Term="SAP__core.Description"
+          String="A BankContractPaymentTransactionInstructionTypeCode is a coded representation of the type of a bank contract payment transaction instruction." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="GDT: BankContractPaymentTransactionInstructionTypeCode" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="71" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations
+        Target="SAP__self.PaymentTransactionInstruction/BankContractPaymentTransactionInstructionTypeName">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="Name of BankContractPaymentTransactionInstructionTypeCode." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: MEDIUM_Name" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="Settlement Generic Payment" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.PaymentTransactionInstruction/DebitCreditCode">
+        <Annotation Term="SAP__core.Immutable" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A coded representation of the credit or debit side of payment transaction instruction." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Remark:
+A DebitCreditCode is used to identify the resulting payment transaction as a credit or debit transaction.
+GDT: DebitCreditCode" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="1" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.PaymentTransactionInstruction/DebitCreditName">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="Name of DebitCreditCode." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: MEDIUM_Name" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="Debit" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.PaymentTransactionInstruction/CounterpartyBankAccount">
+        <Annotation Term="SAP__core.Description"
+          String="Contains the bank account to which funds are either transferred or collected from." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Comment:
+The Counterparty is the party that participates in a payment transaction.
+Remark:
+If DebitCreditCode is 'Credit', funds are transferred to the bank account. If DebitCreditCode is 'Debit', funds are collected from the bank account." />
+      </Annotations>
+      <Annotations Target="SAP__self.PaymentTransactionInstruction/DirectDebitMandate">
+        <Annotation Term="SAP__core.Description"
+          String="The direct debit mandate used in a payment transaction instruction." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Remark:
+DirectDebitMandate is only applicable, if value for DebitCreditCode is 'Debit'." />
+      </Annotations>
+      <Annotations Target="SAP__self.PaymentTransactionInstruction/MappableIndicator">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="Indicates that PaymentTransactionInstruction is mappable." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: Indicator" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="true" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.CommittedCapitalAdjustment">
+        <Annotation Term="SAP__core.Description" String="CommittedCapitalAdjustment" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Adjusts the loan capital amount that is committed for the specified period.Remark: This functionality is realized in the backend using Seasonal Limits.The effects of this adjustment can be seen using transaction BCA_CN_KFG and requesting &quot;Interest and Capital Amounts&quot;.Constraint:  Increase adjustments can be made in the contract future; decrease adjustments can only be made in the contract present." />
+      </Annotations>
+      <Annotations Target="SAP__self.CommittedCapitalAdjustment/ID">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="Unique identifier of an adjustment of a committed capital for a loan contract." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: CommittedCapitalAdjustmentID" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="1" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.CommittedCapitalAdjustment/ValidityPeriod">
+        <Annotation Term="SAP__core.Description"
+          String="The period in which the Committed Capital Adjustment is valid." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="It describes the period when the committed capital adjustment is used.
+GDT:ValidityPeriod" />
+      </Annotations>
+      <Annotations Target="SAP__self.CommittedCapitalAdjustment/Amount">
+        <Annotation Term="SAP__core.Description"
+          String="The amount by which the committed capital is adjusted." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="A negative amount decreases the committed capital amount and a positive amount increases the committed capital amount.
+GDT: Amount" />
+      </Annotations>
+      <Annotations Target="SAP__self.BalanceKeyFigures">
+        <Annotation Term="SAP__core.Description" String="BalanceKeyFigures" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="A BalanceKeyFigure is a key figure that describes an amount pertaining to a loan contract." />
+      </Annotations>
+      <Annotations Target="SAP__self.BalanceKeyFigures/Code">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A BankAccountContractBalanceKeyFigureCode is a coded representation of a key figure for a balance of a BankAccountContract." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Remark: The valid code values for a loan contract are described in the BDT BankAccountContractBalanceKeyFigureCode." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="17" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BalanceKeyFigures/Name">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="Name of BankAccountContractBalanceKeyFigureCode." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="InitialLoanContractAmount" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BalanceKeyFigures/Description">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="Description of a balance key figure." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value"
+              String="An amount that is the initial loan contract amount." />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.BalanceKeyFigures/Amount">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="An amount that specifies the amount of the balance key figure." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Integrity constraint: CurrencyCode of Amount has to be equal to CurrencyCode of LoanContract." />
+      </Annotations>
+      <Annotations Target="SAP__self.EffectiveYields">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="EffectiveYields" />
+        <Annotation Term="SAP__core.LongDescription"
+          String="An EffectiveYields is the effective yield (effective interest) of a bank account contract." />
+      </Annotations>
+      <Annotations Target="SAP__self.EffectiveYields/CalculationReasonCode">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A coded representation of the reason for a effective yield calculation for a bank account contract." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Remark: The valid code values for a loan contract are described in the GDT EffectiveYieldCalculationReasonCode." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="1" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.EffectiveYields/CalculationReasonName">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="The name of an effective yield calculation reason code." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="Legal Effective Yield" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.EffectiveYields/CalculationMethodCode">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="A coded representation of the method for calculating the effective interest rate." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Remark: The valid code values for a loan contract are described in the GDT EffectiveYieldCalculationMethodCode." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="6" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.EffectiveYields/CalculationMethodName">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="The name of a calculation method code." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT:MEDIUM_Name" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="EU Act/365" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.EffectiveYields/Percent">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description" String="The effective yield percent." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT:Percent" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="7.2006348312" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.EffectiveYields/BankingBusinessTransactionTypeCode">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="BankingBusinessTransactionTypeCode is the coded representation of the banking business transaction which is associated with the calculation of the bank account contract effective yield." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="Remark: GDT: BankingBusinessTransactionTypeCode" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="200008" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.EffectiveYields/BankingBusinessTransactionTypeName">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="Name of BankingBusinessTransactionTypeCode." />
+        <Annotation Term="SAP__core.LongDescription" String="GDT: MEDIUM_Name" />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="Loan Contract Utilization (Disbursement)" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.EffectiveYields/ValidityStartDate">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="The date at which the effective yield validity begins." />
+        <Annotation Term="SAP__core.Example">
+          <Record Type="SAP__core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="20-02-2001" />
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SAP__self.EffectiveYields/CalculationPeriod">
+        <Annotation Term="SAP__core.Computed" Bool="true" />
+        <Annotation Term="SAP__core.Description"
+          String="The period for which EffectiveYieldPercent is calculated." />
+        <Annotation Term="SAP__core.LongDescription"
+          String="It describes the period for which EffectiveYieldPercent is calculated.GDT:CLOSED_DatePeriod" />
+      </Annotations>
+      <Annotations Target="SAP__self.Container">
+        <Annotation Term="SAP__capabilities.FilterFunctions">
+          <Collection>
+            <String>eq</String>
+            <String>ne</String>
+            <String>gt</String>
+            <String>ge</String>
+            <String>lt</String>
+            <String>le</String>
+            <String>and</String>
+            <String>or</String>
+            <String>contains</String>
+            <String>startswith</String>
+            <String>endswith</String>
+            <String>any</String>
+            <String>all</String>
+          </Collection>
+        </Annotation>
+        <Annotation Term="SAP__capabilities.SupportedFormats">
+          <Collection>
+            <String>application/json</String>
+            <String>application/pdf</String>
+          </Collection>
+        </Annotation>
+        <Annotation Term="SAP__PDF.Features">
+          <Record>
+            <PropertyValue Property="DocumentDescriptionReference"
+              String="../../../../default/iwbep/common/0001/$metadata" />
+            <PropertyValue Property="DocumentDescriptionCollection" String="MyDocumentDescriptions" />
+            <PropertyValue Property="ArchiveFormat" Bool="true" />
+            <PropertyValue Property="Border" Bool="true" />
+            <PropertyValue Property="CoverPage" Bool="true" />
+            <PropertyValue Property="FitToPage" Bool="true" />
+            <PropertyValue Property="FontName" Bool="true" />
+            <PropertyValue Property="FontSize" Bool="true" />
+            <PropertyValue Property="Margin" Bool="true" />
+            <PropertyValue Property="Padding" Bool="true" />
+            <PropertyValue Property="Signature" Bool="true" />
+            <PropertyValue Property="HeaderFooter" Bool="true" />
+            <PropertyValue Property="ResultSizeDefault">
+              <Null />
+            </PropertyValue>
+            <PropertyValue Property="ResultSizeMaximum">
+              <Null />
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="SAP__capabilities.KeyAsSegmentSupported" />
+        <Annotation Term="SAP__capabilities.AsynchronousRequestsSupported" />
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
