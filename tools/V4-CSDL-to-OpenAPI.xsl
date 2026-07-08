@@ -1455,14 +1455,7 @@
 
   <xsl:template match="edm:NavigationProperty" mode="hashpair">
     <xsl:text>"</xsl:text>
-    <xsl:choose>
-      <xsl:when test="starts-with(@Type,'Collection(')">
-        <xsl:value-of select="substring(@Type,12,string-length(@Type)-12)" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="@Type" />
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:value-of select="@p2:Type" />
     <xsl:text>":{"description":"External entity","type":"object"}</xsl:text>
   </xsl:template>
 

@@ -289,7 +289,7 @@
 			<xsl:when test="$ns">
 				<xsl:value-of select="concat($ns,'.')" />
 				<xsl:call-template name="name">
-					<xsl:with-param name="qname" select="." />
+					<xsl:with-param name="qname" select="$qname" />
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:otherwise>
@@ -658,7 +658,16 @@
 							test="not(starts-with(.,'Edm.') or starts-with(.,'Collection(Edm.'))">
 							<xsl:attribute name="p2:{name()}">
 								<xsl:call-template name="p2-attribute">
-									<xsl:with-param name="qname" select="." />
+									<xsl:with-param name="qname">
+										<xsl:choose>
+											<xsl:when test="starts-with(.,'Collection(')">
+												<xsl:value-of select="substring(.,12,string-length(.)-12)" />
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="." />
+											</xsl:otherwise>
+										</xsl:choose>
+									</xsl:with-param>
 								</xsl:call-template>
 							</xsl:attribute>
 						</xsl:if>
