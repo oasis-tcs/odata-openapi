@@ -51,3 +51,5 @@ Options:
 ## Supported Annotations
 
 The mapping can be fine-tuned via [annotations](https://github.com/oasis-tcs/odata-openapi/blob/main/doc/Annotations.md) in the CSDL (`$metadata`) XML documents.
+
+This tool generates OpenAPI documents for OData V4 services that allow deep insert/upsert only for _containment_ navigation properties. Such OpenAPI documents are suitable for CAP-based services, see also the [`@cap-js/openapi` package](https://github.com/cap-js/openapi) that was forked from this repository.
