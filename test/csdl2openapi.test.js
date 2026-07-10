@@ -998,6 +998,64 @@ describe("Edge cases", function () {
     assert.deepStrictEqual(actual.paths, expected.paths);
   });
 
+  it("action with nullable and not nullable parameters", function () {
+    const csdl = {
+      $Reference: {
+        dummy: {
+          $Include: [{ $Namespace: "Org.OData.Core.V1", $Alias: "Core" }],
+        },
+      },
+      $EntityContainer: "this.Container",
+      this: {
+        act: [
+          {
+            $Kind: "Action",
+            $Parameter: [
+              { $Name: "required1" },
+              { $Name: "required2", $Type: "Edm.Boolean" },
+              { $Name: "nullable", $Nullable: true },
+              {
+                $Name: "optional",
+                "@Core.OptionalParameter": {},
+              },
+              { $Name: "collection", $Collection: true },
+            ],
+          },
+        ],
+        Container: { act: { $Action: "this.act" } },
+      },
+    };
+    const expected = {
+      requestBody: {
+        description: "Action parameters",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              required: ["required1", "required2"],
+              properties: {
+                required1: { type: "string" },
+                required2: { type: "boolean" },
+                nullable: { type: "string", nullable: true },
+                optional: { type: "string" },
+                collection: {
+                  type: "array",
+                  items: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    const actual = csdl2openapi(csdl, {});
+    assert.deepStrictEqual(
+      actual.paths["/act"].post.requestBody,
+      expected.requestBody,
+      "requestBody",
+    );
+  });
+
   it("return type with facets", function () {
     const csdl = {
       $EntityContainer: "this.Container",
