@@ -3006,7 +3006,7 @@
             <xsl:with-param name="selectSupport"
             select="$navigationPropertyRestriction/edm:PropertyValue[@Property='SelectSupport']" />
           -->
-          <xsl:with-param name="with-post" select="$collection and ($targetSet or @ContainsTarget='true') and ($navigation-insertable!='false' or (not($navigation-insertable) and not($insertable='false')))" />
+          <xsl:with-param name="with-post" select="$collection and ($targetSet or @ContainsTarget='true') and (not($navigation-insertable='false') or (not($navigation-insertable) and not($insertable='false')))" />
         </xsl:call-template>
       </xsl:if>
 
