@@ -69,7 +69,7 @@
   <xsl:param name="resourceColor" select="'{bg:dodgerblue}'" />
   <xsl:variable name="option-prefix" select="'$'" />
   <xsl:variable name="csdl-version" select="/edmx:Edmx/@Version" />
-   
+
 
   <xsl:variable name="reuse-schemas">
     <xsl:choose>
@@ -2666,11 +2666,13 @@
         <xsl:text>"$ref":"</xsl:text>
         <xsl:variable name="externalNamespace"
           select="/edmx:Edmx/edmx:Reference/edmx:Include[@Alias=$qualifier]/@Namespace|/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$qualifier]/@Namespace" />
-        <xsl:call-template
-          name="json-url">
-          <xsl:with-param name="url"
-            select="/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
-        </xsl:call-template>
+        <!--
+          <xsl:call-template
+            name="json-url">
+            <xsl:with-param name="url"
+              select="/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
+          </xsl:call-template>
+        -->
         <xsl:value-of
           select="$reuse-schemas" />
         <xsl:value-of select="$externalNamespace" />
