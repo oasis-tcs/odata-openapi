@@ -1034,7 +1034,9 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>,</xsl:text>
-    <xsl:text>"external-ref":{"type":"object","description":"An entity from an external service"},</xsl:text>
+    <xsl:if test="/edmx:Edmx/edmx:Reference[not(starts-with(@Uri,'/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies'))]">
+      <xsl:text>"external-ref":{"type":"object","description":"An entity from an external service"},</xsl:text>
+    </xsl:if>
     <xsl:if test="//@Type[.='Edm.GeographyPoint' or .='Edm.GeometryPoint']">
       <xsl:text>"geoPoint":{"type":"object","properties":{"type":{"type":"string","enum":["Point"],"default":"Point"},"coordinates":{"$ref":"</xsl:text>
       <xsl:value-of select="$reuse-schemas" />
