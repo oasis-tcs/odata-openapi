@@ -1034,7 +1034,7 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>,</xsl:text>
-    <xsl:if test="/edmx:Edmx/edmx:Reference[not(starts-with(@Uri,'/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies'))]">
+    <xsl:if test="/edmx:Edmx/edmx:Reference/edmx:Include[not(starts-with(@Namespace,'Org.OData.') or starts-with(@Namespace,'com.sap.vocabularies.'))]">
       <xsl:text>"external-ref":{"type":"object","description":"An entity from an external service"},</xsl:text>
     </xsl:if>
     <xsl:if test="//@Type[.='Edm.GeographyPoint' or .='Edm.GeometryPoint']">
