@@ -1145,6 +1145,7 @@ describe("Annotations", function () {
                 "application/json": {
                   schema: {
                     type: "object",
+                    required: ["other"],
                     properties: { other: { type: "string" } },
                   },
                 },
