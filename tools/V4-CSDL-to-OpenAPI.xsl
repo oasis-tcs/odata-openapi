@@ -1034,6 +1034,9 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>,</xsl:text>
+    <xsl:if test="/edmx:Edmx/edmx:Reference/edmx:Include[not(starts-with(@Namespace,'Org.OData.') or starts-with(@Namespace,'com.sap.vocabularies.'))]">
+      <xsl:text>"external-ref":{"type":"object","description":"An entity from an external service"},</xsl:text>
+    </xsl:if>
     <xsl:if test="//@Type[.='Edm.GeographyPoint' or .='Edm.GeometryPoint']">
       <xsl:text>"geoPoint":{"type":"object","properties":{"type":{"type":"string","enum":["Point"],"default":"Point"},"coordinates":{"$ref":"</xsl:text>
       <xsl:value-of select="$reuse-schemas" />
@@ -2470,11 +2473,16 @@
       <xsl:otherwise>
         <xsl:text>"$ref":"</xsl:text>
         <xsl:variable name="externalNamespace" select="/edmx:Edmx/edmx:Reference/edmx:Include[@Alias=$qualifier]/@Namespace|/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$qualifier]/@Namespace" />
+        <!--
         <xsl:call-template name="json-url">
           <xsl:with-param name="url" select="/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
         </xsl:call-template>
+        -->
         <xsl:value-of select="$reuse-schemas" />
+        <xsl:text>external-ref</xsl:text>
+        <!--
         <xsl:value-of select="$externalNamespace" />
+        -->
         <xsl:if test="not($externalNamespace)">
           <xsl:message>
             <xsl:text>Unknown qualifier: </xsl:text>
@@ -2485,11 +2493,13 @@
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>.</xsl:text>
-    <xsl:value-of select="$name" />
-    <xsl:variable name="qualifiedName" select="concat($qualifier,'.',$name)" />
-    <xsl:if test="key('namespaceQualifiedType',$qualifiedName)|key('aliasQualifiedType',$qualifiedName)">
-      <xsl:value-of select="$suffix" />
+    <xsl:if test="$internalNamespace">
+      <xsl:text>.</xsl:text>
+      <xsl:value-of select="$name" />
+      <xsl:variable name="qualifiedName" select="concat($qualifier,'.',$name)" />
+      <xsl:if test="key('namespaceQualifiedType',$qualifiedName)|key('aliasQualifiedType',$qualifiedName)">
+        <xsl:value-of select="$suffix" />
+      </xsl:if>
     </xsl:if>
     <xsl:text>"</xsl:text>
   </xsl:template>
