@@ -2807,9 +2807,13 @@
         <xsl:choose>
           <xsl:when test="$label!=''">
             <xsl:value-of select="$label" />
-            <xsl:text> (</xsl:text>
-            <xsl:value-of select="$set/@Name" />
-            <xsl:text>)</xsl:text>
+            <!-- Add entity name for disambiguation if the label occurs more than once. -->
+            <xsl:if test="count(//edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased) and
+              (@String=$label or edm:String=$label)]) > 1">
+              <xsl:text> (</xsl:text>
+              <xsl:value-of select="$set/@Name" />
+              <xsl:text>)</xsl:text>
+            </xsl:if>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="$set/@Name" />
