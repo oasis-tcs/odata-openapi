@@ -2810,14 +2810,21 @@
           <xsl:when test="$label!=''">
             <xsl:value-of select="$label" />
             <!-- Add entity name for disambiguation if the label occurs more than once. -->
-            <xsl:variable name="labelTarget" select="key('label',$label)/../@Target" />
-            <xsl:if test="$labelTarget!=$typename">
-              <xsl:variable name="labelEntityType" select="key('namespaceQualifiedType',$labelTarget)|key('aliasQualifiedType',$labelTarget)" />
-              <xsl:if test="generate-id($labelEntityType) != generate-id($entityType)">
-                <xsl:text> (</xsl:text>
-                <xsl:value-of select="$set/@Name" />
-                <xsl:text>)</xsl:text>
-              </xsl:if>
+            <xsl:variable name="labelTarget" select="key('label',$label)/.." />
+            <xsl:variable name="labelEntityType">
+              <xsl:choose>
+                <xsl:when test="$labelTarget/@Target">
+                  <xsl:value-of select="generate-id(key('namespaceQualifiedType',$labelTarget/@Target)|key('aliasQualifiedType',$labelTarget/@Target))" />
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="generate-id($labelTarget)" />
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>
+              <xsl:if test="$labelEntityType != generate-id($entityType)">
+              <xsl:text> (</xsl:text>
+              <xsl:value-of select="$set/@Name" />
+              <xsl:text>)</xsl:text>
             </xsl:if>
           </xsl:when>
           <xsl:otherwise>
