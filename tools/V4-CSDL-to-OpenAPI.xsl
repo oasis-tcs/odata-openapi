@@ -2821,7 +2821,7 @@
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:variable>
-              <xsl:if test="$labelEntityType != generate-id($entityType)">
+            <xsl:if test="$labelEntityType != generate-id($entityType)">
               <xsl:text> (</xsl:text>
               <xsl:value-of select="$set/@Name" />
               <xsl:text>)</xsl:text>
