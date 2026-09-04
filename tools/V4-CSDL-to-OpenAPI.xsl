@@ -2807,6 +2807,9 @@
         <xsl:choose>
           <xsl:when test="$label!=''">
             <xsl:value-of select="$label" />
+            <xsl:text> (</xsl:text>
+            <xsl:value-of select="$set/@Name" />
+            <xsl:text>)</xsl:text>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="$set/@Name" />
