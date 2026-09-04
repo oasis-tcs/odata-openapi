@@ -235,6 +235,8 @@
   <xsl:key name="namespaceQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Namespace,'.',@Name)" />
   <xsl:key name="aliasQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Alias,'.',@Name)" />
 
+  <xsl:key name="label" match="//edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased)]" use="@String | edm:String" />
+
   <!-- TODO: collect all annotations for target once in caller and pass them here -->
   <xsl:template name="capability">
     <xsl:param name="term" />
@@ -2808,11 +2810,14 @@
           <xsl:when test="$label!=''">
             <xsl:value-of select="$label" />
             <!-- Add entity name for disambiguation if the label occurs more than once. -->
-            <xsl:if test="count(//edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased) and
-              (@String=$label or edm:String=$label)]) > 1">
-              <xsl:text> (</xsl:text>
-              <xsl:value-of select="$set/@Name" />
-              <xsl:text>)</xsl:text>
+            <xsl:variable name="labelTarget" select="key('label',$label)/../@Target" />
+            <xsl:if test="$labelTarget!=$typename">
+              <xsl:variable name="labelEntityType" select="key('namespaceQualifiedType',$labelTarget)|key('aliasQualifiedType',$labelTarget)" />
+              <xsl:if test="generate-id($labelEntityType) != generate-id($entityType)">
+                <xsl:text> (</xsl:text>
+                <xsl:value-of select="$set/@Name" />
+                <xsl:text>)</xsl:text>
+              </xsl:if>
             </xsl:if>
           </xsl:when>
           <xsl:otherwise>
