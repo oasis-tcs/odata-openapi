@@ -235,6 +235,12 @@
   <xsl:key name="namespaceQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Namespace,'.',@Name)" />
   <xsl:key name="aliasQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Alias,'.',@Name)" />
 
+  <xsl:key name="label" match="//edm:Annotation[
+    (parent::edm:EntityType or parent::edm:Annotations[not(contains(@Target,'/'))]) and
+    (@Term='com.sap.vocabularies.Common.v1.Label' or
+    @Term=concat(/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace='com.sap.vocabularies.Common.v1']/@Alias,'.Label'))]"
+    use="@String | edm:String" />
+
   <!-- TODO: collect all annotations for target once in caller and pass them here -->
   <xsl:template name="capability">
     <xsl:param name="term" />
@@ -2807,6 +2813,23 @@
         <xsl:choose>
           <xsl:when test="$label!=''">
             <xsl:value-of select="$label" />
+            <!-- Add entity name for disambiguation if the label occurs more than once. -->
+            <xsl:variable name="labelTarget" select="key('label',$label)[1]/.." />
+            <xsl:variable name="labelEntityType">
+              <xsl:choose>
+                <xsl:when test="$labelTarget/@Target">
+                  <xsl:value-of select="generate-id(key('namespaceQualifiedType',$labelTarget/@Target)|key('aliasQualifiedType',$labelTarget/@Target))" />
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="generate-id($labelTarget)" />
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>
+            <xsl:if test="$labelEntityType != generate-id($entityType)">
+              <xsl:text> (</xsl:text>
+              <xsl:value-of select="$set/@Name" />
+              <xsl:text>)</xsl:text>
+            </xsl:if>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="$set/@Name" />
