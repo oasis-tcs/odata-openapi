@@ -235,7 +235,9 @@
   <xsl:key name="namespaceQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Namespace,'.',@Name)" />
   <xsl:key name="aliasQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Alias,'.',@Name)" />
 
-  <xsl:key name="label" match="//edm:Annotation[@Term=$commonLabel or @Term=$commonLabelAliased]" use="@String | edm:String" />
+  <xsl:key name="label" match="//edm:Annotation[@Term='com.sap.vocabularies.Common.v1.Label' or
+    @Term=concat(/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace='com.sap.vocabularies.Common.v1']/@Alias,'.Label')]"
+    use="@String | edm:String" />
 
   <!-- TODO: collect all annotations for target once in caller and pass them here -->
   <xsl:template name="capability">
