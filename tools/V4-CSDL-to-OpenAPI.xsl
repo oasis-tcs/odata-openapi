@@ -235,7 +235,7 @@
   <xsl:key name="namespaceQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Namespace,'.',@Name)" />
   <xsl:key name="aliasQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Alias,'.',@Name)" />
 
-  <xsl:key name="label" match="//edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased)]" use="@String | edm:String" />
+  <xsl:key name="label" match="//edm:Annotation[@Term=$commonLabel or @Term=$commonLabelAliased]" use="@String | edm:String" />
 
   <!-- TODO: collect all annotations for target once in caller and pass them here -->
   <xsl:template name="capability">
@@ -2810,7 +2810,7 @@
           <xsl:when test="$label!=''">
             <xsl:value-of select="$label" />
             <!-- Add entity name for disambiguation if the label occurs more than once. -->
-            <xsl:variable name="labelTarget" select="key('label',$label)/.." />
+            <xsl:variable name="labelTarget" select="key('label',$label)[1]/.." />
             <xsl:variable name="labelEntityType">
               <xsl:choose>
                 <xsl:when test="$labelTarget/@Target">
