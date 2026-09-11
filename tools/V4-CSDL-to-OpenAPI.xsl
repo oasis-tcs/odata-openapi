@@ -235,6 +235,12 @@
   <xsl:key name="namespaceQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Namespace,'.',@Name)" />
   <xsl:key name="aliasQualifiedType" match="/edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType|/edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType" use="concat(../@Alias,'.',@Name)" />
 
+  <xsl:key name="label" match="//edm:Annotation[
+    (parent::edm:EntityType or parent::edm:Annotations[not(contains(@Target,'/'))]) and
+    (@Term='com.sap.vocabularies.Common.v1.Label' or
+    @Term=concat(/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace='com.sap.vocabularies.Common.v1']/@Alias,'.Label'))]"
+    use="@String | edm:String" />
+
   <!-- TODO: collect all annotations for target once in caller and pass them here -->
   <xsl:template name="capability">
     <xsl:param name="term" />
@@ -1034,6 +1040,9 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>,</xsl:text>
+    <xsl:if test="/edmx:Edmx/edmx:Reference/edmx:Include[not(starts-with(@Namespace,'Org.OData.') or starts-with(@Namespace,'com.sap.vocabularies.'))]">
+      <xsl:text>"external-ref":{"type":"object","description":"An entity from an external service"},</xsl:text>
+    </xsl:if>
     <xsl:if test="//@Type[.='Edm.GeographyPoint' or .='Edm.GeometryPoint']">
       <xsl:text>"geoPoint":{"type":"object","properties":{"type":{"type":"string","enum":["Point"],"default":"Point"},"coordinates":{"$ref":"</xsl:text>
       <xsl:value-of select="$reuse-schemas" />
@@ -2470,11 +2479,16 @@
       <xsl:otherwise>
         <xsl:text>"$ref":"</xsl:text>
         <xsl:variable name="externalNamespace" select="/edmx:Edmx/edmx:Reference/edmx:Include[@Alias=$qualifier]/@Namespace|/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$qualifier]/@Namespace" />
+        <!--
         <xsl:call-template name="json-url">
           <xsl:with-param name="url" select="/edmx:Edmx/edmx:Reference/edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
         </xsl:call-template>
+        -->
         <xsl:value-of select="$reuse-schemas" />
+        <xsl:text>external-ref</xsl:text>
+        <!--
         <xsl:value-of select="$externalNamespace" />
+        -->
         <xsl:if test="not($externalNamespace)">
           <xsl:message>
             <xsl:text>Unknown qualifier: </xsl:text>
@@ -2485,11 +2499,13 @@
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>.</xsl:text>
-    <xsl:value-of select="$name" />
-    <xsl:variable name="qualifiedName" select="concat($qualifier,'.',$name)" />
-    <xsl:if test="key('namespaceQualifiedType',$qualifiedName)|key('aliasQualifiedType',$qualifiedName)">
-      <xsl:value-of select="$suffix" />
+    <xsl:if test="$internalNamespace">
+      <xsl:text>.</xsl:text>
+      <xsl:value-of select="$name" />
+      <xsl:variable name="qualifiedName" select="concat($qualifier,'.',$name)" />
+      <xsl:if test="key('namespaceQualifiedType',$qualifiedName)|key('aliasQualifiedType',$qualifiedName)">
+        <xsl:value-of select="$suffix" />
+      </xsl:if>
     </xsl:if>
     <xsl:text>"</xsl:text>
   </xsl:template>
@@ -2797,6 +2813,23 @@
         <xsl:choose>
           <xsl:when test="$label!=''">
             <xsl:value-of select="$label" />
+            <!-- Add entity name for disambiguation if the label occurs more than once. -->
+            <xsl:variable name="labelTarget" select="key('label',$label)[1]/.." />
+            <xsl:variable name="labelEntityType">
+              <xsl:choose>
+                <xsl:when test="$labelTarget/@Target">
+                  <xsl:value-of select="generate-id(key('namespaceQualifiedType',$labelTarget/@Target)|key('aliasQualifiedType',$labelTarget/@Target))" />
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="generate-id($labelTarget)" />
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>
+            <xsl:if test="$labelEntityType != generate-id($entityType)">
+              <xsl:text> (</xsl:text>
+              <xsl:value-of select="$set/@Name" />
+              <xsl:text>)</xsl:text>
+            </xsl:if>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="$set/@Name" />
