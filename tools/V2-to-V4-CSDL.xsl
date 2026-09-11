@@ -248,6 +248,7 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template match="edm2:EntityType[@Name=preceding-sibling::edm2:EntityType/@Name]" />
   <xsl:template match="edm2:EntityType|edm3:EntityType">
     <EntityType>
       <xsl:apply-templates select="@*[not(starts-with(name(),'sap:'))]" />
@@ -337,6 +338,7 @@
     </ReferentialConstraint>
   </xsl:template>
 
+  <xsl:template match="edm2:EntitySet[@Name=preceding-sibling::edm2:EntitySet/@Name]" />
   <xsl:template match="edm2:EntitySet|edm3:EntitySet">
     <xsl:variable name="qualifier">
       <xsl:call-template name="substring-before-last">
